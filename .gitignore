@@ -1,0 +1,10 @@
+logs/*
+npm-debug.log
+node_modules/
+tmp
+*.swp
+*.log
+.idea
+.DS_Store
+.tags
+.tags1
