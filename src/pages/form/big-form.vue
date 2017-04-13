@@ -9,68 +9,55 @@
             <el-form-item label="姓名" prop="name">
                 <el-input placeholder="请输入您的姓名" v-model="form.name"></el-input>
             </el-form-item>
-
             <el-form-item label="性别" prop="gender">
                 <el-radio-group v-model="form.gender">
                     <el-radio label="男">男</el-radio>
                     <el-radio label="女">女</el-radio>
                 </el-radio-group>
             </el-form-item>
-
             <el-form-item label="生日" prop="birthday">
                 <el-date-picker v-model="form.birthday" type="date" placeholder="请输入您的生日">
                 </el-date-picker>
             </el-form-item>
-
             <el-form-item label="工作年限" prop="workDuration">
                 <el-select v-model="form.workDuration" placeholder="请选择">
                     <el-option v-for="option in workDurationOptions" :label="option.label" :value="option.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-
             <el-form-item label="最高学历" prop="academic">
                 <el-select v-model="form.academic" placeholder="请选择">
                     <el-option v-for="option in academicOptions" :label="option.label" :value="option.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-
             <el-form-item label="学校" prop="school">
                 <el-autocomplete v-model="form.school" :fetch-suggestions="getSchoolsInfo" placeholder="请输入您的学校" @select="handleSelectSchool"></el-autocomplete>
             </el-form-item>
-
             <el-form-item label="专业" prop="major">
                 <el-autocomplete v-model="form.major" :disabled="!form.school" :fetch-suggestions="getMajorsInfo" placeholder="请输入您的专业"></el-autocomplete>
             </el-form-item>
-
             <el-form-item label="在职公司" prop="company">
                 <el-input placeholder="请输入您目前所在的公司名称" v-model="form.company"></el-input>
             </el-form-item>
-
             <el-form-item label="职位" prop="position">
                 <el-input placeholder="请输入您的职位名称" v-model="form.position"></el-input>
             </el-form-item>
-
             <el-form-item label="城市" prop="city">
                 <el-input placeholder="请输入您意向的工作地点" v-model="form.city"></el-input>
             </el-form-item>
-
             <el-form-item label="联系方式" prop="phone">
                 <el-input placeholder="请输入您的联系方式" v-model="form.phone"></el-input>
             </el-form-item>
-
             <el-form-item label="邮箱" prop="email">
                 <el-input placeholder="请输入您的邮箱" v-model="form.email"></el-input>
             </el-form-item>
-
             <el-form-item label="网站" prop="website">
                 <el-input placeholder="请输入您的个人博客" v-model="form.website">
                     <template slot="prepend">http://
 </template>
           </el-input>
         </el-form-item>
-
         <el-form-item label="技能" prop="skills">
           <el-row class="skill-line" v-for="(skill, index) in form.skills" type="flex" align="middle">
             <el-col :span="5">
@@ -90,7 +77,6 @@
             </el-col>
           </el-row>
         </el-form-item>
-
         <el-form-item label="个人简历">
           <el-upload
             action="/resume"
@@ -114,7 +100,6 @@
         </el-form-item>
       </el-form>
     </div>
-
   </div>
 </template>
 

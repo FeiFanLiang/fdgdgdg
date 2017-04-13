@@ -1,3 +1,4 @@
-module.exports = {
-	Common: require('./Common/')
+import Common from './Common'
+export default {
+	Common,
 }

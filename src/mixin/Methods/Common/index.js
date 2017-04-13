@@ -1,4 +1,6 @@
-module.exports = {
-	ListData: require('./ListData.js'),
-	FormData: require('./FormData.js')
+import ListData from './ListData'
+import FormData from './FormData'
+export default {
+	ListData,
+	FormData
 }

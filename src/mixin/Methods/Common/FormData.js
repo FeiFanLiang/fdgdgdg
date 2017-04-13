@@ -29,7 +29,6 @@ module.exports = {
 		}
 		return type === true ? obj.status === 200 : obj
 	},
-
 	onSubmit({
 		data,
 		editor_temp_data
