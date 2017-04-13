@@ -7,7 +7,7 @@ const API = {
 }
 export default {
     bootstrap(mock) {
-        let mock = new MockAdapter(axios);
+        
         mock.onGet('/Hotel/HotelArea/pid/{PArea}').reply(API.listByPArea);
         mock.onGet('/Hotel/HotelArea/query').reply(API.listByQuery);
         mock.onGet('/Hotel/HotelArea/query/{que}').reply(API.listByQue);

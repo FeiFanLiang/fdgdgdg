@@ -8,7 +8,6 @@ const API = {
 }
 export default {
     bootstrap(mock) {
-        let mock = new MockAdapter(axios);
         mock.onGet('/Hotel/HotelPayMode/All').reply(API.list);
         mock.onGet('/Hotel/HotelPayMode/{id}').reply(API.details);
         mock.onPost('/Hotel/HotelPayMode').reply(API.add);

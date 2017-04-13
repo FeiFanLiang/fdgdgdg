@@ -1,23 +1,17 @@
-GET /Hotel/SonRoomSalePrice/{id}
-GET /Hotel/SonRoomSalePrice/{SonRoomID}
-GET /Hotel/SonRoomSalePrice/{ThreePlatId}
-POST /Hotel/SonRoomSalePrice
-PUT /Hotel/SonRoomSalePrice
 import Mock from 'mockjs';
 const API = {
-    list() {},
-    details() {},
+    detailsById() {},
+    detailsBySonRoomID() {},
+    detailsByThreePlatId() {},
     add() {},
     edit() {},
-    remove() {}
 }
 export default {
     bootstrap(mock) {
-        let mock = new MockAdapter(axios);
-        mock.onGet('/Values').reply(API.list);
-        mock.onGet('/Values/{id}').reply(API.details);
-        mock.onPost('/Values').reply(API.add);
-        mock.onPut('/Values/{id}').reply(API.edit);
-        mock.onPost('/Values/{id}').reply(API.remove);
+        mock.onGet('/SonRoomSalePrice/{id}').reply(API.detailsById);
+        mock.onGet('/SonRoomSalePrice/{SonRoomID}').reply(API.detailsBySonRoomID);
+        mock.onGet('/SonRoomSalePrice/{ThreePlatId}').reply(API.detailsByThreePlatId);
+        mock.onPost('/SonRoomSalePrice').reply(API.add);
+        mock.onPut('/SonRoomSalePrice').reply(API.edit);
     }
 }

@@ -1,23 +1,18 @@
-DELETE /Hotel/HotelPolicyImage/{id}
-GET /Hotel/HotelPolicyImage/{id}
-PUT /Hotel/HotelPolicyImage/{id}
-GET /Hotel/HotelPolicyImage/Pid/{pid}
-POST /Hotel/HotelPolicyImage
+
 import Mock from 'mockjs';
 const API = {
-    list() {},
-    details() {},
+    detailsById() {},
+    detailsByPid() {},
     add() {},
     edit() {},
     remove() {}
 }
 export default {
     bootstrap(mock) {
-        let mock = new MockAdapter(axios);
-        mock.onGet('/Values').reply(API.list);
-        mock.onGet('/Values/{id}').reply(API.details);
-        mock.onPost('/Values').reply(API.add);
-        mock.onPut('/Values/{id}').reply(API.edit);
-        mock.onPost('/Values/{id}').reply(API.remove);
+        mock.onGet('/Hotel/HotelPolicyImage/{id}').reply(API.detailsById);
+        mock.onGet('/Hotel/HotelPolicyImage/Pid/{id}').reply(API.detailsByPid);
+        mock.onPost('/Hotel/HotelPolicyImage').reply(API.add);
+        mock.onPut('/Hotel/HotelPolicyImage/{id}').reply(API.edit);
+        mock.onPost('/Hotel/HotelPolicyImage/{id}').reply(API.remove);
     }
 }

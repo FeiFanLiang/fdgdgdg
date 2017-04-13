@@ -1,8 +1,3 @@
-POST /Hotel/PayCompany
-DELETE /Hotel/PayCompany/{id}
-GET /Hotel/PayCompany/{id}
-PUT /Hotel/PayCompany/{id}
-GET /Hotel/PayCompany/All
 import Mock from 'mockjs';
 const API = {
     list() {},
@@ -13,11 +8,10 @@ const API = {
 }
 export default {
     bootstrap(mock) {
-        let mock = new MockAdapter(axios);
-        mock.onGet('/Values').reply(API.list);
-        mock.onGet('/Values/{id}').reply(API.details);
-        mock.onPost('/Values').reply(API.add);
-        mock.onPut('/Values/{id}').reply(API.edit);
-        mock.onPost('/Values/{id}').reply(API.remove);
+        mock.onGet('/Hotel/PayCompany/All').reply(API.list);
+        mock.onGet('/Hotel/PayCompany/{id}').reply(API.details);
+        mock.onPost('/Hotel/PayCompany').reply(API.add);
+        mock.onPut('/Hotel/PayCompany/{id}').reply(API.edit);
+        mock.onPost('/Hotel/PayCompany/{id}').reply(API.remove);
     }
 }

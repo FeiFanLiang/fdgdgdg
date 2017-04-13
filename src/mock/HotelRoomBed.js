@@ -1,23 +1,17 @@
-GET /Hotel/HotelRoomBed
-POST /Hotel/HotelRoomBed
-DELETE /Hotel/HotelRoomBed/{id}
-GET /Hotel/HotelRoomBed/{id}
-PUT /Hotel/HotelRoomBed/{id}
 import Mock from 'mockjs';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 const API = {
-    getPArea() {},
-    getQue() {},
-    getQuery() {},
-    getId() {}
+    list() {},
+    details() {},
+    add() {},
+    edit() {},
+    remove() {}
 }
 export default {
-    bootstrap() {
-        let mock = new MockAdapter(axios);
-        mock.onGet('/Hotel/HotelArea/pid/{PArea}').reply(API.getPArea);
-        mock.onGet('/Hotel/HotelArea/pid/{que}').reply(API.getQue);
-        mock.onGet('/Hotel/HotelArea/query').reply(API.getQuery);
-        mock.onGet('/Hotel/HotelArea/{id}').reply(API.getId);
+    bootstrap(mock) {
+        mock.onGet('/Hotel/HotelRoomBed').reply(API.list);
+        mock.onGet('/Hotel/HotelRoomBed/{id}').reply(API.details);
+        mock.onPost('/Hotel/HotelRoomBed').reply(API.add);
+        mock.onPut('/Hotel/HotelRoomBed/{id}').reply(API.edit);
+        mock.onPost('/Hotel/HotelRoomBed/{id}').reply(API.remove);
     }
 }

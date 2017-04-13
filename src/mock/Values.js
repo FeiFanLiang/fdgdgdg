@@ -1,6 +1,4 @@
 import Mock from 'mockjs';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 const API = {
     list() {},
     details() {},
@@ -9,8 +7,7 @@ const API = {
     remove() {}
 }
 export default {
-    bootstrap() {
-        let mock = new MockAdapter(axios);
+    bootstrap(mock) {
         mock.onGet('/Values').reply(API.list);
         mock.onGet('/Values/{id}').reply(API.details);
         mock.onPost('/Values').reply(API.add);
