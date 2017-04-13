@@ -13,8 +13,7 @@ import HotelDetail from 'views/Hotel/HotelDetail.vue'
 
 const HotelRoutes = [
   {
-    path: 'Index',
-    redirect: 'HotelBase'
+    path: 'policy'
   },
   {
     path: 'HotelBase',
@@ -44,16 +43,10 @@ const HotelRoutes = [
   },
   {
     path: 'HotelPlatform',
-    component: HotelPlatform,
+    component: Pages.HotelPlatform,
     name: 'HotelPlatform',
     description: '酒店平台信息'
   }
-  // {
-  //   path: 'HotelQita',
-  //   component: HotelQita,
-  //   name: 'HotelQita',
-  //   description: '酒店其他信息'
-  // }
 
 ]
 

@@ -6,6 +6,7 @@ import ListWithFilters from './list/with-filters';
 import BigForm from './form/big-form';
 import Login from './login/login';
 import chart from './chart/chart';
+import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 
 import Test from './test'
 
@@ -16,5 +17,6 @@ export default {
     BigForm,
     Login,
     chart,
-    Test
+    Test,
+    HotelPlatform
 }

@@ -5,8 +5,9 @@ import {Schools} from '../resources/schools';
 import {WorkDurationOptions} from '../resources/work-durations';
 import {AcademicOptions} from '../resources/academics';
 import UserAPI from './user';
-import HotelBaseAPI from './HotelBase'
+import HotelBaseAPI from './HotelBase';
 import Mock from 'mockjs';
+import HotelPlatformAPI from './HotelThreePlatInfo';
 
 export default {
     /**
@@ -16,6 +17,7 @@ export default {
         let mock = new MockAdapter(axios);
         UserAPI.bootstrap(mock);
         HotelBaseAPI.bootstrap(mock);
+        HotelPlatformAPI.bootstrap(mock);
         // mock success request
         mock.onPost('/resume/add').reply(200, {msg: 'success'});
 

@@ -50,6 +50,20 @@ let routes = [
         ]
       },
       {
+        path: 'policy',
+        component: Pages.Abstract,
+        name: '政策',
+        iconClass: 'el-icon-message',
+        children: [
+          {
+            path: 'HotelPlatform',
+            component: Pages.HotelPlatform,
+            name: '酒店平台',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          }
+        ]
+      },
+      {
         path: 'form',
         component: Pages.Abstract,
         name: '表单',
