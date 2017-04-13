@@ -1,4 +1,4 @@
-import * as types from './mutations_types'
+import * as types from './mutations-types'
 
 module.exports = {
     set_cur_route: ({

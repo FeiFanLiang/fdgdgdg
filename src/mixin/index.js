@@ -22,7 +22,7 @@ function mergeManyObjToOneObj(obj) {
 
 //导入自定义的全局混合
 var mixins = {
-	methods: mergeManyObjToOneObj(require('./Methods/'))
+	methods: mergeManyObjToOneObj(require('./methods'))
 }
 
 //注册全局混合

@@ -21,54 +21,54 @@
 
 <script>
 export default {
-  data() {
-    return {
-      children: null
-    };
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      let children = vm.$route.meta.children;
-      if (children) {
-        vm.children = children;
-      } else {
-        vm.children = null;
-      }
-    });
-  },
-  watch: {
-    '$route'(to, from) {
-      let children = this.$route.meta.children;
-      if (children) {
-        this.children = children;
-      } else {
-        this.children = null;
-      }
+    data() {
+        return {
+            children: null
+        };
+    },
+    beforeRouteEnter(to, from, next) {
+        next(vm => {
+            let children = vm.$route.meta.children;
+            if (children) {
+                vm.children = children;
+            } else {
+                vm.children = null;
+            }
+        });
+    },
+    watch: {
+        '$route' (to, from) {
+            let children = this.$route.meta.children;
+            if (children) {
+                this.children = children;
+            } else {
+                this.children = null;
+            }
+        }
     }
-  }
 };
 </script>
 
 <style lang="scss">
-  .abstract {
+.abstract {
     .card-wrapper {
-      display: flex;
-      flex-direction: column;
-      .img {
-        height: 150px;
-      }
-      .text {
         display: flex;
-        justify-content: space-around;
-        align-items: center;
-        a {
-          color: #20a0ff;
+        flex-direction: column;
+        .img {
+            height: 150px;
         }
-      }
-      img {
-        width: 100%;
-        height: 150px;
-      }
+        .text {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            a {
+                color: #20a0ff;
+            }
+        }
+        img {
+            width: 100%;
+            height: 150px;
+        }
     }
-  }
+}
 </style>
