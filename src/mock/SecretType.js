@@ -1,9 +1,9 @@
-import Mock from 'mockjs';
+import Mock from 'mockjs'
 const API = {
-    list() {},
+    list() {}
 }
 export default {
     bootstrap(mock) {
-        mock.onGet('/Hotel/SecretType').reply(API.list);
+        mock.onGet('/Hotel/SecretType').reply(API.list)
     }
 }
