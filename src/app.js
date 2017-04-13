@@ -6,6 +6,15 @@ import 'element-ui/lib/theme-default/index.css';
 
 import Breadcrumb from './components/breadcrumb';
 
+const VueProgressBarOptions = {
+  color: '#13ce66',
+  failedColor: '#FF4949',
+  height: '4px'
+}
+import VueProgressBar from './libs/vue-progressbar'
+import VueAxiosProgressBarInterceptor from './libs/vue-axios-progressbar-interceptor'
+Vue.use(VueProgressBar, VueProgressBarOptions)
+Vue.use(VueAxiosProgressBarInterceptor)
 
 import Mock from './mock';
 Mock.bootstrap();

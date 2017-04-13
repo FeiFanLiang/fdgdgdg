@@ -2,7 +2,7 @@
   <div id="login-page" @keyup.enter="login">
     <div class="login-form">
       <div class="input-group">
-        <div class="title">meipia Dashboard</div>
+        <div class="title">美票</div>
         <el-input
           :autofocus="true"
           placeholder="请输入用户名"
