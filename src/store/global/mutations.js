@@ -1,8 +1,6 @@
 import * as types from './mutations-types'
 
-import {
-    store
-} from '../../utils/'
+import {store} from '../../utils/'
 
 module.exports = {
     [types.SHOW_LOADING](state) {

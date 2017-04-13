@@ -8,5 +8,5 @@ module.exports = {
     [types.SET_MENU_CLOSE](state) {
         state.width = '50px'
         state.menu_flag = false
-    },
+    }
 }
