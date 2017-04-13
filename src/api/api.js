@@ -11,4 +11,4 @@ export default {
     uploadImageUrl: 'http://114.215.118.183:8075/api/images/upload',
     chargeUrl: 'http://114.215.118.183:8086/api/charges',
     productUrl:'http://139.129.211.43:8058/api/',
-};
+}

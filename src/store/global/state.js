@@ -1,8 +1,8 @@
 import {
     store
-} from '../../utils/';
+} from '../../utils/'
 
 
 module.exports = {
     ajax_loading: false
-};
+}

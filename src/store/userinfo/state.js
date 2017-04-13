@@ -1,6 +1,6 @@
 import {
 	store
-} from '../../utils/';
+} from '../../utils/'
 
 
 module.exports = {
@@ -16,4 +16,4 @@ module.exports = {
 			token: ''
 		}
 	},
-};
+}

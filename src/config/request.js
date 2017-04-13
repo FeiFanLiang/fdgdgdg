@@ -1,6 +1,6 @@
 import {
 	ajax
-} from 'util/';
+} from 'util/'
 
 /**
  * 导出所有模块需要用到接口
@@ -19,7 +19,7 @@ module.exports = {
 		 * @param {function} fn 成功回调
 		 */
 		login(data, fn, errFn) {
-			ajax.call(this, 'post', '/Login/login', data, fn, true, errFn);
+			ajax.call(this, 'post', '/Login/login', data, fn, true, errFn)
 		},
 
 		/**
@@ -30,7 +30,7 @@ module.exports = {
 		 * @param  	{Function} 	fn   			成功回的回调
 		 */
 		selectUser(data, fn) {
-			ajax.call(this, 'get', '/User/selectUser', data, fn);
+			ajax.call(this, 'get', '/User/selectUser', data, fn)
 		},
 
 		/**
@@ -46,7 +46,7 @@ module.exports = {
 		 * @param {function} fn   成功回调
 		 */
 		saveUser(data, fn) {
-			ajax.call(this, 'post', '/User/saveUser', data, fn);
+			ajax.call(this, 'post', '/User/saveUser', data, fn)
 		},
 
 		/**
@@ -56,7 +56,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		deleteUser(data, fn) {
-			ajax.call(this, 'post', '/User/deleteUser', data, fn);
+			ajax.call(this, 'post', '/User/deleteUser', data, fn)
 		},
 
 		/**
@@ -67,7 +67,7 @@ module.exports = {
 		findUser(id, fn) {
 			ajax.call(this, 'get', '/User/findUser', {
 				id: id
-			}, fn);
+			}, fn)
 		},
 
 
@@ -80,7 +80,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		updPass(data, fn) {
-			ajax.call(this, 'post', '/User/updatePass', data, fn);
+			ajax.call(this, 'post', '/User/updatePass', data, fn)
 		},
 
 		/**
@@ -92,7 +92,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		accessUser(data, fn) {
-			ajax.call(this, 'post', '/User/accessUser', data, fn);
+			ajax.call(this, 'post', '/User/accessUser', data, fn)
 		}
 	},
 
@@ -107,7 +107,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		selectArticle(data, fn) {
-			ajax.call(this, 'get', '/Article/selectArticle', data, fn);
+			ajax.call(this, 'get', '/Article/selectArticle', data, fn)
 		},
 
 		/**
@@ -116,7 +116,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		saveArticle(data, fn) {
-			ajax.call(this, 'post', '/Article/saveArticle', data, fn);
+			ajax.call(this, 'post', '/Article/saveArticle', data, fn)
 		},
 
 		/**
@@ -125,7 +125,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		deleteArticle(data, fn) {
-			ajax.call(this, 'post', '/Article/deleteArticle', data, fn);
+			ajax.call(this, 'post', '/Article/deleteArticle', data, fn)
 		},
 
 		/**
@@ -134,7 +134,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		findArticle(data, fn) {
-			ajax.call(this, 'get', '/Article/findArticle', data, fn);
+			ajax.call(this, 'get', '/Article/findArticle', data, fn)
 		},
 	},
 
@@ -150,7 +150,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		statisOrder(data, fn) {
-			ajax.call(this, 'get', '/Order/statisOrder', data, fn);
+			ajax.call(this, 'get', '/Order/statisOrder', data, fn)
 		},
 
 		/**
@@ -159,7 +159,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		selectOrder(data, fn) {
-			ajax.call(this, 'get', '/Order/selectOrder', data, fn);
+			ajax.call(this, 'get', '/Order/selectOrder', data, fn)
 		},
 
 		/**
@@ -168,7 +168,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		saveOrder(data, fn) {
-			ajax.call(this, 'post', '/Order/saveOrder', data, fn);
+			ajax.call(this, 'post', '/Order/saveOrder', data, fn)
 		},
 	},
 
@@ -182,7 +182,7 @@ module.exports = {
 		 * @param  {Function} fn 成功回调
 		 */
 		getSetting(fn) {
-			ajax.call(this, 'get', '/System/getSetting', {}, fn);
+			ajax.call(this, 'get', '/System/getSetting', {}, fn)
 		},
 
 		/**
@@ -191,7 +191,7 @@ module.exports = {
 		 * @param  {Function} fn   成功回调
 		 */
 		updateSetting(data, fn) {
-			ajax.call(this, 'post', '/System/updateSetting', data, fn);
+			ajax.call(this, 'post', '/System/updateSetting', data, fn)
 		}
 	}
-};
+}

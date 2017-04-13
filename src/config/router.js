@@ -4,7 +4,7 @@ import {
     NotFound,
     Content,
     Modules
-} from '../components/';
+} from '../components/'
 
 module.exports = [{
     path: '/',
@@ -83,4 +83,4 @@ module.exports = [{
     }
   ]
 },
-];
+]

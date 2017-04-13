@@ -1,4 +1,4 @@
-import * as types from './mutations_types';
+import * as types from './mutations_types'
 
 module.exports = {
 	update_userinfo: ({
@@ -9,18 +9,18 @@ module.exports = {
 		return new Promise((resolve, reject) => {
 			commit(types.UPDATE_USERINFO, {
 				userinfo
-			});
+			})
 			resolve()
-		});
+		})
 	},
 
 	remove_userinfo: ({
 		commit
 	}) => {
 		return new Promise((resolve, reject) => {
-			commit(types.REMOVE_USERINFO);
+			commit(types.REMOVE_USERINFO)
 			resolve()
-		});
+		})
 	},
 
 
@@ -34,17 +34,17 @@ module.exports = {
 			commit(types.UPDATE_REMUMBER, {
 				remumber_flag,
 				remumber_login_info
-			});
+			})
 			resolve()
-		});
+		})
 	},
 
 	remove_remumber: ({
 		commit
 	}) => {
 		return new Promise((resolve, reject) => {
-			commit(types.REMOVE_REMUMBER);
+			commit(types.REMOVE_REMUMBER)
 			resolve()
-		});
+		})
 	}
-};
+}

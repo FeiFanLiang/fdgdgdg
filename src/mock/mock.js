@@ -9,9 +9,6 @@ import HotelBaseAPI from './HotelBase'
 import Mock from 'mockjs'
 
 export default {
-    /**
-   * mock bootstrap
-   */
     bootstrap() {
         let mock = new MockAdapter(axios)
         UserAPI.bootstrap(mock)
