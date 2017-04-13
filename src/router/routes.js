@@ -63,20 +63,6 @@ let routes = [
           }
         ]
       },
-      {
-        path: 'chart',
-        component: Pages.chart,
-        name: '图表',
-        iconClass: 'el-icon-document'
-        /* children: [
-          {
-            path: 'big-form',
-            name: '简历管理',
-            component: BigForm,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]*/
-      }
     ]
   },
   {
