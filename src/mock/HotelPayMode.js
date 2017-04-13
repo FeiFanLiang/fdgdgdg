@@ -1,4 +1,6 @@
 import Mock from 'mockjs'
+import {HotelPayMode} from '../resources/HotelPayMode'
+let _HotelPayMode = HotelPayMode
 const API = {
     list() {},
     details() {},
