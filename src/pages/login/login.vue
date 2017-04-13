@@ -6,7 +6,7 @@
         <el-input
           :autofocus="true"
           placeholder="请输入用户名"
-          icon="time"
+          icon="message"
           v-model="username">
         </el-input>
       </div>
@@ -14,7 +14,7 @@
         <el-input
           placeholder="请输入密码"
           type="password"
-          icon="time"
+          icon="edit"
           v-model="password">
         </el-input>
       </div>
@@ -36,66 +36,73 @@
 <script>
 import {
     oldApi
-} from 'api';
+} from 'api'
+import Particle from 'zhihu-particle'
 export default {
+    mounted() {
+        new Particle(document.getElementById('login-page'), {
+            interactive: true,
+            density: 'low'
+        })
+    },
     data() {
         return {
             username: 'zheng',
             password: '123456',
             rememberMe: false,
             isBtnLoading: false
-        };
+        }
     },
     computed: {
         btnText() {
-            if (this.isBtnLoading) return '登录中...';
-            return '登录';
+            if (this.isBtnLoading) return '登录中...'
+            return '登录'
         }
     },
     methods: {
         async login() {
             if (!this.username) {
-                this.$message.error('请填写用户名！！！');
-                return;
+                this.$message.error('请填写用户名！！！')
+                return
             }
             if (!this.password) {
-                this.$message.error('请填写密码');
-                return;
+                this.$message.error('请填写密码')
+                return
             }
             let loginParams = {
                 username: this.username,
                 password: this.password
-            };
-            this.isBtnLoading = true;
+            }
+            this.isBtnLoading = true
             try {
                 const data = await oldApi.requestLogin(loginParams)
-                this.isBtnLoading = false;
+                this.isBtnLoading = false
                 let {
                     msg,
                     code,
                     user
-                } = data;
+                } = data
                 if (code !== 200) {
-                    this.$message.error(msg);
+                    this.$message.error(msg)
                 } else {
-                    localStorage.setItem('user', JSON.stringify(user));
+                    localStorage.setItem('user', JSON.stringify(user))
                     if (this.$route.query.redirect) {
                         this.$router.push({
                             path: this.$route.query.redirect
-                        });
+                        })
                     } else {
                         this.$router.push({
                             path: '/list'
-                        });
+                        })
                     }
                 }
             } catch (e) {
-                console.error(e);
+                console.error(e)
             }
 
         }
     }
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -109,6 +116,8 @@ export default {
 
     .login-form {
         display: flex;
+        position: absolute;
+        z-index: 100;
         flex-direction: column;
         align-items: center;
         width: 500px;
