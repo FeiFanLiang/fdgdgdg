@@ -102,24 +102,40 @@ const API = {
         })
     },
     remove(config) {
+        let {id} = JSON.parse(config.data)
+        _hotelbase = _hotelbase.filter(p => p.id !== id)
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve([
                     200, {
                         code: 200,
-                        msg: '添加成功'
+                        msg: '删除成功'
                     }
                 ])
             })
         })
     },
     edit(config) {
+        let {id, HotelName, HotelName_En, FrontPhone, Address, Star, PersonName, PurchasingName, PayMode} = JSON.parse(config.data)
+        _hotelbase.some(pb => {
+            if (pb.id === id) {
+                pb.HotelName = HotelName || pb.HotelName
+                pb.HotelName_En = HotelName_En || pb.HotelName_En
+                pb.FrontPhone = FrontPhone || pb.FrontPhone
+                pb.Address = Address || pb.Address
+                pb.Star = Star || pb.Star
+                pb.PersonName = PersonName || pb.PersonName
+                pb.PurchasingName = PurchasingName || pb.PurchasingName
+                pb.PayMode = PayMode || pb.PayMode
+                return true
+            }
+        })
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve([
                     200, {
                         code: 200,
-                        msg: '添加成功'
+                        msg: '编辑成功'
                     }
                 ])
             })
@@ -134,7 +150,7 @@ export default {
         mock.onGet('/Hotel/HotelBase/{id}').reply(API.detailsById)
         mock.onGet('/Hotel/HotelBase/HotelNum/{id}').reply(API.detailsByHotelNum)
         mock.onPost('/Hotel/HotelBase/add').reply(API.add)
-        mock.onPost('/Hotel/HotelBase/{id}').reply(API.remove)
-        mock.onPut('/Hotel/HotelBase/{id}').reply(API.edit)
+        mock.onPost('/Hotel/HotelBase/remove/{id}').reply(API.remove)
+        mock.onPut('/Hotel/HotelBase/edit/{id}').reply(API.edit)
     }
 }

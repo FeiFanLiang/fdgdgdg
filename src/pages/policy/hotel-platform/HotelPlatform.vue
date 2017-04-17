@@ -70,8 +70,8 @@
     </el-dialog>
     <!-- create dialog end -->
 
-    <!-- create dialog start -->
-    <el-dialog title="添加新平台信息" v-model="editDialog" size="small">
+    <!-- edit dialog start -->
+    <el-dialog title="编辑平台信息" v-model="editDialog" size="small">
       <el-form ref="editFrom" :model="editForm" label-width="80px">
         <el-form-item label="平台ID">
           <el-input v-model="editForm.id" class="el-col-24" :disabled="true"></el-input>
@@ -88,7 +88,6 @@
         <el-button type="primary" @click="platformEditSave()">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- create dialog end -->
 
   </div>
 </template>

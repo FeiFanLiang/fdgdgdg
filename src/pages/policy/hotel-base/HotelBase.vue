@@ -42,8 +42,13 @@
         <el-table-column prop="PersonName" label="采购人"></el-table-column>
         <el-table-column prop="PurchasingName" label="政策负责人"></el-table-column>
         <el-table-column prop="PayMode" label="结款"></el-table-column>
-        <el-table-column :context="_self" inline-template label="操作">
+        <el-table-column :context="_self" inline-template label="操作" width="150">
           <div>
+            <!-- <el-button type="primary">
+              <router-link :to="{path: '/HotelBaseEdit/id', params: { id: this.id }}">编辑</router-link>
+            </el-button> -->
+            <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="hotelbaseDelete($index, row)">删除</el-button>
           </div>
         </el-table-column>        
       </el-table>
@@ -53,12 +58,53 @@
     <!-- pagination start  -->
       <div class="pagination-wrapper">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
           @current-change="handleCurrentChange"
-          :page-size="10">
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="10"
+          :total="300">
         </el-pagination>
+        
       </div>
     <!-- pagination end  -->
+
+    <!-- edit dialog start -->
+    <el-dialog title="编辑酒店信息" v-model="editDialog" size="small">
+      <el-form ref="editFrom" :model="editForm" label-width="80px">
+        <el-form-item label="酒店ID">
+          <el-input v-model="editForm.id" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店名称">
+          <el-input v-model="editForm.HotelName" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店英文名称">
+          <el-input v-model="editForm.HotelName_En" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="前台电话">
+          <el-input v-model="editForm.FrontPhone" class="el-col-24"></el-input>
+        </el-form-item>
+         <el-form-item label="地址">
+          <el-input v-model="editForm.Address" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="星级">
+          <el-input v-model="editForm.Star" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="采购人">
+          <el-input v-model="editForm.PersonName" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="政策负责人">
+          <el-input v-model="editForm.PurchasingName" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="结款">
+          <el-input v-model="editForm.PayMode" class="el-col-24"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="hotelbaseEditSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- edit dialog end -->
 
   </div>
 </template>
@@ -70,9 +116,15 @@ import {
 
   export default {
     data() {
-      return {
+      return {        
         hotelbase: [],
         page: 0,
+        editDialog:false,
+        editForm: {
+          id: '',
+          PlatName: '',
+          Ramark: ''
+        },
         filters: {
           id: '',
           HotelName: '',
@@ -119,10 +171,52 @@ import {
       },
       handleCurrentChange(val) {
         this.getHotelbaseList(val);
+      },      
+      async hotelbaseEditSave() {
+            try {
+                await hotelApi.editHotelbase(this.editForm)
+                this.getHotelbaseList();
+                this.editDialog = false;
+                this.$message({
+                    message: '编辑成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e)
+            }
       },
-      // mounted() {
-        // this.getHotelbaseList();
-      // }
+      hotelbaseEdit($index, row) {
+            this.editForm.id = row.id;
+            this.editForm.HotelName = row.HotelName;
+            this.editForm.HotelName_En = row.HotelName_En;
+            this.editForm.FrontPhone = row.FrontPhone;
+            this.editForm.Address = row.Address;
+            this.editForm.Star = row.Star;
+            this.editForm.id = row.id;
+            this.editForm.PersonName = row.PersonName;
+            this.editForm.PurchasingName = row.PurchasingName;
+            this.editForm.PayMode = row.PayMode;
+            this.editDialog = true;
+      },
+      async hotelbaseDelete($index, row) {
+            try {
+                await this.$confirm('是否删除此条信息?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                await hotelApi.removeHotelbase({
+                    id: row.id
+                }) 
+                this.getHotelbaseList();
+                this.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+      },
     }
   }
 </script>

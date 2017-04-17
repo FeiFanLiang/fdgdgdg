@@ -1,182 +1,227 @@
-<template lang='jade'>
-div.mcontent
-	Modal(title="提示", v-model="modalShow", @ok="goback", @cancel="goback") {{modalMessage}}
-	div.title
-		button.btn-primary(class="btn btn-default",@click="goback") 返回
-	div.content
-		div
-			div.row
-				div.col-xs-4
-					div.form-group
-						label id
-						input.form-control(type="input", v-model='model.ID',disabled)
-				div.col-xs-4
-					div.form-group
-						label 名称
-						input.form-control(type="input", v-model='model.HotelName')
-				div.col-xs-4
-					div.form-group
-						label 编码
-						input.form-control(type="input", v-model='model.HotelNum')
-				div.col-xs-6
-					div.form-group
-						label 英文名称
-						input.form-control(type="input", v-model='model.HotelName_En')
-			div.row
-				div.col-xs-4
-					div.form-group
-						label 星级
-						multiselect(v-model='model.Star', :options="stars", :searchable="false", track-by="ID", label="StarName", placeholder="酒店星级信息...")
-				div.col-xs-4
-					div.form-group
-						label 前台电话
-						input.form-control(type="input", v-model='model.FrontPhone')
-				div.col-xs-4
-					div.form-group
-						label 传真
-						input.form-control(type="input", v-model='model.FaxNum')
-			div.row
-				div.col-xs-4
-					div.form-group
-						label 区域
-						multiselect(v-model='model.Area', track-by="ID", label="AreaName",
-						 placeholder="酒店所在区域...", :options="areas", :loading="areaisLoading"
-						 @search-change="asyncFind", :searchable="true")
-							span(slot="noResult") 地址未找到<!--@click="asyncFind"-->
-				div.col-xs-8
-					div.form-group
-						label 地址
-						input.form-control(type="input", v-model='model.Address')
-			div.row
-				div.col-xs-12
-					div.form-group
-						label 备注
-						textarea.form-control(v-model='model.Remark',rows='5',style='color:#FF0000')
-			div.row
-				div.col-xs-12
-					div.form-group.text-center
-						button.btn-primary-lg(type="submit", class="btn btn-default", @click='SumitModel') 提 交
-		div
-			Tab(:captions='["政策信息","房型信息","价格信息","平台映射"]')
-				template(scope="actide")
-					TabContent(:activeIndex='actide.index',:index=0)
-						HotelPolicyList(:hotelID='Number(id)')
-					TabContent(:activeIndex='actide.index',:index=1)
-						HotelRoomList(:hotelID='Number(id)')
-					TabContent(:activeIndex='actide.index',:index=2)
-						HotelPrice(:hotelID='Number(id)')
-					TabContent(:activeIndex='actide.index',:index=3)
-						HotelPlatformInfo(:hotelID='Number(id)')
+<template lang="html">
+<el-form ref="form" :model="form">
+
+  <el-row :gutter="20">
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <el-form-item label="酒店ID">
+            <el-input v-model="form.id"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="酒店名称">
+            <el-input v-model="form.HotelName"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="酒店英文名称">
+            <el-input v-model="form.HotelName_En"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>  
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="5">
+        <div class="grid-content bg-purple">
+          <el-form-item label="星级" prop="Star">
+            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
+              <el-option v-for="item in StarOptions" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </el-col>    
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="前台电话">
+            <el-input v-model="form.FrontPhone"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <el-form-item label="地址">
+            <el-input v-model="form.Address"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="5">
+        <div class="grid-content bg-purple">
+          <el-form-item label="结款" prop="PayMode">
+            <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户" >
+              <el-option v-for="item in PayModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </el-col>    
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="采购人">
+            <el-input v-model="form.PersonName"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content bg-purple">
+          <el-form-item label="政策负责人">
+            <el-input v-model="form.PurchasingName"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="20">
+        <div class="grid-content bg-purple">
+          <el-form-item label="备注">
+            <el-input type="textarea" v-model="form.Remark"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>    
+    </el-row>
+
+    <el-row :gutter="18">
+      <el-col :span="5" :offset="5">
+        <div class="grid-content bg-purple">
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="5">
+        <div class="grid-content bg-purple">
+          <el-form-item>
+            <el-button @click="Cancel">取消</el-button>
+          </el-form-item>
+        </div>
+      </el-col>     
+    </el-row>
+
+  </el-form>
+  
+    
+    
+  
 </template>
+
 <script>
-import Modal from 'components/common/Modal.vue'
-import {Tab, TabContent} from 'components/common/tabs'
-import Multiselect from 'vue-multiselect'
-import vSelect from 'vue-select'
-import HotelPolicyList from 'views/Hotel/HotelPolicyList.vue'
-import HotelRoomList from 'views/Hotel/HotelRoomList.vue'
-import HotelPlatformInfo from 'views/Hotel/HotelPlatformInfo.vue'
-import HotelPrice from 'views/Hotel/HotelPrice.vue'
 import {
-  GetModel, SumitModel
-} from 'api/Hotel/HotelBase'
-import {
-  GetStarList, QueryAreas
-} from 'api/Hotel/common'
-export default {
-  name: 'HotelBaseEdit',
-  data () {
-    return {
-      model: {},
-      id: 0,
-      modalShow: false,
-      modalMessage: '',
-      value: null,
-      stars: [],
-      areas: [],
-      areaisLoading: false
-    }
-  },
-  components: {
-    Modal,
-    Multiselect,
-    vSelect,
-    HotelPolicyList,
-    HotelRoomList,
-    HotelPlatformInfo,
-    HotelPrice,
-    Tab,
-    TabContent
-  },
-  created: function () {
-    console.log('created:' + this.$route.fullPath)
-    this.id = this.$route.params.id
-    this.getModel(this.id)
-    this.getList()
-  },
-  methods: {
-    getModel: async function () {
-      const data = await GetModel(this.id)
-      // debugger
-      if (!data.isError) {
-        this.model = data
-      } else {
-        console.log('getModel:' + data.message)
-        this.modalMessage = data.message
-        this.modalShow = true
-        return
+  oldApi, hotelApi
+} from 'api';
+
+  export default {
+    data() {
+      return {
+        form: {
+          id: '',
+          HotelName: '',
+          HotelName_En: '',
+          FrontPhone: '',
+          Address: '',
+          Star: '',
+          PersonName: '',
+          PurchasingName: '',
+          PayMode: '',
+          Remark: ''
+        },
+        StarOptions: [{
+          value: '1',
+          label: '一星级'
+        },{
+          value: '2',
+          label: '二星级'
+        },{
+          value: '3',
+          label: '三星级'
+        },{
+          value: '4',
+          label: '四星级'
+        },{
+          value: '5',
+          label: '五星级'
+        },{
+          value: '6',
+          label: '六星级'
+        }],
+        PayModeOptions: [],
+        
       }
     },
-    getList: async function () {
-      this.stars = await GetStarList()
-      console.log('this.stars:' + this.stars)
+    created() {
+        this.id = this.$route.params.id
+        console.log('11111111111111' + this.id)
+        this.getHotelbaseList(this.id)
+        this.getPayModeOptions();
     },
-    SumitModel: async function () {
-      // debugger
-      let postobj = this.fomateObject(this.model)
-      const data = await SumitModel(postobj)
-      this.model = data.data
-      console.log('SumitModel:')
-      // debugger
-      console.log(data)
-    },
-    goback: function () {
-      this.$router.go(-1)
-    },
-    fomateObject: function (obj) {
-      // 子对象模型，映射到id保存
-      if (obj.star && obj.star.id !== obj.starID) {
-        obj.starID = obj.star.id
-        obj.star = null
-      }
-      if (obj.area && obj.area.id !== obj.areaID) {
-        obj.areaID = obj.area.id
-        obj.area = null
-      }
-      return obj
-    },
-    asyncFind: function (query, loading) {
-      // debugger
-      if (loading) {
-        loading(true)
-      }
-      this.areaisLoading = true
-      QueryAreas(query).then(data => {
-        this.areas = data
-        this.areaisLoading = false
-        if (loading) {
-          loading(false)
+    methods: {
+      async getHotelbaseList(id) {
+          let options = {
+            id: this.id
+        };
+        await hotelApi.fetchHotelbaseList(options).then(data => {
+          let { code, hotelbase_list } = data;
+          if (code === 200) {
+            this.hotelbase = hotelbase_list;
+          }
+        });
+        console.log('getHotelbaseList')
+      },
+      async getPayModeOptions() {
+        const data = await oldApi.fetchPayModeOptions()
+        let {
+            code,
+            paymodeOptions
+        } = data;
+        if (code === 200) {
+          this.PayModeOptions = paymodeOptions;
+          console.log('this.PayModeOptions' + this.PayModeOptions)
+          this.PayModeOptions = paymodeOptions;
+          console.log('this.PayMode' + this.PayMode)
         }
-      })
-      // this.areas = await QueryAreas(query)
-      // ajaxFindCountry(query).then(response => {
-      //   this.countries = response
-      //   this.isLoading = false
-      // })
+      },
+      onSubmit() {
+        console.log('submit!');
+        try {
+            const data = hotelApi.addHotelBase(this.form)
+            this.$message({
+                message: '保存成功',
+                type: 'success'
+            });
+            } catch (e) {
+                console.error(e);
+            }       
+      },
+      Cancel() {
+        this.$router.go(-1)
+      }
+             
+      
     }
   }
-}
 </script>
-<style>
 
+<style lang="scss">
+  .el-row {
+    margin-bottom: 20px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  .el-col {
+    border-radius: 4px;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+  }
 </style>

@@ -15,7 +15,7 @@ for (let i = 1; i < hotelCount; i++) {
         'Star|1':['一星级','二星级','三星级','四星级','五星级','六星级'],
         PersonName: Mock.Random.cname(),
         PurchasingName: Mock.Random.cname(),
-        PayMode:''
+        'PayMode|1':['惠和账户','惠和支付宝','澳迅','鸿源迅达','济南美票']
     }))
 }
 

@@ -21,5 +21,11 @@ export default {
     addHotelBase(params) {
         return axios.post(`${base}/Hotel/HotelBase/add`, params).then(res => res.data);
     },
-    
+    editHotelbase(params) {
+        return axios.put(`${base}/Hotel/HotelBase/edit/{id}`, params).then(res => res.data);
+    },
+    removeHotelbase(params) {
+        return axios.post(`${base}/Hotel/HotelBase/remove/{id}`, params).then(res => res.data);
+    },
+
 };
