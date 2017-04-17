@@ -8,6 +8,7 @@ import UserAPI from './user';
 import HotelBaseAPI from './HotelBase';
 import Mock from 'mockjs';
 import HotelPlatformAPI from './HotelThreePlatInfo';
+import HotelPlatformInfoAPI from './HotelPlatform';
 import PayCompanyApi from './PayCompany';
 import { HotelPayMode } from '../resources/HotelPayMode';
 
@@ -17,6 +18,7 @@ export default {
     UserAPI.bootstrap(mock);
     HotelBaseAPI.bootstrap(mock);
     HotelPlatformAPI.bootstrap(mock);
+    HotelPlatformInfoAPI.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);
 
     // mock success request
