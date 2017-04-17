@@ -7,7 +7,6 @@ import Login from './login/login';
 import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 import HotelBase from './policy/hotel-base/HotelBase';
 import BankInformation from './policy/bank-info/bank-information.vue';
-import Test from './test';
 
 export default {
   Abstract,
@@ -15,7 +14,6 @@ export default {
   ListWithFilters,
   BigForm,
   Login,
-  Test,
   HotelPlatform,
   HotelBase,
   BankInformation

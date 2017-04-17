@@ -36,12 +36,6 @@ let routes = [
     },
     children: [
       {
-        path: 'test',
-        name: 'test',
-        component: Pages.Test,
-        imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-      },
-      {
         path: 'list',
         component: Pages.Abstract,
         name: '列表',
