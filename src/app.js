@@ -32,7 +32,6 @@ Vue.use(VueRouter);
 Vue.use(ElementUI);
 
 import NProgress from 'nprogress';
-// import 'nprogress/nprogress.css';
 
 Vue.component('db-breadcrumb', Breadcrumb);
 
