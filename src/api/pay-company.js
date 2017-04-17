@@ -4,7 +4,7 @@ let base = ''
 export default {
 
     getList(params) {
-        return axios.get(`/Hotel/PayCompany/All`, params)
+        return axios.get(`/Hotel/PayCompany/All`, {params:params})
     },
     getDetail(params) {
         return axios.get(`/Hotel/PayCompany/{id}`, params)

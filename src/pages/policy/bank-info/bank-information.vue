@@ -17,20 +17,20 @@
                 :value="item.value">
             </el-option>
           </el-select>
-          <el-input placeholder="请输入年龄" v-model="filters.age" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入姓名" v-model="filters.userName" v-show="filters.labelVal == '2'"></el-input>
+          <el-input placeholder="请输入账户名称" v-model="filters.AccountName" v-show="filters.labelVal == '1'"></el-input>
+          <el-input placeholder="请输入银行账户" v-model="filters.AccountNum" v-show="filters.labelVal == '2'"></el-input>
         </div>
-        <div class="filter">
+        <!-- <div class="filter">
           起止时间：
           <el-date-picker type="datetimerange" placeholder="选择时间范围" style="width:350px" v-model="filters.startEndTime"></el-date-picker>
-        </div>
+        </div> -->
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
         <el-button type="primary" @click="createDialog = true">创建</el-button>
       </div>
       <!-- filters end -->
 
       <!-- table start  -->
-      <el-table :data="users" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+      <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         stripe
         v-loading="loading"
         @selection-change="handleSelectionChange"
@@ -38,7 +38,7 @@
         <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
         <el-table-column prop="ID" label="ID" width="180"></el-table-column>
         <el-table-column prop="AccountName" label="账户名称"></el-table-column>
-        <el-table-column prop="AccountNum" label="银行帐户"></el-table-column>
+        <el-table-column prop="AccountNum" sortable="custom" label="银行帐户"></el-table-column>
         <el-table-column prop="Remark" label="Remark"></el-table-column>
         <el-table-column :context="_self" width="150" inline-template label="操作">
           <div>
@@ -112,7 +112,7 @@ import { oldApi, payCompanyApi } from 'api';
 export default {
   data() {
     return {
-      users: [],
+      list: [],
       total: 0,
       page: 0,
       loading: true,
@@ -122,10 +122,9 @@ export default {
       createDialog: false,
       filters: {
         sortWay: '',
-        userName: '',
-        startEndTime: '',
+        AccountName: '',
         labelVal: '1',
-        age: ''
+        AccountNum: ''
       },
       editForm: {
         ID: '',
@@ -142,12 +141,13 @@ export default {
       selectedOptions: [
         {
           value: '1',
-          label: '年龄'
+          label: '账户名称'
         },
         {
           value: '2',
-          label: '姓名'
+          label: '银行账户'
         }
+
       ]
     };
   },
@@ -235,21 +235,12 @@ export default {
       // param: page
       this.page = page || this.page;
 
-      // param: start time and end end time
-      let startTime = this.filters.startEndTime
-        ? this.filters.startEndTime[0].getTime()
-        : '';
-      let endTime = this.filters.startEndTime
-        ? this.filters.startEndTime[1].getTime()
-        : '';
       let options = {
         page: this.page,
-        userName: this.filters.labelVal === '2' ? this.filters.userName : null,
-        startTime: startTime,
-        endTime: endTime,
+        AccountName: this.filters.labelVal === '1' ? this.filters.AccountName : null,
         sortWay: sortWay,
-        age: this.filters.labelVal === '1'
-          ? parseInt(this.filters.age, 10)
+        AccountNum: this.filters.labelVal === '2'
+          ? parseInt(this.filters.AccountNum, 10)
           : null
       };
       //      console.log('[dashboard]:your post params');
@@ -257,12 +248,13 @@ export default {
 
       this.loading = true;
       try {
-        const res = await payCompanyApi.getList();
+        console.log(options)
+        const res = await payCompanyApi.getList(options);
         console.log(res.data);
         // clear selection
         this.$refs.table.clearSelection();
         // lazy render data
-        this.users = res.data;
+        this.list = res.data.list;
         this.total = res.data.total;
         this.loading = false;
       } catch (e) {

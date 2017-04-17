@@ -1,17 +1,17 @@
 const List = [{
     "ID": 1,
-    "AccountName": "账号名称1",
-    "AccountNum": "1001",
+    "AccountName": "王凯",
+    "AccountNum": 10,
     "Remark": '无'
 }, {
     "ID": 2,
-    "AccountName": "账号名称2",
-    "AccountNum": "1002",
+    "AccountName": "王浩",
+    "AccountNum": 100,
     "Remark": '无'
 }, {
     "ID": 3,
-    "AccountName": "账号名称3",
-    "AccountNum": "1003",
+    "AccountName": "张杰",
+    "AccountNum": 1000,
     "Remark": '无'
 }]
 

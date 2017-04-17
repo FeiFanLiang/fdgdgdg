@@ -2,10 +2,35 @@ import Mock from 'mockjs';
 import { List } from '../resources/PayCompany';
 let _List = List;
 const API = {
-  getList() {
+  getList(config) {
+    let {
+        page,
+        sortWay,
+        AccountName,
+        AccountNum
+    } = config.params
+    let mockList = _List.filter(user => {
+        if (AccountName && user.AccountName !== AccountName)
+            return false
+        if (AccountNum && user.AccountNum !== AccountNum)
+            return false
+        return true
+    })
+    if (sortWay) {
+        let {order, prop} = sortWay
+        mockList = mockList.sort((u1, u2) => order === 'ascending'
+            ? u1[prop] - u2[prop]
+            : u2[prop] - u1[prop])
+    }
+    if (page === 0)
+        page++
+    mockList = mockList.filter((u, index) => index < 20 * page && index >= 20 * (page - 1))
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve([200, _List]);
+        resolve([200, {
+            total: _List.length,
+            list: mockList
+        }]);
       });
     });
   },
