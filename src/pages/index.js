@@ -6,7 +6,8 @@ import BigForm from './form/big-form';
 import Login from './login/login';
 import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 import HotelBase from './policy/hotel-base/HotelBase';
-import BankInformation from './policy/bank-info/bank-information.vue';
+import PayCompany from './policy/pay-company/pay-company.vue';
+import HotelPayMode from './policy/hotel-paymode/hotel-paymode.vue';
 
 export default {
   Abstract,
@@ -16,5 +17,6 @@ export default {
   Login,
   HotelPlatform,
   HotelBase,
-  BankInformation
+  PayCompany,
+  HotelPayMode
 };

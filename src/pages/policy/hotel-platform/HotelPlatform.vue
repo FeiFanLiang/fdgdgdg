@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="HotelPlatform">
-    
+
     <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
     <!-- breadcrumb end  -->
@@ -46,7 +46,7 @@
           <el-button size="small" @click="platformEdit($index, row)">编辑</el-button>
           <el-button size="small" type="danger" @click="platformDelete($index, row)">删除</el-button>
         </div>
-      </el-table-column>  
+      </el-table-column>
     </el-table>
     <!-- table end -->
 
@@ -88,8 +88,7 @@
         <el-button type="primary" @click="platformEditSave()">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- edit dialog end -->
-  
+
   </div>
 </template>
 
@@ -174,7 +173,7 @@ import {
                 })
                 await hotelApi.removePlatform({
                     id: row.id
-                }) 
+                })
                 this.fetchData();
                 this.$message({
                     message: '删除成功',
@@ -215,7 +214,7 @@ import {
   .el-table {
     margin: 20px 0 0 0;
   }
- 
+
   .filters {
     margin: 20px 0 0 0;
     border: 1px #efefef solid;
@@ -237,6 +236,6 @@ import {
       display: inline-block;
     }
   }
-  
+
 }
 </style>

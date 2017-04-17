@@ -74,21 +74,24 @@ export default {
     this.user = JSON.parse(localStorage.getItem('user'));
   },
   watch: {
-    '$route'(to, from) {
+    $route(to, from) {
       this.activeMenu = this.$route.name;
       this.user = JSON.parse(localStorage.getItem('user'));
     }
   },
   methods: {
-    logout() {
-      this.$confirm('确定要注销吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'info'
-      }).then(() => {
+    async logout() {
+      try {
+        await this.$confirm('确定要注销吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info'
+        });
         localStorage.removeItem('user');
         this.$router.push({ path: '/login' });
-      }).catch(() => {});
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
 };

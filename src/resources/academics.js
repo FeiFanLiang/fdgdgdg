@@ -27,4 +27,4 @@ export const AcademicOptions = [
     label: '博士',
     value: 6
   }
-]
+];

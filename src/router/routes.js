@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d534ede848c656b0faf2f8b9a6dbbdece5d2e20
 import Vue from 'vue'
 import Pages from '../pages'
 import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
 import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8d534ede848c656b0faf2f8b9a6dbbdece5d2e20
 
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
@@ -75,9 +82,14 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
-            path: 'bank-information',
+            path: 'pay-company',
             name: '银行信息',
-            component: Pages.BankInformation,
+            component: Pages.PayCompany,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },{
+            path: 'hotel-paymode',
+            name: '支付方式',
+            component: Pages.HotelPayMode,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
