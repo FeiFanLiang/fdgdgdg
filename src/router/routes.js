@@ -75,14 +75,14 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
-            path: 'bank-information',
+            path: 'pay-company',
             name: '银行信息',
-            component: Pages.BankInformation,
+            component: Pages.PayCompany,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },{
-            path: 'hotel-payinfo',
-            name: '酒店账户信息',
-            component: Pages.HotelPayInfo,
+            path: 'hotel-paymode',
+            name: '支付方式',
+            component: Pages.HotelPayMode,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
