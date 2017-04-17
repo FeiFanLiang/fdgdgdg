@@ -27,5 +27,17 @@ export default {
     removeHotelbase(params) {
         return axios.post(`${base}/Hotel/HotelBase/remove/{id}`, params).then(res => res.data);
     },
+    fetchPlatforminfoList(params) {
+        return axios.get(`${base}/Hotel/HotelPlatform/all`, {params: params}).then(res => res.data);
+    },
+    addPlatforminfo(params) {
+        return axios.post(`${base}/Hotel/HotelPlatform/add`, params).then(res => res.data);
+    },
+    editPlatforminfo(params) {
+        return axios.put(`${base}/Hotel/HotelPlatform/edit/{id}`, params).then(res => res.data);
+    },
+    removePlatforminfo(params) {
+        return axios.post(`${base}/Hotel/HotelPlatform/remove`, params).then(res => res.data);
+    },
 
 };

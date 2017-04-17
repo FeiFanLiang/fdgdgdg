@@ -69,40 +69,109 @@
     <!-- pagination end  -->
 
     <!-- edit dialog start -->
-    <el-dialog title="编辑酒店信息" v-model="editDialog" size="small">
+    <el-dialog title="编辑酒店信息" v-model="editDialog" size="full">
       <el-form ref="editFrom" :model="editForm" label-width="80px">
-        <el-form-item label="酒店ID">
-          <el-input v-model="editForm.id" class="el-col-24" :disabled="true"></el-input>
-        </el-form-item>
-        <el-form-item label="酒店名称">
-          <el-input v-model="editForm.HotelName" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="酒店英文名称">
-          <el-input v-model="editForm.HotelName_En" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="前台电话">
-          <el-input v-model="editForm.FrontPhone" class="el-col-24"></el-input>
-        </el-form-item>
-         <el-form-item label="地址">
-          <el-input v-model="editForm.Address" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="星级">
-          <el-input v-model="editForm.Star" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="采购人">
-          <el-input v-model="editForm.PersonName" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="政策负责人">
-          <el-input v-model="editForm.PurchasingName" class="el-col-24"></el-input>
-        </el-form-item>
-        <el-form-item label="结款">
-          <el-input v-model="editForm.PayMode" class="el-col-24"></el-input>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <div class="grid-content bg-purple">
+              <el-form-item label="酒店ID">
+                <el-input v-model="editForm.id" :disabled="true"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="7">
+            <div class="grid-content bg-purple">
+              <el-form-item label="酒店名称">
+                <el-input v-model="editForm.HotelName"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="7">
+            <div class="grid-content bg-purple">
+              <el-form-item label="酒店英文名称">
+                <el-input v-model="editForm.HotelName_En"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>  
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="5">
+            <div class="grid-content bg-purple">
+              <el-form-item label="星级" prop="Star">
+                <el-select v-model="editForm.Star" clearable placeholder="请选择酒店星级">
+                  <el-option v-for="item in StarOptions" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </el-col>    
+          <el-col :span="7">
+            <div class="grid-content bg-purple">
+              <el-form-item label="前台电话">
+                <el-input v-model="editForm.FrontPhone"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content bg-purple">
+              <el-form-item label="地址">
+                <el-input v-model="editForm.Address"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="5">
+            <div class="grid-content bg-purple">
+              <el-form-item label="结款" prop="PayMode">
+                <el-select v-model="editForm.PayMode" clearable placeholder="请选择结款账户" >
+                  <el-option v-for="item in PayModeOptions" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+          </el-col>    
+          <el-col :span="7">
+            <div class="grid-content bg-purple">
+              <el-form-item label="采购人">
+                <el-input v-model="editForm.PersonName"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content bg-purple">
+              <el-form-item label="政策负责人">
+                <el-input v-model="editForm.PurchasingName"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <el-col :span="20">
+            <div class="grid-content bg-purple">
+              <el-form-item label="备注">
+                <el-input type="textarea" v-model="editForm.Remark"></el-input>
+              </el-form-item>
+            </div>
+          </el-col>    
+        </el-row>
+        <span style="margin-left:100px">
+          <el-button type="primary" @click="hotelbaseEditSave()">确 定</el-button>
+          <el-button @click="editDialog = false">取 消</el-button>
+        </span>
       </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialog = false">取 消</el-button>
-        <el-button type="primary" @click="hotelbaseEditSave()">确 定</el-button>
-      </span>
+      <div class="dialog-footer" style="margin-top:50px">
+        <el-tabs v-model="activeName" type="card">
+          <el-tab-pane label="政策信息" name="first">政策信息</el-tab-pane>
+          <el-tab-pane label="房型信息" name="second">房型信息</el-tab-pane>
+          <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
+          <el-tab-pane label="平台映射" name="fourth">平台映射
+            <HotelPlatformInfo></HotelPlatformInfo>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+  </el-tabs>
     </el-dialog>
     <!-- edit dialog end -->
 
@@ -113,17 +182,25 @@
 import {
   hotelApi,
 } from 'api';
+import HotelPlatformInfo from  '../hotel-platform/HotelPlatformInfo'
 
   export default {
     data() {
-      return {        
+      return {
+        activeName: 'first',        
         hotelbase: [],
         page: 0,
         editDialog:false,
         editForm: {
           id: '',
-          PlatName: '',
-          Ramark: ''
+          HotelName: '',
+          HotelName_En: '',
+          FrontPhone: '',
+          Address: '',
+          Star: '',
+          PersonName: '',
+          PurchasingName: '',
+          PayMode: ''
         },
         filters: {
           id: '',
@@ -140,8 +217,46 @@ import {
         }, {
           value: '3',
           label: '酒店英文名称'
+        }],
+        StarOptions: [{
+          value: '一星级',
+          label: '一星级'
+        },{
+          value: '二星级',
+          label: '二星级'
+        },{
+          value: '三星级',
+          label: '三星级'
+        },{
+          value: '四星级',
+          label: '四星级'
+        },{
+          value: '五星级',
+          label: '五星级'
+        },{
+          value: '六星级',
+          label: '六星级'
+        }],
+        PayModeOptions: [{
+          value: '惠和账户',
+          label: '惠和账户'
+        },{
+          value: '惠和支付宝',
+          label: '惠和支付宝'
+        },{
+          value: '澳迅',
+          label: '澳迅'
+        },{
+          value: '鸿源迅达',
+          label: '鸿源迅达'
+        },{
+          value: '济南美票',
+          label: '济南美票'
         }]
       }
+    },
+    components: {
+          HotelPlatformInfo
     },
     created() {
       this.getHotelbaseList();

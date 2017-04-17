@@ -1,4 +1,9 @@
 # meipiao-Dashboard
+### 启动
+* npm i
+* 开发 npm run dev
+* 打包  npm run build
+
 
 ### 文件目录
 + doc 文档和代码规范

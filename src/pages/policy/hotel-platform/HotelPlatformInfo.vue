@@ -1,112 +1,201 @@
-<!--<template>
-<div>
-  <h1>平台映射信息</h1>
-</div>
-</template>-->
-<template lang='jade'>
-div.content
-  Modal(title="确认删除", v-model="modalIsDel", @ok="affdelplatinfo", @cancel="") 确认要删除吗？
-  a(@click="addplatinfo") 添加
-  table.table
-    thead
-      tr
-        th ID
-        th 平台ID
-        th 酒店ID
-        th 区域
-        th 地址
-        th 酒店平台ID
-        th 平台访问路径
-        th 酒店平台名称
-        th 酒店平台英文名
-        th 备注
-        th 操作
-    tbody
-      tr(v-for="item in list")
-        td {{item.ID}}
-        td {{item.PlatformID}}
-        td {{item.HotelID}}
-        td {{item.AreaID}}
-        td {{item.Address}}
-        td {{item.PlatHotelID }}
-        td {{item.PlatURL}}
-        td {{item.PlatHotelName}}
-        td {{item.PlatHotelName_En}}
-        td {{item.Remark}}
-        td
-          a(@click="editroom(item.ID)") 编辑
-          span  |
-          a(@click="delplatinfo(item.ID)")  刪除
+<template lang="html">
+  <div>
+    <!-- table start -->
+    <el-table
+      :data="HotelPlatformInfo"
+      border
+      style="width: 100%">
 
-  component( :is="showEdit?'HotelPlatInfoEdit':''", :hotelID='hotelID', :platID='pid', :mode='EditMode', @Sumit='UPList', @Cancel='hideEdit')
+      <el-table-column prop="ID" label="ID" width="55"></el-table-column>
+      <el-table-column prop="PlatformID" label="平台ID"></el-table-column>
+      <el-table-column prop="HotelID" label="酒店ID"></el-table-column>\
+      <el-table-column prop="PlatHotelID" label="酒店平台ID"></el-table-column>
+      <el-table-column prop="PlatURL" label="平台访问路径"></el-table-column>
+      <el-table-column prop="PlatHotelName" label="酒店平台名称"></el-table-column>
+      <el-table-column prop="PlatHotelName_En" label="酒店平台英文名"></el-table-column>
+      <el-table-column prop="Remark" label="备注"></el-table-column>
+      <el-table-column :context="_self" inline-template label="操作" width="180">
+          <div>
+            <el-button type="primary" size="mini" @click="createDialog = true">添加</el-button>
+            <el-button type="primary" size="mini" @click="platforminfoEdit($index, row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="platforminfoDelete($index, row)">删除</el-button>
+          </div>
+      </el-table-column>
+
+    </el-table>
+    <!-- table end -->
+
+    <!-- create dialog start -->
+    <el-dialog title="添加新平台映射信息" v-model="createDialog" size="small">
+      <el-form ref="createForm" :model="createForm" label-width="80px">
+        <el-form-item label="ID">
+          <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="平台ID">
+          <el-input v-model="createForm.PlatformID"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店ID">
+          <el-input v-model="createForm.HotelID"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店平台ID">
+          <el-input v-model="createForm.PlatHotelID"></el-input>
+        </el-form-item>
+        <el-form-item label="平台访问路径">
+          <el-input v-model="createForm.PlatURL"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店平台名称">
+          <el-input v-model="createForm.PlatHotelName"></el-input>
+        </el-form-item>
+         <el-form-item label="酒店平台英文名称">
+          <el-input v-model="createForm.PlatHotelName_En"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="createForm.Remark" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialog = false">取 消</el-button>
+        <el-button type="primary" @click="platforminfoSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- create dialog end -->
+
+    <!-- edit dialog start -->
+    <el-dialog title="编辑平台映射信息" v-model="editDialog" size="small" :modal-append-to-body="false">
+      <el-form ref="editForm" :model="editForm" label-width="80px">
+        <el-form-item label="ID">
+          <el-input v-model="editForm.ID" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="平台ID">
+          <el-input v-model="editForm.PlatformID"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店ID">
+          <el-input v-model="editForm.HotelID"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店平台ID">
+          <el-input v-model="editForm.PlatHotelID"></el-input>
+        </el-form-item>
+        <el-form-item label="平台访问路径">
+          <el-input v-model="editForm.PlatURL"></el-input>
+        </el-form-item>
+        <el-form-item label="酒店平台名称">
+          <el-input v-model="editForm.PlatHotelName"></el-input>
+        </el-form-item>
+         <el-form-item label="酒店平台英文名称">
+          <el-input v-model="editForm.PlatHotelName_En"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="editForm.Remark" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="platforminfoEditSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- edit dialog end -->
+  </div>
 </template>
+
 <script>
-import HotelPlatInfoEdit from 'views/Hotel/HotelPlatInfoEdit.vue'
-import Modal from 'components/common/Modal.vue'
-import {
-  GetList
-} from 'api/Hotel/HotelPlatformInfo'
+import { hotelApi } from 'api';
 export default {
-  name: 'HotelPlatformInfo',
-  props: {
-    hotelID: Number
-  },
-  data () {
+  data() {
     return {
-      list: [],
-      showEdit: false,
-      EditMode: 'add',
-      modalIsDel: false,
-      pid: -1
-    }
+      HotelPlatformInfo: [],
+      createDialog: false,
+      editDialog: false,
+      createForm: {
+        ID: '',
+        PlatformID: '',
+        HotelID: '',
+        PlatHotelID: '',
+        PlatURL: '',
+        PlatHotelName: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      },
+      editForm: {
+        ID: '',
+        PlatformID: '',
+        HotelID: '',
+        PlatHotelID: '',
+        PlatURL: '',
+        PlatHotelName: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      }
+    };
   },
-  components: {
-    HotelPlatInfoEdit,
-    Modal
-  },
-  created: function () {
-    console.log('ready')
-    this.UPList()
-    console.log('platinfo' + this.hotelID)
+  mounted() {
+    this.fetchData();
   },
   methods: {
-    UPList: async function () {
-      // if(item.HotelID)
-      const result = await GetList(this.hotelID)
-      for (var re of result) {
-        console.log('list.HotelID:' + re.HotelID)
-        if (re.HotelID === this.hotelID) {
-          this.list = result
-        } else {
-          this.list = null
-        }
+    async platforminfoSave() {
+      try {
+        await hotelApi.addPlatforminfo(this.createForm);
+        console.log('111111111111111111111111111111111');
+        this.fetchData();
+        this.createDialog = false;
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
       }
-      // this.list = result
-      this.showEdit = false
-      this.$nextTick(function () {
-      })
     },
-    editroom (id) {
-      // debugger
-      this.pid = id
-      this.EditMode = 'edit'
-      this.showEdit = true
+    async platforminfoEditSave() {
+      try {
+        await hotelApi.editPlatforminfo(this.editForm);
+        this.fetchData();
+        this.editDialog = false;
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
-    delplatinfo (id) {
-      this.modalIsDel = true
+    platforminfoEdit($index, row) {
+      this.editForm.ID = row.ID;
+      this.editForm.PlatformID = row.PlatformID;
+      this.editForm.HotelID = row.HotelID;
+      this.editForm.PlatHotelID = row.PlatHotelID;
+      this.editForm.PlatURL = row.PlatURL;
+      this.editForm.PlatHotelName = row.PlatHotelName;
+      this.editForm.PlatHotelName_En = row.PlatHotelName_En;
+      this.editForm.Remark = row.Remark;
+      this.editDialog = true;
     },
-    affdelplatinfo (id) {
-      this.modalIsDel = false
+    async platforminfoDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await hotelApi.removePlatforminfo({
+          ID: row.ID
+        });
+        this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
-    addplatinfo () {
-      // debugger
-      this.pid = -1
-      this.EditMode = 'add'
-      this.showEdit = true
-    },
-    hideEdit () {
-      this.showEdit = false
+    async fetchData() {
+      hotelApi.fetchPlatforminfoList().then(data => {
+        let { code, platforminfo_list } = data;
+        if (code === 200) {
+          this.HotelPlatformInfo = platforminfo_list;
+        }
+      });
     }
   }
-}
+};
 </script>
