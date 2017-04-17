@@ -9,7 +9,7 @@ import HotelBaseAPI from './HotelBase';
 import Mock from 'mockjs';
 import HotelPlatformAPI from './HotelThreePlatInfo';
 import PayCompanyApi from './PayCompany';
-import { HotelPayMode } from '../resources/HotelPayMode';
+import HotelPayModeApi from './HotelPayMode';
 
 export default {
   bootstrap() {
@@ -18,6 +18,7 @@ export default {
     HotelBaseAPI.bootstrap(mock);
     HotelPlatformAPI.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);
+    HotelPayModeApi.bootstrap(mock);
 
     // mock success request
     mock.onPost('/resume/add').reply(200, { msg: 'success' });

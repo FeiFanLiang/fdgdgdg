@@ -1,5 +1,5 @@
 <template lang="html">
-  <div id="BankInformation">
+  <div id="HotelPayInfo">
 
     <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
@@ -17,13 +17,9 @@
                 :value="item.value">
             </el-option>
           </el-select>
-          <el-input placeholder="请输入账户名称" v-model="filters.AccountName" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入银行账户" v-model="filters.AccountNum" v-show="filters.labelVal == '2'"></el-input>
+          <el-input placeholder="请输入账户名称" v-model="filters.ModeName" v-show="filters.labelVal == '1'"></el-input>
+          <el-input placeholder="请输入Remark" v-model="filters.Remark" v-show="filters.labelVal == '2'"></el-input>
         </div>
-        <!-- <div class="filter">
-          起止时间：
-          <el-date-picker type="datetimerange" placeholder="选择时间范围" style="width:350px" v-model="filters.startEndTime"></el-date-picker>
-        </div> -->
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
         <el-button type="primary" @click="clickCrate()">创建</el-button>
       </div>
@@ -37,8 +33,7 @@
         @sort-change="handleSortChange">
         <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
         <el-table-column prop="ID" label="ID" width="180"></el-table-column>
-        <el-table-column prop="AccountName" label="账户名称"></el-table-column>
-        <el-table-column prop="AccountNum" sortable="custom" label="银行帐户"></el-table-column>
+        <el-table-column prop="ModeName" label="账户名称"></el-table-column>
         <el-table-column prop="Remark" label="Remark"></el-table-column>
         <el-table-column :context="_self" width="150" inline-template label="操作">
           <div>
@@ -60,13 +55,10 @@
       <!-- pagination end  -->
 
       <!-- edit dialog start -->
-      <el-dialog title="编辑银行信息" v-model="editDialog" size="tiny">
+      <el-dialog title="编辑账户信息" v-model="editDialog" size="tiny">
         <el-form ref="editForm" :model="editForm" label-width="80px">
           <el-form-item label="账户名称">
-            <el-input v-model="editForm.AccountName" class="el-col-24"></el-input>
-          </el-form-item>
-          <el-form-item label="银行帐户">
-            <el-input v-model="editForm.AccountNum" class="el-col-24"></el-input>
+            <el-input v-model="editForm.ModeName" class="el-col-24"></el-input>
           </el-form-item>
           <el-form-item label="Remark">
             <el-input v-model="editForm.Remark" class="el-col-24"></el-input>
@@ -81,13 +73,10 @@
       <!-- edit dialog end -->
 
       <!-- create dialog start -->
-      <el-dialog title="添加银行信息" v-model="createDialog" size="tiny">
+      <el-dialog title="添加账户信息" v-model="createDialog" size="tiny">
         <el-form ref="createFrom" :model="createForm" label-width="80px">
           <el-form-item label="账户名称">
-            <el-input v-model="createForm.AccountName" class="el-col-24"></el-input>
-          </el-form-item>
-          <el-form-item label="银行帐户">
-            <el-input v-model="createForm.AccountNum" class="el-col-24"></el-input>
+            <el-input v-model="createForm.ModeName" class="el-col-24"></el-input>
           </el-form-item>
           <el-form-item label="Remark">
             <el-input v-model="createForm.Remark" class="el-col-24"></el-input>
@@ -106,7 +95,7 @@
 <script>
 import {
     oldApi,
-    payCompanyApi
+    HotelPayModeApi
 } from 'api';
 
 // import moment from 'moment';
@@ -125,20 +114,18 @@ export default {
             createDialog: false,
             filters: {
                 sortWay: '',
-                AccountName: '',
+                ModeName: '',
                 labelVal: '1',
-                AccountNum: ''
+                Remark: ''
             },
             editForm: {
                 ID: '',
-                AccountName: '',
-                AccountNum: '',
+                ModeName: '',
                 Remark: ''
             },
             createForm: {
                 ID: 0,
-                AccountName: '',
-                AccountNum: '',
+                ModeName: '',
                 Remark: ''
             },
             selectedOptions: [{
@@ -147,7 +134,7 @@ export default {
                 },
                 {
                     value: '2',
-                    label: '银行账户'
+                    label: 'remark'
                 }
 
             ]
@@ -166,14 +153,13 @@ export default {
             this.createDialog = true
             this.createForm = {
                 ID: 0,
-                AccountName: '',
-                AccountNum: '',
+                ModeName: '',
                 Remark: ''
             }
         },
         async handleEditSave() {
             try {
-                await payCompanyApi.editInfo(this.editForm);
+                await HotelPayModeApi.editInfo(this.editForm);
                 this.fetchData();
                 this.editDialog = false;
                 this.$message({
@@ -186,7 +172,8 @@ export default {
         },
         async handleSave() {
             try {
-                await payCompanyApi.addInfo(this.createForm);
+                console.log(this.createForm)
+                await HotelPayModeApi.addInfo(this.createForm);
                 this.fetchData();
                 this.createDialog = false;
                 this.$message({
@@ -200,7 +187,7 @@ export default {
         async handleEdit($index, row) {
             this.editDialog = true;
             try {
-                const res = await payCompanyApi.getDetail({
+                const res = await HotelPayModeApi.getDetail({
                     id: row.ID
                 });
                 console.log(res.data);
@@ -216,7 +203,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await payCompanyApi.delInfo({
+                await HotelPayModeApi.delInfo({
                     id: row.ID
                 });
                 this.fetchData();
@@ -248,18 +235,17 @@ export default {
 
             let options = {
                 page: this.page,
-                AccountName: this.filters.labelVal === '1' ? this.filters.AccountName : null,
+                ModeName: this.filters.labelVal === '1' ? this.filters.ModeName : null,
                 sortWay: sortWay,
-                AccountNum: this.filters.labelVal === '2' ?
-                    parseInt(this.filters.AccountNum, 10) :
-                    null
+                Remark: this.filters.labelVal === '2' ? this.filters.Remark : null,
             };
             //      console.log('[dashboard]:your post params');
             //      console.log(options);
 
             this.loading = true;
             try {
-                const res = await payCompanyApi.getList(options);
+                console.log(options)
+                const res = await HotelPayModeApi.getList(options);
                 console.log(res.data);
                 // clear selection
                 this.$refs.table.clearSelection();
@@ -270,6 +256,7 @@ export default {
             } catch (e) {
                 console.error(e);
             }
+
         }
     },
     mounted() {
@@ -279,7 +266,7 @@ export default {
 </script>
 
 <style lang="scss">
-#BankInformation {
+#HotelPayInfo {
     .filters {
         margin: 0 0 20px;
         border: 1px #efefef solid;

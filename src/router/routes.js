@@ -72,6 +72,11 @@ let routes = [
             name: '银行信息',
             component: Pages.BankInformation,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },{
+            path: 'hotel-payinfo',
+            name: '酒店账户信息',
+            component: Pages.HotelPayInfo,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },
