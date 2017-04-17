@@ -75,7 +75,7 @@
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-form-item label="酒店ID">
-                <el-input v-model="editForm.id"></el-input>
+                <el-input v-model="editForm.id" :disabled="true"></el-input>
               </el-form-item>
             </div>
           </el-col>
