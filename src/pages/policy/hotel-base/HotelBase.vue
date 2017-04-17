@@ -1,144 +1,159 @@
-<template lang='jade'>
-div.content
-	div 每页条数
-		select#limit(v-model="limit")
-			option 10
-			option 20
-			option 30
-	router-link(to="add", append) 添加
-	table.table
-		thead
-			tr
-				th ID
-				th 酒店名称
-				th 英文名称
-				th 前台电话
-				th 地址
-				th 星级
-				th 采购人
-				th 政策负责人
-				th 结款
-				th 操作
-		tbody
-			tr(v-for="item in List")
-				// td(v-for="tdcol in item") {{tdcol}}
-				td {{item.ID}}
-				td {{item.HotelName}}
-				td {{item.HotelName_En}}
-				td {{item.FrontPhone}}
-				td {{item.Address}}
-				td {{item.Star?item.Star.StarName:''}}
-				td {{getDef(item.Policys,'PersonName')}}
-				td {{getDef(item.Policys,'PurchasingName')}}
-				td {{getDef(item.Policys,'PayType').typeName}}
-				td
-					router-link(v-bind:to="{name: 'HotelBaseEdit', params: { id: item.ID }}") 编辑
-					span  |
-					router-link(:to="{ path: 'del' , params: { Id: item.ID }}") 删除
-	pagination(:index="page" , :count="countpage" , :loading="false" , @change="pages(arguments[0])")
+<template lang="html">
+  <div id="HotelBasePage">
+    
+    <!-- breadcrumb start  -->
+    <db-breadcrumb></db-breadcrumb>
+    <!-- breadcrumb end  -->
+    
+    <!-- search start -->
+    <div class="filters">
+        <div class="filter">
+          <el-select v-model="filters.labelVal" clearable placeholder="请选择">
+            <el-option
+                v-for="item in selectedOptions"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+          <el-input placeholder="请输入酒店ID" v-model="filters.id" v-show="filters.labelVal == '1'"></el-input>
+          <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
+          <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
+      </div>
+        <el-button type="primary" @click="hotelbaseSearch()">搜索</el-button>
+        <el-button type="primary">
+          <router-link :to="{path: '/HotelBaseAdd'}">创建</router-link>
+        </el-button>
+    </div>
+    <!-- search end -->
+
+    <!-- table start -->
+    <div class="eltable">
+      <el-table
+      :data="hotelbase"
+      border stripe
+      :default-sort = "{prop: 'id', order: 'descending'}"
+      style="width: 100%">
+        <el-table-column prop="id" label="酒店ID" sortable></el-table-column>
+        <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
+        <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
+        <el-table-column prop="FrontPhone" label="前台电话"></el-table-column>
+        <el-table-column prop="Address" label="地址"></el-table-column>
+        <el-table-column prop="Star" label="星级"></el-table-column>
+        <el-table-column prop="PersonName" label="采购人"></el-table-column>
+        <el-table-column prop="PurchasingName" label="政策负责人"></el-table-column>
+        <el-table-column prop="PayMode" label="结款"></el-table-column>
+        <el-table-column :context="_self" inline-template label="操作">
+          <div>
+          </div>
+        </el-table-column>        
+      </el-table>
+    </div>
+    <!-- table end -->
+
+    <!-- pagination start  -->
+      <div class="pagination-wrapper">
+        <el-pagination
+          layout="prev, pager, next"
+          @current-change="handleCurrentChange"
+          :page-size="10">
+        </el-pagination>
+      </div>
+    <!-- pagination end  -->
+
+  </div>
 </template>
+
 <script>
-import pagination from 'components/common/pagination.vue'
 import {
-  GetList
-} from 'api/Hotel/HotelBase'
-export default {
-  name: 'HotelBase',
-  data () {
-    return {
-      List: [],
-      page: 1,
-      order: '',
-      limit: 10,
-      query: '',
-      countpage: 1,
-      loading: false
-    }
-  },
-  components: {
-    pagination
-  },
-  created: function () {
-    console.log('ready')
-    this.loading = true
-    // debugger
-    if (this.$route.query.query) {
-      this.query = this.$route.query.query
-    }
+  hotelApi,
+} from 'api';
 
-    if (this.$route.query.limit) {
-      this.limit = this.$route.query.limit
-    }
-
-    if (this.$route.query.order) {
-      this.order = this.$route.query.order
-    }
-
-    if (this.$route.query.page) {
-      this.page = Number(this.$route.query.page)
-    }
-    //
-
-    console.log(this.page)
-    this.UPList()
-  },
-  watch: {
-    loading: function (newloading) {
-      if (newloading) {
-        // 显示缓冲
-      } else {
-        // 关闭缓冲
+  export default {
+    data() {
+      return {
+        hotelbase: [],
+        page: 0,
+        filters: {
+          id: '',
+          HotelName: '',
+          HotelName_En: '',
+          labelVal: '1'
+        },
+        selectedOptions: [{
+          value: '1',
+          label: '酒店ID'
+          }, {
+          value: '2',
+          label: '酒店名称'
+        }, {
+          value: '3',
+          label: '酒店英文名称'
+        }]
       }
-    }
-  },
-  methods: {
-    UPList: async function () {
-      const result = await GetList(this.page, this.limit, this.order, this.query)
-      this.List = result.Data
-      // debugger
-      this.page = result.pageIndex
-      this.order = result.order
-      this.limit = result.pageSize
-      this.count = result.count
-      this.countpage = result.countpage
-      this.query = result.query
     },
-    pages (index) {
-      this.page = index
-      // this.loading = true
-
-      // this.UPList()
-      // debugger
-      // let pa = '/hotel/HotelBase?a=q'
-      let thisrou = {
-        path: this.$route.path,
-        query: {
-          page: this.page,
-          limit: this.limit,
-          order: this.order,
-          query: this.query
-        }
-      }
-      this.$router.replace(thisrou)
-      // this.$router.push(thisrou)
-      this.UPList()
+    created() {
+      this.getHotelbaseList();
+      console.log('getHotelbaseListcreated')
     },
-    getDef (obj, pro) {
-      if (obj === null || obj.length === 0) {
-        return '无协议'
-      }
-      for (let o in obj) {
-        if (o.isDefault) {
-          return o[pro]
-        }
-      }
-      return (obj[0])[pro]
+    methods: {
+      hotelbaseSearch() {
+        this.getHotelbaseList();
+        console.log('hotelbaseSearch')
+      },
+      async getHotelbaseList(page) {
+        this.page = page || this.page;
+          let options = {
+                page: this.page,
+                id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null,
+                HotelName: this.filters.labelVal === '2' ? this.filters.HotelName : null,
+                HotelName_En: this.filters.labelVal === '3' ? this.filters.HotelName_En : null
+
+        };
+        await hotelApi.fetchHotelbaseList(options).then(data => {
+          let { code, hotelbase_list } = data;
+          if (code === 200) {
+            this.hotelbase = hotelbase_list;
+          }
+        });
+        console.log('getHotelbaseList')
+      },
+      handleCurrentChange(val) {
+        this.getHotelbaseList(val);
+      },
+      // mounted() {
+        // this.getHotelbaseList();
+      // }
     }
   }
-}
 </script>
-<style>
-.table thead{ background-color: #0094ea; text-align: center;color:#FFFFFF;}
-.table thead th{border: solid 1px #FFFFFF;text-align: center;}
-.table tbody{ background-color: #FFFFFF; text-align: center;}
+
+<style lang="scss">
+#HotelBasePage {
+
+  .eltable {
+    margin: 20px 0 0 0 
+  }
+
+  .filters {
+    margin: 20px 0 0 0;
+    border: 1px #efefef solid;
+    padding: 10px;
+    background: #f9f9f9;
+
+  .filter {
+    display: inline-block;
+    width: auto;
+    padding: 10px;
+    border-radius: 5px;
+    .el-select {
+      display: inline-block;
+    }
+  }
+
+  .el-input {
+    width: 150px;
+    display: inline-block;
+  }
+  }
+}
 </style>

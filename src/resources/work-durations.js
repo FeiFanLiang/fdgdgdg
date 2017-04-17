@@ -19,4 +19,4 @@ export const WorkDurationOptions = [
     label: '5年以上经验',
     value: 4
   }
-];
+]

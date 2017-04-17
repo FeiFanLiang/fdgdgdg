@@ -1,17 +1,17 @@
-import Vue from 'vue';
-import axios from 'axios';
-import VueAxios from 'vue-axios';
+import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
-Vue.use(VueAxios, axios);
+Vue.use(VueAxios, axios)
 
 // 导入封装的回调函数
 import {
 	cbs,
 	gbs
-} from 'config/settings.js';
+} from 'config/settings.js'
 
 // 动态设置本地和线上接口域名
-Vue.axios.defaults.baseURL = gbs.host;
+Vue.axios.defaults.baseURL = gbs.host
 
 /**
  * 封装axios的通用请求
@@ -24,43 +24,43 @@ Vue.axios.defaults.baseURL = gbs.host;
 module.exports = function(type, url, data, fn, tokenFlag, errFn) {
 
 	// 分发显示加载样式任务
-	this.$store.dispatch('show_loading');
+	this.$store.dispatch('show_loading')
 
 	if (tokenFlag !== true) {
-		data.token = this.$store.state.user.userinfo.token;
+		data.token = this.$store.state.user.userinfo.token
 	}
 
 	if (type === 'get') {
 		var datas = {
 			params: data
-		};
+		}
 	} else {
-		var datas = data;
+		var datas = data
 	}
 
 	Vue.axios[type](url, datas).then((res) => {
 		if (res.data.status === 200) {
-			// console.dir(res.data);
-			fn(res.data.data);
+			// console.dir(res.data)
+			fn(res.data.data)
 		} else {
 
 			// 调用全局配置错误回调
-			cbs.statusError.call(this, res.data);
+			cbs.statusError.call(this, res.data)
 
 			if (tokenFlag === true) {
-				errFn && errFn.call(this);
+				errFn && errFn.call(this)
 			}
 		}
-		this.$store.dispatch('hide_loading');
+		this.$store.dispatch('hide_loading')
 	}).catch((err) => {
 
 		//调用全局配置错误回调
-		// console.log(err);
+		// console.log(err)
 
-		this.$store.dispatch('hide_loading');
-		cbs.requestError.call(this, err);
+		this.$store.dispatch('hide_loading')
+		cbs.requestError.call(this, err)
 
-		errFn && errFn.call(this);
-	});
+		errFn && errFn.call(this)
+	})
 
-};
+}

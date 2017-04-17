@@ -1,5 +1,5 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
   //获取购物车中的所有商品信息
   getCartList(data){
@@ -20,5 +20,5 @@ export default {
   //清除购物车失效商品
   clearInvalid(){
       return axios.put(path.oldUrl+`shoppingCart/invalidItems/clear`)
-  }
+  },
 }

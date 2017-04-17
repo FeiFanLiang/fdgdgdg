@@ -13,7 +13,7 @@ import HotelDetail from 'views/Hotel/HotelDetail.vue'
 
 const HotelRoutes = [
   {
-    path: 'policy'
+    path: ''
   },
   {
     path: 'HotelBase',
@@ -40,14 +40,7 @@ const HotelRoutes = [
     component: HotelDetail,
     name: 'HotelDetail',
     description: '酒店展示信息'
-  },
-  {
-    path: 'HotelPlatform',
-    component: Pages.HotelPlatform,
-    name: 'HotelPlatform',
-    description: '酒店平台信息'
   }
-
 ]
 
 const HotelBaseRoutes = [

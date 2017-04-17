@@ -1,12 +1,12 @@
-import * as types from './mutations_types'
+import * as types from './mutations-types'
 
 module.exports = {
     [types.SET_MENU_OPEN](state) {
-        state.width = '190px';
-        state.menu_flag = true;
+        state.width = '190px'
+        state.menu_flag = true
     },
     [types.SET_MENU_CLOSE](state) {
-        state.width = '50px';
-        state.menu_flag = false;
-    },
-};
+        state.width = '50px'
+        state.menu_flag = false
+    }
+}

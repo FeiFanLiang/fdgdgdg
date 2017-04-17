@@ -1,9 +1,10 @@
-import Vue from 'vue';
+import Vue from 'vue'
 import Pages from '../pages'
+import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
 
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
-});
+})
 
 let routes = [
   {
@@ -13,6 +14,11 @@ let routes = [
     meta: {
       hidden: true
     }
+  },
+  {
+    path: '/HotelBaseAdd',
+    component: HotelBaseAdd,
+    name: 'HotelBaseAdd'
   },
   {
     path: '/404',
@@ -60,6 +66,12 @@ let routes = [
             component: Pages.HotelPlatform,
             name: '酒店平台',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'HotelBase',
+            component: Pages.HotelBase,
+            name: '酒店基础信息',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },
@@ -77,33 +89,19 @@ let routes = [
           }
         ]
       },
-      {
-        path: 'chart',
-        component: Pages.chart,
-        name: '图表',
-        iconClass: 'el-icon-document'
-        /* children: [
-          {
-            path: 'big-form',
-            name: '简历管理',
-            component: BigForm,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]*/
-      }
     ]
   },
   {
     path: '*',
     redirect: {path: '/404'}
   }
-];
-let menuCount = routes.length;
+]
+let menuCount = routes.length
 routes[menuCount - 2].children.forEach(route => {
   if (route.children) {
-    if (!route.meta) route.meta = {};
-    route.meta.children = route.children;
+    if (!route.meta) route.meta = {}
+    route.meta.children = route.children
   }
-});
+})
 
-export default routes;
+export default routes

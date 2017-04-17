@@ -105,188 +105,187 @@
 
 <script>
 import {
-  oldApi,
+    oldApi,
 } from 'api';
 
 // import moment from 'moment';
 // import Vue from 'vue';
 
 export default {
-  data() {
-    return {
-      users: [],
-      total: 0,
-      page: 0,
-      loading: true,
-      multipleSelection: [],
-      reserveSelection: false,
-      editDialog: false,
-      createDialog: false,
-      filters: {
-        sortWay: '',
-        userName: '',
-        startEndTime: '',
-        labelVal: '1',
-        age: ''
-      },
-      editForm: {
-        id: '',
-        name: '',
-        time: ''
-      },
-      createForm: {
-        name: '',
-        time: '',
-        address: ''
-      },
-      selectedOptions: [{
-        value: '1',
-        label: '年龄'
-      }, {
-        value: '2',
-        label: '姓名'
-      }]
-    };
-  },
-
-  methods: {
-    formatDate(row) {
-      return new Date(row.date).toLocaleDateString();
-    },
-    handleSortChange(sortWay) {
-      this.filters.sortWay = {
-        prop: sortWay.prop,
-        order: sortWay.order
-      };
-      this.fetchData();
+    data() {
+        return {
+            users: [],
+            total: 0,
+            page: 0,
+            loading: true,
+            multipleSelection: [],
+            reserveSelection: false,
+            editDialog: false,
+            createDialog: false,
+            filters: {
+                sortWay: '',
+                userName: '',
+                startEndTime: '',
+                labelVal: '1',
+                age: ''
+            },
+            editForm: {
+                id: '',
+                name: '',
+                time: ''
+            },
+            createForm: {
+                name: '',
+                time: '',
+                address: ''
+            },
+            selectedOptions: [{
+                value: '1',
+                label: '年龄'
+            }, {
+                value: '2',
+                label: '姓名'
+            }]
+        };
     },
 
-    handleEditSave() {
-      oldApi.editUser(this.editForm).then(() => {
+    methods: {
+        formatDate(row) {
+            return new Date(row.date).toLocaleDateString();
+        },
+        handleSortChange(sortWay) {
+            this.filters.sortWay = {
+                prop: sortWay.prop,
+                order: sortWay.order
+            };
+            this.fetchData();
+        },
+        async handleEditSave() {
+            try {
+                await oldApi.editUser(this.editForm)
+                this.fetchData();
+                this.editDialog = false;
+                this.$message({
+                    message: '编辑成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e)
+            }
+        },
+        async handleSave() {
+            try {
+                await oldApi.addUser(this.createForm)
+                this.fetchData();
+                this.createDialog = false;
+                this.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        handleEdit($index, row) {
+            this.editForm.id = row.id;
+            this.editDialog = true;
+        },
+        async handleDelete($index, row) {
+            try {
+                await this.$confirm('是否删除此条信息?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                await oldApi.removeUser({
+                    id: row.id
+                })
+                this.fetchData();
+                this.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        handleSelectionChange(val) {
+            this.multipleSelection = val;
+        },
+        handleSearch() {
+            this.fetchData();
+        },
+        handleCurrentChange(val) {
+            this.fetchData(val);
+        },
+        async fetchData(page) {
+            // param: sort way
+            let sortWay = this.filters.sortWay && this.filters.sortWay.prop ? this.filters.sortWay : '';
+
+            // param: page
+            this.page = page || this.page;
+
+            // param: start time and end end time
+            let startTime = this.filters.startEndTime ? this.filters.startEndTime[0].getTime() : '';
+            let endTime = this.filters.startEndTime ? this.filters.startEndTime[1].getTime() : '';
+            let options = {
+                page: this.page,
+                userName: this.filters.labelVal === '2' ? this.filters.userName : null,
+                startTime: startTime,
+                endTime: endTime,
+                sortWay: sortWay,
+                age: this.filters.labelVal === '1' ? parseInt(this.filters.age, 10) : null
+            };
+            //      console.log('[dashboard]:your post params');
+            //      console.log(options);
+
+            this.loading = true;
+            try {
+                const res = await oldApi.fetchList(options)
+                // clear selection
+                this.$refs.table.clearSelection();
+                // lazy render data
+                this.users = res.data.users;
+                this.total = res.data.total;
+                this.loading = false;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    },
+    mounted() {
         this.fetchData();
-        this.editDialog = false;
-
-        this.$message({
-          message: '编辑成功',
-          type: 'success'
-        });
-      });
-    },
-
-    handleSave() {
-      oldApi.addUser(this.createForm).then(() => {
-        this.fetchData();
-        this.createDialog = false;
-
-        this.$message({
-          message: '保存成功',
-          type: 'success'
-        });
-      });
-    },
-
-    handleEdit($index, row) {
-      this.editForm.id = row.id;
-      this.editDialog = true;
-    },
-
-    handleDelete($index, row) {
-      this.$confirm('是否删除此条信息?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        oldApi.removeUser({
-          id: row.id
-        }).then(() => {
-          this.fetchData();
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-        });
-      });
-    },
-
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-
-    handleSearch() {
-      this.fetchData();
-    },
-
-    handleCurrentChange(val) {
-      this.fetchData(val);
-    },
-
-    fetchData(page) {
-      // param: sort way
-      let sortWay = this.filters.sortWay && this.filters.sortWay.prop ? this.filters.sortWay : '';
-
-      // param: page
-      this.page = page || this.page;
-
-      // param: start time and end end time
-      let startTime = this.filters.startEndTime ? this.filters.startEndTime[0].getTime() : '';
-      let endTime = this.filters.startEndTime ? this.filters.startEndTime[1].getTime() : '';
-      console.log('this.filters.labelVal', this.filters.labelVal);
-      let options = {
-        page: this.page,
-        userName: this.filters.labelVal === '2' ? this.filters.userName : null,
-        startTime: startTime,
-        endTime: endTime,
-        sortWay: sortWay,
-        age: this.filters.labelVal === '1' ? parseInt(this.filters.age, 10) : null
-      };
-//      console.log('[dashboard]:your post params');
-//      console.log(options);
-
-      this.loading = true;
-      oldApi.fetchList(options).then((res) => {
-        // clear selection
-        this.$refs.table.clearSelection();
-        // lazy render data
-        this.users = res.data.users;
-        this.total = res.data.total;
-        this.loading = false;
-      });
     }
-  },
-
-  mounted() {
-    this.fetchData();
-  }
 };
 </script>
 
 <style lang="scss">
 #ListWithFiltersPage {
-  .filters {
-    margin: 0 0 20px 0;
-    border: 1px #efefef solid;
-    padding: 10px;
-    background: #f9f9f9;
+    .filters {
+        margin: 0 0 20px;
+        border: 1px #efefef solid;
+        padding: 10px;
+        background: #f9f9f9;
 
-    .filter {
-      display: inline-block;
-      width: auto;
-      padding: 10px;
-      border-radius: 5px;
-      .el-select {
-        display: inline-block;
-      }
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+
+        .el-input {
+            width: 150px;
+            display: inline-block;
+        }
     }
 
-    .el-input {
-      width: 150px;
-      display: inline-block;
+    .pagination-wrapper {
+        text-align: center;
+        padding: 30px;
     }
-  }
-
-  .pagination-wrapper {
-    text-align: center;
-    padding: 30px;
-  }
 }
 </style>

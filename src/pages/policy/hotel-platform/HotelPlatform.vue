@@ -19,32 +19,76 @@
           <el-input placeholder="请输入平台名称" v-model="filters.PlatName" v-show="filters.labelVal == '2'"></el-input>
         </div>
         <el-button type="primary" @click="platformSearch()">搜索</el-button>
-        <el-button type="primary" @click="createPlatform = true">创建</el-button>
+        <el-button type="primary" @click="createDialog = true">创建</el-button>
       </div>
       <!-- filters end -->
 
     <!-- table start -->
     <el-table
     :data="platform"
-    style="width: 100%"
-    @selection-change="handleSelectionChange"
-    @sort-change="handleSortChange">
-    <el-table-column
-      prop="id"
-      label="ID"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="PlatName"
-      label="平台名称"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="Ramark"
-      label="平台信息">
-    </el-table-column>
-  </el-table>
-  <!-- table end -->
+    style="width: 100%">
+      <el-table-column
+        prop="id"
+        label="平台ID"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="PlatName"
+        label="平台名称"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="Ramark"
+        label="平台信息">
+      </el-table-column>
+      <el-table-column :context="_self" inline-template label="操作">
+        <div>
+          <el-button size="small" @click="platformEdit($index, row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="platformDelete($index, row)">删除</el-button>
+        </div>
+      </el-table-column>  
+    </el-table>
+    <!-- table end -->
+
+    <!-- create dialog start -->
+    <el-dialog title="添加新平台信息" v-model="createDialog" size="small">
+      <el-form ref="createFrom" :model="createForm" label-width="80px">
+        <el-form-item label="平台ID">
+          <el-input v-model="createForm.id" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="平台名称">
+          <el-input v-model="createForm.PlatName" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="平台信息">
+          <el-input v-model="createForm.Ramark" class="el-col-24"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialog = false">取 消</el-button>
+        <el-button type="primary" @click="platformSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- create dialog end -->
+
+    <!-- create dialog start -->
+    <el-dialog title="添加新平台信息" v-model="editDialog" size="small">
+      <el-form ref="editFrom" :model="editForm" label-width="80px">
+        <el-form-item label="平台ID">
+          <el-input v-model="editForm.id" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="平台名称">
+          <el-input v-model="editForm.PlatName" class="el-col-24"></el-input>
+        </el-form-item>
+        <el-form-item label="平台信息">
+          <el-input v-model="editForm.Ramark" class="el-col-24"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="platformEditSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- create dialog end -->
   
   </div>
 </template>
@@ -58,11 +102,22 @@ import {
     data() {
       return {
         platform: [],
-        multipleSelection: [],
+        createDialog: false,
+        editDialog: false,
         filters: {
           PlatName: '',
           id: '',
           labelVal: '1'
+        },
+        createForm: {
+          id: '',
+          PlatName: '',
+          Ramark: ''
+        },
+        editForm: {
+          id: '',
+          PlatName: '',
+          Ramark: ''
         },
         selectedOptions: [{
           value: '1',
@@ -74,44 +129,76 @@ import {
       }
     },
     created() {
-      // this.getPlatformList();
       this.fetchData();
       console.log('111111111111')
     },
     methods: {
-//      getPlatformList() {
-//        console.log('22222222222')
-//        hotelApi.fetchPlatformList().then(data => {
-//          let { code, platform_list } = data;
-//          if (code === 200) {
-//            this.platform = platform_list;
-//          }
-//        });
-//        console.log('3333333333333')
-//      },
-      handleSortChange() {
-        this.fetchData();
+      async platformSave() {
+        try {
+                await hotelApi.addPlatform(this.createForm)
+                this.fetchData();
+                this.createDialog = false;
+                this.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
+      async platformEditSave() {
+            try {
+                await hotelApi.editPlatform(this.editForm)
+                this.fetchData();
+                this.editDialog = false;
+                this.$message({
+                    message: '编辑成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e)
+            }
+      },
+      platformEdit($index, row) {
+            this.editForm.id = row.id;
+            this.editForm.PlatName = row.PlatName;
+            this.editForm.Ramark = row.Ramark;
+            this.editDialog = true;
+      },
+      async platformDelete($index, row) {
+            try {
+                await this.$confirm('是否删除此条信息?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                await hotelApi.removePlatform({
+                    id: row.id
+                }) 
+                this.fetchData();
+                this.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
       },
       platformSearch() {
         console.log('44444444444');
         this.fetchData();
       },
-      fetchData() {
+      async fetchData() {
         let options = {
           PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
-          id: this.filters.labelVal === '1' ? this.filters.id : null
+          id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
         };
         console.log(options);
-        hotelApi.fetchPlatformList(options).then(res => {
-          // this.$refs.table.clearSelection();
-          // let { code, platform_list } = data;
-          // if (code === 200) {
-            // this.platform = platform_list;
-          // }
-          this.platform = res.platform_list;
+        hotelApi.fetchPlatformList(options).then(data => {
+          let { code, platform_list } = data;
+          if (code === 200) {
+            this.platform = platform_list;
+          }
         });
         console.log('3333333333333')
       },
