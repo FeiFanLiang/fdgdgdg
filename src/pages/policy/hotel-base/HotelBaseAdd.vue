@@ -1,7 +1,7 @@
 <template lang="html">
 <el-form ref="form" :model="form">
 
-  <el-row :gutter="20">  
+  <el-row :gutter="20">
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店ID">
@@ -98,7 +98,7 @@
       <el-col :span="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button>取消</el-button>
+            <el-button @click="Cancel">取消</el-button>
           </el-form-item>
         </div>
       </el-col>     
@@ -128,7 +128,7 @@ import {
           Star: '',
           PersonName: '',
           PurchasingName: '',
-          PayMode: null,
+          PayMode: '',
           Remark: ''
         },
         StarOptions: [{
@@ -140,27 +140,32 @@ import {
         },{
           value: '3',
           label: '三星级'
+        },{
+          value: '4',
+          label: '四星级'
+        },{
+          value: '5',
+          label: '五星级'
+        },{
+          value: '6',
+          label: '六星级'
         }],
         PayModeOptions: [],
         
       }
     },
     created() {
-        console.log('222222222222222222222')
         console.log('this.Star' + this.Star)
-        // this.getStarOptions();
         this.getPayModeOptions();
     },
     methods: {
       async getPayModeOptions() {
-        console.log('1111111111111111111111111')
         const data = await oldApi.fetchPayModeOptions()
         let {
             code,
             paymodeOptions
         } = data;
         if (code === 200) {
-          console.log('123456798941236412558452125')
           this.PayModeOptions = paymodeOptions;
           console.log('this.PayModeOptions' + this.PayModeOptions)
           this.PayModeOptions = paymodeOptions;
@@ -171,17 +176,20 @@ import {
         console.log('submit!');
         try {
             const data = hotelApi.addHotelBase(this.form)
-            let oform = data.form
-            this.$router.push({path: '/policy/HotelBase', params: { form: oform }})
+            // let oform = data.form
+            // this.$router.push({path: '/HotelBaseAdd', params: { form: oform }})
+            this.$route.params.form
             this.$message({
                 message: '保存成功',
                 type: 'success'
             });
             } catch (e) {
                 console.error(e);
-            }
-        
+            }       
       },
+      Cancel() {
+        this.$router.go(-1)
+      }
              
       
     }

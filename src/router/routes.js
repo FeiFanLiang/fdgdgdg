@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Pages from '../pages'
 import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
+import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'
 
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
@@ -19,6 +20,11 @@ let routes = [
     path: '/HotelBaseAdd',
     component: HotelBaseAdd,
     name: 'HotelBaseAdd'
+  },
+  {
+    path: '/HotelBaseEdit',
+    component: HotelBaseEdit,
+    name: 'HotelBaseEdit'
   },
   {
     path: '/404',
