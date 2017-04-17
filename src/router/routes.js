@@ -1,11 +1,17 @@
+<<<<<<< HEAD
 import Vue from 'vue'
 import Pages from '../pages'
 import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
 import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'
+=======
+import Vue from 'vue';
+import Pages from '../pages';
+import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd';
+>>>>>>> fd0a6ad6e694a635d2dc65b2ebaaa42fe8a1e52e
 
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
-})
+});
 
 let routes = [
   {
@@ -42,12 +48,6 @@ let routes = [
     },
     children: [
       {
-        path: 'test',
-        name: 'test',
-        component: Pages.Test,
-        imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-      },
-      {
         path: 'list',
         component: Pages.Abstract,
         name: '列表',
@@ -78,6 +78,12 @@ let routes = [
             component: Pages.HotelBase,
             name: '酒店基础信息',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'bank-information',
+            name: '银行信息',
+            component: Pages.BankInformation,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },
@@ -94,20 +100,20 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
-      },
+      }
     ]
   },
   {
     path: '*',
-    redirect: {path: '/404'}
+    redirect: { path: '/404' }
   }
-]
-let menuCount = routes.length
+];
+let menuCount = routes.length;
 routes[menuCount - 2].children.forEach(route => {
   if (route.children) {
-    if (!route.meta) route.meta = {}
-    route.meta.children = route.children
+    if (!route.meta) route.meta = {};
+    route.meta.children = route.children;
   }
-})
+});
 
-export default routes
+export default routes;
