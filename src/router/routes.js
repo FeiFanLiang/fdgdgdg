@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Pages from '../pages'
-import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
+import Vue from 'vue';
+import Pages from '../pages';
+import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd';
 
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
-})
+});
 
 let routes = [
   {
@@ -72,6 +72,12 @@ let routes = [
             component: Pages.HotelBase,
             name: '酒店基础信息',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'bank-information',
+            name: '银行信息',
+            component: Pages.BankInformation,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },
@@ -88,20 +94,20 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
-      },
+      }
     ]
   },
   {
     path: '*',
-    redirect: {path: '/404'}
+    redirect: { path: '/404' }
   }
-]
-let menuCount = routes.length
+];
+let menuCount = routes.length;
 routes[menuCount - 2].children.forEach(route => {
   if (route.children) {
-    if (!route.meta) route.meta = {}
-    route.meta.children = route.children
+    if (!route.meta) route.meta = {};
+    route.meta.children = route.children;
   }
-})
+});
 
-export default routes
+export default routes;

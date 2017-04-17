@@ -1,4 +1,3 @@
-
 import Abstract from './common/abstract';
 import NotFound from './common/404';
 // list with filters page
@@ -7,16 +6,17 @@ import BigForm from './form/big-form';
 import Login from './login/login';
 import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 import HotelBase from './policy/hotel-base/HotelBase';
-import Test from './test'
+import BankInformation from './policy/bank-info/bank-information.vue';
+import Test from './test';
 
 export default {
-    Abstract,
-    NotFound,
-    ListWithFilters,
-    BigForm,
-    Login,   
-    Test,
-    HotelPlatform,
-    HotelBase
-
-}
+  Abstract,
+  NotFound,
+  ListWithFilters,
+  BigForm,
+  Login,
+  Test,
+  HotelPlatform,
+  HotelBase,
+  BankInformation
+};
