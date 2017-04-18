@@ -1,27 +1,25 @@
 import Abstract from './common/abstract';
 import NotFound from './common/404';
-// list with filters page
-import ListWithFilters from './list/with-filters';
-import BigForm from './form/big-form';
+// auth
 import Login from './login/login';
+// hotel
 import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 import HotelBase from './policy/hotel-base/HotelBase';
-import PayCompany from './policy/pay-company/pay-company';
-import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import HotelBaseAdd from './policy/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './policy/hotel-base/HotelBaseEdit';
-
+// policy
+import PayCompany from './policy/pay-company/pay-company';
+import PayType from './policy/pay-type/pay-type';
+import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 import RserveMode from './policy/rserve-mode/rserve-mode';
 import SecretType from './policy/secret-type/secret-type';
-
+// order
 import Order from './order/order';
 
 export default {
   Abstract,
   NotFound,
-  ListWithFilters,
-  BigForm,
   Login,
   HotelPlatform,
   HotelBase,
@@ -31,6 +29,7 @@ export default {
   HotelBaseEdit,
   PolicyImages,
   RserveMode,
+  PayType,
   SecretType,
   Order
 };

@@ -29,6 +29,7 @@ let routes = [
       requiresAuth: true
     },
     children: [
+      // hotel
       {
         path: 'hotel',
         component: Pages.Abstract,
@@ -65,6 +66,7 @@ let routes = [
           }
         ]
       },
+      // policy
       {
         path: 'policy',
         component: Pages.Abstract,
@@ -75,6 +77,12 @@ let routes = [
             path: 'pay-company',
             name: '银行信息',
             component: Pages.PayCompany,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'pay-type',
+            name: 'PayType',
+            component: Pages.PayType,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
@@ -103,6 +111,7 @@ let routes = [
           }
         ]
       },
+      // order
       {
         path: 'order',
         component: Pages.Abstract,
