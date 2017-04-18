@@ -1,5 +1,5 @@
 <template lang="html">
-  <div id="BankInformation">
+  <div id="PayCompany">
 
     <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
@@ -33,9 +33,8 @@
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         stripe
         v-loading="loading"
-        @selection-change="handleSelectionChange"
         @sort-change="handleSortChange">
-        <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
+        <!-- <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column> -->
         <el-table-column prop="ID" label="ID" width="180"></el-table-column>
         <el-table-column prop="AccountName" label="账户名称"></el-table-column>
         <el-table-column prop="AccountNum" sortable="custom" label="银行帐户"></el-table-column>
@@ -61,20 +60,20 @@
 
       <!-- edit dialog start -->
       <el-dialog title="编辑银行信息" v-model="editDialog" size="tiny">
-        <el-form ref="editForm" :model="editForm" label-width="80px">
-          <el-form-item label="账户名称">
-            <el-input v-model="editForm.AccountName" class="el-col-24"></el-input>
+        <el-form :rules="rules" ref="editForm" :model="editForm" >
+          <el-form-item label="账户名称" prop="AccountName">
+            <el-input placeholder="请输入账户名称" v-model="editForm.AccountName"></el-input>
           </el-form-item>
-          <el-form-item label="银行帐户">
-            <el-input v-model="editForm.AccountNum" class="el-col-24"></el-input>
+          <el-form-item label="银行帐户" prop="AccountNum">
+            <el-input placeholder="请输入银行账户" v-model="editForm.AccountNum"></el-input>
           </el-form-item>
           <el-form-item label="Remark">
-            <el-input v-model="editForm.Remark" class="el-col-24"></el-input>
+            <el-input v-model="editForm.Remark"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialog = false">取 消</el-button>
-          <el-button type="primary" @click="handleEditSave()">确 定</el-button>
+          <el-button type="primary" @click="handleEditSave('editForm')">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -82,20 +81,20 @@
 
       <!-- create dialog start -->
       <el-dialog title="添加银行信息" v-model="createDialog" size="tiny">
-        <el-form ref="createFrom" :model="createForm" label-width="80px">
-          <el-form-item label="账户名称">
-            <el-input v-model="createForm.AccountName" class="el-col-24"></el-input>
+        <el-form :rules="rules" ref="createForm" :model="createForm">
+          <el-form-item label="账户名称" prop="AccountName">
+            <el-input placeholder="请输入账户名称" v-model="createForm.AccountName"></el-input>
           </el-form-item>
-          <el-form-item label="银行帐户">
-            <el-input v-model="createForm.AccountNum" class="el-col-24"></el-input>
+          <el-form-item label="银行帐户" prop="AccountNum">
+            <el-input placeholder="请输入银行账户" v-model="createForm.AccountNum"></el-input>
           </el-form-item>
           <el-form-item label="Remark">
-            <el-input v-model="createForm.Remark" class="el-col-24"></el-input>
+            <el-input v-model="createForm.Remark"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="createDialog = false">取 消</el-button>
-          <el-button type="primary" @click="handleSave()">确 定</el-button>
+          <el-button type="primary" @click="handleSave('createForm')">确 定</el-button>
         </span>
       </el-dialog>
       <!-- create dialog end -->
@@ -119,8 +118,6 @@ export default {
             total: 0,
             page: 0,
             loading: true,
-            multipleSelection: [],
-            reserveSelection: false,
             editDialog: false,
             createDialog: false,
             filters: {
@@ -150,7 +147,19 @@ export default {
                     label: '银行账户'
                 }
 
-            ]
+            ],
+            rules: {
+                AccountName: [{
+                    required: true,
+                    message: '请输入账户名称',
+                    trigger: 'blur'
+                }],
+                AccountNum: [{
+                    required: true,
+                    message: '请输入银行账户',
+                    trigger: 'blur'
+                }]
+            }
         };
     },
 
@@ -171,43 +180,59 @@ export default {
                 Remark: ''
             }
         },
-        async handleEditSave() {
-            try {
-                await payCompanyApi.editInfo(this.editForm);
-                this.fetchData();
-                this.editDialog = false;
-                this.$message({
-                    message: '编辑成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
+        async handleEditSave(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    try {
+                        payCompanyApi.editInfo(this.editForm);
+                        this.fetchData();
+                        this.editDialog = false;
+                        this.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
+            })
         },
-        async handleSave() {
-            try {
-                await payCompanyApi.addInfo(this.createForm);
-                this.fetchData();
-                this.createDialog = false;
-                this.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
+        async handleSave(formName) {
+          console.log(formName)
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    try {
+                        payCompanyApi.addInfo(this.createForm);
+                        this.fetchData();
+                        this.createDialog = false;
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
+            })
         },
         async handleEdit($index, row) {
             this.editDialog = true;
-            try {
-                const res = await payCompanyApi.getDetail({
-                    id: row.ID
-                });
-                console.log(res.data);
-                this.editForm = res.data;
-            } catch (e) {
-                console.error(e);
-            }
+            // try {
+            //     const res = await payCompanyApi.getDetail({
+            //         id: row.ID
+            //     });
+            //     console.log(res.data);
+            this.editForm.ID = row.ID;
+            this.editForm.AccountName = row.AccountName;
+            this.editForm.AccountNum = row.AccountNum;
+            this.editForm.Remark = row.Remark;
+            // } catch (e) {
+            //     console.error(e);
+            // }
         },
         async handleDelete($index, row) {
             try {
@@ -228,9 +253,6 @@ export default {
                 console.error(e);
             }
         },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
         handleSearch() {
             this.fetchData();
         },
@@ -250,9 +272,7 @@ export default {
                 page: this.page,
                 AccountName: this.filters.labelVal === '1' ? this.filters.AccountName : null,
                 sortWay: sortWay,
-                AccountNum: this.filters.labelVal === '2' ?
-                    parseInt(this.filters.AccountNum, 10) :
-                    null
+                AccountNum: this.filters.labelVal === '2' ? this.filters.AccountNum : null
             };
             //      console.log('[dashboard]:your post params');
             //      console.log(options);
@@ -279,7 +299,7 @@ export default {
 </script>
 
 <style lang="scss">
-#BankInformation {
+#PayCompany {
     .filters {
         margin: 0 0 20px;
         border: 1px #efefef solid;

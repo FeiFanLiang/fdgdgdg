@@ -62,11 +62,18 @@ const API = {
     });
   },
   editInfo(config) {
-    console.log(config);
-    let id = JSON.parse(config.data).ID;
-    for (let [, elem] of _List.entries()) {
-      if (elem.ID === id) elem = JSON.parse(config.data);
-    }
+    let {ID, AccountName, AccountNum, Remark} = JSON.parse(config.data)
+    _List.some(u => {
+        if (u.ID === ID) {
+            u.AccountName = AccountName || u.AccountName
+            u.AccountNum = AccountNum || u.AccountNum
+            u.Remark = Remark || u.Remark
+            return true
+        }
+    })
+    // for (let [, elem] of _List.entries()) {
+    //   if (elem.ID === id) elem = JSON.parse(config.data);
+    // }
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve([

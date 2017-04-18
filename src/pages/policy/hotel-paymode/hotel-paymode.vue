@@ -29,9 +29,7 @@
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         stripe
         v-loading="loading"
-        @selection-change="handleSelectionChange"
         @sort-change="handleSortChange">
-        <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column>
         <el-table-column prop="ID" label="ID" width="180"></el-table-column>
         <el-table-column prop="ModeName" label="账户名称"></el-table-column>
         <el-table-column prop="Remark" label="Remark"></el-table-column>
@@ -108,8 +106,6 @@ export default {
             total: 0,
             page: 0,
             loading: true,
-            multipleSelection: [],
-            reserveSelection: false,
             editDialog: false,
             createDialog: false,
             filters: {
@@ -214,9 +210,6 @@ export default {
             } catch (e) {
                 console.error(e);
             }
-        },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
         },
         handleSearch() {
             this.fetchData();

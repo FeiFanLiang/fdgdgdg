@@ -1,8 +1,15 @@
 
 import Vue from 'vue'
 import Pages from '../pages'
+<<<<<<< HEAD
 /*import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
 import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'*/
+=======
+import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
+import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'
+
+
+>>>>>>> adca743fc7441d60724ce83e8f143a2119acc589
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
