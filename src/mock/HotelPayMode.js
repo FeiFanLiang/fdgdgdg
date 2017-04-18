@@ -63,10 +63,14 @@ const API = {
     });
   },
   editInfo(config) {
-    let id = JSON.parse(config.data).ID;
-    for (let [, elem] of _HotelPayMode.entries()) {
-      if (elem.ID === id) elem = JSON.parse(config.data);
-    }
+    let {ID, ModeName, Remark} = JSON.parse(config.data)
+    _HotelPayMode.some(u => {
+        if (u.ID === ID) {
+            u.ModeName = ModeName || u.ModeName
+            u.Remark = Remark || u.Remark
+            return true
+        }
+    })
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve([
