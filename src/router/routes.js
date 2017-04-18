@@ -15,6 +15,14 @@ let routes = [
     }
   },
   {
+    path: '/register',
+    component: Pages.Register,
+    name: 'register',
+    meta: {
+      hidden: true
+    }
+  },
+  {
     path: '/404',
     component: Pages.NotFound,
     name: '404',

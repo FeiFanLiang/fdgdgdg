@@ -2,6 +2,7 @@ import Abstract from './common/abstract';
 import NotFound from './common/404';
 // auth
 import Login from './login/login';
+import Register from './register/register';
 // hotel
 import HotelPlatform from './policy/hotel-platform/HotelPlatform';
 import HotelBase from './policy/hotel-base/HotelBase';
@@ -21,6 +22,7 @@ export default {
   Abstract,
   NotFound,
   Login,
+  Register,
   HotelPlatform,
   HotelBase,
   PayCompany,
