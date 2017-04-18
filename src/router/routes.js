@@ -14,7 +14,6 @@ let routes = [
       hidden: true
     }
   },
-
   {
     path: '/404',
     component: Pages.NotFound,
@@ -31,53 +30,11 @@ let routes = [
     },
     children: [
       {
-        path: 'list',
-        component: Pages.Abstract,
-        name: '列表',
-        iconClass: 'el-icon-message',
-        children: [
-          {
-            path: 'filters',
-            name: '搜索条件',
-            component: Pages.ListWithFilters,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
-      {
         path: 'policy',
         component: Pages.Abstract,
         name: '政策',
         iconClass: 'el-icon-message',
         children: [
-          {
-            path: 'HotelPlatform',
-            component: Pages.HotelPlatform,
-            name: '酒店平台',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'HotelBase',
-            component: Pages.HotelBase,
-            name: '酒店基础信息',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: '/HotelBaseAdd',
-            component: Pages.HotelBaseAdd,
-            name: 'HotelBaseAdd',
-            meta: {
-              hidden: true
-            }
-          },
-          {
-            path: '/HotelBaseEdit/:id',
-            component: Pages.HotelBaseEdit,
-            name: 'HotelBaseEdit',
-            meta: {
-              hidden: true
-            }
-          },
           {
             path: 'pay-company',
             name: '银行信息',
@@ -111,16 +68,38 @@ let routes = [
         ]
       },
       {
-        path: 'form',
+        path: 'hotel',
         component: Pages.Abstract,
-        name: '表单',
-        iconClass: 'el-icon-document',
+        name: '酒店',
+        iconClass: 'el-icon-message',
         children: [
           {
-            path: 'big-form',
-            name: '简历管理',
-            component: Pages.BigForm,
+            path: 'HotelPlatform',
+            component: Pages.HotelPlatform,
+            name: '酒店平台',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'HotelBase',
+            component: Pages.HotelBase,
+            name: '酒店基础信息',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: '/HotelBaseAdd',
+            component: Pages.HotelBaseAdd,
+            name: 'HotelBaseAdd',
+            meta: {
+              hidden: true
+            }
+          },
+          {
+            path: '/HotelBaseEdit/:id',
+            component: Pages.HotelBaseEdit,
+            name: 'HotelBaseEdit',
+            meta: {
+              hidden: true
+            }
           }
         ]
       }
