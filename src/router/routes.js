@@ -1,15 +1,6 @@
+import Vue from 'vue';
+import Pages from '../pages';
 
-import Vue from 'vue'
-import Pages from '../pages'
-<<<<<<< HEAD
-/*import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
-import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'*/
-=======
-import HotelBaseAdd from '../pages/policy/hotel-base/HotelBaseAdd'
-import HotelBaseEdit from '../pages/policy/hotel-base/HotelBaseEdit'
-
-
->>>>>>> adca743fc7441d60724ce83e8f143a2119acc589
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
@@ -23,16 +14,7 @@ let routes = [
       hidden: true
     }
   },
-  {
-    path: '/HotelBaseAdd',
-    component: Pages.HotelBaseAdd,
-    name: 'HotelBaseAdd'
-  },
-  {
-    path: '/HotelBaseEdit/:id',
-    component: Pages.HotelBaseEdit,
-    name: 'HotelBaseEdit'
-  },
+
   {
     path: '/404',
     component: Pages.NotFound,
@@ -79,6 +61,22 @@ let routes = [
             component: Pages.HotelBase,
             name: '酒店基础信息',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: '/HotelBaseAdd',
+            component: Pages.HotelBaseAdd,
+            name: 'HotelBaseAdd',
+            meta: {
+              hidden: true
+            }
+          },
+          {
+            path: '/HotelBaseEdit/:id',
+            component: Pages.HotelBaseEdit,
+            name: 'HotelBaseEdit',
+            meta: {
+              hidden: true
+            }
           },
           {
             path: 'pay-company',
