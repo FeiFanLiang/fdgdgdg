@@ -13,7 +13,7 @@
       <el-table-column prop="Remark" label="备注"></el-table-column>
       <el-table-column :context="_self" inline-template label="操作" width="180">
         <div>
-          <el-button type="primary" size="mini" @click="createDialog = true">添加</el-button>
+          <el-button type="primary" size="mini" @click="platforminfoAdd">添加</el-button>
           <el-button type="primary" size="mini" @click="platforminfoEdit($index, row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="platforminfoDelete($index, row)">删除</el-button>
         </div>
@@ -154,6 +154,9 @@ export default {
       } catch (e) {
         console.error(e);
       }
+    },
+    platforminfoAdd() {
+      this.createDialog = true;
     },
     platforminfoEdit($index, row) {
       this.editForm.ID = row.ID;
