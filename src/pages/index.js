@@ -15,6 +15,8 @@ import PolicyImages from './policy/policy-images/policy-images';
 import RserveMode from './policy/rserve-mode/rserve-mode';
 import SecretType from './policy/secret-type/secret-type';
 
+import Order from './order/order';
+
 export default {
   Abstract,
   NotFound,
@@ -29,5 +31,6 @@ export default {
   HotelBaseEdit,
   PolicyImages,
   RserveMode,
-  SecretType
+  SecretType,
+  Order
 };

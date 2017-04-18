@@ -30,6 +30,42 @@ let routes = [
     },
     children: [
       {
+        path: 'hotel',
+        component: Pages.Abstract,
+        name: '酒店',
+        iconClass: 'el-icon-message',
+        children: [
+          {
+            path: 'HotelPlatform',
+            component: Pages.HotelPlatform,
+            name: '酒店平台',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'HotelBase',
+            component: Pages.HotelBase,
+            name: '酒店基础信息',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: '/HotelBaseAdd',
+            component: Pages.HotelBaseAdd,
+            name: 'HotelBaseAdd',
+            meta: {
+              hidden: true
+            }
+          },
+          {
+            path: '/HotelBaseEdit/:id',
+            component: Pages.HotelBaseEdit,
+            name: 'HotelBaseEdit',
+            meta: {
+              hidden: true
+            }
+          }
+        ]
+      },
+      {
         path: 'policy',
         component: Pages.Abstract,
         name: '政策',
@@ -68,38 +104,16 @@ let routes = [
         ]
       },
       {
-        path: 'hotel',
+        path: 'order',
         component: Pages.Abstract,
-        name: '酒店',
+        name: '订单',
         iconClass: 'el-icon-message',
         children: [
           {
-            path: 'HotelPlatform',
-            component: Pages.HotelPlatform,
-            name: '酒店平台',
+            path: 'Order',
+            component: Pages.Order,
+            name: '订单',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'HotelBase',
-            component: Pages.HotelBase,
-            name: '酒店基础信息',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: '/HotelBaseAdd',
-            component: Pages.HotelBaseAdd,
-            name: 'HotelBaseAdd',
-            meta: {
-              hidden: true
-            }
-          },
-          {
-            path: '/HotelBaseEdit/:id',
-            component: Pages.HotelBaseEdit,
-            name: 'HotelBaseEdit',
-            meta: {
-              hidden: true
-            }
           }
         ]
       }
