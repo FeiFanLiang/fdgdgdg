@@ -36,7 +36,5 @@ export default {
     createResume(params) {
         return axios.post(`${base}/resume/add`).then(res => res.data)
     },
-    fetchPayModeOptions(params) {
-        return axios.get(`${base}/paymodeOptions`).then(res => res.data);
-    },
+    
 }

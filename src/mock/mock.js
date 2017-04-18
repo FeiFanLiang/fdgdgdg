@@ -113,23 +113,6 @@ export default {
       });
     });
 
-    mock.onGet('/paymodeOptions').reply(config => {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          let paymodeOptions = JSON.parse(JSON.stringify(HotelPayMode));
-          resolve([
-            200,
-            {
-              code: 200,
-              msg: '请求成功!!!',
-              paymodeOptions
-            }
-          ]);
-        }, Math.random() * 200 + 50);
-        console.log('aaa123456789123456789');
-      });
-    });
-
     mock.onPost('/resume').reply(config => {
       return new Promise((resolve, reject) => {
         setTimeout(() => {

@@ -7,9 +7,17 @@ const API = {
     detailsByHotelid() {},
     detailsByPlatid() {},
     listAll(config) {
+        let {
+            ID
+        } = config.params
+        let mockPlatforminfo = _platforminfo.filter(platforminfos => {
+            if (ID && platforminfos.ID !== ID)
+                return false
+            return true
+        })
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                let platforminfo_list = JSON.parse(JSON.stringify(platforminfo));
+                let platforminfo_list = JSON.parse(JSON.stringify(mockPlatforminfo));
                 resolve([
                     200, {
                         code: 200,

@@ -189,7 +189,10 @@ export default {
       }
     },
     async fetchData() {
-      hotelApi.fetchPlatforminfoList().then(data => {
+      let options = {
+          ID: this.ID
+      };
+      hotelApi.fetchPlatforminfoList(options).then(data => {
         let { code, platforminfo_list } = data;
         if (code === 200) {
           this.HotelPlatformInfo = platforminfo_list;

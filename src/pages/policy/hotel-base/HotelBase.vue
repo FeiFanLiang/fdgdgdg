@@ -36,8 +36,8 @@
         <el-table-column prop="id" label="酒店ID" sortable></el-table-column>
         <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
-        <el-table-column prop="FrontPhone" label="前台电话"></el-table-column>
-        <el-table-column prop="Address" label="地址"></el-table-column>
+        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip="false"></el-table-column>
+        <el-table-column prop="Address" label="地址" show-overflow-tooltip="false"></el-table-column>
         <el-table-column prop="Star" label="星级"></el-table-column>
         <el-table-column prop="PersonName" label="采购人"></el-table-column>
         <el-table-column prop="PurchasingName" label="政策负责人"></el-table-column>
@@ -53,13 +53,11 @@
     <!-- table end -->
 
     <!-- pagination start  -->
-      <div class="pagination-wrapper">
+      <div class="pagination-wrapper" style="align=center">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
+          layout="prev, pager, next"
           @current-change="handleCurrentChange"
-          :page-sizes="[10, 20, 30, 40]"
-          :page-size="10"
-          :total="300">
+          :page-size="10">
         </el-pagination>
       </div>
     <!-- pagination end  -->
@@ -212,10 +210,6 @@ export default {
 <style lang="scss">
 #HotelBasePage {
 
-  .eltable {
-    margin: 20px 0 0 0
-  }
-
   .filters {
     margin: 20px 0 0 0;
     border: 1px #efefef solid;
@@ -237,5 +231,11 @@ export default {
     display: inline-block;
   }
   }
+
+  .pagination-wrapper {
+        text-align: center;
+        padding: 30px;
+    }
+
 }
 </style>

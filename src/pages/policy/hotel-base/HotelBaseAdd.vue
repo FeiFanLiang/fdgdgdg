@@ -1,24 +1,24 @@
 <template lang="html">
-<el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
+<el-form :rules="rules" ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
       <el-col :span="4">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店ID">
+          <el-form-item label="酒店ID" prop="id">
             <el-input v-model="form.id" :disabled='true'></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="7" :offset="1">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店名称">
+          <el-form-item label="酒店名称" prop="HotelName">
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店英文名称">
+          <el-form-item label="酒店英文名称" prop="HotelName_En">
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
         </div>
@@ -37,14 +37,14 @@
       </el-col>    
       <el-col :span="7">
         <div class="grid-content bg-purple">
-          <el-form-item label="前台电话">
+          <el-form-item label="前台电话" prop="FrontPhone">
             <el-input v-model="form.FrontPhone"></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content bg-purple">
-          <el-form-item label="地址">
+          <el-form-item label="地址" prop="Address">
             <el-input v-model="form.Address"></el-input>
           </el-form-item>
         </div>
@@ -63,14 +63,14 @@
       </el-col>    
       <el-col :span="7">
         <div class="grid-content bg-purple">
-          <el-form-item label="采购人">
+          <el-form-item label="采购人" prop="PersonName">
             <el-input v-model="form.PersonName"></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="8">
         <div class="grid-content bg-purple">
-          <el-form-item label="政策负责人">
+          <el-form-item label="政策负责人" prop="PurchasingName">
             <el-input v-model="form.PurchasingName"></el-input>
           </el-form-item>
         </div>
@@ -80,7 +80,7 @@
     <el-row :gutter="20">
       <el-col :span="20">
         <div class="grid-content bg-purple">
-          <el-form-item label="备注">
+          <el-form-item label="备注" prop="Remark">
             <el-input type="textarea" v-model="form.Remark"></el-input>
           </el-form-item>
         </div>
@@ -91,7 +91,7 @@
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit(form)">立即创建</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -113,7 +113,7 @@
 
 <script>
 import {
-  oldApi, hotelApi
+  HotelPayModeApi, hotelApi
 } from 'api';
 
   export default {
@@ -132,6 +132,33 @@ import {
           PayMode: '',
           Remark: ''
         },
+         rules: {
+          HotelName: [
+            { required: true, message: '请输入酒店名称', trigger: 'blur' }
+          ],
+          HotelName_En: [
+            { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
+          ],
+          FrontPhone: [
+            { required: true, message: '请输入联系人电话', trigger: 'blur' }
+          ],
+          Address: [
+            { required: true, message: '请输入酒店地址', trigger: 'blur' }
+          ],
+          Star: [
+            { required: true, message: '请选择酒店星级', trigger: 'change' }
+          ],
+          PersonName: [
+            { required: true, message: '请输入采购人姓名', trigger: 'blur' }
+          ],
+          PurchasingName: [
+            { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
+          ],
+          PayMode: [
+            { required: true, message: '请选择付款账户', trigger: 'change' }
+          ]
+        },
+
         StarOptions: [{
           value: '1',
           label: '一星级'
@@ -161,7 +188,7 @@ import {
     },
     methods: {
       async getPayModeOptions() {
-        const data = await oldApi.fetchPayModeOptions()
+        const data = await HotelPayModeApi.getDetail()
         let {
             code,
             paymodeOptions
@@ -171,12 +198,18 @@ import {
           console.log('this.PayModeOptions' + this.PayModeOptions)
         }
       },
-      onSubmit() {
+      onSubmit(formName) {
         console.log('submit!');
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
         try {
             const data = hotelApi.addHotelBase(this.form)
-            // let oform = data.form
-            // this.$router.push({path: '/HotelBaseAdd', params: { form: oform }})
             this.$route.params.form
             this.$message({
                 message: '保存成功',
