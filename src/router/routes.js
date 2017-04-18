@@ -1,8 +1,13 @@
+import Vue from 'vue';
+import Pages from '../pages';
 
+<<<<<<< HEAD
 import Vue from 'vue'
 import Pages from '../pages'
 
 
+=======
+>>>>>>> 31b0ea4234da4ab430d1d825db0a2a43683bc206
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
@@ -16,16 +21,7 @@ let routes = [
       hidden: true
     }
   },
-  {
-    path: '/HotelBaseAdd',
-    component: Pages.HotelBaseAdd,
-    name: 'HotelBaseAdd'
-  },
-  {
-    path: '/HotelBaseEdit/:id',
-    component: Pages.HotelBaseEdit,
-    name: 'HotelBaseEdit'
-  },
+
   {
     path: '/404',
     component: Pages.NotFound,
@@ -72,6 +68,22 @@ let routes = [
             component: Pages.HotelBase,
             name: '酒店基础信息',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: '/HotelBaseAdd',
+            component: Pages.HotelBaseAdd,
+            name: 'HotelBaseAdd',
+            meta: {
+              hidden: true
+            }
+          },
+          {
+            path: '/HotelBaseEdit/:id',
+            component: Pages.HotelBaseEdit,
+            name: 'HotelBaseEdit',
+            meta: {
+              hidden: true
+            }
           },
           {
             path: 'pay-company',
