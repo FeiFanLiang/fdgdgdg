@@ -22,7 +22,7 @@
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
         </div>
-      </el-col>  
+      </el-col>
     </el-row>
 
     <el-row :gutter="20">
@@ -34,7 +34,7 @@
             </el-select>
           </el-form-item>
         </div>
-      </el-col>    
+      </el-col>
       <el-col :span="7">
         <div class="grid-content bg-purple">
           <el-form-item label="前台电话" prop="FrontPhone">
@@ -60,7 +60,7 @@
             </el-select>
           </el-form-item>
         </div>
-      </el-col>    
+      </el-col>
       <el-col :span="7">
         <div class="grid-content bg-purple">
           <el-form-item label="采购人" prop="PersonName">
@@ -84,14 +84,14 @@
             <el-input type="textarea" v-model="form.Remark"></el-input>
           </el-form-item>
         </div>
-      </el-col>    
+      </el-col>
     </el-row>
 
     <el-row :gutter="18">
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit(form)">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -101,131 +101,118 @@
             <el-button @click="Cancel">取消</el-button>
           </el-form-item>
         </div>
-      </el-col>     
+      </el-col>
     </el-row>
 
   </el-form>
-  
-    
-    
-  
+
+
+
+
 </template>
 
 <script>
-import {
-  HotelPayModeApi, hotelApi
-} from 'api';
+import { HotelPayModeApi, hotelApi } from 'api';
 
-  export default {
-    data() {
-      return {
-        labelPosition: 'top',
-        form: {
-          id: '',
-          HotelName: '',
-          HotelName_En: '',
-          FrontPhone: '',
-          Address: '',
-          Star: '',
-          PersonName: '',
-          PurchasingName: '',
-          PayMode: '',
-          Remark: ''
-        },
-         rules: {
-          HotelName: [
-            { required: true, message: '请输入酒店名称', trigger: 'blur' }
-          ],
-          HotelName_En: [
-            { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
-          ],
-          FrontPhone: [
-            { required: true, message: '请输入联系人电话', trigger: 'blur' }
-          ],
-          Address: [
-            { required: true, message: '请输入酒店地址', trigger: 'blur' }
-          ],
-          Star: [
-            { required: true, message: '请选择酒店星级', trigger: 'change' }
-          ],
-          PersonName: [
-            { required: true, message: '请输入采购人姓名', trigger: 'blur' }
-          ],
-          PurchasingName: [
-            { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
-          ],
-          PayMode: [
-            { required: true, message: '请选择付款账户', trigger: 'change' }
-          ]
-        },
+export default {
+  data() {
+    return {
+      labelPosition: 'top',
+      form: {
+        id: '',
+        HotelName: '',
+        HotelName_En: '',
+        FrontPhone: '',
+        Address: '',
+        Star: '',
+        PersonName: '',
+        PurchasingName: '',
+        PayMode: '',
+        Remark: ''
+      },
+      rules: {
+        HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }],
+        HotelName_En: [
+          { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
+        ],
+        FrontPhone: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
+        Address: [{ required: true, message: '请输入酒店地址', trigger: 'blur' }],
+        Star: [{ required: true, message: '请选择酒店星级', trigger: 'change' }],
+        PersonName: [{ required: true, message: '请输入采购人姓名', trigger: 'blur' }],
+        PurchasingName: [
+          { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
+        ],
+        PayMode: [{ required: true, message: '请选择付款账户', trigger: 'change' }]
+      },
 
-        StarOptions: [{
+      StarOptions: [
+        {
           value: '1',
           label: '一星级'
-        },{
+        },
+        {
           value: '2',
           label: '二星级'
-        },{
+        },
+        {
           value: '3',
           label: '三星级'
-        },{
+        },
+        {
           value: '4',
           label: '四星级'
-        },{
+        },
+        {
           value: '5',
           label: '五星级'
-        },{
+        },
+        {
           value: '6',
           label: '六星级'
-        }],
-        PayModeOptions: [],
-        
-      }
-    },
-    created() {
-        console.log('this.Star' + this.Star)
-        this.getPayModeOptions();
-    },
-    methods: {
-      async getPayModeOptions() {
-        const data = await HotelPayModeApi.getDetail()
-        let {
-            code,
-            paymodeOptions
-        } = data;
-        if (code === 200) {
-          this.PayModeOptions = paymodeOptions;
-          console.log('this.PayModeOptions' + this.PayModeOptions)
         }
-      },
-      onSubmit(formName) {
-        console.log('submit!');
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-        try {
-            const data = hotelApi.addHotelBase(this.form)
-            this.$route.params.form
-            this.$message({
-                message: '保存成功',
-                type: 'success'
-            });
-            } catch (e) {
-                console.error(e);
-            }       
-      },
-      Cancel() {
-        this.$router.go(-1)
+      ],
+      PayModeOptions: []
+    };
+  },
+  created() {
+    console.log('this.Star' + this.Star);
+    this.getPayModeOptions();
+  },
+  methods: {
+    async getPayModeOptions() {
+      const data = await HotelPayModeApi.getDetail();
+      let { code, paymodeOptions } = data;
+      if (code === 200) {
+        this.PayModeOptions = paymodeOptions;
+        console.log('this.PayModeOptions' + this.PayModeOptions);
       }
-             
-      
+    },
+    onSubmit(formName) {
+      console.log('submit!');
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+      try {
+        const data = hotelApi.addHotelBase(this.form);
+        this.$route.params.form;
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    Cancel() {
+      this.$router.go(-1);
     }
   }
+};
 </script>
 
 <style lang="scss">
