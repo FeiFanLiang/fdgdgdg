@@ -44,9 +44,6 @@
         <el-table-column prop="PayMode" label="结款"></el-table-column>
         <el-table-column :context="_self" inline-template label="操作" width="150">
           <div>
-            <!-- <el-button type="small">
-              <router-link :to="{name: 'HotelBaseEdit', params: { id: id }}">编辑</router-link>
-            </el-button> -->
             <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button>
             <el-button size="small" type="danger" @click="hotelbaseDelete($index, row)">删除</el-button>
           </div>
@@ -64,143 +61,21 @@
           :page-size="10"
           :total="300">
         </el-pagination>
-
       </div>
     <!-- pagination end  -->
-
-    <!-- edit dialog start -->
-    <el-dialog title="编辑酒店信息" v-model="editDialog" size="full">
-      <el-form ref="editFrom" :model="editForm" label-width="80px">
-        <el-row :gutter="20">
-          <el-col :span="6">
-            <div class="grid-content bg-purple">
-              <el-form-item label="酒店ID">
-                <el-input v-model="editForm.id" :disabled="true"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content bg-purple">
-              <el-form-item label="酒店名称">
-                <el-input v-model="editForm.HotelName"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content bg-purple">
-              <el-form-item label="酒店英文名称">
-                <el-input v-model="editForm.HotelName_En"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <div class="grid-content bg-purple">
-              <el-form-item label="星级" prop="Star">
-                <el-select v-model="editForm.Star" clearable placeholder="请选择酒店星级">
-                  <el-option v-for="item in StarOptions" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content bg-purple">
-              <el-form-item label="前台电话">
-                <el-input v-model="editForm.FrontPhone"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-              <el-form-item label="地址">
-                <el-input v-model="editForm.Address"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="5">
-            <div class="grid-content bg-purple">
-              <el-form-item label="结款" prop="PayMode">
-                <el-select v-model="editForm.PayMode" clearable placeholder="请选择结款账户" >
-                  <el-option v-for="item in PayModeOptions" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="7">
-            <div class="grid-content bg-purple">
-              <el-form-item label="采购人">
-                <el-input v-model="editForm.PersonName"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-              <el-form-item label="政策负责人">
-                <el-input v-model="editForm.PurchasingName"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
-          <el-col :span="20">
-            <div class="grid-content bg-purple">
-              <el-form-item label="备注">
-                <el-input type="textarea" v-model="editForm.Remark"></el-input>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-        <span style="margin-left:100px">
-          <el-button type="primary" @click="hotelbaseEditSave()">确 定</el-button>
-          <el-button @click="editDialog = false">取 消</el-button>
-        </span>
-      </el-form>
-      <div class="dialog-footer" style="margin-top:50px">
-        <el-tabs v-model="activeName" type="card">
-          <el-tab-pane label="政策信息" name="first">政策信息</el-tab-pane>
-          <el-tab-pane label="房型信息" name="second">房型信息</el-tab-pane>
-          <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
-          <el-tab-pane label="平台映射" name="fourth">平台映射
-            <HotelPlatformInfo></HotelPlatformInfo>
-          </el-tab-pane>
-        </el-tabs>
-      </div>
-  </el-tabs>
-    </el-dialog>
-    <!-- edit dialog end -->
 
   </div>
 </template>
 
 <script>
 import { hotelApi } from 'api';
-import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 
 export default {
   data() {
     return {
-      activeName: 'first',
       hotelbase: [],
       page: 0,
       editDialog: false,
-      editForm: {
-        id: '',
-        HotelName: '',
-        HotelName_En: '',
-        FrontPhone: '',
-        Address: '',
-        Star: '',
-        PersonName: '',
-        PurchasingName: '',
-        PayMode: '',
-        Remark: ''
-      },
       filters: {
         id: '',
         HotelName: '',
@@ -271,9 +146,6 @@ export default {
       ]
     };
   },
-  components: {
-    HotelPlatformInfo
-  },
   created() {
     this.getHotelbaseList();
     console.log('getHotelbaseListcreated');
@@ -308,48 +180,11 @@ export default {
     handleCurrentChange(val) {
       this.getHotelbaseList(val);
     },
-    async hotelbaseEditSave() {
-      try {
-        await hotelApi.editHotelbase(this.editForm);
-        this.getHotelbaseList();
-        this.editDialog = false;
-        this.$message({
-          message: '编辑成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
     hotelbaseEdit($index, row) {
       this.$router.push({
         name: 'HotelBaseEdit',
         params: { id: row.id }
       });
-
-      // this.editForm.id = row.id;
-
-      // this.editForm.HotelName = row.HotelName;
-
-      // this.editForm.HotelName_En = row.HotelName_En;
-
-      // this.editForm.FrontPhone = row.FrontPhone;
-
-      // this.editForm.Address = row.Address;
-
-      // this.editForm.Star = row.Star;
-
-      // this.editForm.id = row.id;
-
-      // this.editForm.PersonName = row.PersonName;
-
-      // this.editForm.PurchasingName = row.PurchasingName;
-
-      // this.editForm.PayMode = row.PayMode;
-
-      // this.editForm.Remark = row.Remark;
-
-      // this.editDialog = true;
     },
     async hotelbaseDelete($index, row) {
       try {

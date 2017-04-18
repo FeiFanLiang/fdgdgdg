@@ -116,7 +116,7 @@ const API = {
         })
     },
     edit(config) {
-        let {id, HotelName, HotelName_En, FrontPhone, Address, Star, PersonName, PurchasingName, PayMode} = JSON.parse(config.data)
+        let {id, HotelName, HotelName_En, FrontPhone, Address, Star, PersonName, PurchasingName, PayMode, Remark} = JSON.parse(config.data)
         _hotelbase.some(pb => {
             if (pb.id === id) {
                 pb.HotelName = HotelName || pb.HotelName
@@ -127,6 +127,7 @@ const API = {
                 pb.PersonName = PersonName || pb.PersonName
                 pb.PurchasingName = PurchasingName || pb.PurchasingName
                 pb.PayMode = PayMode || pb.PayMode
+                pb.Remark = Remark || pb.Remark
                 return true
             }
         })
