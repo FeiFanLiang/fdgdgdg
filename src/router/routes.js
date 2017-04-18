@@ -42,7 +42,7 @@ let routes = [
         path: 'hotel',
         component: Pages.Abstract,
         name: '酒店',
-        iconClass: 'el-icon-message',
+        iconClass: 'el-icon-setting',
         children: [
           {
             path: 'HotelPlatform',
@@ -79,7 +79,7 @@ let routes = [
         path: 'policy',
         component: Pages.Abstract,
         name: '政策',
-        iconClass: 'el-icon-message',
+        iconClass: 'el-icon-setting',
         children: [
           {
             path: 'pay-company',
@@ -124,7 +124,7 @@ let routes = [
         path: 'order',
         component: Pages.Abstract,
         name: '订单',
-        iconClass: 'el-icon-message',
+        iconClass: 'el-icon-setting',
         children: [
           {
             path: 'Order',
