@@ -29,7 +29,7 @@
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
                   <template slot="title"><i :class="route.iconClass"></i>{{route.name}}</template>
-                  <el-menu-item :index="cRoute.name" v-for="(cRoute, cIndex) in route.children" :route="cRoute">{{cRoute.name}}</el-menu-item>
+                  <el-menu-item v-if="!(cRoute.meta&&cRoute.meta.hidden)"  :index="cRoute.name" v-for="(cRoute, cIndex) in route.children" :route="cRoute">{{cRoute.name}}</el-menu-item>
                 </el-submenu>
               </template>
 

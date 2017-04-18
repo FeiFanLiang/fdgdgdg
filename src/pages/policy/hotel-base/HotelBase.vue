@@ -1,10 +1,10 @@
 <template lang="html">
   <div id="HotelBasePage">
-    
+
     <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
     <!-- breadcrumb end  -->
-    
+
     <!-- search start -->
     <div class="filters">
         <div class="filter">
@@ -44,13 +44,13 @@
         <el-table-column prop="PayMode" label="结款"></el-table-column>
         <el-table-column :context="_self" inline-template label="操作" width="150">
           <div>
-            <!-- <el-button type="primary">
-              <router-link :to="{path: '/HotelBaseEdit/id', params: { id: this.id }}">编辑</router-link>
+            <!-- <el-button type="small">
+              <router-link :to="{name: 'HotelBaseEdit', params: { id: id }}">编辑</router-link>
             </el-button> -->
             <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button>
             <el-button size="small" type="danger" @click="hotelbaseDelete($index, row)">删除</el-button>
           </div>
-        </el-table-column>        
+        </el-table-column>
       </el-table>
     </div>
     <!-- table end -->
@@ -64,7 +64,7 @@
           :page-size="10"
           :total="300">
         </el-pagination>
-        
+
       </div>
     <!-- pagination end  -->
 
@@ -92,7 +92,7 @@
                 <el-input v-model="editForm.HotelName_En"></el-input>
               </el-form-item>
             </div>
-          </el-col>  
+          </el-col>
         </el-row>
 
         <el-row :gutter="20">
@@ -104,7 +104,7 @@
                 </el-select>
               </el-form-item>
             </div>
-          </el-col>    
+          </el-col>
           <el-col :span="7">
             <div class="grid-content bg-purple">
               <el-form-item label="前台电话">
@@ -130,7 +130,7 @@
                 </el-select>
               </el-form-item>
             </div>
-          </el-col>    
+          </el-col>
           <el-col :span="7">
             <div class="grid-content bg-purple">
               <el-form-item label="采购人">
@@ -154,7 +154,7 @@
                 <el-input type="textarea" v-model="editForm.Remark"></el-input>
               </el-form-item>
             </div>
-          </el-col>    
+          </el-col>
         </el-row>
         <span style="margin-left:100px">
           <el-button type="primary" @click="hotelbaseEditSave()">确 定</el-button>
@@ -179,168 +179,206 @@
 </template>
 
 <script>
-import {
-  hotelApi,
-} from 'api';
-import HotelPlatformInfo from  '../hotel-platform/HotelPlatformInfo'
+import { hotelApi } from 'api';
+import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 
-  export default {
-    data() {
-      return {
-        activeName: 'first',        
-        hotelbase: [],
-        page: 0,
-        editDialog:false,
-        editForm: {
-          id: '',
-          HotelName: '',
-          HotelName_En: '',
-          FrontPhone: '',
-          Address: '',
-          Star: '',
-          PersonName: '',
-          PurchasingName: '',
-          PayMode: ''
-        },
-        filters: {
-          id: '',
-          HotelName: '',
-          HotelName_En: '',
-          labelVal: '1'
-        },
-        selectedOptions: [{
+export default {
+  data() {
+    return {
+      activeName: 'first',
+      hotelbase: [],
+      page: 0,
+      editDialog: false,
+      editForm: {
+        id: '',
+        HotelName: '',
+        HotelName_En: '',
+        FrontPhone: '',
+        Address: '',
+        Star: '',
+        PersonName: '',
+        PurchasingName: '',
+        PayMode: '',
+        Remark: ''
+      },
+      filters: {
+        id: '',
+        HotelName: '',
+        HotelName_En: '',
+        labelVal: '1'
+      },
+      selectedOptions: [
+        {
           value: '1',
           label: '酒店ID'
-          }, {
+        },
+        {
           value: '2',
           label: '酒店名称'
-        }, {
+        },
+        {
           value: '3',
           label: '酒店英文名称'
-        }],
-        StarOptions: [{
+        }
+      ],
+      StarOptions: [
+        {
           value: '一星级',
           label: '一星级'
-        },{
+        },
+        {
           value: '二星级',
           label: '二星级'
-        },{
+        },
+        {
           value: '三星级',
           label: '三星级'
-        },{
+        },
+        {
           value: '四星级',
           label: '四星级'
-        },{
+        },
+        {
           value: '五星级',
           label: '五星级'
-        },{
+        },
+        {
           value: '六星级',
           label: '六星级'
-        }],
-        PayModeOptions: [{
+        }
+      ],
+      PayModeOptions: [
+        {
           value: '惠和账户',
           label: '惠和账户'
-        },{
+        },
+        {
           value: '惠和支付宝',
           label: '惠和支付宝'
-        },{
+        },
+        {
           value: '澳迅',
           label: '澳迅'
-        },{
+        },
+        {
           value: '鸿源迅达',
           label: '鸿源迅达'
-        },{
+        },
+        {
           value: '济南美票',
           label: '济南美票'
-        }]
+        }
+      ]
+    };
+  },
+  components: {
+    HotelPlatformInfo
+  },
+  created() {
+    this.getHotelbaseList();
+    console.log('getHotelbaseListcreated');
+  },
+  methods: {
+    hotelbaseSearch() {
+      this.getHotelbaseList();
+      console.log('hotelbaseSearch');
+    },
+    async getHotelbaseList(page) {
+      this.page = page || this.page;
+      let options = {
+        page: this.page,
+        id: this.filters.labelVal === '1'
+          ? parseInt(this.filters.id, 10)
+          : null,
+        HotelName: this.filters.labelVal === '2'
+          ? this.filters.HotelName
+          : null,
+        HotelName_En: this.filters.labelVal === '3'
+          ? this.filters.HotelName_En
+          : null
+      };
+      await hotelApi.fetchHotelbaseList(options).then(data => {
+        let { code, hotelbase_list } = data;
+        if (code === 200) {
+          this.hotelbase = hotelbase_list;
+        }
+      });
+      console.log('getHotelbaseList');
+    },
+    handleCurrentChange(val) {
+      this.getHotelbaseList(val);
+    },
+    async hotelbaseEditSave() {
+      try {
+        await hotelApi.editHotelbase(this.editForm);
+        this.getHotelbaseList();
+        this.editDialog = false;
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
       }
     },
-    components: {
-          HotelPlatformInfo
-    },
-    created() {
-      this.getHotelbaseList();
-      console.log('getHotelbaseListcreated')
-    },
-    methods: {
-      hotelbaseSearch() {
-        this.getHotelbaseList();
-        console.log('hotelbaseSearch')
-      },
-      async getHotelbaseList(page) {
-        this.page = page || this.page;
-          let options = {
-                page: this.page,
-                id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null,
-                HotelName: this.filters.labelVal === '2' ? this.filters.HotelName : null,
-                HotelName_En: this.filters.labelVal === '3' ? this.filters.HotelName_En : null
+    hotelbaseEdit($index, row) {
+      this.$router.push({
+        name: 'HotelBaseEdit',
+        params: { id: row.id }
+      });
 
-        };
-        await hotelApi.fetchHotelbaseList(options).then(data => {
-          let { code, hotelbase_list } = data;
-          if (code === 200) {
-            this.hotelbase = hotelbase_list;
-          }
+      // this.editForm.id = row.id;
+
+      // this.editForm.HotelName = row.HotelName;
+
+      // this.editForm.HotelName_En = row.HotelName_En;
+
+      // this.editForm.FrontPhone = row.FrontPhone;
+
+      // this.editForm.Address = row.Address;
+
+      // this.editForm.Star = row.Star;
+
+      // this.editForm.id = row.id;
+
+      // this.editForm.PersonName = row.PersonName;
+
+      // this.editForm.PurchasingName = row.PurchasingName;
+
+      // this.editForm.PayMode = row.PayMode;
+
+      // this.editForm.Remark = row.Remark;
+
+      // this.editDialog = true;
+    },
+    async hotelbaseDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         });
-        console.log('getHotelbaseList')
-      },
-      handleCurrentChange(val) {
-        this.getHotelbaseList(val);
-      },      
-      async hotelbaseEditSave() {
-            try {
-                await hotelApi.editHotelbase(this.editForm)
-                this.getHotelbaseList();
-                this.editDialog = false;
-                this.$message({
-                    message: '编辑成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e)
-            }
-      },
-      hotelbaseEdit($index, row) {
-            this.editForm.id = row.id;
-            this.editForm.HotelName = row.HotelName;
-            this.editForm.HotelName_En = row.HotelName_En;
-            this.editForm.FrontPhone = row.FrontPhone;
-            this.editForm.Address = row.Address;
-            this.editForm.Star = row.Star;
-            this.editForm.id = row.id;
-            this.editForm.PersonName = row.PersonName;
-            this.editForm.PurchasingName = row.PurchasingName;
-            this.editForm.PayMode = row.PayMode;
-            this.editDialog = true;
-      },
-      async hotelbaseDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
-                await hotelApi.removeHotelbase({
-                    id: row.id
-                }) 
-                this.getHotelbaseList();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-      },
+        await hotelApi.removeHotelbase({
+          id: row.id
+        });
+        this.getHotelbaseList();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
   }
+};
 </script>
 
 <style lang="scss">
 #HotelBasePage {
 
   .eltable {
-    margin: 20px 0 0 0 
+    margin: 20px 0 0 0
   }
 
   .filters {

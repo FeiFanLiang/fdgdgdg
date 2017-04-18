@@ -5,7 +5,7 @@
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店ID">
-            <el-input v-model="form.id"></el-input>
+            <el-input v-model="form.id" :disabled='true'></el-input>
           </el-form-item>
         </div>
       </el-col>
@@ -168,8 +168,6 @@ import {
         if (code === 200) {
           this.PayModeOptions = paymodeOptions;
           console.log('this.PayModeOptions' + this.PayModeOptions)
-          this.PayModeOptions = paymodeOptions;
-          console.log('this.PayMode' + this.PayMode)
         }
       },
       onSubmit() {

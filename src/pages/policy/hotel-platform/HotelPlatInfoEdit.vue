@@ -37,7 +37,7 @@ div.mcontant
         div.col-xs-12
           div.form-group
             label 备注
-            textarea.form-control(rows='5',style='color:#FF0000', v-model="model.Ramark")
+            textarea.form-control(rows='5',style='color:#FF0000', v-model="model.Remark")
       div.row
         div.col-xs-12
           div.form-group.text-center
