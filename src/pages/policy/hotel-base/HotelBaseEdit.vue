@@ -91,7 +91,7 @@
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit">保存</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -165,7 +165,7 @@ import {
           let options = {
             id: this.id
         };
-        await hotelApi.fetchHotelbaseList(options).then(data => {
+        await hotelApi.fetchHotelbaseOne(options).then(data => {
           let { code, hotelbase_list } = data;
           if (code === 200) {
             this.hotelbase = hotelbase_list;
@@ -187,7 +187,7 @@ import {
       onSubmit() {
         console.log('submit!');
         try {
-            const data = hotelApi.addHotelBase(this.form)
+            const data = hotelApi.editHotelBase(this.form)
             this.$message({
                 message: '保存成功',
                 type: 'success'

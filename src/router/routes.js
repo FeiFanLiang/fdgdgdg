@@ -1,6 +1,13 @@
 import Vue from 'vue';
 import Pages from '../pages';
 
+<<<<<<< HEAD
+import Vue from 'vue'
+import Pages from '../pages'
+
+
+=======
+>>>>>>> 31b0ea4234da4ab430d1d825db0a2a43683bc206
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
