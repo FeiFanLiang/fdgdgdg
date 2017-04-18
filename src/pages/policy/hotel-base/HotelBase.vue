@@ -36,8 +36,8 @@
         <el-table-column prop="id" label="酒店ID" sortable></el-table-column>
         <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
-        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip="false"></el-table-column>
-        <el-table-column prop="Address" label="地址" show-overflow-tooltip="false"></el-table-column>
+        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Star" label="星级"></el-table-column>
         <el-table-column prop="PersonName" label="采购人"></el-table-column>
         <el-table-column prop="PurchasingName" label="政策负责人"></el-table-column>
