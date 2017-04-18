@@ -44,10 +44,10 @@
         <el-table-column prop="PayMode" label="结款"></el-table-column>
         <el-table-column :context="_self" inline-template label="操作" width="150">
           <div>
-            <!-- <el-button type="primary">
-              <router-link :to="{path: '/HotelBaseEdit/id', params: { id: this.id }}">编辑</router-link>
-            </el-button> -->
-            <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button>
+            <el-button type="small">
+              <router-link :to="{name: 'HotelBaseEdit', params: { id: id }}">编辑</router-link>
+            </el-button>
+            <!-- <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button> -->
             <el-button size="small" type="danger" @click="hotelbaseDelete($index, row)">删除</el-button>
           </div>
         </el-table-column>        
@@ -200,7 +200,8 @@ import HotelPlatformInfo from  '../hotel-platform/HotelPlatformInfo'
           Star: '',
           PersonName: '',
           PurchasingName: '',
-          PayMode: ''
+          PayMode: '',
+          Remark: ''
         },
         filters: {
           id: '',
@@ -311,6 +312,7 @@ import HotelPlatformInfo from  '../hotel-platform/HotelPlatformInfo'
             this.editForm.PersonName = row.PersonName;
             this.editForm.PurchasingName = row.PurchasingName;
             this.editForm.PayMode = row.PayMode;
+            this.editForm.Remark = row.Remark;
             this.editDialog = true;
       },
       async hotelbaseDelete($index, row) {

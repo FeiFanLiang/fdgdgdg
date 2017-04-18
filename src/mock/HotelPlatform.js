@@ -45,7 +45,7 @@ const API = {
                 pi.PlatURL = PlatURL || pi.PlatURL
                 pi.PlatHotelName = PlatHotelName || pi.PlatHotelName
                 pi.PlatHotelName_En = PlatHotelName_En || pi.PlatHotelName_En
-                pi.Ramark = Ramark || pi.Ramark
+                pi.Remark = Remark || pi.Remark
                 return true
             }
         })
