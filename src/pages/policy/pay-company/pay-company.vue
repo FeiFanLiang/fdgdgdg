@@ -34,11 +34,10 @@
         stripe
         v-loading="loading"
         @sort-change="handleSortChange">
-        <!-- <el-table-column type="selection" width="55" :reserve-selection="reserveSelection"></el-table-column> -->
         <el-table-column prop="ID" label="ID" width="180"></el-table-column>
-        <el-table-column prop="AccountName" label="账户名称"></el-table-column>
-        <el-table-column prop="AccountNum" sortable="custom" label="银行帐户"></el-table-column>
-        <el-table-column prop="Remark" label="Remark"></el-table-column>
+        <el-table-column prop="AccountName" label="账户名称" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="AccountNum" sortable="custom" label="银行帐户" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="Remark" label="Remark" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column :context="_self" width="150" inline-template label="操作">
           <div>
             <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
@@ -200,7 +199,6 @@ export default {
             })
         },
         async handleSave(formName) {
-          console.log(formName)
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     try {
@@ -221,18 +219,15 @@ export default {
         },
         async handleEdit($index, row) {
             this.editDialog = true;
-            // try {
-            //     const res = await payCompanyApi.getDetail({
-            //         id: row.ID
-            //     });
-            //     console.log(res.data);
-            this.editForm.ID = row.ID;
-            this.editForm.AccountName = row.AccountName;
-            this.editForm.AccountNum = row.AccountNum;
-            this.editForm.Remark = row.Remark;
-            // } catch (e) {
-            //     console.error(e);
-            // }
+            try {
+                const res = await payCompanyApi.getDetail({
+                    id: row.ID
+                });
+                this.editForm = { ...res.data
+                };
+            } catch (e) {
+                console.error(e);
+            }
         },
         async handleDelete($index, row) {
             try {
@@ -321,7 +316,6 @@ export default {
             display: inline-block;
         }
     }
-
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
