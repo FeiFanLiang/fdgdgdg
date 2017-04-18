@@ -1,22 +1,22 @@
 <template lang="html">
-<el-form ref="form" :model="form">
+<el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
-  <el-row :gutter="20">
-      <el-col :span="6">
+    <el-row :gutter="20">
+      <el-col :span="4">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店ID">
             <el-input v-model="form.id" :disabled='true'></el-input>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="7" :offset="1">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店名称">
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="8">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店英文名称">
             <el-input v-model="form.HotelName_En"></el-input>
@@ -119,6 +119,7 @@ import {
   export default {
     data() {
       return {
+        labelPosition: 'top',
         form: {
           id: '',
           HotelName: '',
