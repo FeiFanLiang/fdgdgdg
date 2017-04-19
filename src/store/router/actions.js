@@ -1,9 +1,7 @@
-import * as types from './mutations-types'
+import * as types from './mutations-types';
 
 module.exports = {
-    set_cur_route: ({
-        commit
-    }, paths) => {
-        commit(types.SET_CUR_ROUTE, paths)
-    }
-}
+  set_cur_route: ({ commit }, paths) => {
+    commit(types.SET_CUR_ROUTE, paths);
+  }
+};

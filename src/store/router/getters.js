@@ -1,5 +1,5 @@
 module.exports = {
-    // getCartList(state) {
-    //     return state.cartList
-    // }
-}
+  // getCartList(state) {
+  //     return state.cartList
+  // }
+};
