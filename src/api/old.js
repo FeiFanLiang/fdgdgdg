@@ -21,6 +21,9 @@ export default {
     requestLogin(params) {
         return axios.post(`${base}/login`, params).then(res => res.data)
     },
+    requestRegister(params) {
+        return axios.post(`${base}/register`, params).then(res => res.data)
+    },
     fetchSchoolList(params) {
         return axios.get(`${base}/schools`).then(res => res.data)
     },
@@ -36,5 +39,5 @@ export default {
     createResume(params) {
         return axios.post(`${base}/resume/add`).then(res => res.data)
     },
-    
+
 }

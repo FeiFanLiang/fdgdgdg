@@ -37,15 +37,15 @@ export default {
   },
   data() {
     return {
-      username: 'zheng',
-      password: '123456',
+      username: '',
+      password: '',
       rememberMe: false,
       isBtnLoading: false
     };
   },
   computed: {
     btnText() {
-      if (this.isBtnLoading) return '注册中...';
+      if (this.isBtnLoading) return '注册登录中...';
       return '注册';
     }
   },
@@ -71,15 +71,27 @@ export default {
         if (code !== 200) {
           this.$message.error(msg);
         } else {
-          localStorage.setItem('user', JSON.stringify(user));
-          if (this.$route.query.redirect) {
-            this.$router.push({
-              path: this.$route.query.redirect
-            });
-          } else {
-            this.$router.push({
-              path: '/'
-            });
+          this.isBtnLoading = true;
+          try {
+            const data = await oldApi.requestLogin(registerParams);
+            this.isBtnLoading = false;
+            let { msg, code, user } = data;
+            if (code !== 200) {
+              this.$message.error(msg);
+            } else {
+              localStorage.setItem('user', JSON.stringify(user));
+              if (this.$route.query.redirect) {
+                this.$router.push({
+                  path: this.$route.query.redirect
+                });
+              } else {
+                this.$router.push({
+                  path: '/'
+                });
+              }
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       } catch (e) {

@@ -76,6 +76,7 @@ export default {
       try {
         const data = await oldApi.requestLogin(loginParams);
         this.isBtnLoading = false;
+        console.log(data)
         let { msg, code, user } = data;
         if (code !== 200) {
           this.$message.error(msg);
