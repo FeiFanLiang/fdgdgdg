@@ -102,10 +102,7 @@
 </template>
 
 <script>
-import {
-    oldApi,
-    payCompanyApi
-} from 'api';
+import { payCompanyApi } from 'api';
 
 // import moment from 'moment';
 // import Vue from 'vue';
