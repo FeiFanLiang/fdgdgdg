@@ -24,7 +24,7 @@
               <el-input v-model="form.HotelName_En"></el-input>
             </el-form-item>
           </div>
-        </el-col>  
+        </el-col>
       </el-row>
 
       <el-row :gutter="20">
@@ -36,7 +36,7 @@
               </el-select>
             </el-form-item>
           </div>
-        </el-col>    
+        </el-col>
         <el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="前台电话">
@@ -62,7 +62,7 @@
               </el-select>
             </el-form-item>
           </div>
-        </el-col>    
+        </el-col>
         <el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="采购人">
@@ -86,7 +86,7 @@
               <el-input type="textarea" v-model="form.Remark"></el-input>
             </el-form-item>
           </div>
-        </el-col>    
+        </el-col>
       </el-row>
 
       <el-row :gutter="15">
@@ -103,11 +103,11 @@
               <el-button @click="Cancel">取消</el-button>
             </el-form-item>
           </div>
-        </el-col>     
+        </el-col>
       </el-row>
 
   </el-form>
-  <!-- form end --> 
+  <!-- form end -->
 
   <!-- tab start -->
   <el-tabs v-model="activeName" type="card">
@@ -125,104 +125,104 @@
 </template>
 
 <script>
-import {
-  HotelPayModeApi, hotelApi
-} from 'api';
+import { HotelPayModeApi, hotelApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
-import HotelRoomList from '../hotel-room/HotelRoomList';
+import HotelRoomList from '../../hotel/hotel-room/HotelRoomList';
 
-  export default {
-    data() {
-      return {
-        activeName: 'first',
-        labelPosition: 'top',
-        form: {
-          id: '',
-          HotelName: '',
-          HotelName_En: '',
-          FrontPhone: '',
-          Address: '',
-          Star: '',
-          PersonName: '',
-          PurchasingName: '',
-          PayMode: '',
-          Remark: ''
-        },
-        StarOptions: [{
+export default {
+  data() {
+    return {
+      activeName: 'first',
+      labelPosition: 'top',
+      form: {
+        id: '',
+        HotelName: '',
+        HotelName_En: '',
+        FrontPhone: '',
+        Address: '',
+        Star: '',
+        PersonName: '',
+        PurchasingName: '',
+        PayMode: '',
+        Remark: ''
+      },
+      StarOptions: [
+        {
           value: '1',
           label: '一星级'
-        },{
+        },
+        {
           value: '2',
           label: '二星级'
-        },{
+        },
+        {
           value: '3',
           label: '三星级'
-        },{
+        },
+        {
           value: '4',
           label: '四星级'
-        },{
+        },
+        {
           value: '5',
           label: '五星级'
-        },{
+        },
+        {
           value: '6',
           label: '六星级'
-        }],
-        PayModeOptions: [],
-      }
-    },
-    components: {
-          HotelPlatformInfo,
-          HotelRoomList
-    },
-    created() {
-        this.id = this.$route.params.id
-        console.log('11111111111111' + this.id)
-        this.getHotelbaseList(this.id)
-        this.getPayModeOptions();
-    },
-    methods: {
-      async getHotelbaseList(id) {
-          let options = {
-            id: this.id
-        };
-        await hotelApi.fetchHotelbaseList(options).then(data => {
-          let { code, hotelbase_list } = data;
-          if (code === 200) {
-            this.hotelbase = hotelbase_list;
-          }
-        });
-        console.log('getHotelbaseList')
-      },
-      async getPayModeOptions() {
-        const data = await HotelPayModeApi.getDetail()
-        let {
-            code,
-            paymodeOptions
-        } = data;
-        if (code === 200) {
-          this.PayModeOptions = paymodeOptions;
-          console.log('this.PayModeOptions' + this.PayModeOptions)
         }
-      },
-      onSubmit() {
-        console.log('submit!');
-        try {
-            hotelApi.editHotelbase(this.form)
-            this.$message({
-                message: '保存成功',
-                type: 'success'
-            });
-            } catch (e) {
-                console.error(e);
-            }       
-      },
-      Cancel() {
-        this.$router.go(-1)
+      ],
+      PayModeOptions: []
+    };
+  },
+  components: {
+    HotelPlatformInfo,
+    HotelRoomList
+  },
+  created() {
+    this.id = this.$route.params.id;
+    console.log('11111111111111' + this.id);
+    this.getHotelbaseList(this.id);
+    this.getPayModeOptions();
+  },
+  methods: {
+    async getHotelbaseList(id) {
+      let options = {
+        id: this.id
+      };
+      await hotelApi.fetchHotelbaseList(options).then(data => {
+        let { code, hotelbase_list } = data;
+        if (code === 200) {
+          this.hotelbase = hotelbase_list;
+        }
+      });
+      console.log('getHotelbaseList');
+    },
+    async getPayModeOptions() {
+      const data = await HotelPayModeApi.getDetail();
+      let { code, paymodeOptions } = data;
+      if (code === 200) {
+        this.PayModeOptions = paymodeOptions;
+        console.log('this.PayModeOptions' + this.PayModeOptions);
       }
-             
-      
+    },
+    onSubmit() {
+      console.log('submit!');
+      try {
+        hotelApi.editHotelbase(this.form);
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    Cancel() {
+      this.$router.go(-1);
     }
   }
+};
 </script>
 
 <style lang="scss">
