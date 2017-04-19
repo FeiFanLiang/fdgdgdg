@@ -10,6 +10,7 @@ import PayCompany from './policy/pay-company/pay-company.vue';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode.vue';
 import HotelBaseAdd from './policy/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './policy/hotel-base/HotelBaseEdit';
+import HotelPlatformInfo from './policy/hotel-platform/HotelPlatformInfo';
 
 export default {
   Abstract,
@@ -22,5 +23,6 @@ export default {
   PayCompany,
   HotelPayMode,
   HotelBaseAdd,
-  HotelBaseEdit
+  HotelBaseEdit,
+  HotelPlatformInfo
 };
