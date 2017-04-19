@@ -17,7 +17,8 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 // order
 import Order from './order/order';
-
+// test
+import Test from './test/test';
 export default {
   Abstract,
   NotFound,
@@ -32,5 +33,6 @@ export default {
   HotelPlatformInfo,
   PolicyImages,
   PayType,
-  Order
+  Order,
+  Test
 };

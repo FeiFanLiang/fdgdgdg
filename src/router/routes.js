@@ -7,6 +7,11 @@ const root = Vue.component('root', {
 
 let routes = [
   {
+    path: '/test',
+    component: Pages.Test,
+    name: 'test'
+  },
+  {
     path: '/login',
     component: Pages.Login,
     name: 'login',
