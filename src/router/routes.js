@@ -12,6 +12,11 @@ let routes = [
     name: 'test'
   },
   {
+    path: '/testone',
+    component: Pages.TestOne,
+    name: 'testone'
+  },
+  {
     path: '/login',
     component: Pages.Login,
     name: 'login',
