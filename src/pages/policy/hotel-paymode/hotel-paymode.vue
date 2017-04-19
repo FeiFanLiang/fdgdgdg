@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { HotelPayModeApi } from 'api';
+import { hotelPayModeApi } from 'api';
 
 // import moment from 'moment';
 // import Vue from 'vue';
@@ -161,7 +161,7 @@ export default {
                 if (valid) {
                     try {
                         console.log(this.editForm)
-                        HotelPayModeApi.editInfo(this.editForm);
+                        hotelPayModeApi.editInfo(this.editForm);
                         this.fetchData();
                         this.editDialog = false;
                         this.$message({
@@ -180,7 +180,7 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     try {
-                        HotelPayModeApi.addInfo(this.createForm);
+                        hotelPayModeApi.addInfo(this.createForm);
                         this.fetchData();
                         this.createDialog = false;
                         this.$message({
@@ -199,7 +199,7 @@ export default {
         async handleEdit($index, row) {
             this.editDialog = true;
             try {
-                const res = await HotelPayModeApi.getDetail({
+                const res = await hotelPayModeApi.getDetail({
                     id: row.ID
                 });
                 this.editForm = { ...res.data
@@ -215,7 +215,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await HotelPayModeApi.delInfo({
+                await hotelPayModeApi.delInfo({
                     id: row.ID
                 });
                 this.fetchData();
@@ -254,7 +254,7 @@ export default {
             this.loading = true;
             try {
                 console.log(options)
-                const res = await HotelPayModeApi.getList(options);
+                const res = await hotelPayModeApi.getList(options);
                 console.log(res.data);
                 // clear selection
                 this.$refs.table.clearSelection();
