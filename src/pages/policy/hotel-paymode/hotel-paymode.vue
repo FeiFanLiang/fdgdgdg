@@ -90,10 +90,7 @@
 </template>
 
 <script>
-import {
-    oldApi,
-    HotelPayModeApi
-} from 'api';
+import { HotelPayModeApi } from 'api';
 
 // import moment from 'moment';
 // import Vue from 'vue';
