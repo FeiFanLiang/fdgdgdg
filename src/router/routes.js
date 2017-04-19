@@ -14,7 +14,14 @@ let routes = [
       hidden: true
     }
   },
-
+  {
+    path: '/register',
+    component: Pages.Register,
+    name: 'register',
+    meta: {
+      hidden: true
+    }
+  },
   {
     path: '/404',
     component: Pages.NotFound,
@@ -30,25 +37,12 @@ let routes = [
       requiresAuth: true
     },
     children: [
+      // hotel
       {
-        path: 'list',
+        path: 'hotel',
         component: Pages.Abstract,
-        name: '列表',
-        iconClass: 'el-icon-message',
-        children: [
-          {
-            path: 'filters',
-            name: '搜索条件',
-            component: Pages.ListWithFilters,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
-      {
-        path: 'policy',
-        component: Pages.Abstract,
-        name: '政策',
-        iconClass: 'el-icon-message',
+        name: '酒店',
+        iconClass: 'el-icon-setting',
         children: [
           {
             path: 'HotelPlatform',
@@ -77,7 +71,16 @@ let routes = [
             meta: {
               hidden: true
             }
-          },
+          }
+        ]
+      },
+      // policy
+      {
+        path: 'policy',
+        component: Pages.Abstract,
+        name: '政策',
+        iconClass: 'el-icon-setting',
+        children: [
           {
             path: 'pay-company',
             name: '银行信息',
@@ -85,23 +88,48 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
+            path: 'pay-type',
+            name: 'PayType',
+            component: Pages.PayType,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
             path: 'hotel-paymode',
             name: '支付方式',
             component: Pages.HotelPayMode,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'PolicyImages',
+            name: '政策图片',
+            component: Pages.PolicyImages,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'RserveMode',
+            name: 'RserveMode',
+            component: Pages.RserveMode,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'SecretType',
+            name: 'SecretType',
+            component: Pages.SecretType,
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },
+      // order
       {
-        path: 'form',
+        path: 'order',
         component: Pages.Abstract,
-        name: '表单',
-        iconClass: 'el-icon-document',
+        name: '订单',
+        iconClass: 'el-icon-setting',
         children: [
           {
-            path: 'big-form',
-            name: '简历管理',
-            component: Pages.BigForm,
+            path: 'Order',
+            component: Pages.Order,
+            name: '订单',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
