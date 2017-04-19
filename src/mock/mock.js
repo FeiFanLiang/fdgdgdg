@@ -6,6 +6,7 @@ import HotelPlatformAPI from './HotelThreePlatInfo';
 import HotelPlatformInfoAPI from './HotelPlatform';
 import PayCompanyApi from './PayCompany';
 import HotelPayModeApi from './HotelPayMode';
+import HotelRoomApi from './HotelRoom';
 
 export default {
   bootstrap() {
@@ -16,6 +17,7 @@ export default {
     HotelPlatformInfoAPI.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);
     HotelPayModeApi.bootstrap(mock);
+    HotelRoomApi.bootstrap(mock);
 
     // mock error request
     mock.onGet('/error').reply(500, { msg: 'failure' });

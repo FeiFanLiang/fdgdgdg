@@ -1,115 +1,190 @@
-<template lang='jade'>
-div.content
-  a(@click="addroom") 添加
-  Modal(title="确认删除", v-model="modalIsDel", @ok="affdelroom", @cancel="") 确认要删除这个房型吗？相关政策价格也会被动删除
-  Modal(title="设为默认", v-model="modalIsDef", @ok="affdef", @cancel="") 设为默认？
-  Modal(title="取消默认", v-model="modalIsCalDef", @ok="", @cancel="") 取消默认？
-  table.table
-    thead
-      tr
-        th ID
-        th 房间名称
-        th 床型
-        th 数量
-        th 备注
-        th 默认
-        th 操作
-    tbody
-      tr(v-for="item in List")
-        td {{item.ID}}
-        td {{item.RoomName}}
-        td {{arrs(item.Beds)}}
-        td {{item.RoomCount}}
-        td {{item.Remark}}
-        td {{item.IsDelete?"是":"否"}}
-        td
-          a(@click="editroom(item.ID)") 编辑
-          span |
-          a(@click='setdef(item.ID)') 设为默认
-          span |
-          a(@click="delroom(item.ID)") 刪除
-  component( :is="showEdit?'hotelroomedit':''", :hotelID='hotelID', :mode='EditMode', :roomID='crrID', @Sumit='UPList', @Cancel='hideEdit')
+<template>
+<div>
+  <!-- table start -->
+  <el-table
+    :data="hotelroomlist"
+    border
+    style="width: 100%">
+
+    <el-table-column prop="id" label="ID" width="60"></el-table-column>
+    <el-table-column prop="RoomName" label="房间名称"></el-table-column>
+    <el-table-column prop="Beds" label="床型"></el-table-column>
+    <el-table-column prop="RoomCount" label="数量"></el-table-column>
+    <el-table-column prop="Remark" label="备注"></el-table-column>
+    <el-table-column prop="IsDelete" label="默认"></el-table-column>
+    <el-table-column :context="_self" inline-template label="操作" width="180">
+      <div>
+        <el-button size="mini" @click="hotelroomAdd">添加</el-button>
+        <el-button size="mini" @click="hotelroomEdit($index, row)">编辑</el-button>         
+        <el-button size="mini" type="danger" @click="hotelroomDelete($index, row)">删除</el-button>
+      </div>
+    </el-table-column>
+
+  </el-table>
+  <!-- table end -->
+
+  <!-- create dialog start -->
+    <el-dialog title="添加房间信息" v-model="createDialog" size="small">
+      <el-form ref="createForm" :model="createForm" label-width="80px">
+        <el-form-item label="ID">
+          <el-input v-model="createForm.id" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="房间名称">
+          <el-input v-model="createForm.RoomName"></el-input>
+        </el-form-item>
+        <el-form-item label="床型">
+          <el-input v-model="createForm.Beds"></el-input>
+        </el-form-item>
+        <el-form-item label="数量">
+          <el-input v-model="createForm.RoomCount"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="createForm.Remark"></el-input>
+        </el-form-item>
+        <el-form-item label="默认">
+          <el-input v-model="createForm.IsDelete"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialog = false">取 消</el-button>
+        <el-button type="primary" @click="hotelroomSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- create dialog end -->
+
+    <!-- edit dialog start -->
+    <el-dialog title="编辑房间信息" v-model="editDialog" size="small" :modal-append-to-body="false">
+      <el-form ref="editForm" :model="editForm" label-width="80px">
+        <el-form-item label="ID">
+          <el-input v-model="editForm.id" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="房间名称">
+          <el-input v-model="editForm.RoomName"></el-input>
+        </el-form-item>
+        <el-form-item label="床型">
+          <el-input v-model="editForm.Beds"></el-input>
+        </el-form-item>
+        <el-form-item label="数量">
+          <el-input v-model="editForm.RoomCount"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="editForm.Remark"></el-input>
+        </el-form-item>
+        <el-form-item label="默认">
+          <el-input v-model="editForm.IsDelete"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="hotelroomEditSave()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- edit dialog end -->
+   
+
+</div>
 </template>
+
 <script>
-import hotelroomedit from 'views/Hotel/HotelRoomEdit.vue'
-import Modal from 'components/common/Modal.vue'
-import {
-  GetList
-} from 'api/Hotel/HotelRoom'
-export default {
-  name: 'HotelRoomList',
-  props: {
-    hotelID: Number
-  },
-  data () {
-    return {
-      List: [],
-      crrID: -1,
-      showEdit: false,
-      EditMode: 'add',
-      modalIsDel: false,
-      modalIsDef: false,
-      modalIsCalDef: false
-    }
-  },
-  components: {
-    hotelroomedit,
-    Modal
-  },
-  created: function () {
-    console.log('ready')
-    this.UPList()
-    console.log('roomlist' + this.hotelID)
-  },
-  methods: {
-    UPList: async function () {
-      const result = await GetList(this.hotelID)
-      this.List = result
-      this.showEdit = false
-      this.$nextTick(function () {
-      })
+import { hotelApi } from 'api';
+
+  export default {
+    data() {
+      return {
+        hotelroomlist: [],
+        createDialog: false,
+        editDialog: false,
+        createForm: {
+          id: '',
+          RoomName: '',
+          Beds: '',
+          RoomCount: '',
+          Remark: '',
+          IsDelete: ''
+        },
+        editForm: {
+          id: '',
+          RoomName: '',
+          Beds: '',
+          RoomCount: '',
+          Remark: '',
+          IsDelete: ''
+        }
+     }
     },
-    setdef (id) {
-      this.modalIsDef = true
+    mounted() {      
+      this.fetchData();
     },
-    affdef (id) {
-      this.modalIsDef = false
-    },
-    editroom (id) {
-      // debugger
-      this.crrID = id
-      this.EditMode = 'edit'
-      this.showEdit = true
-    },
-    closeEdit () {
-      this.showEdit = false
-    },
-    delroom (id) {
-      this.modalIsDel = true
-    },
-    affdelroom (id) {
-      this.modalIsDel = false
-    },
-    arrs (bads) {
-      let bname = ''
-      for (let b of bads) {
-        bname += b.BedName
-        bname += ' | '
+    methods: {
+      async hotelroomSave() {
+      try {
+        await hotelApi.addHotelroom(this.createForm);
+        console.log('111111111111111111111111111111111');
+        this.fetchData();
+        this.createDialog = false;
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
       }
-      return bname
     },
-    addroom () {
-      // debugger
-      this.crrID = -1
-      this.EditMode = 'add'
-      this.showEdit = true
+    async hotelroomEditSave() {
+      try {
+        await hotelApi.editHotelroom(this.editForm);
+        this.fetchData();
+        this.editDialog = false;
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
-    hideEdit () {
-      this.showEdit = false
+    hotelroomAdd() {
+      this.createDialog = true;
+    },
+    hotelroomEdit($index, row) {
+      this.editForm.id = row.id;
+      this.editForm.RoomName = row.RoomName;
+      this.editForm.Beds = row.Beds;
+      this.editForm.RoomCount = row.RoomCount;
+      this.editForm.Remark = row.Remark;
+      this.editForm.IsDelete = row.IsDelete;
+      this.editDialog = true;
+    },
+    async hotelroomDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await hotelApi.removeHotelroom({
+          id: row.id
+        });
+        this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+      async fetchData() {
+        let options = {
+            id: this.id
+        };
+        hotelApi.fetchHotelroomList(options).then(data => {
+          let { code, hotelroomlist_list } = data;
+          if (code === 200) {
+            this.hotelroomlist = hotelroomlist_list;
+          }
+      });
     }
   }
 }
 </script>
-<style>
-
-</style>

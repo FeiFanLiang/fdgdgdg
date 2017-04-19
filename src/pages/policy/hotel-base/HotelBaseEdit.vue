@@ -1,5 +1,5 @@
 <template lang="html">
-<div>
+<div id="HotelbaseEdit">
   <!-- form start -->
   <el-form ref="form" :model="form" style="margin-top:25px" :label-position="labelPosition">
 
@@ -112,7 +112,9 @@
   <!-- tab start -->
   <el-tabs v-model="activeName" type="card">
     <el-tab-pane label="政策信息" name="first">政策信息</el-tab-pane>
-    <el-tab-pane label="房型信息" name="second">房型信息</el-tab-pane>
+    <el-tab-pane label="房型信息" name="second">房型信息
+      <HotelRoomList></HotelRoomList>
+    </el-tab-pane>
     <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
     <el-tab-pane label="平台映射" name="fourth">平台映射
       <HotelPlatformInfo></HotelPlatformInfo>
@@ -124,9 +126,10 @@
 
 <script>
 import {
-  oldApi, hotelApi
+  HotelPayModeApi, hotelApi
 } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
+import HotelRoomList from '../hotel-room/HotelRoomList';
 
   export default {
     data() {
@@ -168,7 +171,8 @@ import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
       }
     },
     components: {
-          HotelPlatformInfo
+          HotelPlatformInfo,
+          HotelRoomList
     },
     created() {
         this.id = this.$route.params.id
@@ -190,7 +194,7 @@ import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
         console.log('getHotelbaseList')
       },
       async getPayModeOptions() {
-        const data = await oldApi.fetchPayModeOptions()
+        const data = await HotelPayModeApi.getDetail()
         let {
             code,
             paymodeOptions
@@ -222,6 +226,9 @@ import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 </script>
 
 <style lang="scss">
+  #HotelbaseEdit {
+    margin: 20px;
+  }
   .el-row {
     margin-bottom: 20px;
     &:last-child {

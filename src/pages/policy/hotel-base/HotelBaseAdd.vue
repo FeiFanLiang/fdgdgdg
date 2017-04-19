@@ -1,4 +1,5 @@
 <template lang="html">
+<div id="HotelbaseAdd">
 <el-form :rules="rules" ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
@@ -108,7 +109,7 @@
 
 
 
-
+</div>
 </template>
 
 <script>
@@ -216,6 +217,9 @@ export default {
 </script>
 
 <style lang="scss">
+  #HotelbaseAdd {
+    margin: 20px;
+  }
   .el-row {
     margin-bottom: 20px;
     &:last-child {
