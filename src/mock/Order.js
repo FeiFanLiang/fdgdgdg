@@ -1,15 +1,16 @@
 import Mock from 'mockjs';
-import { List } from '../resources/Order';
-let _List = List;
+import { orderList } from '../resources/Order';
+let _orderList = orderList;
 const API = {
   getList(config) {
+		console.log(config)
     let {
         page,
         sortWay,
         AccountName,
         AccountNum
     } = config.params
-    let mockList = _List.filter(user => {
+    let mockList = _orderList.filter(user => {
         if (AccountName && user.AccountName !== AccountName)
             return false
         if (AccountNum && user.AccountNum !== AccountNum)
@@ -28,7 +29,7 @@ const API = {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve([200, {
-            total: _List.length,
+            total: _orderList.length,
             list: mockList
         }]);
       });
@@ -37,7 +38,7 @@ const API = {
   getDetail(config) {
     let id = config.id;
     let data = {};
-    for (let [, elem] of _List.entries()) {
+    for (let [, elem] of _orderList.entries()) {
       if (elem.ID === id) data = elem;
     }
     return new Promise((resolve, reject) => {
@@ -48,7 +49,7 @@ const API = {
   },
   editInfo(config) {
     let {ID, AccountName, AccountNum, Remark} = JSON.parse(config.data)
-    _List.some(u => {
+    _orderList.some(u => {
         if (u.ID === ID) {
             u.AccountName = AccountName || u.AccountName
             u.AccountNum = AccountNum || u.AccountNum
