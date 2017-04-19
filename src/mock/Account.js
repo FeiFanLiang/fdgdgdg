@@ -38,7 +38,6 @@ const API = {
   register(config) {
     let { username, password } = JSON.parse(config.data);
     return new Promise((resolve, reject) => {
-      let user = null;
       setTimeout(() => {
         let addUser = null;
         let checkUser = LoginUsers.find(function(value, index, arr) {
@@ -53,7 +52,6 @@ const API = {
             {
               code: 200,
               msg: '请求成功!!!',
-              user
             }
           ]);
         } else {
@@ -61,7 +59,7 @@ const API = {
             200,
             {
               code: 500,
-              msg: '注册失败!!!该用户已存在!'
+              msg: '注册失败!该用户已存在!!!'
             }
           ]);
         }
