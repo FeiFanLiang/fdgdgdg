@@ -10,7 +10,7 @@
       <!-- filters start -->
       <div class="filters">
         <div class="filter">
-          <el-select v-model="filters.labelVal" clearable placeholder="请选择">
+          <!-- <el-select v-model="filters.labelVal" clearable placeholder="请选择">
             <el-option
                 v-for="item in selectedOptions"
                 :label="item.label"
@@ -18,13 +18,13 @@
             </el-option>
           </el-select>
           <el-input placeholder="请输入账户名称" v-model="filters.AccountName" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入银行账户" v-model="filters.AccountNum" v-show="filters.labelVal == '2'"></el-input>
+          <el-input placeholder="请输入银行账户" v-model="filters.AccountNum" v-show="filters.labelVal == '2'"></el-input> -->
         </div>
         <!-- <div class="filter">
           起止时间：
           <el-date-picker type="datetimerange" placeholder="选择时间范围" style="width:350px" v-model="filters.startEndTime"></el-date-picker>
         </div> -->
-        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <!-- <el-button type="primary" @click="handleSearch()">搜索</el-button> -->
         <!-- <el-button type="primary" @click="clickCrate()">创建</el-button> -->
       </div>
       <!-- filters end -->
@@ -99,7 +99,6 @@ export default {
                     value: '2',
                     label: '银行账户'
                 }
-
             ],
             rules: {
                 AccountName: [{
