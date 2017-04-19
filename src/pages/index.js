@@ -4,11 +4,12 @@ import NotFound from './common/404';
 import Login from './login/login';
 import Register from './register/register';
 // hotel
-import HotelPlatform from './policy/hotel-platform/HotelPlatform';
-import HotelBase from './policy/hotel-base/HotelBase';
-import HotelBaseAdd from './policy/hotel-base/HotelBaseAdd';
-import HotelBaseEdit from './policy/hotel-base/HotelBaseEdit';
-import HotelPlatformInfo from './policy/hotel-platform/HotelPlatformInfo';
+import HotelPlatform from './hotel/hotel-platform/HotelPlatform';
+import HotelBase from './hotel/hotel-base/HotelBase';
+import HotelBaseAdd from './hotel/hotel-base/HotelBaseAdd';
+import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
+import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
+
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import PayType from './policy/pay-type/pay-type';
