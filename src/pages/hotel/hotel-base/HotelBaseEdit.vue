@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { HotelPayModeApi, hotelApi } from 'api';
+import { HotelPayModeApi, HotelBaseApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 import HotelRoomList from '../../hotel/hotel-room/HotelRoomList';
 
@@ -190,7 +190,7 @@ export default {
       let options = {
         id: this.id
       };
-      await hotelApi.fetchHotelbaseList(options).then(data => {
+      await HotelBaseApi.listAll(options).then(data => {
         let { code, hotelbase_list } = data;
         if (code === 200) {
           this.hotelbase = hotelbase_list;
@@ -209,7 +209,7 @@ export default {
     onSubmit() {
       console.log('submit!');
       try {
-        hotelApi.editHotelbase(this.form);
+        HotelBaseApi.edit(this.form);
         this.$message({
           message: '保存成功',
           type: 'success'

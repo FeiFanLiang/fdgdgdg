@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { hotelApi } from 'api';
+import { HotelBaseApi } from 'api';
 
 export default {
   data() {
@@ -167,7 +167,7 @@ export default {
           ? this.filters.HotelName_En
           : null
       };
-      await hotelApi.fetchHotelbaseList(options).then(data => {
+      await HotelBaseApi.listAll(options).then(data => {
         let { code, hotelbase_list } = data;
         if (code === 200) {
           this.hotelbase = hotelbase_list;
@@ -191,9 +191,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await hotelApi.removeHotelbase({
-          id: row.id
-        });
+        await HotelBaseApi.remove(row.id);
         this.getHotelbaseList();
         this.$message({
           message: '删除成功',

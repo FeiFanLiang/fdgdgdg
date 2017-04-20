@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { HotelPayModeApi, hotelApi } from 'api';
+import { HotelPayModeApi, HotelBaseApi } from 'api';
 
 export default {
   data() {
@@ -199,7 +199,7 @@ export default {
         }
       });
       try {
-        const data = hotelApi.addHotelBase(this.form);
+        const data = HotelBaseApi.add(this.form);
         this.$route.params.form;
         this.$message({
           message: '保存成功',

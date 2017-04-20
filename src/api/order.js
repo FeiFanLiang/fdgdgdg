@@ -1,15 +1,13 @@
-import axios from 'axios'
-import path from './api'
-let base = ''
+import axios from 'axios';
+import path from './api';
 export default {
-
-    getList(params) {
-        return axios.get(`/Hotel/Order/All`, {params:params})
-    },
-    getDetail(params) {
-        return axios.get(`/Hotel/Order/{id}`, params)
-    },
-    editInfo(params) {
-        return axios.put(`/Hotel/Order/{id}`, params)
-    },
-}
+  getList(params) {
+    return axios.get(path.apiBaseUrl + 'Hotel/Order/All', { params: params });
+  },
+  getDetail(id) {
+    return axios.get(path.apiBaseUrl + `Hotel/Order/${id}`);
+  },
+  editInfo(id, params) {
+    return axios.put(path.apiBaseUrl + `Hotel/Order/${id}`, params);
+  }
+};
