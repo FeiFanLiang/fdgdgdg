@@ -4,6 +4,7 @@
     <el-button @click="priceMore('2017-01-01')">测试批量修改售卖价</el-button>
 
   <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
+
     <el-row>
         <el-col :span="23" :offset="1">生效时间  <el-date-picker
                 v-model="value7"
@@ -14,39 +15,46 @@
               </el-date-picker></el-col>
 
   </el-row>
+
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
     <el-checkbox v-for="city in cities" :label="city">{{city}}</el-checkbox>
   </el-checkbox-group></el-col>
 </el-row>
+
   <el-row>
     <el-col :span="12" :offset="1"><el-input placeholder="最高采购价" v-model="input3">
    <template slot="prepend">最高采购价</template>
    <template slot="append">CNY</template>
  </el-input></el-col>
    </el-row>
+
    <el-row>
        <el-col :span="12" :offset="1"><el-input placeholder="售卖价" v-model="input3">
       <template slot="prepend">售卖价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</template>
       <template slot="append">CNY</template>
       </el-input></el-col>
     </el-row>
+
     <el-row>  <el-col :span="23" :offset="1"><el-radio-group v-model="radio2">
       <el-radio :label="3">不变</el-radio>
       <el-radio :label="6">开房</el-radio>
       <el-radio :label="9">关房</el-radio>
-    </el-radio-group></el-col></el-row>
+    </el-radio-group></el-col>
+  </el-row>
 
   <div slot="footer" class="dialog-footer">
     <el-button @click="priceChangeForOne = false">取 消</el-button>
     <el-button type="primary" @click="priceChangeForOne = false">确 定</el-button>
   </div>
+
 </el-dialog>
 
 
 <el-dialog title="批量修改售卖价" v-model="priceChangeForMore" >
-  <div v-for="n in cycle" style="position: relative;">
+  <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
+
     <el-row>
         <el-col :span="23" :offset="1">生效时间  <el-date-picker
                 v-model="value7"
@@ -57,6 +65,7 @@
               </el-date-picker></el-col>
 
   </el-row>
+
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -65,141 +74,146 @@
   </el-row>
   <i class="el-icon-delete" style="    position: absolute;
     top: 50%;
-    right: 0;" @click="deleteCycle(n,index)"></i>
+    right: 0;" @click="deleteCycle(n,index)" v-show="chosenDelete===n&&cycle.length>1"></i>
 </div>
-<el-button type="text" @click="addCycle">添加周期</el-button>
+
+<el-row>
+  <el-col :span="23" :offset="1"><el-button type="text" @click="addCycle" >添加周期</el-button></el-col>
+  </el-row>
+
 <el-row>
 <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
 <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
   <el-checkbox v-for="type in homeType" :label="type">{{type}}</el-checkbox>
 </el-checkbox-group></el-col>
 </el-row>
+
 <div class="ui-table ui-table-bordered">
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th class="ui-table-col-center w170">房型名称</th>
-                                    <th class="ui-table-col-center w170">产品名称</th>
-                                    <th class="ui-table-col-center w100">早餐</th>
-                                    <th class="ui-table-col-center w120">最高采购价
-                                        <i class="ui-icon helper" title="所选有效日期段的最高采购价"></i>
-                                    </th>
-                                    <th class="ui-table-col-center w150">售卖价</th>
-                                </tr>
-                            </thead>
-                            <!--repeat544945594847--><tbody>
-                                <!--repeat69447206484--><tr>
-                                    <td rowspan="2">
-                                        <div style="margin-left: 5px;">标准房</div>
-                                    </td>
-                                    <td>
-                                        预付无早（双床双人入住）
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        无早
-                                    </td>
-                                    <!-- 今日最高采购价 -->
-                                    <td class="ui-table-col-center">
-                                        <span>
+  <table>
+    <thead>
+      <tr>
+        <th class="ui-table-col-center w170">房型名称</th>
+        <th class="ui-table-col-center w170">产品名称</th>
+        <th class="ui-table-col-center w100">早餐</th>
+        <th class="ui-table-col-center w120">最高采购价
+          <i class="ui-icon helper" title="所选有效日期段的最高采购价"></i>
+        </th>
+        <th class="ui-table-col-center w150">售卖价</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="2">
+          <div style="margin-left: 5px;">标准房</div>
+        </td>
+        <td>
+          预付无早（双床双人入住）
+        </td>
+        <td class="ui-table-col-center">
+          无早
+        </td>
+        <!-- 今日最高采购价 -->
+        <td class="ui-table-col-center">
+          <span>
                                         --
                                         <a target="_blank" href="javascript:void(0)">录入</a>
                                         </span>
-                                        <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        <div class="oni-textbox">
-    <div class="oni-textbox-input-wrap">
+          <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
+        </td>
+        <td class="ui-table-col-center">
+          <div class="oni-textbox">
+            <div class="oni-textbox-input-wrap">
+              <!--ms-if-->
+              <input data-textbox-width="60" maxlength="8" avalonctrl="textbox223286466218" class="oni-textbox-input" style="width: 60px;"></div>
+          </div>
+          CNY
+        </td>
+      </tr>
+      <tr>
         <!--ms-if-->
-    <input data-textbox-width="60" maxlength="8" avalonctrl="textbox223286466218" class="oni-textbox-input" style="width: 60px;"></div>
-
-</div>
-                                        CNY
-                                    </td>
-                                </tr><!--repeat69447206484--><tr>
-                                    <!--ms-if-->
-                                    <td>
-                                        预付含早（双床双人入住）
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        双早
-                                    </td>
-                                    <!-- 今日最高采购价 -->
-                                    <td class="ui-table-col-center">
-                                        <span>
+        <td>
+          预付含早（双床双人入住）
+        </td>
+        <td class="ui-table-col-center">
+          双早
+        </td>
+        <!-- 今日最高采购价 -->
+        <td class="ui-table-col-center">
+          <span>
                                         --
                                         <a target="_blank" href="javascript:void(0)">录入</a>
                                         </span>
-                                        <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        <div class="oni-textbox">
-    <div class="oni-textbox-input-wrap">
-        <!--ms-if-->
-    <input data-textbox-width="60" maxlength="8" avalonctrl="textbox834999740479" class="oni-textbox-input" style="width: 60px;"></div>
-
-</div>
-                                        CNY
-                                    </td>
-                                </tr><!--repeat69447206484--><!--repeat69447206484:end-->
-                            </tbody><!--repeat544945594847--><tbody>
-                                <!--repeat696371359034--><tr>
-                                    <td rowspan="2">
-                                        <div style="margin-left: 5px;">单人房</div>
-                                    </td>
-                                    <td>
-                                        预付无早
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        无早
-                                    </td>
-                                    <!-- 今日最高采购价 -->
-                                    <td class="ui-table-col-center">
-                                        <span>
+          <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
+        </td>
+        <td class="ui-table-col-center">
+          <div class="oni-textbox">
+            <div class="oni-textbox-input-wrap">
+              <!--ms-if-->
+              <input data-textbox-width="60" maxlength="8" avalonctrl="textbox834999740479" class="oni-textbox-input" style="width: 60px;"></div>
+          </div>
+          CNY
+        </td>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <td rowspan="2">
+          <div style="margin-left: 5px;">单人房</div>
+        </td>
+        <td>
+          预付无早
+        </td>
+        <td class="ui-table-col-center">
+          无早
+        </td>
+        <!-- 今日最高采购价 -->
+        <td class="ui-table-col-center">
+          <span>
                                         --
                                         <a target="_blank" href="javascript:void(0)">录入</a>
                                         </span>
-                                        <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        <div class="oni-textbox">
-    <div class="oni-textbox-input-wrap">
+          <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
+        </td>
+        <td class="ui-table-col-center">
+          <div class="oni-textbox">
+            <div class="oni-textbox-input-wrap">
+              <!--ms-if-->
+              <input data-textbox-width="60" maxlength="8" avalonctrl="textbox904173609814" class="oni-textbox-input" style="width: 60px;"></div>
+          </div>
+          CNY
+        </td>
+      </tr>
+      <tr>
         <!--ms-if-->
-    <input data-textbox-width="60" maxlength="8" avalonctrl="textbox904173609814" class="oni-textbox-input" style="width: 60px;"></div>
-
-</div>
-                                        CNY
-                                    </td>
-                                </tr><!--repeat696371359034--><tr>
-                                    <!--ms-if-->
-                                    <td>
-                                        预付含早
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        单早
-                                    </td>
-                                    <!-- 今日最高采购价 -->
-                                    <td class="ui-table-col-center">
-                                        <span>
+        <td>
+          预付含早
+        </td>
+        <td class="ui-table-col-center">
+          单早
+        </td>
+        <!-- 今日最高采购价 -->
+        <td class="ui-table-col-center">
+          <span>
                                         --
                                         <a target="_blank" href="javascript:void(0)">录入</a>
                                         </span>
-                                        <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-                                    </td>
-                                    <td class="ui-table-col-center">
-                                        <div class="oni-textbox">
-    <div class="oni-textbox-input-wrap">
-        <!--ms-if-->
-    <input data-textbox-width="60" maxlength="8" avalonctrl="textbox09802206752" class="oni-textbox-input" style="width: 60px;"></div>
+          <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
+        </td>
+        <td class="ui-table-col-center">
+          <div class="oni-textbox">
+            <div class="oni-textbox-input-wrap">
+              <!--ms-if-->
+              <input data-textbox-width="60" maxlength="8" avalonctrl="textbox09802206752" class="oni-textbox-input" style="width: 60px;"></div>
 
+          </div>
+          CNY
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
-                                        CNY
-                                    </td>
-                                </tr><!--repeat696371359034--><!--repeat696371359034:end-->
-                            </tbody><!--repeat544945594847--><!--repeat544945594847:end-->
-                        </table>
 
-                </div>
+
   <el-row>  <el-col :span="23" :offset="1"><el-radio-group v-model="radio2">
     <el-radio :label="3">不变</el-radio>
     <el-radio :label="6">开房</el-radio>
@@ -250,12 +264,16 @@ export default {
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
         }
-      ]
+      ],
+      chosenDelete: ''
     };
   },
   methods: {
+    showDelete(item) {
+      this.chosenDelete = item;
+    },
     addCycle() {
-      this.cycle.push('one');
+      this.cycle.push(Math.random().toString(36).substr(2));
     },
     deleteCycle(item, index) {
       this.cycle.splice(index, 1);
