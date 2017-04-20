@@ -1,7 +1,7 @@
 var settings = {
   // 全局设置
   gbs: {
-    host: '/meipiao',
+    host: 'http://192.168.10.95:8500/',
     db_prefix: 'meipiao_admin_' // 本地存储的key
   },
 
