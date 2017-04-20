@@ -5,6 +5,11 @@
       <div class="title">{{curYearMonth}}</div>
       <div class="r" @click="nextMonth"><div class="arrow-right icon">&nbsp</div></div>
     </div>
+    <div class="cal-header">
+      <div class="l" @click="preMonth"><div class="arrow-left icon">&nbsp</div></div>
+      <div class="title">{{curYearMonth}}</div>
+      <div class="r" @click="nextMonth"><div class="arrow-right icon">&nbsp</div></div>
+    </div>
     <div class="cal-body">
       <div class="weeks">
         <span v-for="dayName in i18n[calendar.options.locale].dayNames" class="item">{{dayName}}</span>
@@ -50,6 +55,39 @@ export default {
   },
   computed: {
     dayList() {
+      let firstDay = new Date(
+        this.calendar.params.curYear +
+          '/' +
+          (this.calendar.params.curMonth + 1) +
+          '/01'
+      );
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
+      let item, status, tempArr = [], tempItem;
+      if (this.calendar.options.locale === 'es') {
+        startTimestamp = startTimestamp + 1000 * 60 * 60 * 24;
+      }
+      for (let i = 0; i < 42; i++) {
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
+        if (this.calendar.params.curMonth === item.getMonth()) {
+          status = 1;
+        } else {
+          status = 0;
+        }
+        tempItem = {
+          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          status: status
+        };
+        this.events.forEach(event => {
+          if (isEqualDateStr(event.date, tempItem.date)) {
+            tempItem.title = event.title;
+            tempItem.desc = event.desc || '';
+          }
+        });
+        tempArr.push(tempItem);
+      }
+      return tempArr;
+    },
+    dayListByweek() {
       let firstDay = new Date(
         this.calendar.params.curYear +
           '/' +
