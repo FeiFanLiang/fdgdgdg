@@ -17,10 +17,10 @@
     "jquery": "^3.2.1",
     "moment": "^2.17.1",
     "nprogress": "^0.2.0",
-    "vue": "^2.0.1",
+    "vue": "^2.1.0",
     "vue-axios": "^1.2.2",
     "vue-router": "^2.0.3",
-    "vuex": "^2.0.1",
+    "vuex": "^2.1.0",
     "zhihu-particle": "^0.0.9"
   },
   "devDependencies": {
@@ -51,6 +51,8 @@
     "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
     "function-bind": "^1.0.2",
     "html-webpack-plugin": "^2.8.1",
     "http-proxy-middleware": "^0.17.2",

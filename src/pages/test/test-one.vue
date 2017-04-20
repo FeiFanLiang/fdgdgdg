@@ -2,7 +2,7 @@
 <div class="">
   <el-button @click="priceOne('2017-01-01')">测试修改售卖价</el-button>
     <el-button @click="priceMore('2017-01-01')">测试批量修改售卖价</el-button>
-
+<vue-event-calendar :events="demoEvents"></vue-event-calendar>
   <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
 
     <el-row>
@@ -229,10 +229,26 @@
 </template>
 
 <script>
+import Vue from 'vue';
+
+import vueEventCalendar from '../../components/vue-event-calendar';
+
+Vue.use(vueEventCalendar, { locale: 'pt-br' });
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export default {
   data() {
     return {
+      demoEvents: [
+        {
+          date: '2016/12/15',
+          title: 'eat',
+          desc: 'longlonglong description'
+        },
+        {
+          date: '2016/11/12',
+          title: 'this is a title'
+        }
+      ],
       cycle: ['one'],
       priceChangeForOne: false,
       priceChangeForMore: false,
