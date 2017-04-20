@@ -220,8 +220,7 @@ export default {
                 const res = await payCompanyApi.getDetail({
                     id: row.ID
                 });
-                this.editForm = { ...res.data
-                };
+                this.editForm = { ...res.data};
             } catch (e) {
                 console.error(e);
             }
@@ -276,7 +275,7 @@ export default {
                 // clear selection
                 this.$refs.table.clearSelection();
                 // lazy render data
-                this.list = res.data.list;
+                this.list = res.data;
                 this.total = res.data.total;
                 this.loading = false;
             } catch (e) {
