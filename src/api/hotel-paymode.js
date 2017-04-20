@@ -3,9 +3,7 @@ import path from './api';
 
 export default {
   getList(params) {
-    return axios.get(path.apiBaseUrl + '/Hotel/HotelPayMode/All', {
-      params: params
-    });
+    return axios.get(path.apiBaseUrl + '/Hotel/HotelPayMode/All', { params: params });
   },
   getDetail(id, params) {
     return axios.get(path.apiBaseUrl + `/Hotel/HotelPayMode/${id}`, params);

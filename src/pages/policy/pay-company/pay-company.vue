@@ -271,6 +271,7 @@ export default {
 
             this.loading = true;
             try {
+                console.log('aaaaaaaaaaaaaaaaaaaa')
                 const res = await payCompanyApi.getList(options);
                 console.log(res.data);
                 // clear selection

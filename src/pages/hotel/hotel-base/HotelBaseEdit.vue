@@ -129,18 +129,14 @@
 <script>
 import { HotelPayModeApi, HotelBaseApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
-<<<<<<< HEAD
 import HotelRoomList from '../hotel-room/HotelRoomList';
 import HotelPolicyList from '../hotel-policy/HotelPolicyList';
-=======
-import HotelRoomList from '../../hotel/hotel-room/HotelRoomList';
->>>>>>> 0dd44daf128418475f5a2a79a95462eb8a535f9a
-
 export default {
   data() {
     return {
       activeName: 'first',
       labelPosition: 'top',
+      PayModeOptions: [],
       form: {
         id: '',
         HotelName: '',
@@ -177,7 +173,6 @@ export default {
         {
           value: '6',
           label: '六星级'
-<<<<<<< HEAD
         }],
         PayModeOptions: [],
       }
@@ -186,19 +181,10 @@ export default {
           HotelPlatformInfo,
           HotelRoomList,
           HotelPolicyList
-=======
-        }
-      ],
-      PayModeOptions: []
-    };
-  },
-  components: {
-    HotelPlatformInfo,
-    HotelRoomList
-  },
+        },
+      
   created() {
     this.id = this.$route.params.id;
-    console.log('11111111111111' + this.id);
     this.getHotelbaseList(this.id);
     this.getPayModeOptions();
   },
@@ -213,19 +199,15 @@ export default {
           this.hotelbase = hotelbase_list;
         }
       });
-      console.log('getHotelbaseList');
->>>>>>> 0dd44daf128418475f5a2a79a95462eb8a535f9a
     },
     async getPayModeOptions() {
       const data = await HotelPayModeApi.getDetail();
       let { code, paymodeOptions } = data;
       if (code === 200) {
         this.PayModeOptions = paymodeOptions;
-        console.log('this.PayModeOptions' + this.PayModeOptions);
       }
     },
     onSubmit() {
-      console.log('submit!');
       try {
         HotelBaseApi.edit(this.form);
         this.$message({
@@ -233,7 +215,6 @@ export default {
           type: 'success'
         });
       } catch (e) {
-        console.error(e);
       }
     },
     Cancel() {

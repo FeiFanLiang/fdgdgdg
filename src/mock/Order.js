@@ -3,7 +3,7 @@ import { orderList } from '../resources/Order';
 let _orderList = orderList;
 const API = {
   getList(config) {
-		console.log(config)
+		//console.log(config)
     let {
         page,
         sortWay,

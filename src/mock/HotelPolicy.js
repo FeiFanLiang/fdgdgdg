@@ -17,7 +17,6 @@ const API = {
         })
         return new Promise((resolve, reject) => {
             setTimeout(() => {
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa:' + hotelpolicylist)
                 let hotelpolicy_list = JSON.parse(JSON.stringify(mockHotelpolicy));
                 resolve([
                     200, {

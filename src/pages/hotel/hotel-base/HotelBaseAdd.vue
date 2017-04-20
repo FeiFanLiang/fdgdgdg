@@ -176,7 +176,6 @@ export default {
     };
   },
   created() {
-    console.log('this.Star' + this.Star);
     this.getPayModeOptions();
   },
   methods: {
@@ -185,16 +184,13 @@ export default {
       let { code, paymodeOptions } = data;
       if (code === 200) {
         this.PayModeOptions = paymodeOptions;
-        console.log('this.PayModeOptions' + this.PayModeOptions);
       }
     },
     onSubmit(formName) {
-      console.log('submit!');
       this.$refs[formName].validate(valid => {
         if (valid) {
           alert('submit!');
         } else {
-          console.log('error submit!!');
           return false;
         }
       });

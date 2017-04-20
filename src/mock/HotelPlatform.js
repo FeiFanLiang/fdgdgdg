@@ -91,6 +91,6 @@ export default {
         mock.onGet('/Hotel/HotelPlatform/all').reply(API.listAll)
         mock.onPost('/Hotel/HotelPlatform/add').reply(API.add)
         mock.onPut('/Hotel/HotelPlatform/edit/{id}').reply(API.edit)
-        mock.onPost('/Hotel/HotelPlatform/remove').reply(API.remove)
+        mock.onPost('/Hotel/HotelPlatform/remove/{id}').reply(API.remove)
     }
 }

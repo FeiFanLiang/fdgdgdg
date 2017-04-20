@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { hotelApi } from 'api';
+import { HotelPlatformApi } from 'api';
 export default {
   data() {
     return {
@@ -130,8 +130,7 @@ export default {
   methods: {
     async platforminfoSave() {
       try {
-        await hotelApi.addPlatforminfo(this.createForm);
-        console.log('111111111111111111111111111111111');
+        await HotelPlatformApi.add(this.createForm);
         this.fetchData();
         this.createDialog = false;
         this.$message({
@@ -144,7 +143,7 @@ export default {
     },
     async platforminfoEditSave() {
       try {
-        await hotelApi.editPlatforminfo(this.editForm);
+        await HotelPlatformApi.edit(this.editForm);
         this.fetchData();
         this.editDialog = false;
         this.$message({
@@ -176,7 +175,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await hotelApi.removePlatforminfo({
+        await HotelPlatformApi.remove({
           ID: row.ID
         });
         this.fetchData();
@@ -192,7 +191,7 @@ export default {
       let options = {
           ID: this.ID
       };
-      hotelApi.fetchPlatforminfoList(options).then(data => {
+      HotelPlatformApi.listAll(options).then(data => {
         let { code, platforminfo_list } = data;
         if (code === 200) {
           this.HotelPlatformInfo = platforminfo_list;
