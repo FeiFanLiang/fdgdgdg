@@ -129,12 +129,8 @@
 <script>
 import { HotelPayModeApi, HotelBaseApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
-<<<<<<< HEAD
 import HotelRoomList from '../hotel-room/HotelRoomList';
 import HotelPolicyList from '../hotel-policy/HotelPolicyList';
-=======
-import HotelRoomList from '../../hotel/hotel-room/HotelRoomList';
->>>>>>> 0dd44daf128418475f5a2a79a95462eb8a535f9a
 
 export default {
   data() {
@@ -177,16 +173,6 @@ export default {
         {
           value: '6',
           label: '六星级'
-<<<<<<< HEAD
-        }],
-        PayModeOptions: [],
-      }
-    },
-    components: {
-          HotelPlatformInfo,
-          HotelRoomList,
-          HotelPolicyList
-=======
         }
       ],
       PayModeOptions: []
@@ -214,7 +200,6 @@ export default {
         }
       });
       console.log('getHotelbaseList');
->>>>>>> 0dd44daf128418475f5a2a79a95462eb8a535f9a
     },
     async getPayModeOptions() {
       const data = await HotelPayModeApi.getDetail();
