@@ -2,7 +2,7 @@ import axios from 'axios';
 import path from './api';
 export default {
   listAll(params) {
-    return axios.get(path.apiBaseUrl + '/Hotel/HotelPolicy/all', {params  : params});
+    return axios.get(path.apiBaseUrl + 'Hotel/HotelPolicy/all', {params  : params});
   },
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy/add');

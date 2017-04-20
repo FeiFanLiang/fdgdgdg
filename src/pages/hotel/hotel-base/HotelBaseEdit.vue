@@ -179,6 +179,7 @@ export default {
       PayModeOptions: []
     };
   },
+
   components: {
     HotelPlatformInfo,
     HotelRoomList,

@@ -9,7 +9,6 @@ import HotelPayModeApi from './HotelPayMode';
 import HotelRoomApi from './HotelRoom';
 import HotelPolicyApi from './HotelPolicy';
 import imagesInfoApi from './imagesInfo';
-import OrderApi from './Order';
 
 export default {
   bootstrap() {
@@ -22,7 +21,6 @@ export default {
     HotelRoomApi.bootstrap(mock);
     HotelThreePlatInfoAPI.bootstrap(mock);
     imagesInfoApi.bootstrap(mock);
-    OrderApi.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);
 
     // mock success request

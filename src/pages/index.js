@@ -9,7 +9,6 @@ import HotelBase from './hotel/hotel-base/HotelBase';
 import HotelBaseAdd from './hotel/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
 import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
-
 import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
 
 // policy
@@ -19,13 +18,11 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 // order
 import Order from './order/order';
-
 // images
 import imagesInfo from './images/imagesInfo';
 import imagesInfoAdd from './images/imagesInfoAdd';
 import imagesInfoEdit from './images/imagesInfoEdit';
 import imagesInfoList from './images/imagesInfoList';
-
 // test
 import Test from './test/test';
 import TestOne from './test/test-one';

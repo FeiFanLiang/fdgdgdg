@@ -17,4 +17,5 @@ export default {
     delInfo(id) {
         return axios.delete(path.apiBaseUrl + `Hotel/PayCompany/${id}`);
     }
+
 };
