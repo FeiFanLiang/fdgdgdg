@@ -76,7 +76,6 @@ export default {
       try {
         const data = await AccountApi.login(loginParams);
         this.isBtnLoading = false;
-        console.log(data);
         let { msg, code, user } = data;
         if (code !== 200) {
           this.$message.error(msg);
