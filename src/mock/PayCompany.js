@@ -3,6 +3,7 @@ import { List } from '../resources/PayCompany';
 let _List = List;
 const API = {
   getList(config) {
+    console.log('ddddddddddddddddddddd')
     let {
         page,
         sortWay,

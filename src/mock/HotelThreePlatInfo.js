@@ -18,7 +18,6 @@ const API = {
             return true
         })
         return new Promise((resolve, reject) => {
-            console.log('mockPlatform....' + mockPlatform)
             setTimeout(() => {
                 let platform_list = JSON.parse(JSON.stringify(mockPlatform));
                 resolve([
@@ -33,9 +32,7 @@ const API = {
 
     },
     add(config) {
-        console.log('config.data.....:::' + config.data)
         let {id, PlatName, Ramark} = JSON.parse(config.data)
-        console.log('config.data222.....:::' + {PlatName, Ramark})
         _platform.push({id: Mock.Random.natural( 0, 100 ), PlatName, Ramark})
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -88,8 +85,8 @@ export default {
         mock.onGet('/Hotel/HotelThreePlatInfo/all').reply(API.listAll);
         mock.onGet('/Hotel/HotelThreePlatInfo').reply(API.list)
         mock.onPost('/Hotel/HotelThreePlatInfo/add').reply(API.add)
-        mock.onPut('/Hotel/HotelThreePlatInfo/edit').reply(API.edit)
-        mock.onPost('/Hotel/HotelThreePlatInfo/remove').reply(API.remove)
+        mock.onPut('/Hotel/HotelThreePlatInfo/edit/{id}').reply(API.edit)
+        mock.onPost('/Hotel/HotelThreePlatInfo/remove/{id}').reply(API.remove)
     }
 }   
 

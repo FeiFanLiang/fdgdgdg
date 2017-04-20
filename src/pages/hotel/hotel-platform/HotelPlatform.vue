@@ -94,7 +94,7 @@
 
 <script>
 import {
-  hotelApi,
+  HotelThreePlatInfoApi
 } from 'api';
 
   export default {
@@ -129,12 +129,11 @@ import {
     },
     created() {
       this.fetchData();
-      console.log('111111111111')
     },
     methods: {
       async platformSave() {
         try {
-                await hotelApi.addPlatform(this.createForm)
+                await HotelThreePlatInfoApi.add(this.createForm)
                 this.fetchData();
                 this.createDialog = false;
                 this.$message({
@@ -147,7 +146,7 @@ import {
       },
       async platformEditSave() {
             try {
-                await hotelApi.editPlatform(this.editForm)
+                await HotelThreePlatInfoApi.edit(this.editForm)
                 this.fetchData();
                 this.editDialog = false;
                 this.$message({
@@ -171,7 +170,7 @@ import {
                     cancelButtonText: '取消',
                     type: 'warning'
                 })
-                await hotelApi.removePlatform({
+                await HotelThreePlatInfoApi.remove({
                     id: row.id
                 })
                 this.fetchData();
@@ -184,7 +183,6 @@ import {
             }
       },
       platformSearch() {
-        console.log('44444444444');
         this.fetchData();
       },
       async fetchData() {
@@ -192,14 +190,12 @@ import {
           PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
           id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
         };
-        console.log(options);
-        hotelApi.fetchPlatformList(options).then(data => {
+        HotelThreePlatInfoApi.listAll(options).then(data => {
           let { code, platform_list } = data;
           if (code === 200) {
             this.platform = platform_list;
           }
         });
-        console.log('3333333333333')
       },
       mounted() {
         this.fetchData();
