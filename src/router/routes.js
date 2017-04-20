@@ -37,6 +37,16 @@ let routes = [
       requiresAuth: true
     },
     children: [
+      {
+        path: '/test',
+        component: Pages.Test,
+        name: 'test'
+      },
+      {
+        path: '/testone',
+        component: Pages.TestOne,
+        name: 'testone'
+      },
       // hotel
       {
         path: 'hotel',
@@ -103,18 +113,6 @@ let routes = [
             path: 'PolicyImages',
             name: '政策图片',
             component: Pages.PolicyImages,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'RserveMode',
-            name: 'RserveMode',
-            component: Pages.RserveMode,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'SecretType',
-            name: 'SecretType',
-            component: Pages.SecretType,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]

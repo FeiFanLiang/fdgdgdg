@@ -1,6 +1,6 @@
 <template lang="html">
-  <div id="login-page" @keyup.enter="login">
-    <div class="login-form">
+  <div id="register-page" @keyup.enter="register">
+    <div class="register-form">
       <div class="input-group">
         <div class="title">美票</div>
         <el-input
@@ -19,16 +19,7 @@
         </el-input>
       </div>
       <div class="input-group">
-        <el-col :span="18" >  <label>记住我？</label>
-          <el-switch
-            v-model="rememberMe"
-            on-text=""
-            off-text="">
-          </el-switch></el-col>
-        <el-col :span="6" ><el-button type="text" @click.native="register">注册</el-button></el-col>
-      </div>
-      <div class="input-group">
-        <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
+        <el-button @click.native="register" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
       </div>
     </div>
   </div>
@@ -39,27 +30,27 @@ import { oldApi } from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
-    new Particle(document.getElementById('login-page'), {
+    new Particle(document.getElementById('register-page'), {
       interactive: true,
       density: 'low'
     });
   },
   data() {
     return {
-      username: 'zheng',
-      password: '123456',
+      username: '',
+      password: '',
       rememberMe: false,
       isBtnLoading: false
     };
   },
   computed: {
     btnText() {
-      if (this.isBtnLoading) return '登录中...';
-      return '登录';
+      if (this.isBtnLoading) return '注册登录中...';
+      return '注册';
     }
   },
   methods: {
-    async login() {
+    async register() {
       if (!this.username) {
         this.$message.error('请填写用户名！！！');
         return;
@@ -68,44 +59,51 @@ export default {
         this.$message.error('请填写密码');
         return;
       }
-      let loginParams = {
+      let registerParams = {
         username: this.username,
         password: this.password
       };
       this.isBtnLoading = true;
       try {
-        const data = await oldApi.requestLogin(loginParams);
+        const data = await oldApi.requestRegister(registerParams);
         this.isBtnLoading = false;
         let { msg, code, user } = data;
         if (code !== 200) {
           this.$message.error(msg);
         } else {
-          localStorage.setItem('user', JSON.stringify(user));
-          if (this.$route.query.redirect) {
-            this.$router.push({
-              path: this.$route.query.redirect
-            });
-          } else {
-            this.$router.push({
-              path: '/'
-            });
+          this.isBtnLoading = true;
+          try {
+            const data = await oldApi.requestLogin(registerParams);
+            this.isBtnLoading = false;
+            let { msg, code, user } = data;
+            if (code !== 200) {
+              this.$message.error(msg);
+            } else {
+              localStorage.setItem('user', JSON.stringify(user));
+              if (this.$route.query.redirect) {
+                this.$router.push({
+                  path: this.$route.query.redirect
+                });
+              } else {
+                this.$router.push({
+                  path: '/'
+                });
+              }
+            }
+          } catch (e) {
+            console.error(e);
           }
         }
       } catch (e) {
         console.error(e);
       }
-    },
-    async register() {
-      this.$router.push({
-        path: 'register'
-      });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-#login-page {
+#register-page {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -113,7 +111,7 @@ export default {
     align-items: center;
     background: #efeeee;
 
-    .login-form {
+    .register-form {
         display: flex;
         position: absolute;
         z-index: 100;
