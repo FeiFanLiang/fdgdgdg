@@ -5,34 +5,21 @@
       :calendar="calendarOptions"
       @cur-day-changed="handleChangeCurDay">
     </cal-panel>
-    <cal-events
-      :dayEvents="selectdDayEvents"
-      :locale="calendarOptions.options.locale"
-      :color="calendarOptions.options.color">
-      <slot :showEvents="selectdDayEvents.events"></slot>
-    </cal-events>
   </div>
 </template>
 <script>
 import { isEqualDateStr } from './tools.js';
 
-import calEvents from './components/cal-events.vue';
 import calPanel from './components/cal-panel.vue';
 
 const inBrowser = typeof window !== 'undefined';
 export default {
   name: 'vue-event-calendar',
   components: {
-    'cal-events': calEvents,
     'cal-panel': calPanel
   },
   data() {
-    return {
-      selectdDayEvents: {
-        date: 'all',
-        events: this.events || [] //default show all event
-      }
-    };
+    return {};
   },
   props: {
     events: {
@@ -81,12 +68,7 @@ export default {
   },
   methods: {
     handleChangeCurDay(date) {
-      this.selectdDayEvents = {
-        date: date,
-        events: this.events.filter(function(event) {
-          return isEqualDateStr(event.date, date);
-        })
-      };
+      alert(date);
     }
   },
   watch: {
@@ -94,18 +76,9 @@ export default {
       if (this.calendarParams.curEventsDate !== 'all') {
         this.handleChangeCurDay(this.calendarParams.curEventsDate);
       } else {
-        this.selectdDayEvents = {
-          date: 'all',
-          events: this.events
-        };
       }
     },
-    events() {
-      this.selectdDayEvents = {
-        date: 'all',
-        events: this.events || []
-      };
-    }
+    events() {}
   }
 };
 </script>

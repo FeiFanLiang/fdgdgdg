@@ -27,16 +27,16 @@
 </template>
 
 <script>
-import i18n from '../i18n.js'
-import { dateTimeFormatter, isEqualDateStr} from '../tools.js'
+import i18n from '../i18n.js';
+import { dateTimeFormatter, isEqualDateStr } from '../tools.js';
 
-const inBrowser = typeof window !== 'undefined'
+const inBrowser = typeof window !== 'undefined';
 export default {
   name: 'cal-panel',
-  data () {
+  data() {
     return {
       i18n
-    }
+    };
   },
   props: {
     events: {
@@ -49,43 +49,55 @@ export default {
     }
   },
   computed: {
-    dayList () {
-        let firstDay = new Date(this.calendar.params.curYear+'/'+(this.calendar.params.curMonth+1)+'/01')
-        let startTimestamp = firstDay-1000*60*60*24*firstDay.getDay()
-        let item, status, tempArr = [], tempItem
-        if (this.calendar.options.locale === 'es') {
-          startTimestamp = startTimestamp + 1000*60*60*24
+    dayList() {
+      let firstDay = new Date(
+        this.calendar.params.curYear +
+          '/' +
+          (this.calendar.params.curMonth + 1) +
+          '/01'
+      );
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
+      let item, status, tempArr = [], tempItem;
+      if (this.calendar.options.locale === 'es') {
+        startTimestamp = startTimestamp + 1000 * 60 * 60 * 24;
+      }
+      for (let i = 0; i < 42; i++) {
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
+        if (this.calendar.params.curMonth === item.getMonth()) {
+          status = 1;
+        } else {
+          status = 0;
         }
-        for (let i = 0 ; i < 42 ; i++) {
-            item = new Date(startTimestamp + i*1000*60*60*24)
-            if (this.calendar.params.curMonth === item.getMonth()) {
-              status = 1
-            } else {
-              status = 0
-            }
-            tempItem = {
-              date: `${item.getFullYear()}/${item.getMonth()+1}/${item.getDate()}`,
-              status: status
-            }
-            this.events.forEach((event) => {
-              if (isEqualDateStr(event.date, tempItem.date)) {
-                tempItem.title = event.title
-                tempItem.desc = event.desc || ''
-              }
-            })
-            tempArr.push(tempItem)
-        }
-        return tempArr
+        tempItem = {
+          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          status: status
+        };
+        this.events.forEach(event => {
+          if (isEqualDateStr(event.date, tempItem.date)) {
+            tempItem.title = event.title;
+            tempItem.desc = event.desc || '';
+          }
+        });
+        tempArr.push(tempItem);
+      }
+      return tempArr;
     },
-    today () {
-      let dateObj = new Date()
-      return `${dateObj.getFullYear()}/${dateObj.getMonth()+1}/${dateObj.getDate()}`
+    today() {
+      let dateObj = new Date();
+      return `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()}`;
     },
-    curYearMonth () {
-      let tempDate = Date.parse(new Date(`${this.calendar.params.curYear}/${this.calendar.params.curMonth+1}/01`))
-      return dateTimeFormatter(tempDate, this.i18n[this.calendar.options.locale].format)
+    curYearMonth() {
+      let tempDate = Date.parse(
+        new Date(
+          `${this.calendar.params.curYear}/${this.calendar.params.curMonth + 1}/01`
+        )
+      );
+      return dateTimeFormatter(
+        tempDate,
+        this.i18n[this.calendar.options.locale].format
+      );
     },
-    style () {
+    style() {
       let style = {
         todayStyle: {
           backgroundColor: this.calendar.options.color,
@@ -94,22 +106,23 @@ export default {
         eventStyle: {
           borderColor: this.calendar.options.color
         }
-      }
-      return style
+      };
+      return style;
     }
   },
   methods: {
-    nextMonth () {
-      this.$EventCalendar.nextMonth()
+    nextMonth() {
+      this.$EventCalendar.nextMonth();
     },
-    preMonth () {
-      this.$EventCalendar.preMonth()
+    preMonth() {
+      this.$EventCalendar.preMonth();
     },
-    handleChangeCurday (date) {
+    handleChangeCurday(date) {
+      alert(JSON.stringify(date));
       if (date.title != undefined) {
-        this.$emit('cur-day-changed', date.date)
+        this.$emit('cur-day-changed', date.date);
       }
     }
   }
-}
+};
 </script>
