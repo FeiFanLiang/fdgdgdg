@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { oldApi } from 'api';
+import { AccountApi } from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
@@ -73,27 +73,35 @@ export default {
         password: this.password
       };
       this.isBtnLoading = true;
-      try {
-        const data = await oldApi.requestLogin(loginParams);
-        this.isBtnLoading = false;
-        console.log(data)
-        let { msg, code, user } = data;
-        if (code !== 200) {
-          this.$message.error(msg);
-        } else {
-          localStorage.setItem('user', JSON.stringify(user));
-          if (this.$route.query.redirect) {
-            this.$router.push({
-              path: this.$route.query.redirect
-            });
-          } else {
-            this.$router.push({
-              path: '/'
-            });
-          }
-        }
-      } catch (e) {
-        console.error(e);
+      // try {
+      //   const data = await AccountApi.login(loginParams);
+      //   this.isBtnLoading = false;
+      //   let { msg, code, user } = data;
+      //   if (code !== 200) {
+      //     this.$message.error(msg);
+      //   } else {
+      //     localStorage.setItem('user', JSON.stringify(user));
+      //     if (this.$route.query.redirect) {
+      //       this.$router.push({
+      //         path: this.$route.query.redirect
+      //       });
+      //     } else {
+      //       this.$router.push({
+      //         path: '/'
+      //       });
+      //     }
+      //   }
+      // } catch (e) {
+      //   console.error(e);
+      // }
+      if (this.$route.query.redirect) {
+        this.$router.push({
+          path: this.$route.query.redirect
+        });
+      } else {
+        this.$router.push({
+          path: '/'
+        });
       }
     },
     async register() {

@@ -274,12 +274,12 @@ export default {
 
             this.loading = true;
             try {
-                const res = await payCompanyApi.getList(options);
+                const res = await payCompanyApi.getList();
                 console.log(res.data);
                 // clear selection
                 this.$refs.table.clearSelection();
                 // lazy render data
-                this.list = res.data.list;
+                this.list = res.data;
                 this.total = res.data.total;
                 this.loading = false;
             } catch (e) {

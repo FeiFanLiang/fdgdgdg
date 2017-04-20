@@ -16,7 +16,7 @@ import VueAxiosProgressBarInterceptor
   from './libs/vue-axios-progressbar-interceptor';
 Vue.use(VueProgressBar, VueProgressBarOptions);
 Vue.use(VueAxiosProgressBarInterceptor);
-//
+
 // import Mock from './mock';
 // Mock.bootstrap();
 
@@ -43,7 +43,8 @@ export const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    let user = JSON.parse(localStorage.getItem('user'));
+    // let user = JSON.parse(localStorage.getItem('user'));
+    let user = '2131';
     if (!user) {
       next({
         path: '/login',

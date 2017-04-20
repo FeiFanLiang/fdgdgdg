@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { oldApi } from 'api';
+import { AccountApi } from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
@@ -65,7 +65,7 @@ export default {
       };
       this.isBtnLoading = true;
       try {
-        const data = await oldApi.requestRegister(registerParams);
+        const data = await AccountApi.register(registerParams);
         this.isBtnLoading = false;
         let { msg, code, user } = data;
         if (code !== 200) {
@@ -73,7 +73,7 @@ export default {
         } else {
           this.isBtnLoading = true;
           try {
-            const data = await oldApi.requestLogin(registerParams);
+            const data = await AccountApi.login(registerParams);
             this.isBtnLoading = false;
             let { msg, code, user } = data;
             if (code !== 200) {

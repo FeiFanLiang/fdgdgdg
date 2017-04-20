@@ -18,7 +18,10 @@ export default {
     HotelBaseAPI.bootstrap(mock);
     HotelPayModeApi.bootstrap(mock);
     HotelPlatformAPI.bootstrap(mock);
+<<<<<<< HEAD
     HotelRoomApi.bootstrap(mock);
+=======
+>>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
     HotelPolicyApi.bootstrap(mock);
     HotelRoomApi.bootstrap(mock);
     HotelThreePlatInfoAPI.bootstrap(mock);
@@ -26,10 +29,13 @@ export default {
     OrderApi.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);
 
-    
     // mock success request
     mock.onPost('/resume/add').reply(200, { msg: 'success' });
+<<<<<<< HEAD
     OrderApi.bootstrap(mock);
+=======
+
+>>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
     // mock error request
     mock.onGet('/error').reply(500, { msg: 'failure' });
   }

@@ -1,4 +1,3 @@
-import oldApi from './old';
 import HotelBaseApi from './hotel-base';
 import HotelThreePlatInfoApi from './hotel-threeplat-info';
 import HotelPlatformApi from './hotel-platform';
@@ -11,7 +10,6 @@ import orderApi from './order';
 import AccountApi from './account';
 
 export {
-  oldApi,
   HotelBaseApi,
   HotelThreePlatInfoApi,
   HotelPlatformApi,

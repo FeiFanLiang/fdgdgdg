@@ -254,12 +254,11 @@ export default {
             this.loading = true;
             try {
                 console.log(options)
-                const res = await hotelPayModeApi.getList(options);
-                console.log(res.data);
+                const res = await hotelPayModeApi.getList();
                 // clear selection
                 this.$refs.table.clearSelection();
                 // lazy render data
-                this.list = res.data.list;
+                this.list = res.data;
                 this.total = res.data.total;
                 this.loading = false;
             } catch (e) {

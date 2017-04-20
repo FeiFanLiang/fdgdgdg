@@ -131,6 +131,10 @@ import { HotelPayModeApi, HotelBaseApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 import HotelRoomList from '../hotel-room/HotelRoomList';
 import HotelPolicyList from '../hotel-policy/HotelPolicyList';
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
 export default {
   data() {
     return {
@@ -173,14 +177,27 @@ export default {
         {
           value: '6',
           label: '六星级'
+<<<<<<< HEAD
         }],
         PayModeOptions: [],
       }
     },
+=======
+        }
+      ],
+      PayModeOptions: []
+    };
+  },
+>>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
   components: {
     HotelPlatformInfo,
-    HotelRoomList
+    HotelRoomList,
+    HotelPolicyList
   },
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
   created() {
     this.id = this.$route.params.id;
     this.getHotelbaseList(this.id);
@@ -212,8 +229,7 @@ export default {
           message: '保存成功',
           type: 'success'
         });
-      } catch (e) {
-      }
+      } catch (e) {}
     },
     Cancel() {
       this.$router.go(-1);
