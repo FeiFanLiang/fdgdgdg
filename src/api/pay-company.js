@@ -3,21 +3,12 @@ import path from './api';
 
 export default {
   getList(params) {
-<<<<<<< HEAD
-    console.log('bbbbbbbbbbbbbbbb');
-    console.log('ccccccccccccccc:' + params)
-    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/All`, { params: params });
-  },
-  getDetail(params) {
-    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/{id}`, params);
-=======
     return axios.get(path.apiBaseUrl + `Hotel/PayCompany/All`, {
       params: params
     });
   },
-  getDetail(params) {
-    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/${id}`, params);
->>>>>>> c1239effdbb7a4099c03947dfccc648148fa8dc7
+  getDetail(id) {
+    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/${id}`);
   },
   addInfo(params) {
     return axios.post(path.apiBaseUrl + `Hotel/PayCompany`, params);
