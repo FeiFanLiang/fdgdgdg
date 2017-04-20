@@ -1,11 +1,13 @@
 import axios from 'axios';
 import path from './api';
-let base = '';
 export default {
   login(params) {
-    return axios.post(`/login`, {params: params}).then(res => res.data);
+    return axios.post(path.apiBaseUrl + 'Account/Login', { params: params });
   },
   register(params) {
-    return axios.post(`/register`, {params: params}).then(res => res.data);;
+    return axios.post(path.apiBaseUrl + 'Account/Register', { params: params });
+  },
+  logout(params) {
+    return axios.post(path.apiBaseUrl + 'Account/Logout', { params: params });
   }
 };
