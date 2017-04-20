@@ -12,6 +12,8 @@ import HotelPlatformInfoAPI from './HotelPlatform';
 import PayCompanyApi from './PayCompany';
 import HotelPayModeApi from './HotelPayMode';
 import HotelRoomApi from './HotelRoom';
+import HotelPolicyApi from './HotelPolicy';
+import imagesInfoApi from './imagesInfo';
 
 export default {
   bootstrap() {
@@ -23,6 +25,8 @@ export default {
     PayCompanyApi.bootstrap(mock);
     HotelPayModeApi.bootstrap(mock);
     HotelRoomApi.bootstrap(mock);
+    HotelPolicyApi.bootstrap(mock);
+    imagesInfoApi.bootstrap(mock);
 
     // mock success request
     mock.onPost('/resume/add').reply(200, { msg: 'success' });

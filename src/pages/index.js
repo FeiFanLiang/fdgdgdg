@@ -9,6 +9,7 @@ import HotelBase from './hotel/hotel-base/HotelBase';
 import HotelBaseAdd from './hotel/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
 import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
+import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import PayType from './policy/pay-type/pay-type';
@@ -18,6 +19,11 @@ import RserveMode from './policy/rserve-mode/rserve-mode';
 import SecretType from './policy/secret-type/secret-type';
 // order
 import Order from './order/order';
+//images
+import imagesInfo from './images/imagesInfo';
+import imagesInfoAdd from './images/imagesInfoAdd';
+import imagesInfoEdit from './images/imagesInfoEdit';
+import imagesInfoList from './images/imagesInfoList';
 
 export default {
   Abstract,
@@ -35,5 +41,10 @@ export default {
   RserveMode,
   PayType,
   SecretType,
-  Order
+  Order,
+  HotelPolicyList,
+  imagesInfo,
+  imagesInfoAdd,
+  imagesInfoEdit,
+  imagesInfoList
 };

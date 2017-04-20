@@ -111,7 +111,9 @@
 
   <!-- tab start -->
   <el-tabs v-model="activeName" type="card">
-    <el-tab-pane label="政策信息" name="first">政策信息</el-tab-pane>
+    <el-tab-pane label="政策信息" name="first">政策信息
+      <HotelPolicyList></HotelPolicyList>
+    </el-tab-pane>
     <el-tab-pane label="房型信息" name="second">房型信息
       <HotelRoomList></HotelRoomList>
     </el-tab-pane>
@@ -130,6 +132,7 @@ import {
 } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 import HotelRoomList from '../hotel-room/HotelRoomList';
+import HotelPolicyList from '../hotel-policy/HotelPolicyList';
 
   export default {
     data() {
@@ -172,7 +175,8 @@ import HotelRoomList from '../hotel-room/HotelRoomList';
     },
     components: {
           HotelPlatformInfo,
-          HotelRoomList
+          HotelRoomList,
+          HotelPolicyList
     },
     created() {
         this.id = this.$route.params.id

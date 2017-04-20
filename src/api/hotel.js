@@ -51,5 +51,17 @@ export default {
     removeHotelroom(params) {
         return axios.post(`${base}/Hotel/HotelRoom/remove/{id}`, params).then(res => res.data);
     },
+    fetchHotelpolicyList(params) {
+        return axios.get(`${base}/Hotel/HotelPolicy/all`, {params: params}).then(res => res.data);
+    },
+    addHotelpolicy(params) {
+        return axios.post(`${base}/Hotel/HotelPolicy/add`, params).then(res => res.data);
+    },
+    editHotelpolicy(params) {
+        return axios.put(`${base}/Hotel/HotelPolicy/edit/{id}`, params).then(res => res.data);
+    },
+    removeHotelpolicy(params) {
+        return axios.post(`${base}/Hotel/HotelPolicy/remove/{id}`, params).then(res => res.data);
+    },
 
 };

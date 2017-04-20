@@ -21,7 +21,7 @@
       </div>
         <el-button type="primary" @click="hotelbaseSearch()">搜索</el-button>
         <el-button type="primary">
-          <router-link :to="{path: '/HotelBaseAdd'}">创建</router-link>
+          <router-link :to="{path: 'HotelBaseAdd'}">创建</router-link>
         </el-button>
     </div>
     <!-- search end -->

@@ -57,7 +57,7 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
-            path: '/HotelBaseAdd',
+            path: 'HotelBaseAdd',
             component: Pages.HotelBaseAdd,
             name: 'HotelBaseAdd',
             meta: {
@@ -65,7 +65,7 @@ let routes = [
             }
           },
           {
-            path: '/HotelBaseEdit/:id',
+            path: 'HotelBaseEdit/:id',
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
             meta: {
@@ -133,9 +133,49 @@ let routes = [
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
+      },
+      // images
+      {
+        path: 'images',
+        component: Pages.Abstract,
+        name: '截图信息',
+        iconClass: 'el-icon-picture',
+        children: [
+          {
+            path: 'imagesInfo',
+            component: Pages.imagesInfo,
+            name: '截图信息',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          },
+          {
+            path: 'imagesInfoAdd',
+            component: Pages.imagesInfoAdd,
+            name: 'imagesInfoAdd',
+            meta: {
+              hidden: true,
+            }
+          },
+          {
+            path: 'imagesInfoEdit/:id',
+            component: Pages.imagesInfoEdit,
+            name: 'imagesInfoEdit',
+            meta: {
+              hidden: true,
+            }
+          },
+          {
+            path: 'imagesInfoList',
+            component: Pages.imagesInfoList,
+            name: 'imagesInfoList',
+            meta: {
+              hidden: true,
+            }
+          },
+        ]
       }
     ]
   },
+
   {
     path: '*',
     redirect: { path: '/404' }
