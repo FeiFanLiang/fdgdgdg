@@ -16,7 +16,7 @@ import VueAxiosProgressBarInterceptor
   from './libs/vue-axios-progressbar-interceptor';
 Vue.use(VueProgressBar, VueProgressBarOptions);
 Vue.use(VueAxiosProgressBarInterceptor);
-//
+
 // import Mock from './mock';
 // Mock.bootstrap();
 

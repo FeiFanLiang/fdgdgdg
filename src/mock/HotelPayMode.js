@@ -3,7 +3,7 @@ import {HotelPayMode} from '../resources/HotelPayMode'
 let _HotelPayMode = HotelPayMode
 const API = {
   getList(config) {
-    console.log(config)
+    //console.log(config)
     let {
         page,
         sortWay,

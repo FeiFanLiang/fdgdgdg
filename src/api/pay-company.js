@@ -1,9 +1,11 @@
 import axios from 'axios';
 import path from './api';
-let base = '';
+
 export default {
   getList(params) {
-    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/All`, { params: params });
+    return axios.get(path.apiBaseUrl + `Hotel/PayCompany/All`, {
+      params: params
+    });
   },
   getDetail(params) {
     return axios.get(path.apiBaseUrl + `Hotel/PayCompany/${id}`, params);

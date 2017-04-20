@@ -10,6 +10,7 @@ import HotelBaseAdd from './hotel/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
 import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
 
+import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
 
 // policy
 import PayCompany from './policy/pay-company/pay-company';
@@ -18,6 +19,12 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 // order
 import Order from './order/order';
+
+// images
+import imagesInfo from './images/imagesInfo';
+import imagesInfoAdd from './images/imagesInfoAdd';
+import imagesInfoEdit from './images/imagesInfoEdit';
+import imagesInfoList from './images/imagesInfoList';
 
 // test
 import Test from './test/test';
@@ -37,6 +44,11 @@ export default {
   PolicyImages,
   PayType,
   Order,
+  HotelPolicyList,
+  imagesInfo,
+  imagesInfoAdd,
+  imagesInfoEdit,
+  imagesInfoList,
   Test,
   TestOne
 };

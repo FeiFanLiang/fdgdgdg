@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { hotelApi } from 'api';
+import { HotelPolicyApi } from 'api';
 
 export default {
   data() {
@@ -126,14 +126,13 @@ export default {
     }
   },
   mounted() {
-    console.log('123123123123')
     this.fetchData();
   },
 
   methods: {
     async hotelpolicySave() {
       try {
-        await hotelApi.addHotelpolicy(this.createForm);
+        await HotelPolicyApi.add(this.createForm);
         this.fetchData();
         this.createDialog = false;
         this.$message({
@@ -146,7 +145,7 @@ export default {
     },
     async hotelpolicyEditSave() {
       try {
-        await hotelApi.editHotelpolicy(this.editForm);
+        await HotelPolicyApi.edit(this.editForm);
         this.fetchData();
         this.editDialog = false;
         this.$message({
@@ -177,7 +176,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await hotelApi.removeHotelpolicy({
+        await HotelPolicyApi.remove({
           ID: row.ID
         });
         this.fetchData();
@@ -193,14 +192,12 @@ export default {
       let options = {
         ID: this.ID
       };
-      console.log('cjycccccccccccc')
-      hotelApi.fetchHotelpolicyList(options).then(data => {
+      HotelPolicyApi.listAll(options).then(data => {
         let { code, hotelpolicy_list } = data;
         if (code === 200) {
           this.hotelpolicy = hotelpolicy_list;
         }
       });
-      console.log('cjyaaaaaaaaaaaaa')
     }
   },
 

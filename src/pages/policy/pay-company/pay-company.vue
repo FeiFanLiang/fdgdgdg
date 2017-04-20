@@ -270,7 +270,7 @@ export default {
 
             this.loading = true;
             try {
-                const res = await payCompanyApi.getList(options);
+                const res = await payCompanyApi.getList();
                 console.log(res.data);
                 // clear selection
                 this.$refs.table.clearSelection();

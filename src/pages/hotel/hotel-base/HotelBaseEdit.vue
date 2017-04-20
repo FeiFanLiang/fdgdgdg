@@ -137,6 +137,7 @@ export default {
     return {
       activeName: 'first',
       labelPosition: 'top',
+      PayModeOptions: [],
       form: {
         id: '',
         HotelName: '',
@@ -180,11 +181,12 @@ export default {
   },
   components: {
     HotelPlatformInfo,
-    HotelRoomList
+    HotelRoomList,
+    HotelPolicyList
   },
+
   created() {
     this.id = this.$route.params.id;
-    console.log('11111111111111' + this.id);
     this.getHotelbaseList(this.id);
     this.getPayModeOptions();
   },
@@ -199,27 +201,22 @@ export default {
           this.hotelbase = hotelbase_list;
         }
       });
-      console.log('getHotelbaseList');
     },
     async getPayModeOptions() {
       const data = await HotelPayModeApi.getDetail();
       let { code, paymodeOptions } = data;
       if (code === 200) {
         this.PayModeOptions = paymodeOptions;
-        console.log('this.PayModeOptions' + this.PayModeOptions);
       }
     },
     onSubmit() {
-      console.log('submit!');
       try {
         HotelBaseApi.edit(this.form);
         this.$message({
           message: '保存成功',
           type: 'success'
         });
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
     },
     Cancel() {
       this.$router.go(-1);

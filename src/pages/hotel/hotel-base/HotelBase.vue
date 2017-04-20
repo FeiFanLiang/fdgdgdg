@@ -146,12 +146,10 @@ export default {
   },
   created() {
     this.getHotelbaseList();
-    console.log('getHotelbaseListcreated');
   },
   methods: {
     hotelbaseSearch() {
       this.getHotelbaseList();
-      console.log('hotelbaseSearch');
     },
     async getHotelbaseList(page) {
       this.page = page || this.page;
@@ -173,7 +171,6 @@ export default {
           this.hotelbase = hotelbase_list;
         }
       });
-      console.log('getHotelbaseList');
     },
     handleCurrentChange(val) {
       this.getHotelbaseList(val);

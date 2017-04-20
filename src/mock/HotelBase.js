@@ -16,10 +16,8 @@ const API = {
       (h, index) => index < 10 * page && index >= 10 * (page - 1)
     );
     return new Promise((resolve, reject) => {
-      // console.log('hotelbase....' + hotelbase)
       setTimeout(() => {
         let hotelbase_list = JSON.parse(JSON.stringify(mockHotelbase));
-        // console.log('hotelbase11111....' + hotelbase_list)
         resolve([
           200,
           {
@@ -29,7 +27,6 @@ const API = {
           }
         ]);
       }, 500);
-      console.log('wwwwwwwww....');
     });
   },
   listByQuery(config) {
@@ -85,9 +82,7 @@ const API = {
     });
   },
   add(config) {
-    console.log('config.datahotelbaseadd:' + config.data);
     let { form } = JSON.parse(config.data);
-    console.log('config.data222.....:::' + { form });
     _hotelbase.push({ form });
     return new Promise((resolve, reject) => {
       setTimeout(() => {
