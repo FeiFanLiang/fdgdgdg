@@ -19,6 +19,7 @@ import PolicyImages from './policy/policy-images/policy-images';
 import Order from './order/order';
 // test
 import Test from './test/test';
+import TestOne from './test/test-one';
 export default {
   Abstract,
   NotFound,
@@ -34,5 +35,6 @@ export default {
   PolicyImages,
   PayType,
   Order,
-  Test
+  Test,
+  TestOne
 };
