@@ -80,7 +80,7 @@ let routes = [
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
             meta: {
-              hidden: true
+              //hidden: true
             }
           }
         ]

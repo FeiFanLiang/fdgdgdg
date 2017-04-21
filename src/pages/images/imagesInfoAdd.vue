@@ -27,8 +27,8 @@
             <div style="padding: 10px 0">打款截图：</div>
             <el-upload
                 class="upload-demo"
-                ref="upload"
-                action="https://www.uc123.com/posts/"
+                ref="upload1"
+                action="https://jsonplaceholder.typicode.com/posts/"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :file-list="fileList"
@@ -43,7 +43,7 @@
             <div style="padding: 10px 0">明细截图：</div>
             <el-upload
                 class="upload-demo"
-                ref="upload"
+                ref="upload2"
                 action="https://jsonplaceholder.typicode.com/posts/"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
@@ -76,10 +76,10 @@
     },
     methods: {
       submitUploadDK() {
-        this.$refs.upload.submit();
+        this.$refs.upload1.submit();
       },
       submitUploadMX() {
-        this.$refs.upload.submit();
+        this.$refs.upload2.submit();
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);

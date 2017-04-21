@@ -34,9 +34,12 @@
       :default-sort = "{prop: 'id', order: 'descending'}"
       style="width: 100%">
         <el-table-column prop="id" label="酒店ID" sortable></el-table-column>
+        <el-table-column prop="HotelNum" label="酒店编号"></el-table-column>
         <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
+        <el-table-column prop="FaxNum" label="传真号"></el-table-column>
         <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Area" label="区域"></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Star" label="星级"></el-table-column>
         <el-table-column prop="PersonName" label="采购人"></el-table-column>
@@ -117,7 +120,8 @@ export default {
           : null
       };
       const res = await HotelBaseApi.listAll(options)
-      this.hotelbase = res.data;
+      console.log(res)
+      this.hotelbase = res.data.Data;
     },
     handleCurrentChange(val) {
       this.getHotelbaseList(val);

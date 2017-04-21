@@ -7,11 +7,12 @@
     style="width: 100%">
 
     <el-table-column prop="id" label="ID" width="60"></el-table-column>
+    <el-table-column prop="HotelID" label="酒店ID"></el-table-column>
     <el-table-column prop="RoomName" label="房间名称"></el-table-column>
+    <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="Beds" label="床型"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
-    <el-table-column prop="IsDelete" label="默认"></el-table-column>
     <el-table-column :context="_self" inline-template label="操作" width="180">
       <div>
         <el-button size="mini" @click="hotelroomAdd">添加</el-button>
@@ -29,20 +30,25 @@
         <el-form-item label="ID">
           <el-input v-model="createForm.id" class="el-col-24" :disabled="true"></el-input>
         </el-form-item>
+        <el-form-item label="HotelID">
+          <el-input v-model="createForm.HotelID" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
         <el-form-item label="房间名称">
           <el-input v-model="createForm.RoomName"></el-input>
         </el-form-item>
+        <el-form-item label="房间编号">
+          <el-input v-model="createForm.RoomCode"></el-input>
+        </el-form-item>
         <el-form-item label="床型">
-          <el-input v-model="createForm.Beds"></el-input>
+          <el-select v-model="createForm.Beds" clearable placeholder="请选择房间床型">
+            <el-option v-for="item in bedsOptions" :label="item.BedName" :value="item.ID"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="数量">
           <el-input v-model="createForm.RoomCount"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="createForm.Remark"></el-input>
-        </el-form-item>
-        <el-form-item label="默认">
-          <el-input v-model="createForm.IsDelete"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -58,20 +64,25 @@
         <el-form-item label="ID">
           <el-input v-model="editForm.id" :disabled="true"></el-input>
         </el-form-item>
+        <el-form-item label="HotelID">
+          <el-input v-model="editForm.HotelID" class="el-col-24" :disabled="true"></el-input>
+        </el-form-item>
         <el-form-item label="房间名称">
           <el-input v-model="editForm.RoomName"></el-input>
         </el-form-item>
+        <el-form-item label="房间编号">
+          <el-input v-model="editForm.RoomCode"></el-input>
+        </el-form-item>
         <el-form-item label="床型">
-          <el-input v-model="editForm.Beds"></el-input>
+          <el-select v-model="editForm.Beds" clearable placeholder="请选择房间床型">
+            <el-option v-for="item in bedsOptions" :label="item.BedName" :value="item.ID"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="数量">
           <el-input v-model="editForm.RoomCount"></el-input>
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="editForm.Remark"></el-input>
-        </el-form-item>
-        <el-form-item label="默认">
-          <el-input v-model="editForm.IsDelete"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -86,12 +97,13 @@
 </template>
 
 <script>
-import { HotelRoomApi } from 'api';
+import { HotelRoomApi, hotelRoomBedApi } from 'api';
 
   export default {
     data() {
       return {
-        hotelroomlist: [],
+        bedsOptions: [],
+        hotelroomlist: [{id:1}],
         createDialog: false,
         editDialog: false,
         createForm: {
@@ -114,8 +126,13 @@ import { HotelRoomApi } from 'api';
     },
     mounted() {      
       this.fetchData();
+      this.getBeds();
     },
     methods: {
+      async getBeds() {
+        const res = await hotelRoomBedApi.list();
+        this.bedsOptions = res.data;
+      },
       async hotelroomSave() {
       try {
         await HotelRoomApi.add(this.createForm);
@@ -177,7 +194,7 @@ import { HotelRoomApi } from 'api';
         let options = {
             id: this.id
         };
-        const res = await HotelRoomApi.listAll(options);
+        const res = await HotelRoomApi.list(options);
         this.hotelroomlist = res.data;
     }
   }
