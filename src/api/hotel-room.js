@@ -1,16 +1,27 @@
 import axios from 'axios';
 import path from './api';
 export default {
-  listAll(params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelRoom/all', {params : params});
+  list(pid) {
+    // 根据酒店id获取房间列表
+    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/Hotel/${pid}`);
+  },
+  details(id) {
+    // 根据房间id获取详情
+    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/${id}`);
   },
   add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelRoom/add');
+    // {
+    //   "RoomName": "string",酒店名称
+    //   "RoomCode": "string",酒店code
+    //   "RoomCount": 0,房间类型数量
+    //   "Remark": "string"备注
+    // }
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelRoom');
   },
   remove(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelRoom/remove/${id}`);
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelRoom/${id}`);
   },
   edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelRoom/edit/${id}`, params);
+    return axios.put(path.apiBaseUrl + `Hotel/HotelRoom/${id}`, params);
   }
-}
+};
