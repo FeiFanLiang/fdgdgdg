@@ -1,7 +1,7 @@
 <template>
   <section class="db">
-    <template v-if="!$route.meta.hidden">
-
+    <template v-if="!$route.meta.alone">
+<!-- <template > -->
       <header class="db-header">
         <router-link class="logo" :to="{path: '/list/filters'}">美票</router-link>
         <div class="user-info" v-if="user.id">

@@ -11,7 +11,8 @@ let routes = [
     component: Pages.Login,
     name: 'login',
     meta: {
-      hidden: true
+      hidden: true,
+      alone: true
     }
   },
   {
@@ -19,7 +20,8 @@ let routes = [
     component: Pages.Register,
     name: 'register',
     meta: {
-      hidden: true
+      hidden: true,
+      alone: true
     }
   },
   {
@@ -75,7 +77,8 @@ let routes = [
             }
           },
           {
-            path: 'HotelBaseEdit/:id',
+            // path: 'HotelBaseEdit/:id',
+            path: 'HotelBaseEdit',
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
             meta: {
@@ -93,14 +96,8 @@ let routes = [
         children: [
           {
             path: 'pay-company',
-            name: '银行信息',
+            name: '公司支付账号',
             component: Pages.PayCompany,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'pay-type',
-            name: 'PayType',
-            component: Pages.PayType,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
@@ -150,7 +147,7 @@ let routes = [
             component: Pages.imagesInfoAdd,
             name: 'imagesInfoAdd',
             meta: {
-              hidden: true,
+              hidden: true
             }
           },
           {
@@ -158,7 +155,7 @@ let routes = [
             component: Pages.imagesInfoEdit,
             name: 'imagesInfoEdit',
             meta: {
-              hidden: true,
+              hidden: true
             }
           },
           {
@@ -166,9 +163,9 @@ let routes = [
             component: Pages.imagesInfoList,
             name: 'imagesInfoList',
             meta: {
-              hidden: true,
+              hidden: true
             }
-          },
+          }
         ]
       }
     ]

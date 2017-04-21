@@ -191,12 +191,8 @@ export default {
       let options = {
           ID: this.ID
       };
-      HotelPlatformApi.listAll(options).then(data => {
-        let { code, platforminfo_list } = data;
-        if (code === 200) {
-          this.HotelPlatformInfo = platforminfo_list;
-        }
-      });
+      const res = await HotelPlatformApi.listAll(options);
+      this.HotelPlatformInfo = res.data;
     }
   }
 };

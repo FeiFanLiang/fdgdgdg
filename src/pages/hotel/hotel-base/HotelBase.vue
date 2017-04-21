@@ -116,12 +116,8 @@ export default {
           ? this.filters.HotelName_En
           : null
       };
-      await HotelBaseApi.listAll(options).then(data => {
-        let { code, hotelbase_list } = data;
-        if (code === 200) {
-          this.hotelbase = hotelbase_list;
-        }
-      });
+      const res = await HotelBaseApi.listAll(options)
+      this.hotelbase = res.data;
     },
     handleCurrentChange(val) {
       this.getHotelbaseList(val);

@@ -192,12 +192,8 @@ export default {
       let options = {
         ID: this.ID
       };
-      HotelPolicyApi.listAll(options).then(data => {
-        let { code, hotelpolicy_list } = data;
-        if (code === 200) {
-          this.hotelpolicy = hotelpolicy_list;
-        }
-      });
+      const res = await HotelPolicyApi.listAll(options);
+      this.hotelpolicy = res.data;
     }
   },
 
