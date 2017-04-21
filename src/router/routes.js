@@ -77,7 +77,7 @@ let routes = [
             }
           },
           {
-            //path: 'HotelBaseEdit/:id',
+            // path: 'HotelBaseEdit/:id',
             path: 'HotelBaseEdit',
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
@@ -96,14 +96,8 @@ let routes = [
         children: [
           {
             path: 'pay-company',
-            name: '银行信息',
+            name: '公司支付账号',
             component: Pages.PayCompany,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'pay-type',
-            name: 'PayType',
-            component: Pages.PayType,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
