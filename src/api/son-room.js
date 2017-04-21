@@ -1,16 +1,19 @@
 import axios from 'axios';
 import path from './api';
 export default {
-  listAll(params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelPolicy/all', {params  : params});
+  detailById(id) {
+    return axios.get(path.apiBaseUrl + `Hotel/SonRoom/${id}`);
+  },
+  detailRoomById(id) {
+    return axios.get(path.apiBaseUrl + `Hotel/SonRoom/Room/${id}`);
   },
   add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy/add');
+    return axios.post(path.apiBaseUrl + 'Hotel/SonRoom', params);
   },
   remove(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicy/remove/${id}`);
+    return axios.delete(path.apiBaseUrl + `Hotel/SonRoom/${id}`);
   },
   edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicy/edit/${id}`, params);
+    return axios.put(path.apiBaseUrl + `Hotel/SonRoom/${id}`, params);
   }
-}
+};
