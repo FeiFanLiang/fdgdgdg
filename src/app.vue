@@ -1,7 +1,7 @@
 <template>
   <section class="db">
-    <!-- <template v-if="!$route.meta.hidden"> -->
-<template >
+    <template v-if="!$route.meta.alone">
+<!-- <template > -->
       <header class="db-header">
         <router-link class="logo" :to="{path: '/list/filters'}">美票</router-link>
         <div class="user-info" v-if="user.id">
@@ -51,9 +51,9 @@
       </div>
       <!-- body end  -->
     </template>
-    <!-- <template v-else>
+    <template v-else>
       <router-view></router-view>
-    </template> -->
+    </template>
   </section>
 </template>
 

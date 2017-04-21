@@ -13,7 +13,6 @@ import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
 
 // policy
 import PayCompany from './policy/pay-company/pay-company';
-import PayType from './policy/pay-type/pay-type';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 // order
@@ -41,7 +40,6 @@ export default {
   HotelBaseEdit,
   HotelPlatformInfo,
   PolicyImages,
-  PayType,
   Order,
   HotelPolicyList,
   imagesInfo,

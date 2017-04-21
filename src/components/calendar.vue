@@ -136,6 +136,7 @@
                                 <span class="expander">
                                     <i class="ui-icon"></i>标准房
                                 </span>
+
                             </td>
                         </tr>
                         <!-- 产品tr -->
@@ -147,10 +148,13 @@
                                     <span class="gray" style="display: none;">(无效)</span>
                                 </div>
                             </td>
-                            <td class="ui-table-col-center w80 current disable" v-for="a in list">
-                                <div class="dayname">{{a.date}}</div>
-                                <div class="price">CNY{{a.CNY}}</div>
-                                <div class="remain">余{{a.odd}}</div>
+                            <td class="listp">
+                              <div class="listc ui-table-col-center w80 current disable" v-for="a in list">
+                                  <div class="dayname">{{a.date}}</div>
+                                  <div class="price">CNY{{a.CNY}}</div>
+                                  <div class="remain">余{{a.odd}}</div>
+                              </div>
+
                             </td>
 
                         </tr>
@@ -215,7 +219,7 @@ export default {
 
     methods: {
         async fetchData() {
-            let total = 7;
+            let total = 10;
             let count = 1;
             for (let i = 0; i < total; i++) {
                 this.list.push(
@@ -251,6 +255,24 @@ export default {
     display: inline-block;
     margin: 0px 10px;
 }
+.listp{
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+    padding: 0px !important;
+}
+.listc{
+    box-sizing: border-box;
+    -ms-flex: 0 0 14.28%;
+    flex: 0 0 14.28%;
+    border-right: 1px solid silver;
+    border-bottom: 1px solid silver;
+    text-align: center;
+    height: 85px;
+    padding-top: 10px;
+    line-height: 20px;
+    font-size: 10px;
+}
 html{background:#fff none;color:#333;font:normal 12px/1.5 tahoma,arial,"hiragino sans gb",simsun,sans-serif;-moz-font-feature-settings:"liga","kern";-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
 body,dd,dl,form,p,pre{margin:0}
 table{border-collapse:collapse;border-spacing:0}
@@ -261,6 +283,7 @@ em,i{font-style:normal}
 .inlineblock{display:inline-block;*display:inline;vertical-align:middle;*zoom:1}
 .left{display:inline;float:left}
 .right{display:inline;float:right}
+.w960{width:960px}
 
 .ui-table table{width:100%}
 .ui-table td,.ui-table th{border-bottom:1px solid #ececec;font-weight:400;padding:11px 5px}
