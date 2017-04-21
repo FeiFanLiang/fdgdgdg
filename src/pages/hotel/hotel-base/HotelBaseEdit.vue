@@ -131,7 +131,10 @@ import { HotelPayModeApi, HotelBaseApi } from 'api';
 import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
 import HotelRoomList from '../hotel-room/HotelRoomList';
 import HotelPolicyList from '../hotel-policy/HotelPolicyList';
+<<<<<<< HEAD
+=======
 
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
 export default {
   data() {
     return {
@@ -174,6 +177,12 @@ export default {
         {
           value: '6',
           label: '六星级'
+<<<<<<< HEAD
+        }],
+        PayModeOptions: [],
+      }
+    },
+=======
         }
       ],
       PayModeOptions: []
@@ -186,6 +195,7 @@ export default {
     HotelPolicyList
   },
 
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
   created() {
     this.id = this.$route.params.id;
     this.getHotelbaseList(this.id);

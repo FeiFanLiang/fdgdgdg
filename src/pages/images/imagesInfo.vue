@@ -40,7 +40,8 @@
         <el-table-column prop="hotelName" label="酒店名称"></el-table-column>
         <el-table-column :context="_self" inline-template label="截图信息">
             <div>
-                 <router-link :to="{path: 'imagesInfoList'}" id="look">点击查看</router-link>
+                 <!--<router-link id="look" @click="imagesInfos($index, row)">点击查看</router-link>-->
+                 <router-link id="look" :to="{name: 'imagesInfoList',params: { id: id }}">点击查看</router-link>
             </div>
         </el-table-column>
         <el-table-column prop="uploadDate" label="上传日期"></el-table-column>
@@ -72,9 +73,16 @@ import {imagesInfoApi} from 'api'
 export default {
     data() {
         return {
-            id: '',
+            id: 1,
             page: 0,
-            imagesInfo:[],
+            imagesInfo:[
+                {  
+                   id: 1,
+                   hotelName: 'aaa',
+                   uploadDate: '11.21',
+                   upPersonName: 'cdd' 
+                }
+            ],
             hotelName: '',
             date1: '',
             date2: ''
@@ -130,7 +138,7 @@ export default {
         name: 'imagesInfoEdit',
         params: { id: row.id }
       });
-    },
+    }
 
 
   }

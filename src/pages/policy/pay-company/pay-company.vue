@@ -230,7 +230,14 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
+<<<<<<< HEAD
+                await payCompanyApi.delInfo({
+                    id: row.ID
+                    
+                });
+=======
                 await payCompanyApi.delInfo(row.ID);
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
                 this.fetchData();
                 this.$message({
                     message: '删除成功',

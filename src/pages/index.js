@@ -18,11 +18,20 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 import PolicyImages from './policy/policy-images/policy-images';
 // order
 import Order from './order/order';
+<<<<<<< HEAD
+
+=======
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
 // images
 import imagesInfo from './images/imagesInfo';
 import imagesInfoAdd from './images/imagesInfoAdd';
 import imagesInfoEdit from './images/imagesInfoEdit';
 import imagesInfoList from './images/imagesInfoList';
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
 // test
 import Test from './test/test';
 import TestOne from './test/test-one';

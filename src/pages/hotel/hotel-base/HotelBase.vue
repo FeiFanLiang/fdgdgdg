@@ -73,7 +73,6 @@ export default {
     return {
       hotelbase: [],
       page: 0,
-      editDialog: false,
       filters: {
         id: '',
         HotelName: '',
@@ -92,54 +91,6 @@ export default {
         {
           value: '3',
           label: '酒店英文名称'
-        }
-      ],
-      StarOptions: [
-        {
-          value: '一星级',
-          label: '一星级'
-        },
-        {
-          value: '二星级',
-          label: '二星级'
-        },
-        {
-          value: '三星级',
-          label: '三星级'
-        },
-        {
-          value: '四星级',
-          label: '四星级'
-        },
-        {
-          value: '五星级',
-          label: '五星级'
-        },
-        {
-          value: '六星级',
-          label: '六星级'
-        }
-      ],
-      PayModeOptions: [
-        {
-          value: '惠和账户',
-          label: '惠和账户'
-        },
-        {
-          value: '惠和支付宝',
-          label: '惠和支付宝'
-        },
-        {
-          value: '澳迅',
-          label: '澳迅'
-        },
-        {
-          value: '鸿源迅达',
-          label: '鸿源迅达'
-        },
-        {
-          value: '济南美票',
-          label: '济南美票'
         }
       ]
     };

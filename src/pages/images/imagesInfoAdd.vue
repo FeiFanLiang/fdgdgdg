@@ -51,7 +51,7 @@
                 :auto-upload="false"
                 list-type="picture"
                 :before-upload="beforeAvatarUpload">
-                <el-button slot="trigger" size="small" type="primary">选取图片</el-button>
+                <el-button slot="trigger" size="small" type="primary" multiple="false">选取图片</el-button>
                 <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUploadMX">上传</el-button>
             </el-upload>
           </div>
