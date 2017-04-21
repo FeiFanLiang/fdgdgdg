@@ -11,7 +11,8 @@ let routes = [
     component: Pages.Login,
     name: 'login',
     meta: {
-      hidden: true
+      hidden: true,
+      alone: true
     }
   },
   {
@@ -19,7 +20,8 @@ let routes = [
     component: Pages.Register,
     name: 'register',
     meta: {
-      hidden: true
+      hidden: true,
+      alone: true
     }
   },
   {
@@ -151,7 +153,7 @@ let routes = [
             component: Pages.imagesInfoAdd,
             name: 'imagesInfoAdd',
             meta: {
-              hidden: true,
+              hidden: true
             }
           },
           {
@@ -159,7 +161,7 @@ let routes = [
             component: Pages.imagesInfoEdit,
             name: 'imagesInfoEdit',
             meta: {
-              hidden: true,
+              hidden: true
             }
           },
           {
@@ -167,9 +169,9 @@ let routes = [
             component: Pages.imagesInfoList,
             name: 'imagesInfoList',
             meta: {
-              hidden: true,
+              hidden: true
             }
-          },
+          }
         ]
       }
     ]
