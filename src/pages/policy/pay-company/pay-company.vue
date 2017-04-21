@@ -108,187 +108,188 @@ import { payCompanyApi } from 'api';
 // import Vue from 'vue';
 
 export default {
-    data() {
-        return {
-            list: [],
-            total: 0,
-            page: 0,
-            loading: true,
-            editDialog: false,
-            createDialog: false,
-            filters: {
-                sortWay: '',
-                AccountName: '',
-                labelVal: '1',
-                AccountNum: ''
-            },
-            editForm: {
-                ID: '',
-                AccountName: '',
-                AccountNum: '',
-                Remark: ''
-            },
-            createForm: {
-                ID: 0,
-                AccountName: '',
-                AccountNum: '',
-                Remark: ''
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: '银行账户'
-                }
-
-            ],
-            rules: {
-                AccountName: [{
-                    required: true,
-                    message: '请输入账户名称',
-                    trigger: 'blur'
-                }],
-                AccountNum: [{
-                    required: true,
-                    message: '请输入银行账户',
-                    trigger: 'blur'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        handleSortChange(sortWay) {
-            this.filters.sortWay = {
-                prop: sortWay.prop,
-                order: sortWay.order
-            };
-            this.fetchData();
+  data() {
+    return {
+      list: [],
+      total: 0,
+      page: 0,
+      loading: true,
+      editDialog: false,
+      createDialog: false,
+      filters: {
+        sortWay: '',
+        AccountName: '',
+        labelVal: '1',
+        AccountNum: ''
+      },
+      editForm: {
+        ID: '',
+        AccountName: '',
+        AccountNum: '',
+        Remark: ''
+      },
+      createForm: {
+        ID: 0,
+        AccountName: '',
+        AccountNum: '',
+        Remark: ''
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '账户名称'
         },
-        clickCrate() {
-            this.createDialog = true
-            this.createForm = {
-                ID: 0,
-                AccountName: '',
-                AccountNum: '',
-                Remark: ''
-            }
-        },
-        async handleEditSave(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    try {
-                        payCompanyApi.editInfo(this.editForm);
-                        this.fetchData();
-                        this.editDialog = false;
-                        this.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            })
-        },
-        async handleSave(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    try {
-                        payCompanyApi.addInfo(this.createForm);
-                        this.fetchData();
-                        this.createDialog = false;
-                        this.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            })
-        },
-        async handleEdit($index, row) {
-            this.editDialog = true;
-            try {
-                const res = await payCompanyApi.getDetail(row.ID);
-                this.editForm = { ...res.data};
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async handleDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-<<<<<<< HEAD
-                await payCompanyApi.delInfo({
-                    id: row.ID
-                    
-                });
-=======
-                await payCompanyApi.delInfo(row.ID);
->>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
-                this.fetchData();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        handleSearch() {
-            this.fetchData();
-        },
-        handleCurrentChange(val) {
-            this.fetchData(val);
-        },
-        async fetchData(page) {
-            // param: sort way
-            let sortWay = this.filters.sortWay && this.filters.sortWay.prop ?
-                this.filters.sortWay :
-                '';
-
-            // param: page
-            this.page = page || this.page;
-
-            let options = {
-                page: this.page,
-                AccountName: this.filters.labelVal === '1' ? this.filters.AccountName : null,
-                sortWay: sortWay,
-                AccountNum: this.filters.labelVal === '2' ? this.filters.AccountNum : null
-            };
-            //      console.log('[dashboard]:your post params');
-            //      console.log(options);
-
-            this.loading = true;
-            try {
-                const res = await payCompanyApi.getList(options);
-                console.log(res.data);
-                // clear selection
-                this.$refs.table.clearSelection();
-                // lazy render data
-                this.list = res.data;
-                this.total = res.data.total;
-                this.loading = false;
-            } catch (e) {
-                console.error(e);
-            }
+        {
+          value: '2',
+          label: '银行账户'
         }
+      ],
+      rules: {
+        AccountName: [
+          {
+            required: true,
+            message: '请输入账户名称',
+            trigger: 'blur'
+          }
+        ],
+        AccountNum: [
+          {
+            required: true,
+            message: '请输入银行账户',
+            trigger: 'blur'
+          }
+        ]
+      }
+    };
+  },
+
+  methods: {
+    handleSortChange(sortWay) {
+      this.filters.sortWay = {
+        prop: sortWay.prop,
+        order: sortWay.order
+      };
+      this.fetchData();
     },
-    mounted() {
+    clickCrate() {
+      this.createDialog = true;
+      this.createForm = {
+        ID: 0,
+        AccountName: '',
+        AccountNum: '',
+        Remark: ''
+      };
+    },
+    async handleEditSave(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          try {
+            payCompanyApi.editInfo(this.editForm);
+            this.fetchData();
+            this.editDialog = false;
+            this.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async handleSave(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          try {
+            payCompanyApi.addInfo(this.createForm);
+            this.fetchData();
+            this.createDialog = false;
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async handleEdit($index, row) {
+      this.editDialog = true;
+      try {
+        const res = await payCompanyApi.getDetail(row.ID);
+        this.editForm = { ...res.data };
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async handleDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await payCompanyApi.delInfo(row.ID);
         this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    handleSearch() {
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.fetchData(val);
+    },
+    async fetchData(page) {
+      // param: sort way
+      let sortWay = this.filters.sortWay && this.filters.sortWay.prop
+        ? this.filters.sortWay
+        : '';
+
+      // param: page
+      this.page = page || this.page;
+
+      let options = {
+        page: this.page,
+        AccountName: this.filters.labelVal === '1'
+          ? this.filters.AccountName
+          : null,
+        sortWay: sortWay,
+        AccountNum: this.filters.labelVal === '2'
+          ? this.filters.AccountNum
+          : null
+      };
+      //      console.log('[dashboard]:your post params');
+      //      console.log(options);
+
+      this.loading = true;
+      try {
+        const res = await payCompanyApi.getList(options);
+        console.log(res.data);
+        // clear selection
+        this.$refs.table.clearSelection();
+        // lazy render data
+        this.list = res.data;
+        this.total = res.data.total;
+        this.loading = false;
+      } catch (e) {
+        console.error(e);
+      }
     }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 
