@@ -10,7 +10,7 @@
                               <dd>关房</dd>
                           </dl>
                           <dl class="item">
-                              <dt class="normal" @click=""><span class="oversale"><i class="ui-icon"></i></span></dt>
+                              <dt class="normal" @click=""><span class="oversale"><i class="el-icon-arrow-up"></i></span></dt>
                               <dd>允许超售</dd>
                           </dl>
                           <dl class="item">
@@ -132,10 +132,10 @@
                                     <span class="gray" style="display: none;">(无效)</span>
                                 </div>
                             </td>
-                            <td class="ui-table-col-center w80 current disable" v-for="a in week">
-                                <div class="dayname">{{a.date}}</div>
-                                <div class="price">CNY{{a.CNY}}</div>
-                                <div class="remain">余{{a.odd}}</div>
+                            <td class="ui-table-col-center w80 current " v-for="day in week" @click="editPrice(day)">
+                                <div class="dayname">{{day.date}}</div>
+                                <div class="price">CNY{{day.CNY}}</div>
+                                <div class="remain">余{{day.odd}}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -177,25 +177,14 @@ export default {
       if (!this.chosenDate)
         return {
           curYear: '2017',
-
           curMonth: '4',
-
           curDay: '12'
         };
       let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd');
       let arry = time1.split('-');
-      console.dir({
-        curYear: arry[0],
-
-        curMonth: arry[1],
-
-        curDay: arry[2]
-      });
       return {
         curYear: arry[0],
-
         curMonth: arry[1],
-
         curDay: arry[2]
       };
     },
@@ -203,13 +192,8 @@ export default {
       let firstDay = new Date(
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );
-      console.log(firstDay);
       let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
-      console.log(startTimestamp);
       let item, status, tempArr = [], tempItem;
-      // if (this.calendar.options.locale === 'es') {
-      //   startTimestamp = startTimestamp + 1000 * 60 * 60 * 24;
-      // }
       for (let i = 0; i < 42; i++) {
         item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
         if (this.calendar.curMonth === item.getMonth()) {
@@ -229,7 +213,6 @@ export default {
         // });
         tempArr.push(tempItem);
       }
-      console.log(tempArr);
       return chunk(tempArr, 7);
     }
   },
@@ -245,7 +228,7 @@ export default {
       if (month < 10) {
         month = '0' + month;
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; //上个月的第一天
+      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
     next() {
       let nowdays = new Date(this.chosenDate);
@@ -259,7 +242,10 @@ export default {
       if (month < 10) {
         month = '0' + month;
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; //上个月的第一天
+      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
+    },
+    editPrice(day) {
+      alert(JSON.stringify(day));
     },
     handleCommand(command) {
       this.stateText = command;
@@ -296,11 +282,12 @@ export default {
           );
       return fmt;
     };
+    this.chosenDate = Date.now();
   }
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 .smalltext{
     font-size: 10px;
 }
@@ -372,5 +359,8 @@ em,i{font-style:normal}
 .m-sysbar .userinfo .lang{display:inline;float:left;border-left:1px solid #e0e0e0;padding-left:20px}
 .m-sysbar .userinfo .info{display:inline;float:left;border-left:1px solid #e0e0e0;margin-left:20px}
 
-
+.m-price-sheet .current {
+    background-color: #fbfbfb;
+    cursor: pointer;
+    vertical-align: top;}
 </style>
