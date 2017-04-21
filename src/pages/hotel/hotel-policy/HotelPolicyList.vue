@@ -42,7 +42,9 @@
         <el-input v-model="createForm.PhoneNum"></el-input>
       </el-form-item>
       <el-form-item label="保密类型">
-        <el-input v-model="createForm.SecretType"></el-input>
+        <el-select v-model="createForm.SecretType" clearable placeholder="请选择保密类型">
+          <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
+        </el-select>
       </el-form-item>
         <el-form-item label="酒店预订方式">
         <el-input v-model="createForm.ReserveMode"></el-input>
@@ -77,7 +79,9 @@
         <el-input v-model="editForm.PhoneNum"></el-input>
       </el-form-item>
       <el-form-item label="保密类型">
-        <el-input v-model="editForm.SecretType"></el-input>
+        <el-select v-model="editForm.SecretType" clearable placeholder="请选择保密类型">
+          <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
+        </el-select>
       </el-form-item>
         <el-form-item label="酒店预订方式">
         <el-input v-model="editForm.ReserveMode"></el-input>
@@ -97,12 +101,13 @@
 </template>
 
 <script>
-import { HotelPolicyApi } from 'api';
+import { HotelPolicyApi, secretTypeApi } from 'api';
 
 export default {
   data() {
     return {
-      hotelpolicy: [],
+      SecretTypeOptions: [],
+      hotelpolicy: [{id:1}],
       createDialog: false,
       editDialog: false,
       createForm: {
@@ -127,9 +132,14 @@ export default {
   },
   mounted() {
     this.fetchData();
+    this.getSecretType();
   },
 
   methods: {
+    async getSecretType() {
+      const res = await secretTypeApi.list();
+      this.SecretTypeOptions = res.data;
+    },
     async hotelpolicySave() {
       try {
         await HotelPolicyApi.add(this.createForm);
