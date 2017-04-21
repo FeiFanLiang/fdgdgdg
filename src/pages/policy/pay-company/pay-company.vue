@@ -234,6 +234,7 @@ export default {
                 });
                 await payCompanyApi.delInfo({
                     id: row.ID
+                    
                 });
                 this.fetchData();
                 this.$message({

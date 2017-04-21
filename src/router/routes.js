@@ -162,7 +162,7 @@ let routes = [
             }
           },
           {
-            path: 'imagesInfoList',
+            path: 'imagesInfoList/:id',
             component: Pages.imagesInfoList,
             name: 'imagesInfoList',
             meta: {
