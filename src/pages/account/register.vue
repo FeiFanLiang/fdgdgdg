@@ -72,26 +72,22 @@ export default {
           this.$message.error(msg);
         } else {
           this.isBtnLoading = true;
-          try {
-            const data = await AccountApi.login(registerParams);
-            this.isBtnLoading = false;
-            let { msg, code, user } = data;
-            if (code !== 200) {
-              this.$message.error(msg);
+          const data = await AccountApi.login(registerParams);
+          this.isBtnLoading = false;
+          let { msg, code, user } = data;
+          if (code !== 200) {
+            this.$message.error(msg);
+          } else {
+            localStorage.setItem('user', JSON.stringify(user));
+            if (this.$route.query.redirect) {
+              this.$router.push({
+                path: this.$route.query.redirect
+              });
             } else {
-              localStorage.setItem('user', JSON.stringify(user));
-              if (this.$route.query.redirect) {
-                this.$router.push({
-                  path: this.$route.query.redirect
-                });
-              } else {
-                this.$router.push({
-                  path: '/'
-                });
-              }
+              this.$router.push({
+                path: '/'
+              });
             }
-          } catch (e) {
-            console.error(e);
           }
         }
       } catch (e) {
