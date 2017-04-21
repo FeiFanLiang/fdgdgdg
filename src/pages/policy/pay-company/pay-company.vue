@@ -58,7 +58,7 @@
       <!-- pagination end  -->
 
       <!-- edit dialog start -->
-      <el-dialog title="编辑银行信息" v-model="editDialog" size="tiny">
+      <el-dialog title="编辑账户信息" v-model="editDialog" size="tiny">
         <el-form :rules="rules" ref="editForm" :model="editForm" >
           <el-form-item label="账户名称" prop="AccountName">
             <el-input placeholder="请输入账户名称" v-model="editForm.AccountName"></el-input>
@@ -79,7 +79,7 @@
       <!-- edit dialog end -->
 
       <!-- create dialog start -->
-      <el-dialog title="添加银行信息" v-model="createDialog" size="tiny">
+      <el-dialog title="添加支付账户" v-model="createDialog" size="tiny">
         <el-form :rules="rules" ref="createForm" :model="createForm">
           <el-form-item label="账户名称" prop="AccountName">
             <el-input placeholder="请输入账户名称" v-model="createForm.AccountName"></el-input>
