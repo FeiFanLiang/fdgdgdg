@@ -177,12 +177,8 @@ import { HotelRoomApi } from 'api';
         let options = {
             id: this.id
         };
-        HotelRoomApi.listAll(options).then(data => {
-          let { code, hotelroomlist_list } = data;
-          if (code === 200) {
-            this.hotelroomlist = hotelroomlist_list;
-          }
-      });
+        const res = await HotelRoomApi.listAll(options);
+        this.hotelroomlist = res.data;
     }
   }
 }

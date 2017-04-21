@@ -190,12 +190,8 @@ import {
           PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
           id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
         };
-        HotelThreePlatInfoApi.listAll(options).then(data => {
-          let { code, platform_list } = data;
-          if (code === 200) {
-            this.platform = platform_list;
-          }
-        });
+        const res = await HotelThreePlatInfoApi.listAll(options);
+        this.platform = res.data;
       },
       mounted() {
         this.fetchData();

@@ -75,7 +75,8 @@ let routes = [
             }
           },
           {
-            path: 'HotelBaseEdit/:id',
+            //path: 'HotelBaseEdit/:id',
+            path: 'HotelBaseEdit',
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
             meta: {

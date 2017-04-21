@@ -31,7 +31,7 @@
         <div class="grid-content bg-purple">
           <el-form-item label="星级" prop="Star">
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
-              <el-option v-for="item in StarOptions" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="item in StarOptions" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { HotelPayModeApi, HotelBaseApi } from 'api';
+import { hotelPayModeApi, HotelBaseApi, hotelStarApi } from 'api';
 
 export default {
   data() {
@@ -138,53 +138,28 @@ export default {
         ],
         FrontPhone: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
         Address: [{ required: true, message: '请输入酒店地址', trigger: 'blur' }],
-        Star: [{ required: true, message: '请选择酒店星级', trigger: 'change' }],
         PersonName: [{ required: true, message: '请输入采购人姓名', trigger: 'blur' }],
         PurchasingName: [
           { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
-        ],
-        PayMode: [{ required: true, message: '请选择付款账户', trigger: 'change' }]
+        ]
       },
 
-      StarOptions: [
-        {
-          value: '1',
-          label: '一星级'
-        },
-        {
-          value: '2',
-          label: '二星级'
-        },
-        {
-          value: '3',
-          label: '三星级'
-        },
-        {
-          value: '4',
-          label: '四星级'
-        },
-        {
-          value: '5',
-          label: '五星级'
-        },
-        {
-          value: '6',
-          label: '六星级'
-        }
-      ],
+      StarOptions: [],
       PayModeOptions: []
     };
   },
   created() {
     this.getPayModeOptions();
+    this.getStarOptions();
   },
   methods: {
     async getPayModeOptions() {
-      const data = await HotelPayModeApi.getDetail();
-      let { code, paymodeOptions } = data;
-      if (code === 200) {
-        this.PayModeOptions = paymodeOptions;
-      }
+      const res = await hotelPayModeApi.getList();
+      this.PayModeOptions = res.data;
+    },
+    async getStarOptions() {
+      const res = await hotelStarApi.list();
+      this.StarOptions = res.data;
     },
     onSubmit(formName) {
       this.$refs[formName].validate(valid => {
