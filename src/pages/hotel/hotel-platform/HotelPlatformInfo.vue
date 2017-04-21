@@ -223,7 +223,7 @@ export default {
         align-items: center;
         justify-content: flex-end;
     }
-    .textarea {
+    textarea {
         border: 1px solid #bfcbd9;
         border-radius: 4px;
     }
