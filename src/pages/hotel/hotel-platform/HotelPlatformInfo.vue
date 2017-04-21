@@ -9,7 +9,7 @@
       <el-table-column prop="PlatformID" label="平台ID" width="80"></el-table-column>
       <el-table-column prop="IsValid" label="IsValid" width="85"></el-table-column>
       <el-table-column prop="PlatHotelName" label="平台酒店名称"></el-table-column>
-      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" width="100"></el-table-column>
+      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名"></el-table-column>
       <el-table-column prop="PlatURL" label="平台访问路径"></el-table-column>
       <el-table-column prop="Remark" label="备注"></el-table-column>
       <el-table-column :context="_self" inline-template label="操作" width="180">
@@ -25,7 +25,7 @@
 
     <!-- create dialog start -->
     <el-dialog title="添加新平台映射信息" v-model="createDialog" size="small">
-      <el-form class="flex" ref="createForm" :model="createForm">
+      <el-form class="around" ref="createForm" :model="createForm">
         <div>
           <el-form-item label="ID">
             <el-input v-model="createForm.ID" :disabled="true"></el-input>
@@ -74,31 +74,44 @@
 
     <!-- edit dialog start -->
     <el-dialog title="编辑平台映射信息" v-model="editDialog" size="small" :modal-append-to-body="false">
-      <el-form ref="editForm" :model="editForm" label-width="80px">
-        <el-form-item label="ID">
-          <el-input v-model="editForm.ID" :disabled="true"></el-input>
-        </el-form-item>
-        <el-form-item label="平台ID">
-          <el-input v-model="editForm.PlatformID"></el-input>
-        </el-form-item>
-        <el-form-item label="酒店ID">
-          <el-input v-model="editForm.HotelID"></el-input>
-        </el-form-item>
-        <el-form-item label="酒店平台ID">
-          <el-input v-model="editForm.PlatHotelID"></el-input>
-        </el-form-item>
-        <el-form-item label="平台访问路径">
-          <el-input v-model="editForm.PlatURL"></el-input>
-        </el-form-item>
-        <el-form-item label="酒店平台名称">
-          <el-input v-model="editForm.PlatHotelName"></el-input>
-        </el-form-item>
-         <el-form-item label="酒店平台英文名称">
-          <el-input v-model="editForm.PlatHotelName_En"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="editForm.Remark" type="textarea"></el-input>
-        </el-form-item>
+      <el-form class="around" ref="editForm" :model="editForm">
+        <div>
+          <el-form-item label="ID">
+            <el-input v-model="editForm.ID" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="平台ID">
+            <el-input v-model="editForm.PlatformID"></el-input>
+          </el-form-item>
+            <el-form-item label="酒店ID">
+              <el-input v-model="editForm.HotelID"></el-input>
+            </el-form-item>
+          <el-form-item label="平台酒店名称">
+            <el-input v-model="editForm.PlatHotelName"></el-input>
+          </el-form-item>
+          <el-form-item label="平台访问路径">
+            <el-input v-model="editForm.PlatURL"></el-input>
+          </el-form-item>
+          <el-form-item label="IsValid">
+           <el-input v-model="editForm.IsValid"></el-input>
+         </el-form-item>
+        </div>
+        <div>
+          <el-form-item label="平台酒店ID">
+            <el-input v-model="editForm.PlatHotelID"></el-input>
+          </el-form-item>
+          <el-form-item label="平台名称">
+            <el-input v-model="editForm.Platform"></el-input>
+          </el-form-item>
+          <el-form-item label="酒店名称">
+            <el-input v-model="editForm.Hotel"></el-input>
+          </el-form-item>
+           <el-form-item label="平台酒店英文名称">
+            <el-input v-model="editForm.PlatHotelName_En"></el-input>
+          </el-form-item>
+          <el-form-item label="备注">
+            <textarea name="name" rows="6" cols="24"></textarea>
+          </el-form-item>
+        </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialog = false">取 消</el-button>
@@ -214,8 +227,10 @@ export default {
 </script>
 <style lang="scss">
 #HotelPlatformInfo {
-    .flex {
+    .around {
         display: flex;
+        align-items: center;
+        justify-content: space-around;
     }
     .el-form-item {
         margin-bottom: 22px;
