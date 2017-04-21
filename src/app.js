@@ -38,7 +38,7 @@ Vue.component('db-breadcrumb', Breadcrumb);
 
 export const router = new VueRouter({
   routes,
-  mode: 'hash',
+  mode: 'history',
   linkActiveClass: 'active'
 });
 
