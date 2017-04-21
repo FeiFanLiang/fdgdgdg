@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
+import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';
 
 import Breadcrumb from './components/breadcrumb';
 
+axios.defaults.withCredentials = true;
 const VueProgressBarOptions = {
   color: '#13ce66',
   failedColor: '#FF4949',
