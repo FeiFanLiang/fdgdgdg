@@ -199,9 +199,7 @@ export default {
         async handleEdit($index, row) {
             this.editDialog = true;
             try {
-                const res = await hotelPayModeApi.getDetail({
-                    id: row.ID
-                });
+                const res = await hotelPayModeApi.getDetail(row.ID);
                 this.editForm = { ...res.data
                 }
             } catch (e) {
@@ -215,9 +213,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await hotelPayModeApi.delInfo({
-                    id: row.ID
-                });
+                await hotelPayModeApi.delInfo(row.ID);
                 this.fetchData();
                 this.$message({
                     message: '删除成功',
@@ -254,7 +250,7 @@ export default {
             this.loading = true;
             try {
                 console.log(options)
-                const res = await hotelPayModeApi.getList();
+                const res = await hotelPayModeApi.getList(options);
                 // clear selection
                 this.$refs.table.clearSelection();
                 // lazy render data
