@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="l-workspace-body m-price">
-      <div class="" avalonctrl="toolbar">
+      <div  >
           <div class="l-bar w960">
               <div class="left">
                   <div class="l-bar-item">
@@ -10,7 +10,7 @@
                               <dd>关房</dd>
                           </dl>
                           <dl class="item">
-                              <dt class="normal" @click=""><span class="oversale"><i class="ui-icon"></i></span></dt>
+                              <dt class="normal" @click=""><span class="oversale"><i class="el-icon-arrow-up"></i></span></dt>
                               <dd>允许超售</dd>
                           </dl>
                           <dl class="item">
@@ -22,7 +22,7 @@
                   <div class="l-bar-item">
                       <!-- <div class="l-bar-label w70">状态</div> -->
                       <div class="oni-dropdown" tabindex="0">
-                        <el-dropdown trigger="click" @command="handleCommand">
+                        <el-dropdown trigger="click" @command="toggleStatus">
                           <span class="el-dropdown-link">{{stateText}}
                             <i class="el-icon-caret-bottom el-icon--right"></i>
                           </span>
@@ -40,7 +40,7 @@
         <div class="l-bar w960">
             <div class="left">
                 <div class="l-bar-item">
-                      <el-dropdown trigger="click" >
+                      <el-dropdown trigger="click"  >
                         <el-button type="primary">批量修改价格
                           <i class="el-icon-caret-bottom el-icon--right"></i>
                         </el-button>
@@ -53,7 +53,7 @@
                   <!-- 渠道 -->
                   <!-- 渠道dropdown -->
                 <div class="l-bar-item">
-                    <el-dropdown trigger="click" >
+                    <el-dropdown trigger="click" @command="toggleStatus">
                       <el-button type="primary">售卖价
                         <i class="el-icon-caret-bottom el-icon--right"></i>
                       </el-button>
@@ -68,27 +68,11 @@
                       </el-dropdown-menu>
                     </el-dropdown>
                   </div>
-
-                  <!-- 分销商 -->
-                  <!-- 分销商dropdown -->
-                <div class="l-bar-item" style="display: none;">
-                      <div class="l-bar-label">分销商</div>
-                      <div class="oni-dropdown" tabindex="0" style="width: 200px;">
-                      <div class="oni-dropdown-source">
-                          <div class="oni-dropdown-input" id="title-disGroup" title="" style="width: 176px;">aa</div>
-                          <div class="oni-dropdown-icon-wrap">
-                              <i class="oni-dropdown-icon oni-icon oni-icon-angle-up" style="display: none;"></i>
-                              <i class="oni-dropdown-icon oni-icon oni-icon-angle-down"></i>
-                          </div>
-                      </div>
-                      <select avalonctrl="disGroup" multiple="false" size="1" style="display: none;"> </select>
-                    </div>
-                  </div>
             </div>
             <div class="right">
                   <!-- 展示方式，按周展示，按月展示 -->
                 <div class="mydate">
-                   <el-dropdown trigger="click">
+                   <el-dropdown trigger="click" @command="togglePeriod">
                       <span class="el-dropdown-link">按周显示
                         <i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
@@ -98,19 +82,20 @@
                       </el-dropdown-menu>
                     </el-dropdown>
                 </div>
-                <el-button type="primary" icon="arrow-left">前一周</el-button>
+                <el-button type="primary" icon="arrow-left" @click="pre">前一月</el-button>
                 <el-date-picker class="mydate"
-                    v-model="value1"
+                    v-model="chosenDate"
                     type="date"
                     placeholder="选择日期"
+
                     :picker-options="pickerOptions0">
                 </el-date-picker>
-                <el-button type="primary">后一周<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                <el-button type="primary" @click="next">后一月<i class="el-icon-arrow-right el-icon--right"></i></el-button>
             </div>
           </div>
       </div>
       <div class="l-section w960">
-          <div class="ui-table ui-table-bordered m-price-sheet" avalonctrl="calendar">
+          <div class="ui-table ui-table-bordered m-price-sheet" >
             <div class="ui-table-header">
                 <table>
                     <tbody>
@@ -136,27 +121,22 @@
                                 <span class="expander">
                                     <i class="ui-icon"></i>标准房
                                 </span>
-
                             </td>
                         </tr>
                         <!-- 产品tr -->
-                        <tr>
+                        <tr v-for="(week,index) in dayList" >
                             <!-- 产品名称 -->
-                            <td class="ui-table-col-left" colspan="1" rowspan="6">
+                            <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                                 <div style="margin-left: 30px;">
                                     标准房-预付无早（双床双人入住）
                                     <span class="gray" style="display: none;">(无效)</span>
                                 </div>
                             </td>
-                            <td class="listp">
-                              <div class="listc ui-table-col-center w80 current disable" v-for="a in list">
-                                  <div class="dayname">{{a.date}}</div>
-                                  <div class="price">CNY{{a.CNY}}</div>
-                                  <div class="remain">余{{a.odd}}</div>
-                              </div>
-
+                            <td class="ui-table-col-center w80 current " v-for="day in week" @click="editPrice(day)">
+                                <div class="dayname">{{day.date}}</div>
+                                <div class="price">CNY{{day.CNY}}</div>
+                                <div class="remain">余{{day.odd}}</div>
                             </td>
-
                         </tr>
                     </tbody>
                     <tbody>
@@ -180,74 +160,134 @@
           </div>
         </div>
       <div class="l-secction w960">无效：表示该产品不可售卖</div>
-      <div class="ui-contextmenu hide w80" id="popuppanel" avalonctrl="gridPopupController">
-        <div class="ui-contextmenu-set w130">
-            <ul>
-                <li class="ui-contextmenu-item" style="display: none;">
-                    <a href="javascript:void(0);" class="ui-contextmenu-handler">开房</a></li>
-                <li class="ui-contextmenu-item">
-                    <a href="javascript:void(0);" class="ui-contextmenu-handler">关房</a></li>
-                <li class="ui-contextmenu-divider"></li>
-            </ul>
-            <!-- <ul>
-                <li class="ui-contextmenu-item"
-                    ms-click="productControl" ms-visible="type == 'PRODUCT'">
-                    <a href="javascript:void(0);" class="ui-contextmenu-handler">设置最大可售量</a></li>
-                <li class="ui-contextmenu-item" ms-if='true'
-                    ms-click="roomControl" ms-visible="type == 'ROOM'">
-                    <a href="javascript:void(0);" class="ui-contextmenu-handler">修改房量</a></li>
-                <li class="ui-contextmenu-item" ms-if='false'
-                    ms-click="channelControl" ms-visible="type == 'ROOM' && hasChannel">
-                    <a href="javascript:void(0);" class="ui-contextmenu-handler">渠道管理</a></li>
-            </ul> -->
-        </div>
-      </div>
   </div>
 </template>
 
 <script>
-import Mock from 'mockjs';
-
+import chunk from 'lodash/chunk';
 export default {
-    data() {
+  data() {
+    return {
+      stateText: '全部',
+      chosenDate: ''
+    };
+  },
+  computed: {
+    calendar() {
+      if (!this.chosenDate)
         return {
-            list: [],
-            stateText: '全部',
-            value1: ''
+          curYear: '2017',
+          curMonth: '4',
+          curDay: '12'
         };
+      let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd');
+      let arry = time1.split('-');
+      return {
+        curYear: arry[0],
+        curMonth: arry[1],
+        curDay: arry[2]
+      };
     },
-
-    methods: {
-        async fetchData() {
-            let total = 10;
-            let count = 1;
-            for (let i = 0; i < total; i++) {
-                this.list.push(
-                    Mock.mock({
-                        date: `04-${count++}`,
-                        'CNY|1000-3000': 1,
-                        'odd|1-10': 1
-                    })
-                );
-            }
-            console.log(this.list)
-        },
-        handleCommand(command) {
-            this.stateText = command
-        },
-        pickerOptions0: {
-            disabledDate(time) {
-                return time.getTime() < Date.now() - 8.64e7;
-            }
+    dayList() {
+      let firstDay = new Date(
+        this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
+      );
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
+      let item, status, tempArr = [], tempItem;
+      for (let i = 0; i < 42; i++) {
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
+        if (this.calendar.curMonth === item.getMonth()) {
+          status = 1;
+        } else {
+          status = 0;
         }
-    },
-    mounted() {
-        this.fetchData();
+        tempItem = {
+          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          status: status
+        };
+        // this.events.forEach(event => {
+        //   if (isEqualDateStr(event.date, tempItem.date)) {
+        //     tempItem.title = event.title;
+        //     tempItem.desc = event.desc || '';
+        //   }
+        // });
+        tempArr.push(tempItem);
+      }
+      return chunk(tempArr, 7);
     }
+  },
+  methods: {
+    pre() {
+      let nowdays = new Date(this.chosenDate);
+      let year = nowdays.getFullYear();
+      let month = nowdays.getMonth();
+      if (month == 0) {
+        month = 12;
+        year = year - 1;
+      }
+      if (month < 10) {
+        month = '0' + month;
+      }
+      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
+    },
+    next() {
+      let nowdays = new Date(this.chosenDate);
+      let year = nowdays.getFullYear();
+      let month = nowdays.getMonth();
+      if (month == 11) {
+        month = -1;
+        year = year + 1;
+      }
+      month += 2;
+      if (month < 10) {
+        month = '0' + month;
+      }
+      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
+    },
+    editPrice(day) {
+      alert(JSON.stringify(day));
+    },
+    handleCommand(command) {
+      this.stateText = command;
+    },
+    pickerOptions0: {
+      disabledDate(time) {
+        return time.getTime() < Date.now() - 8.64e7;
+      }
+    }
+  },
+  mounted() {
+    Date.prototype.Format = function(fmt) {
+      let o = {
+        'M+': this.getMonth() + 1, //月份
+        'd+': this.getDate(), //日
+        'h+': this.getHours(), //小时
+        'm+': this.getMinutes(), //分
+        's+': this.getSeconds(), //秒
+        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+        S: this.getMilliseconds() //毫秒
+      };
+      if (/(y+)/.test(fmt))
+        fmt = fmt.replace(
+          RegExp.$1,
+          (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+        );
+      for (let k in o)
+        if (new RegExp('(' + k + ')').test(fmt))
+          fmt = fmt.replace(
+            RegExp.$1,
+            RegExp.$1.length == 1
+              ? o[k]
+              : ('00' + o[k]).substr(('' + o[k]).length)
+          );
+      return fmt;
+    };
+    this.chosenDate = Date.now();
+  }
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 .smalltext{
     font-size: 10px;
 }
@@ -319,5 +359,8 @@ em,i{font-style:normal}
 .m-sysbar .userinfo .lang{display:inline;float:left;border-left:1px solid #e0e0e0;padding-left:20px}
 .m-sysbar .userinfo .info{display:inline;float:left;border-left:1px solid #e0e0e0;margin-left:20px}
 
-
+.m-price-sheet .current {
+    background-color: #fbfbfb;
+    cursor: pointer;
+    vertical-align: top;}
 </style>
