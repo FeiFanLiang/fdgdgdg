@@ -32,7 +32,7 @@
         @sort-change="handleSortChange">
         <el-table-column prop="ID" label="ID" width="180" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="ModeName" label="账户名称" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="Remark" label="Remark" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="Remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column :context="_self" width="150" inline-template label="操作">
           <div>
             <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
