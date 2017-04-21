@@ -217,9 +217,7 @@ export default {
         async handleEdit($index, row) {
             this.editDialog = true;
             try {
-                const res = await payCompanyApi.getDetail({
-                    id: row.ID
-                });
+                const res = await payCompanyApi.getDetail(row.ID);
                 this.editForm = { ...res.data};
             } catch (e) {
                 console.error(e);
@@ -232,10 +230,14 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
+<<<<<<< HEAD
                 await payCompanyApi.delInfo({
                     id: row.ID
                     
                 });
+=======
+                await payCompanyApi.delInfo(row.ID);
+>>>>>>> c40f64152661ed0afc17f908ee121703c551ab5d
                 this.fetchData();
                 this.$message({
                     message: '删除成功',
@@ -271,7 +273,7 @@ export default {
 
             this.loading = true;
             try {
-                const res = await payCompanyApi.getList();
+                const res = await payCompanyApi.getList(options);
                 console.log(res.data);
                 // clear selection
                 this.$refs.table.clearSelection();
