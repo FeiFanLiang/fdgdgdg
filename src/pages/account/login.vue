@@ -76,23 +76,31 @@ export default {
       try {
         const data = await AccountApi.login(loginParams);
         this.isBtnLoading = false;
-        let { msg, code, user } = data;
-        if (code !== 200) {
-          this.$message.error(msg);
+        console.log(data);
+        let user = {
+          id: '1',
+          username: this.username,
+          avatar: ''
+        };
+        // let { msg, code, user } = data;
+
+        // if (code !== 200) {
+        // this.$message.error(msg);
+        // } else {
+        localStorage.setItem('user', JSON.stringify(user));
+        if (this.$route.query.redirect) {
+          this.$router.push({
+            path: this.$route.query.redirect
+          });
         } else {
-          localStorage.setItem('user', JSON.stringify(user));
-          if (this.$route.query.redirect) {
-            this.$router.push({
-              path: this.$route.query.redirect
-            });
-          } else {
-            this.$router.push({
-              path: '/'
-            });
-          }
+          this.$router.push({
+            path: '/'
+          });
         }
+
+        // }
       } catch (e) {
-        console.error(e);
+        this.$message.error(e);
       }
       if (this.$route.query.redirect) {
         this.$router.push({

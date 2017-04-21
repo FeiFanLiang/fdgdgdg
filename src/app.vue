@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import { AccountApi } from 'api';
 export default {
   data() {
     return {
@@ -72,13 +73,13 @@ export default {
   created() {
     this.activeMenu = this.$route.name;
 
-    // this.user = JSON.parse(localStorage.getItem('user'));
+    this.user = JSON.parse(localStorage.getItem('user'));
   },
   watch: {
     $route(to, from) {
       this.activeMenu = this.$route.name;
 
-      // this.user = JSON.parse(localStorage.getItem('user'));
+      this.user = JSON.parse(localStorage.getItem('user'));
     }
   },
   methods: {
@@ -90,7 +91,9 @@ export default {
           type: 'info'
         });
         localStorage.removeItem('user');
+
         this.$router.push({ path: '/login' });
+        await AccountApi.logout();
       } catch (e) {
         console.error(e);
       }

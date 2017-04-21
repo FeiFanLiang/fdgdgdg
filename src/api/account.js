@@ -18,7 +18,7 @@ export default {
   register(params) {
     return axios.post(path.apiBaseUrl + 'Account/Register', params);
   },
-  logout(params) {
-    return axios.post(path.apiBaseUrl + 'Account/Logout', params);
+  logout() {
+    return axios.post(path.apiBaseUrl + 'Account/Logout');
   }
 };
