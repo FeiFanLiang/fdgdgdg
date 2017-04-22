@@ -131,7 +131,7 @@
     </el-tab-pane>
     <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
     <el-tab-pane label="平台映射" name="fourth">平台映射
-      <HotelPlatformInfo></HotelPlatformInfo>
+      <HotelPlatformInfo :hotelID='Number(this.$route.params.ID)'></HotelPlatformInfo>
     </el-tab-pane>
   </el-tabs>
   <!-- tab end -->
