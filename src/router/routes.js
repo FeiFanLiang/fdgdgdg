@@ -77,12 +77,11 @@ let routes = [
             }
           },
           {
-            // path: 'HotelBaseEdit/:id',
-            path: 'HotelBaseEdit',
+            path: 'HotelBaseEdit/:ID',
             component: Pages.HotelBaseEdit,
             name: 'HotelBaseEdit',
             meta: {
-              //hidden: true
+              hidden: true
             }
           }
         ]

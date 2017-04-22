@@ -3,24 +3,48 @@
 <el-form :rules="rules" ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
-      <el-col :span="4">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店ID" prop="id">
             <el-input v-model="form.id" :disabled='true'></el-input>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7" :offset="1">
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="酒店编号" prop="HotelNum">
+            <el-input v-model="form.HotelNum"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="传真号" prop="FaxNum">
+            <el-input v-model="form.FaxNum"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店名称" prop="HotelName">
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="7">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店英文名称" prop="HotelName_En">
             <el-input v-model="form.HotelName_En"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="7">
+        <div class="grid-content bg-purple">
+          <el-form-item label="前台电话" prop="FrontPhone">
+            <el-input v-model="form.FrontPhone"></el-input>
           </el-form-item>
         </div>
       </el-col>
@@ -36,23 +60,6 @@
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
-          <el-form-item label="前台电话" prop="FrontPhone">
-            <el-input v-model="form.FrontPhone"></el-input>
-          </el-form-item>
-        </div>
-      </el-col>
-      <el-col :span="8">
-        <div class="grid-content bg-purple">
-          <el-form-item label="地址" prop="Address">
-            <el-input v-model="form.Address"></el-input>
-          </el-form-item>
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20">
       <el-col :span="5">
         <div class="grid-content bg-purple">
           <el-form-item label="结款" prop="PayMode">
@@ -62,22 +69,27 @@
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
+    </el-row>
+
+    <el-row :gutter="20">
+      <el-col :span="5">
         <div class="grid-content bg-purple">
-          <el-form-item label="采购人" prop="PersonName">
-            <el-input v-model="form.PersonName"></el-input>
+          <el-form-item label="区域" prop="Area">
+            <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
+              <el-option v-for="item in AreaOptions" :label="item.AreaName" :value="item.ID"></el-option>
+            </el-select>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="13">
         <div class="grid-content bg-purple">
-          <el-form-item label="政策负责人" prop="PurchasingName">
-            <el-input v-model="form.PurchasingName"></el-input>
+          <el-form-item label="地址" prop="Address">
+            <el-input v-model="form.Address"></el-input>
           </el-form-item>
         </div>
       </el-col>
     </el-row>
-
+      
     <el-row :gutter="20">
       <el-col :span="20">
         <div class="grid-content bg-purple">
@@ -113,7 +125,7 @@
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi } from 'api';
+import { hotelPayModeApi, HotelBaseApi, hotelStarApi,hotelAreaApi } from 'api';
 
 export default {
   data() {
@@ -121,13 +133,13 @@ export default {
       labelPosition: 'top',
       form: {
         id: '',
+        HotelNum: '',
         HotelName: '',
         HotelName_En: '',
         FrontPhone: '',
+        Area: '',
         Address: '',
         Star: '',
-        PersonName: '',
-        PurchasingName: '',
         PayMode: '',
         Remark: ''
       },
@@ -143,7 +155,7 @@ export default {
           { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
         ]
       },
-
+      AreaOptions: [],
       StarOptions: [],
       PayModeOptions: []
     };
@@ -151,8 +163,13 @@ export default {
   created() {
     this.getPayModeOptions();
     this.getStarOptions();
+    this.getAreaOptions();
   },
   methods: {
+    async getAreaOptions(query) {
+      const res = await hotelAreaApi.listByQuery(query);
+      this.AreaOptions = res.data;
+    },
     async getPayModeOptions() {
       const res = await hotelPayModeApi.getList();
       this.PayModeOptions = res.data;

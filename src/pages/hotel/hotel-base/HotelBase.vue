@@ -15,11 +15,11 @@
                 :value="item.value">
             </el-option>
           </el-select>
-          <el-input placeholder="请输入酒店ID" v-model="filters.id" v-show="filters.labelVal == '1'"></el-input>
+          <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
           <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
           <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
       </div>
-        <el-button type="primary" @click="hotelbaseSearch()">搜索</el-button>
+        <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
         <el-button type="primary">
           <router-link :to="{path: 'HotelBaseAdd'}">创建</router-link>
         </el-button>
@@ -31,19 +31,19 @@
       <el-table
       :data="hotelbase"
       border stripe
-      :default-sort = "{prop: 'id', order: 'descending'}"
+      :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
-        <el-table-column prop="id" label="酒店ID" sortable></el-table-column>
+        <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>
         <el-table-column prop="HotelNum" label="酒店编号"></el-table-column>
         <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
         <el-table-column prop="FaxNum" label="传真号"></el-table-column>
         <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Area" label="区域"></el-table-column>
+        <el-table-column prop="Area.AreaName" label="区域"></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Star" label="星级"></el-table-column>
-        <el-table-column prop="PersonName" label="采购人"></el-table-column>
-        <el-table-column prop="PurchasingName" label="政策负责人"></el-table-column>
+        <el-table-column prop="Star.StarName" label="星级"></el-table-column>
+        <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
+        <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
         <el-table-column prop="PayMode" label="结款"></el-table-column>
         <el-table-column :context="_self" inline-template label="操作" width="150">
           <div>
@@ -75,9 +75,9 @@ export default {
   data() {
     return {
       hotelbase: [],
-      page: 0,
+      page: 1,
       filters: {
-        id: '',
+        ID: '',
         HotelName: '',
         HotelName_En: '',
         labelVal: '1'
@@ -108,19 +108,16 @@ export default {
     async getHotelbaseList(page) {
       this.page = page || this.page;
       let options = {
-        page: this.page,
-        id: this.filters.labelVal === '1'
-          ? parseInt(this.filters.id, 10)
-          : null,
-        HotelName: this.filters.labelVal === '2'
-          ? this.filters.HotelName
-          : null,
-        HotelName_En: this.filters.labelVal === '3'
-          ? this.filters.HotelName_En
-          : null
+        pageIndex: this.page,
+        pageSize: 10,
+        order: 'ID',
+        query: [
+          {ID: this.filters.labelVal === '1' ? parseInt(this.filters.ID, 10) : null},
+          {HotelName: this.filters.labelVal === '2' ? this.filters.HotelName : null},
+          {HotelName_En: this.filters.labelVal === '3' ? this.filters.HotelName_En : null}
+        ]
       };
       const res = await HotelBaseApi.listAll(options)
-      console.log(res)
       this.hotelbase = res.data.Data;
     },
     handleCurrentChange(val) {
@@ -129,7 +126,7 @@ export default {
     hotelbaseEdit($index, row) {
       this.$router.push({
         name: 'HotelBaseEdit',
-        params: { id: row.id }
+        params: { ID: row.ID }
       });
     },
     async hotelbaseDelete($index, row) {
@@ -139,7 +136,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelBaseApi.remove(row.id);
+        await HotelBaseApi.remove(row.ID);
         this.getHotelbaseList();
         this.$message({
           message: '删除成功',
