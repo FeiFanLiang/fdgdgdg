@@ -74,9 +74,8 @@ export default {
       };
       this.isBtnLoading = true;
       try {
-        const data = await AccountApi.login(loginParams);
+        // const data = await AccountApi.login(loginParams);
         this.isBtnLoading = false;
-        console.log(data);
         let user = {
           id: '1',
           username: this.username,
