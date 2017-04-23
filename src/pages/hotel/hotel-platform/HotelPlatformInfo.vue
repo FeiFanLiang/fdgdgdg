@@ -14,7 +14,7 @@
       <el-table-column prop="Remark" label="备注"></el-table-column>
       <el-table-column :context="_self" inline-template label="操作" width="180">
         <div>
-          <el-button type="primary" size="mini" @click="addInfo">添加</el-button>
+          <el-button type="primary" size="mini" @click="addPlatforminfo">添加</el-button>
           <el-button type="primary" size="mini" @click="platforminfoEdit($index, row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="platforminfoDelete($index, row)">删除</el-button>
         </div>
@@ -60,7 +60,7 @@
             <el-input v-model="createForm.PlatHotelName_En"></el-input>
           </el-form-item>
           <el-form-item label="备注">
-            <textarea name="name" rows="6" cols="24"></textarea>
+            <textarea name="name" rows="6" cols="24" v-model="createForm.Remark"></textarea>
           </el-form-item>
         </div>
 
@@ -133,13 +133,16 @@ export default {
             createDialog: false,
             editDialog: false,
             createForm: {
-                ID: '',
-                PlatformID: '',
-                HotelID: '',
-                PlatHotelID: '',
-                PlatURL: '',
-                PlatHotelName: '',
-                PlatHotelName_En: '',
+                ID: 0,
+                PlatformID:0,
+                HotelID: 0,
+                PlatHotelName:'',
+                PlatURL:'',
+                IsValid:'',
+                PlatHotelID:0,
+                Platform:'',
+                Hotel:'',
+                PlatHotelName_En:'',
                 Remark: ''
             },
             editForm: {
@@ -160,7 +163,8 @@ export default {
     methods: {
         async platforminfoSave() {
             try {
-                await HotelPlatformApi.add(this.createForm);
+              console.log(this.createForm)
+                await HotelPlatformApi.addInfo(this.createForm);
                 this.fetchData();
                 this.createDialog = false;
                 this.$message({
@@ -184,7 +188,7 @@ export default {
                 console.error(e);
             }
         },
-        addInfo() {
+        addPlatforminfo() {
             this.createDialog = true;
         },
         platforminfoEdit($index, row) {
