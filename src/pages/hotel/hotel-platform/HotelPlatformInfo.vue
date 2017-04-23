@@ -127,6 +127,9 @@ import {
     HotelPlatformApi
 } from 'api';
 export default {
+    props: {
+      hotelID: Number
+    },
     data() {
         return {
             list: [],
@@ -222,8 +225,9 @@ export default {
             }
         },
         async fetchData() {
-            const res = await HotelPlatformApi.getList(`51`);
-            console.log(res)
+            let hotelID = this.hotelID;
+            const res = await HotelPlatformApi.getList(hotelID);
+            //console.log(res)
             this.list = res.data;
         }
     }

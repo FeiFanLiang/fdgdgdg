@@ -8,11 +8,23 @@
     <el-table-column prop="ID" label="ID"></el-table-column>
     <el-table-column prop="PersonName" label="政策负责人"></el-table-column>
     <el-table-column prop="PurchasingName" label="政策采购人"></el-table-column>
-    <el-table-column prop="PersonName" label="酒店联系人"></el-table-column>
+    <el-table-column prop="LinkMan" label="酒店联系人"></el-table-column>
     <el-table-column prop="PhoneNum" label="酒店联系电话"></el-table-column>
-    <el-table-column prop="SecretType" label="保密类型"></el-table-column>
-    <el-table-column prop="ReserveMode" label="酒店预订方式"></el-table-column>
+
+    <el-table-column prop="BankName" label="酒店开户行"></el-table-column>
+    <el-table-column prop="AccountName" label="酒店账户"></el-table-column>
+    <el-table-column prop="AccountNum" label="酒店账号"></el-table-column>
+    <el-table-column prop="FinanceLinkMan" label="酒店财务负责人"></el-table-column>
+    <el-table-column prop="FinancePhoneNum" label="酒店财务电话"></el-table-column>
+    <el-table-column prop="PayCompany.AccountName" label="支付账户"></el-table-column>
+
+    <el-table-column prop="SecretType.SecretName" label="保密类型"></el-table-column>
+    <el-table-column prop="ReserveMode.ModeName" label="酒店预订方式"></el-table-column>
     <el-table-column prop="IsDefault" label="默认政策"></el-table-column>
+
+    <el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
+    <el-table-column prop="Remark1" label="备注"></el-table-column>
+
     <el-table-column :context="_self" inline-template label="操作" width="180">
       <div>
         <el-button type="primary" size="mini" @click="hotelpolicyAdd">添加</el-button>
@@ -24,34 +36,153 @@
   <!-- table end -->
 
   <!-- create dialog start -->
-  <el-dialog title="添加酒店政策信息" v-model="createDialog" size="small">
+  <el-dialog title="添加酒店政策信息" v-model="createDialog" size="large">
     <el-form ref="createForm" :model="createForm" label-width="80px">
-      <el-form-item label="ID">
-        <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
-      </el-form-item>
-      <el-form-item label="政策负责人">
-        <el-input v-model="createForm.PersonName"></el-input>
-      </el-form-item>
-      <el-form-item label="政策采购人">
-        <el-input v-model="createForm.PurchasingName"></el-input>
-      </el-form-item>
-      <el-form-item label="酒店联系人">
-        <el-input v-model="createForm.PersonName"></el-input>
-      </el-form-item>
-      <el-form-item label="酒店联系电话">
-        <el-input v-model="createForm.PhoneNum"></el-input>
-      </el-form-item>
-      <el-form-item label="保密类型">
-        <el-select v-model="createForm.SecretType" clearable placeholder="请选择保密类型">
-          <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
-        </el-select>
-      </el-form-item>
-        <el-form-item label="酒店预订方式">
-        <el-input v-model="createForm.ReserveMode"></el-input>
-      </el-form-item>
-      <el-form-item label="默认政策">
-        <el-input v-model="createForm.IsDefault"></el-input>
-      </el-form-item>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="ID">
+              <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策负责人">
+              <el-input v-model="createForm.PersonName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策采购人">
+              <el-input v-model="createForm.PurchasingName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店联系人">
+              <el-input v-model="createForm.LinkMan"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店联系电话">
+              <el-input v-model="createForm.PhoneNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店开户行">
+              <el-input v-model="createForm.BankName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店账户">
+              <el-input v-model="createForm.AccountName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店账号">
+             <el-input v-model="createForm.AccountNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店财务负责人">
+              <el-input v-model="createForm.FinanceLinkMan"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店财务电话">
+              <el-input v-model="createForm.FinancePhoneNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="支付账户">
+              <el-select v-model="createForm.PayCompany" clearable placeholder="请选择支付账户">
+                <el-option v-for="item in PayCompanyOptions" :label="item.AccountName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="保密类型">
+              <el-select v-model="createForm.SecretType" clearable placeholder="请选择保密类型">
+                <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店预订方式">
+              <el-select v-model="createForm.ReserveMode" clearable placeholder="请选择预订方式">
+                <el-option v-for="item in ReserveModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="默认政策">
+              <el-input v-model="createForm.IsDefault"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+          </div>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="20">
+          <div class="grid-content bg-purple">
+            <el-form-item label="财务备注">
+              <el-input type="textarea" v-model="createForm.FinanceRemark"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="20">
+          <div class="grid-content bg-purple">
+            <el-form-item label="备注">
+              <el-input type="textarea" v-model="createForm.Remark1"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="createDialog = false">取 消</el-button>
@@ -61,34 +192,153 @@
   <!-- create dialog end -->
 
   <!-- edit dialog start -->
-  <el-dialog title="编辑酒店政策信息" v-model="editDialog" size="small" :modal-append-to-body="false">
+  <el-dialog title="编辑酒店政策信息" v-model="editDialog" size="large">
     <el-form ref="editForm" :model="editForm" label-width="80px">
-      <el-form-item label="ID">
-        <el-input v-model="editForm.ID" :disabled="true"></el-input>
-      </el-form-item>
-      <el-form-item label="政策负责人">
-        <el-input v-model="editForm.PersonName"></el-input>
-      </el-form-item>
-      <el-form-item label="政策采购人">
-        <el-input v-model="editForm.PurchasingName"></el-input>
-      </el-form-item>
-      <el-form-item label="酒店联系人">
-        <el-input v-model="editForm.PersonName"></el-input>
-      </el-form-item>
-      <el-form-item label="酒店联系电话">
-        <el-input v-model="editForm.PhoneNum"></el-input>
-      </el-form-item>
-      <el-form-item label="保密类型">
-        <el-select v-model="editForm.SecretType" clearable placeholder="请选择保密类型">
-          <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
-        </el-select>
-      </el-form-item>
-        <el-form-item label="酒店预订方式">
-        <el-input v-model="editForm.ReserveMode"></el-input>
-      </el-form-item>
-      <el-form-item label="默认政策">
-        <el-input v-model="editForm.IsDefault"></el-input>
-      </el-form-item>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="ID">
+              <el-input v-model="editForm.ID" class="el-col-24" :disabled="true"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策负责人">
+              <el-input v-model="editForm.PersonName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策采购人">
+              <el-input v-model="editForm.PurchasingName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店联系人">
+              <el-input v-model="editForm.LinkMan"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店联系电话">
+              <el-input v-model="editForm.PhoneNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店开户行">
+              <el-input v-model="editForm.BankName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店账户">
+              <el-input v-model="editForm.AccountName"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店账号">
+             <el-input v-model="editForm.AccountNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店财务负责人">
+              <el-input v-model="editForm.FinanceLinkMan"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
+
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店财务电话">
+              <el-input v-model="editForm.FinancePhoneNum"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="支付账户">
+              <el-select v-model="editForm.PayCompany" clearable placeholder="请选择支付账户">
+                <el-option v-for="item in PayCompanyOptions" :label="item.AccountName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="保密类型">
+              <el-select v-model="editForm.SecretType" clearable placeholder="请选择保密类型">
+                <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">
+            <el-form-item label="酒店预订方式">
+              <el-select v-model="editForm.ReserveMode" clearable placeholder="请选择预订方式">
+                <el-option v-for="item in ReserveModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+            <el-form-item label="默认政策">
+              <el-input v-model="editForm.IsDefault"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+        <el-col :span="7">
+          <div class="grid-content bg-purple">
+          </div>
+        </el-col>
+      </el-row>
+      
+      <el-row :gutter="20">
+        <el-col :span="20">
+          <div class="grid-content bg-purple">
+            <el-form-item label="财务备注">
+              <el-input type="textarea" v-model="editForm.FinanceRemark"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20">
+        <el-col :span="20">
+          <div class="grid-content bg-purple">
+            <el-form-item label="备注">
+              <el-input type="textarea" v-model="editForm.Remark1"></el-input>
+            </el-form-item>
+          </div>
+        </el-col>
+      </el-row>
+      
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="editDialog = false">取 消</el-button>
@@ -101,20 +351,35 @@
 </template>
 
 <script>
-import { HotelPolicyApi, secretTypeApi } from 'api';
+import { HotelPolicyApi, secretTypeApi, rserveModeApi, payCompanyApi } from 'api';
 
 export default {
+  props: {
+    hotelID: Number
+  },
   data() {
     return {
+      PayCompanyOptions: [],
+      ReserveModeOptions: [],
       SecretTypeOptions: [],
-      hotelpolicy: [{id:1}],
+      hotelpolicy: [],
       createDialog: false,
       editDialog: false,
       createForm: {
         ID: '',
         PersonName: '',
+        LinkMan: '',
         PurchasingName: '',
         PhoneNum: '',
+        BankName: '',
+        AccountName: '',
+        AccountNum: '',
+        FinanceLinkMan: '',
+        FinancePhoneNum: '',
+        PayCompany: '',
+        FinanceRemark: '',
+        Remark1: '',
+        PayMode: '',
         SecretType: '',
         ReserveMode: '',
         IsDefault: ''
@@ -122,8 +387,18 @@ export default {
       editForm: {
         ID: '',
         PersonName: '',
+        LinkMan: '',
         PurchasingName: '',
         PhoneNum: '',
+        BankName: '',
+        AccountName: '',
+        AccountNum: '',
+        FinanceLinkMan: '',
+        FinancePhoneNum: '',
+        PayCompany: '',
+        FinanceRemark: '',
+        Remark1: '',
+        PayMode: '',
         SecretType: '',
         ReserveMode: '',
         IsDefault: ''
@@ -133,9 +408,19 @@ export default {
   mounted() {
     this.fetchData();
     this.getSecretType();
+    this.getReserveMode();
+    this.getPayCompany();
   },
 
   methods: {
+    async getPayCompany() {
+      const res = await payCompanyApi.getList();
+      this.PayCompanyOptions = res.data;
+    },
+    async getReserveMode() {
+      const res = await rserveModeApi.list();
+      this.ReserveModeOptions = res.data;
+    },
     async getSecretType() {
       const res = await secretTypeApi.list();
       this.SecretTypeOptions = res.data;
@@ -176,6 +461,17 @@ export default {
       this.editForm.PhoneNum = row.PhoneNum;
       this.editForm.SecretType = row.SecretType;
       this.editForm.ReserveMode = row.ReserveMode;
+      this.editForm.LinkMan = row.LinkMan;
+      this.editForm.PhoneNum = row.PhoneNum;
+      this.editForm.BankName = row.BankName;
+      this.editForm.AccountName = row.AccountName;
+      this.editForm.AccountNum = row.AccountNum;
+      this.editForm.FinanceLinkMan = row.FinanceLinkMan;
+      this.editForm.FinancePhoneNum = row.FinancePhoneNum;
+      this.editForm.PayCompany = row.PayCompany;
+      this.editForm.FinanceRemark = row.FinanceRemark;
+      this.editForm.PayMode = row.PayMode;
+      this.editForm.Remark1 = row.Remark1;
       this.editForm.IsDefault = row.IsDefault;
       this.editDialog = true;
     },
@@ -199,10 +495,8 @@ export default {
       }
     },
     async fetchData() {
-      let options = {
-        ID: this.ID
-      };
-      const res = await HotelPolicyApi.listAll(options);
+      let hotelID = this.hotelID;
+      const res = await HotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     }
   },

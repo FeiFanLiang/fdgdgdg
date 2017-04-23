@@ -6,7 +6,7 @@
     border
     style="width: 100%">
 
-    <el-table-column prop="id" label="ID" width="60"></el-table-column>
+    <el-table-column prop="ID" label="ID" width="60"></el-table-column>
     <el-table-column prop="HotelID" label="酒店ID"></el-table-column>
     <el-table-column prop="RoomName" label="房间名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
@@ -28,7 +28,7 @@
     <el-dialog title="添加房间信息" v-model="createDialog" size="small">
       <el-form ref="createForm" :model="createForm" label-width="80px">
         <el-form-item label="ID">
-          <el-input v-model="createForm.id" class="el-col-24" :disabled="true"></el-input>
+          <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="HotelID">
           <el-input v-model="createForm.HotelID" class="el-col-24" :disabled="true"></el-input>
@@ -62,7 +62,7 @@
     <el-dialog title="编辑房间信息" v-model="editDialog" size="small" :modal-append-to-body="false">
       <el-form ref="editForm" :model="editForm" label-width="80px">
         <el-form-item label="ID">
-          <el-input v-model="editForm.id" :disabled="true"></el-input>
+          <el-input v-model="editForm.ID" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="HotelID">
           <el-input v-model="editForm.HotelID" class="el-col-24" :disabled="true"></el-input>
@@ -100,14 +100,18 @@
 import { HotelRoomApi, hotelRoomBedApi } from 'api';
 
   export default {
+    props: {
+      hotelID: Number
+    },
     data() {
       return {
         bedsOptions: [],
-        hotelroomlist: [{id:1}],
+        hotelroomlist: [],
         createDialog: false,
         editDialog: false,
         createForm: {
-          id: '',
+          ID: '',
+          HotelID: '',
           RoomName: '',
           Beds: '',
           RoomCount: '',
@@ -115,7 +119,8 @@ import { HotelRoomApi, hotelRoomBedApi } from 'api';
           IsDelete: ''
         },
         editForm: {
-          id: '',
+          ID: '',
+          HotelID: '',
           RoomName: '',
           Beds: '',
           RoomCount: '',
@@ -163,7 +168,8 @@ import { HotelRoomApi, hotelRoomBedApi } from 'api';
       this.createDialog = true;
     },
     hotelroomEdit($index, row) {
-      this.editForm.id = row.id;
+      this.editForm.ID = row.ID;
+      this.editForm.HotelID = row.HotelID;
       this.editForm.RoomName = row.RoomName;
       this.editForm.Beds = row.Beds;
       this.editForm.RoomCount = row.RoomCount;
@@ -179,7 +185,7 @@ import { HotelRoomApi, hotelRoomBedApi } from 'api';
           type: 'warning'
         });
         await HotelRoomApi.remove({
-          id: row.id
+          ID: row.ID
         });
         this.fetchData();
         this.$message({
@@ -191,10 +197,8 @@ import { HotelRoomApi, hotelRoomBedApi } from 'api';
       }
     },
       async fetchData() {
-        let options = {
-            id: this.id
-        };
-        const res = await HotelRoomApi.list(options);
+        let hotelID = this.hotelID;
+        const res = await HotelRoomApi.list(hotelID);
         this.hotelroomlist = res.data;
     }
   }
