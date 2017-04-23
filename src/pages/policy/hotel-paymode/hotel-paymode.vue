@@ -159,14 +159,15 @@ export default {
       };
     },
     async handleEditSave(formName) {
-      this.$refs[formName].validate(valid => {
+      const _self = this;
+      _self.$refs[formName].validate(valid => {
         if (valid) {
           try {
-            console.log(this.editForm);
-            hotelPayModeApi.editInfo(this.editForm);
-            this.fetchData();
-            this.editDialog = false;
-            this.$message({
+            console.log(_self.editForm);
+            hotelPayModeApi.editInfo(_self.editForm);
+            _self.fetchData();
+            _self.editDialog = false;
+            _self.$message({
               message: '编辑成功',
               type: 'success'
             });
@@ -179,13 +180,14 @@ export default {
       });
     },
     async handleSave(formName) {
-      this.$refs[formName].validate(valid => {
+      const _self = this;
+      _self.$refs[formName].validate(valid => {
         if (valid) {
           try {
-            hotelPayModeApi.addInfo(this.createForm);
-            this.fetchData();
-            this.createDialog = false;
-            this.$message({
+            hotelPayModeApi.addInfo(_self.createForm);
+            _self.fetchData();
+            _self.createDialog = false;
+            _self.$message({
               message: '保存成功',
               type: 'success'
             });
@@ -209,15 +211,16 @@ export default {
       }
     },
     async handleDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         });
         await hotelPayModeApi.delInfo(row.ID);
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });
@@ -232,33 +235,36 @@ export default {
       this.fetchData(val);
     },
     async fetchData(page) {
+      const _self = this;
       // param: sort way
-      const sortWay = this.filters.sortWay && this.filters.sortWay.prop
-        ? this.filters.sortWay
+      const sortWay = _self.filters.sortWay && _self.filters.sortWay.prop
+        ? _self.filters.sortWay
         : '';
 
       // param: page
-      this.page = page || this.page;
+      _self.page = page || _self.page;
 
       const options = {
-        page: this.page,
-        ModeName: this.filters.labelVal === '1' ? this.filters.ModeName : null,
+        page: _self.page,
+        ModeName: _self.filters.labelVal === '1'
+          ? _self.filters.ModeName
+          : null,
         sortWay: sortWay,
-        Remark: this.filters.labelVal === '2' ? this.filters.Remark : null
+        Remark: _self.filters.labelVal === '2' ? _self.filters.Remark : null
       };
       //      console.log('[dashboard]:your post params');
       //      console.log(options);
 
-      this.loading = true;
+      _self.loading = true;
       try {
         console.log(options);
         const res = await hotelPayModeApi.getList(options);
         // clear selection
-        this.$refs.table.clearSelection();
+        _self.$refs.table.clearSelection();
         // lazy render data
-        this.list = res.data;
-        this.total = res.data.total;
-        this.loading = false;
+        _self.list = res.data;
+        _self.total = res.data.total;
+        _self.loading = false;
       } catch (e) {
         console.error(e);
       }

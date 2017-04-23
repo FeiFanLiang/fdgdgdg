@@ -106,31 +106,32 @@ export default {
       this.getHotelbaseList();
     },
     async getHotelbaseList(page) {
-      this.page = page || this.page;
+      const _self = this;
+      _self.page = page || _self.page;
       const options = {
-        pageIndex: this.page,
+        pageIndex: _self.page,
         pageSize: 10,
         order: 'ID',
         query: [
           {
-            ID: this.filters.labelVal === '1'
-              ? parseInt(this.filters.ID, 10)
+            ID: _self.filters.labelVal === '1'
+              ? parseInt(_self.filters.ID, 10)
               : null
           },
           {
-            HotelName: this.filters.labelVal === '2'
-              ? this.filters.HotelName
+            HotelName: _self.filters.labelVal === '2'
+              ? _self.filters.HotelName
               : null
           },
           {
-            HotelName_En: this.filters.labelVal === '3'
-              ? this.filters.HotelName_En
+            HotelName_En: _self.filters.labelVal === '3'
+              ? _self.filters.HotelName_En
               : null
           }
         ]
       };
       const res = await HotelBaseApi.listAll(options);
-      this.hotelbase = res.data.Data;
+      _self.hotelbase = res.data.Data;
     },
     handleCurrentChange(val) {
       this.getHotelbaseList(val);
@@ -144,15 +145,16 @@ export default {
       });
     },
     async hotelbaseDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         });
         await HotelBaseApi.remove(row.ID);
-        this.getHotelbaseList();
-        this.$message({
+        _self.getHotelbaseList();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });

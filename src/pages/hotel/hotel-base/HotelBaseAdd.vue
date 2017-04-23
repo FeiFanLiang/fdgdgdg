@@ -158,9 +158,10 @@ export default {
     };
   },
   created() {
-    this.getPayModeOptions();
-    this.getStarOptions();
-    this.getAreaOptions();
+    const _self = this;
+    _self.getPayModeOptions();
+    _self.getStarOptions();
+    _self.getAreaOptions();
   },
   methods: {
     async getAreaOptions(query) {
@@ -176,7 +177,8 @@ export default {
       this.StarOptions = res.data;
     },
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      const _self = this;
+      _self.$refs[formName].validate(valid => {
         if (valid) {
           alert('submit!');
         } else {
@@ -184,9 +186,9 @@ export default {
         }
       });
       try {
-        const data = HotelBaseApi.add(this.form);
-        this.$route.params.form;
-        this.$message({
+        const data = HotelBaseApi.add(_self.form);
+        _self.$route.params.form;
+        _self.$message({
           message: '保存成功',
           type: 'success'
         });

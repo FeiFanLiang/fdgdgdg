@@ -411,10 +411,11 @@ export default {
     };
   },
   mounted() {
-    this.fetchData();
-    this.getSecretType();
-    this.getReserveMode();
-    this.getPayCompany();
+    const _self = this;
+    _self.fetchData();
+    _self.getSecretType();
+    _self.getReserveMode();
+    _self.getPayCompany();
   },
 
   methods: {
@@ -431,11 +432,12 @@ export default {
       this.SecretTypeOptions = res.data;
     },
     async hotelpolicySave() {
+      const _self = this;
       try {
-        await HotelPolicyApi.add(this.createForm);
-        this.fetchData();
-        this.createDialog = false;
-        this.$message({
+        await HotelPolicyApi.add(_self.createForm);
+        _self.fetchData();
+        _self.createDialog = false;
+        _self.$message({
           message: '保存成功',
           type: 'success'
         });
@@ -444,11 +446,12 @@ export default {
       }
     },
     async hotelpolicyEditSave() {
+      const _self = this;
       try {
-        await HotelPolicyApi.edit(this.editForm);
-        this.fetchData();
-        this.editDialog = false;
-        this.$message({
+        await HotelPolicyApi.edit(_self.editForm);
+        _self.fetchData();
+        _self.editDialog = false;
+        _self.$message({
           message: '编辑成功',
           type: 'success'
         });
@@ -460,29 +463,31 @@ export default {
       this.createDialog = true;
     },
     hotelpolicyEdit($index, row) {
-      this.editForm.ID = row.ID;
-      this.editForm.PersonName = row.PersonName;
-      this.editForm.PurchasingName = row.PurchasingName;
-      this.editForm.PhoneNum = row.PhoneNum;
-      this.editForm.SecretType = row.SecretType;
-      this.editForm.ReserveMode = row.ReserveMode;
-      this.editForm.LinkMan = row.LinkMan;
-      this.editForm.PhoneNum = row.PhoneNum;
-      this.editForm.BankName = row.BankName;
-      this.editForm.AccountName = row.AccountName;
-      this.editForm.AccountNum = row.AccountNum;
-      this.editForm.FinanceLinkMan = row.FinanceLinkMan;
-      this.editForm.FinancePhoneNum = row.FinancePhoneNum;
-      this.editForm.PayCompany = row.PayCompany;
-      this.editForm.FinanceRemark = row.FinanceRemark;
-      this.editForm.PayMode = row.PayMode;
-      this.editForm.Remark1 = row.Remark1;
-      this.editForm.IsDefault = row.IsDefault;
-      this.editDialog = true;
+      const _self = this;
+      _self.editForm.ID = row.ID;
+      _self.editForm.PersonName = row.PersonName;
+      _self.editForm.PurchasingName = row.PurchasingName;
+      _self.editForm.PhoneNum = row.PhoneNum;
+      _self.editForm.SecretType = row.SecretType;
+      _self.editForm.ReserveMode = row.ReserveMode;
+      _self.editForm.LinkMan = row.LinkMan;
+      _self.editForm.PhoneNum = row.PhoneNum;
+      _self.editForm.BankName = row.BankName;
+      _self.editForm.AccountName = row.AccountName;
+      _self.editForm.AccountNum = row.AccountNum;
+      _self.editForm.FinanceLinkMan = row.FinanceLinkMan;
+      _self.editForm.FinancePhoneNum = row.FinancePhoneNum;
+      _self.editForm.PayCompany = row.PayCompany;
+      _self.editForm.FinanceRemark = row.FinanceRemark;
+      _self.editForm.PayMode = row.PayMode;
+      _self.editForm.Remark1 = row.Remark1;
+      _self.editForm.IsDefault = row.IsDefault;
+      _self.editDialog = true;
     },
     async hotelpolicyDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -490,8 +495,8 @@ export default {
         await HotelPolicyApi.remove({
           ID: row.ID
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });

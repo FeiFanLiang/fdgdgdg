@@ -131,11 +131,12 @@ export default {
   },
   methods: {
     async platformSave() {
+      const _self = this;
       try {
-        await HotelThreePlatInfoApi.add(this.createForm);
-        this.fetchData();
-        this.createDialog = false;
-        this.$message({
+        await HotelThreePlatInfoApi.add(_self.createForm);
+        _self.fetchData();
+        _self.createDialog = false;
+        _self.$message({
           message: '保存成功',
           type: 'success'
         });
@@ -144,11 +145,12 @@ export default {
       }
     },
     async platformEditSave() {
+      const _self = this;
       try {
-        await HotelThreePlatInfoApi.edit(this.editForm);
-        this.fetchData();
-        this.editDialog = false;
-        this.$message({
+        await HotelThreePlatInfoApi.edit(_self.editForm);
+        _self.fetchData();
+        _self.editDialog = false;
+        _self.$message({
           message: '编辑成功',
           type: 'success'
         });
@@ -157,14 +159,16 @@ export default {
       }
     },
     platformEdit($index, row) {
-      this.editForm.id = row.id;
-      this.editForm.PlatName = row.PlatName;
-      this.editForm.Ramark = row.Ramark;
-      this.editDialog = true;
+      const _self = this;
+      _self.editForm.id = row.id;
+      _self.editForm.PlatName = row.PlatName;
+      _self.editForm.Ramark = row.Ramark;
+      _self.editDialog = true;
     },
     async platformDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -172,8 +176,8 @@ export default {
         await HotelThreePlatInfoApi.remove({
           id: row.id
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });
@@ -185,12 +189,17 @@ export default {
       this.fetchData();
     },
     async fetchData() {
+      const _self = this;
       const options = {
-        PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
-        id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
+        PlatName: _self.filters.labelVal === '2'
+          ? _self.filters.PlatName
+          : null,
+        id: _self.filters.labelVal === '1'
+          ? parseInt(_self.filters.id, 10)
+          : null
       };
       const res = await HotelThreePlatInfoApi.listAll(options);
-      this.platform = res.data;
+      _self.platform = res.data;
     },
     mounted() {
       this.fetchData();

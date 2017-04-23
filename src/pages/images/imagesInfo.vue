@@ -94,18 +94,19 @@ export default {
   },
   methods: {
     async fetchData(page) {
-      this.page = page || this.page;
+      const _self = this;
+      _self.page = page || _self.page;
       const options = {
-        id: this.id,
-        page: this.page,
-        hotelName: this.hotelName,
-        date1: this.date1,
-        date2: this.date2
+        id: _self.id,
+        page: _self.page,
+        hotelName: _self.hotelName,
+        date1: _self.date1,
+        date2: _self.date2
       };
       await imagesInfoApi.fetchImages(options).then(data => {
         const { code, imagesInfo_list } = data;
         if (code === 200) {
-          this.imagesInfo = imagesInfo_list;
+          _self.imagesInfo = imagesInfo_list;
         }
       });
     },
@@ -116,8 +117,9 @@ export default {
       this.fetchData();
     },
     async imagesInfoDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -125,8 +127,8 @@ export default {
         await imagesInfoApi.removeImages({
           id: row.id
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });

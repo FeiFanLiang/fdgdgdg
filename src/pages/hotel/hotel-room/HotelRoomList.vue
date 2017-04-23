@@ -139,11 +139,12 @@ export default {
       this.bedsOptions = res.data;
     },
     async hotelroomSave() {
+      const _self = this;
       try {
-        await HotelRoomApi.add(this.createForm);
-        this.fetchData();
-        this.createDialog = false;
-        this.$message({
+        await HotelRoomApi.add(_self.createForm);
+        _self.fetchData();
+        _self.createDialog = false;
+        _self.$message({
           message: '保存成功',
           type: 'success'
         });
@@ -152,11 +153,12 @@ export default {
       }
     },
     async hotelroomEditSave() {
+      const _self = this;
       try {
-        await HotelRoomApi.edit(this.editForm);
-        this.fetchData();
-        this.editDialog = false;
-        this.$message({
+        await HotelRoomApi.edit(_self.editForm);
+        _self.fetchData();
+        _self.editDialog = false;
+        _self.$message({
           message: '编辑成功',
           type: 'success'
         });
@@ -168,18 +170,20 @@ export default {
       this.createDialog = true;
     },
     hotelroomEdit($index, row) {
-      this.editForm.ID = row.ID;
-      this.editForm.HotelID = row.HotelID;
-      this.editForm.RoomName = row.RoomName;
-      this.editForm.Beds = row.Beds;
-      this.editForm.RoomCount = row.RoomCount;
-      this.editForm.Remark = row.Remark;
-      this.editForm.IsDelete = row.IsDelete;
-      this.editDialog = true;
+      const _self = this;
+      _self.editForm.ID = row.ID;
+      _self.editForm.HotelID = row.HotelID;
+      _self.editForm.RoomName = row.RoomName;
+      _self.editForm.Beds = row.Beds;
+      _self.editForm.RoomCount = row.RoomCount;
+      _self.editForm.Remark = row.Remark;
+      _self.editForm.IsDelete = row.IsDelete;
+      _self.editDialog = true;
     },
     async hotelroomDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -187,8 +191,8 @@ export default {
         await HotelRoomApi.remove({
           ID: row.ID
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });

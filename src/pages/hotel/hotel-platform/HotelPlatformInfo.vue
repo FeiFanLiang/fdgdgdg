@@ -163,12 +163,13 @@ export default {
   },
   methods: {
     async platforminfoSave() {
+      const _self = this;
       try {
-        console.log(this.createForm);
-        await HotelPlatformApi.addInfo(this.createForm);
-        this.fetchData();
-        this.createDialog = false;
-        this.$message({
+        console.log(_self.createForm);
+        await HotelPlatformApi.addInfo(_self.createForm);
+        _self.fetchData();
+        _self.createDialog = false;
+        _self.$message({
           message: '保存成功',
           type: 'success'
         });
@@ -177,11 +178,12 @@ export default {
       }
     },
     async platforminfoEditSave() {
+      const _self = this;
       try {
-        await HotelPlatformApi.edit(this.editForm);
-        this.fetchData();
-        this.editDialog = false;
-        this.$message({
+        await HotelPlatformApi.edit(_self.editForm);
+        _self.fetchData();
+        _self.editDialog = false;
+        _self.$message({
           message: '编辑成功',
           type: 'success'
         });
@@ -193,19 +195,21 @@ export default {
       this.createDialog = true;
     },
     platforminfoEdit($index, row) {
-      this.editForm.ID = row.ID;
-      this.editForm.PlatformID = row.PlatformID;
-      this.editForm.HotelID = row.HotelID;
-      this.editForm.PlatHotelID = row.PlatHotelID;
-      this.editForm.PlatURL = row.PlatURL;
-      this.editForm.PlatHotelName = row.PlatHotelName;
-      this.editForm.PlatHotelName_En = row.PlatHotelName_En;
-      this.editForm.Remark = row.Remark;
-      this.editDialog = true;
+      const _self = this;
+      _self.editForm.ID = row.ID;
+      _self.editForm.PlatformID = row.PlatformID;
+      _self.editForm.HotelID = row.HotelID;
+      _self.editForm.PlatHotelID = row.PlatHotelID;
+      _self.editForm.PlatURL = row.PlatURL;
+      _self.editForm.PlatHotelName = row.PlatHotelName;
+      _self.editForm.PlatHotelName_En = row.PlatHotelName_En;
+      _self.editForm.Remark = row.Remark;
+      _self.editDialog = true;
     },
     async platforminfoDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -213,8 +217,8 @@ export default {
         await HotelPlatformApi.remove({
           ID: row.ID
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });

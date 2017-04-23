@@ -181,13 +181,14 @@ export default {
       };
     },
     async handleEditSave(formName) {
-      this.$refs[formName].validate(valid => {
+      const _self = this;
+      _self.$refs[formName].validate(valid => {
         if (valid) {
           try {
-            payCompanyApi.editInfo(this.editForm);
-            this.fetchData();
-            this.editDialog = false;
-            this.$message({
+            payCompanyApi.editInfo(_self.editForm);
+            _self.fetchData();
+            _self.editDialog = false;
+            _self.$message({
               message: '编辑成功',
               type: 'success'
             });
@@ -200,13 +201,14 @@ export default {
       });
     },
     async handleSave(formName) {
-      this.$refs[formName].validate(valid => {
+      const _self = this;
+      _self.$refs[formName].validate(valid => {
         if (valid) {
           try {
-            payCompanyApi.addInfo(this.createForm);
-            this.fetchData();
-            this.createDialog = false;
-            this.$message({
+            payCompanyApi.addInfo(_self.createForm);
+            _self.fetchData();
+            _self.createDialog = false;
+            _self.$message({
               message: '保存成功',
               type: 'success'
             });
@@ -219,12 +221,13 @@ export default {
       });
     },
     async handleEdit($index, row) {
-      this.editDialog = true;
+      const _self = this;
+      _self.editDialog = true;
       try {
         const res = await payCompanyApi.getDetail({
           id: row.ID
         });
-        this.editForm = {
+        _self.editForm = {
           ...res.data
         };
       } catch (e) {
@@ -232,8 +235,9 @@ export default {
       }
     },
     async handleDelete($index, row) {
+      const _self = this;
       try {
-        await this.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -241,8 +245,8 @@ export default {
         await payCompanyApi.delInfo({
           id: row.ID
         });
-        this.fetchData();
-        this.$message({
+        _self.fetchData();
+        _self.$message({
           message: '删除成功',
           type: 'success'
         });
@@ -257,37 +261,38 @@ export default {
       this.fetchData(val);
     },
     async fetchData(page) {
+      const _self = this;
       // param: sort way
-      const sortWay = this.filters.sortWay && this.filters.sortWay.prop
-        ? this.filters.sortWay
+      const sortWay = _self.filters.sortWay && _self.filters.sortWay.prop
+        ? _self.filters.sortWay
         : '';
 
       // param: page
-      this.page = page || this.page;
+      _self.page = page || _self.page;
 
       const options = {
-        page: this.page,
-        AccountName: this.filters.labelVal === '1'
-          ? this.filters.AccountName
+        page: _self.page,
+        AccountName: _self.filters.labelVal === '1'
+          ? _self.filters.AccountName
           : null,
         sortWay: sortWay,
-        AccountNum: this.filters.labelVal === '2'
-          ? this.filters.AccountNum
+        AccountNum: _self.filters.labelVal === '2'
+          ? _self.filters.AccountNum
           : null
       };
       //      console.log('[dashboard]:your post params');
       //      console.log(options);
 
-      this.loading = true;
+      _self.loading = true;
       try {
         const res = await payCompanyApi.getList();
         console.log(res.data);
         // clear selection
-        this.$refs.table.clearSelection();
+        _self.$refs.table.clearSelection();
         // lazy render data
-        this.list = res.data;
-        this.total = res.data.total;
-        this.loading = false;
+        _self.list = res.data;
+        _self.total = res.data.total;
+        _self.loading = false;
       } catch (e) {
         console.error(e);
       }
