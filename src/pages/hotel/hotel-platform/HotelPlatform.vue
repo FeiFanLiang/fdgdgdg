@@ -185,7 +185,7 @@ export default {
       this.fetchData();
     },
     async fetchData() {
-      let options = {
+      const options = {
         PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
         id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
       };

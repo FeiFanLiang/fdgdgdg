@@ -60,53 +60,54 @@ export default {
   },
   methods: {
     async login() {
-      if (!this.username) {
-        this.$message.error('请填写用户名！！！');
+      const _self = this;
+      if (!_self.username) {
+        _self.$message.error('请填写用户名！！！');
         return;
       }
-      if (!this.password) {
-        this.$message.error('请填写密码');
+      if (!_self.password) {
+        _self.$message.error('请填写密码');
         return;
       }
-      let loginParams = {
-        username: this.username,
-        password: this.password
+      const loginParams = {
+        username: _self.username,
+        password: _self.password
       };
-      this.isBtnLoading = true;
+      _self.isBtnLoading = true;
       try {
         // const data = await AccountApi.login(loginParams);
-        this.isBtnLoading = false;
-        let user = {
+        _self.isBtnLoading = false;
+        const user = {
           id: '1',
-          username: this.username,
+          username: _self.username,
           avatar: ''
         };
-        // let { msg, code, user } = data;
+        // const { msg, code, user } = data;
 
         // if (code !== 200) {
-        // this.$message.error(msg);
+        // _self.$message.error(msg);
         // } else {
         localStorage.setItem('user', JSON.stringify(user));
-        if (this.$route.query.redirect) {
-          this.$router.push({
-            path: this.$route.query.redirect
+        if (_self.$route.query.redirect) {
+          _self.$router.push({
+            path: _self.$route.query.redirect
           });
         } else {
-          this.$router.push({
+          _self.$router.push({
             path: '/'
           });
         }
 
         // }
       } catch (e) {
-        this.$message.error(e);
+        _self.$message.error(e);
       }
-      if (this.$route.query.redirect) {
-        this.$router.push({
-          path: this.$route.query.redirect
+      if (_self.$route.query.redirect) {
+        _self.$router.push({
+          path: _self.$route.query.redirect
         });
       } else {
-        this.$router.push({
+        _self.$router.push({
           path: '/'
         });
       }

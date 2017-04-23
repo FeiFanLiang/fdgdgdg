@@ -46,13 +46,11 @@ div.mcontant
             // , @click='SumitModel'
 </template>
 <script>
-import {
-  GetModel
-} from 'api/Hotel/HotelFinance'
+import { GetModel } from 'api/Hotel/HotelFinance';
 // , SumitModel
 export default {
   name: 'HotelFinanceEdit',
-  data () {
+  data() {
     return {
       // id: 1,
       model: {
@@ -65,37 +63,37 @@ export default {
         personName: '',
         remark: null
       }
-    }
+    };
   },
-  created: function () {
+  created: function() {
     // debugger
-    console.log('created:' + this.$route.fullPath)
-    this.id = this.$route.params.id
-    console.log('id33333:' + this.id)
-    this.getModel(this.id)
+    console.log('created:' + this.$route.fullPath);
+    this.id = this.$route.params.id;
+    console.log('id33333:' + this.id);
+    this.getModel(this.id);
   },
   methods: {
-    getModel: async function () {
-      const data = await GetModel(this.id)
+    getModel: async function() {
+      const data = await GetModel(this.id);
       if (!data.isError) {
-        this.model = data
+        this.model = data;
       } else {
-        console.log('getModel:' + data.message)
-        return
+        console.log('getModel:' + data.message);
+        return;
       }
     },
     // SumitModel: async function () {
     //   debugger
-    //   let postobj = this.model
+    //   const postobj = this.model
     //   const data = await SumitModel(postobj)
     //   this.model = data.data
     //   console.log('SumitModel:')
     //   debugger
     //   console.log(data)
     // },
-    goback: function () {
-      this.$router.go(-1)
+    goback: function() {
+      this.$router.go(-1);
     }
   }
-}
+};
 </script>

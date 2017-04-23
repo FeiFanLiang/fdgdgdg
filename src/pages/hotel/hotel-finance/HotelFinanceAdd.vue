@@ -38,16 +38,14 @@ div.mcontant
       div.row
         div.col-xs-12
           div.form-group.text-center
-            button.btn-primary-lg(type="submit", class="btn btn-default", @click='AddModel2') 提 交 
+            button.btn-primary-lg(type="submit", class="btn btn-default", @click='AddModel2') 提 交
             //
 </template>
 <script>
-import {
-  GetModel, AddModel
-} from 'api/Hotel/HotelFinance'
+import { GetModel, AddModel } from 'api/Hotel/HotelFinance';
 export default {
   name: 'HotelFinanceAdd',
-  data () {
+  data() {
     return {
       model: {
         id: null,
@@ -58,13 +56,13 @@ export default {
         personName: '',
         remark: null
       }
-    }
+    };
   },
-  created: function () {
+  created: function() {
     // debugger
-    console.log('created:' + this.$route.fullPath)
-    this.id = this.$route.params.id
-    this.getModel2(this.id)
+    console.log('created:' + this.$route.fullPath);
+    this.id = this.$route.params.id;
+    this.getModel2(this.id);
   },
   methods: {
     // getModel: async function () {
@@ -78,27 +76,27 @@ export default {
     // },
     // SumitModel: async function () {
     //   debugger
-    //   let postobj = this.model
+    //   const postobj = this.model
     //   const data = await SumitModel(postobj)
     //   this.model = data.data
     //   console.log('SumitModel:')
     //   debugger
     //   console.log(data)
     // },
-    AddModel2: async function () {
-      console.log('Submit')
-      const data = await AddModel(this.model)
-      console.log('AddModel:')
-      console.log(data)
+    AddModel2: async function() {
+      console.log('Submit');
+      const data = await AddModel(this.model);
+      console.log('AddModel:');
+      console.log(data);
     },
-    getModel2: async function () {
-      const data = await GetModel(this.id)
-      this.model = data
-      console.log('22222:' + this.model)
+    getModel2: async function() {
+      const data = await GetModel(this.id);
+      this.model = data;
+      console.log('22222:' + this.model);
     },
-    goback: function () {
-      this.$router.go(-1)
+    goback: function() {
+      this.$router.go(-1);
     }
   }
-}
+};
 </script>

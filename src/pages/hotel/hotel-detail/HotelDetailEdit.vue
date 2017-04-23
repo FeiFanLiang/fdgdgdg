@@ -41,63 +41,62 @@ div.content
           button.btn-primary-lg(type="button", class="btn btn-default", @click='Cancel') 取 消
 </template>
 <script>
-import Multiselect from 'vue-multiselect'
-import vSelect from 'vue-select'
-import {
-  SaveModel, GetModel, CreateModel
-} from 'api/Hotel/HotelDetail'
+import Multiselect from 'vue-multiselect';
+import vSelect from 'vue-select';
+import { SaveModel, GetModel, CreateModel } from 'api/Hotel/HotelDetail';
 export default {
   name: 'HotelDetailEdit',
   props: {
     detailID: Number,
     mode: String
   },
-  data () {
+  data() {
     return {
       model: {
         ID: ''
       },
       abc: ['a']
-    }
+    };
   },
   components: {
     Multiselect,
     vSelect
   },
-  created: async function () {
+  created: async function() {
     // debugger
     if (this.mode === 'edit' && this.detailID > 0) {
-      this.Get(this.detailID)
+      this.Get(this.detailID);
     }
   },
   methods: {
-    Get: async function (id) {
+    Get: async function(id) {
       // debugger
-      const data = await GetModel(id)
-      this.model = data
+      const data = await GetModel(id);
+      this.model = data;
+
       // debugger
     },
-    Create: async function (obj) {
-      await CreateModel(obj)
+    Create: async function(obj) {
+      await CreateModel(obj);
     },
-    Save: async function (obj) {
+    Save: async function(obj) {
       // debugger
-      await SaveModel(obj)
+      await SaveModel(obj);
     },
-    SumitHotelDetail: async function () {
-      let postobj = this.fomateObject(this.model)
+    SumitHotelDetail: async function() {
+      const postobj = this.fomateObject(this.model);
       // debugger
       if (this.mode === 'add') {
-        await this.Create(postobj)
+        await this.Create(postobj);
       } else {
-        await this.Save(postobj)
+        await this.Save(postobj);
       }
-      this.$emit('Sumit')
+      this.$emit('Sumit');
     },
-    Cancel: function () {
+    Cancel: function() {
       // this.$router.go(-1)
-      this.$emit('Cancel')
+      this.$emit('Cancel');
     }
   }
-}
+};
 </script>

@@ -107,7 +107,7 @@ export default {
     },
     async getHotelbaseList(page) {
       this.page = page || this.page;
-      let options = {
+      const options = {
         pageIndex: this.page,
         pageSize: 10,
         order: 'ID',

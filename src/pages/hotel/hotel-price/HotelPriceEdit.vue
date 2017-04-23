@@ -44,15 +44,11 @@ div.mcontent
             button.btn-primary-lg(type="button", class="btn btn-default", @click='Cancel') 取 消
 </template>
 <script>
-import Modal from 'components/common/Modal.vue'
-import Multiselect from 'vue-multiselect'
-import vSelect from 'vue-select'
-import {
-  GetModel, SaveModel, CreateModel
-} from 'api/Hotel/HotelPrice'
-import {
-  GetBedList
-} from 'api/Hotel/common'
+import Modal from 'components/common/Modal.vue';
+import Multiselect from 'vue-multiselect';
+import vSelect from 'vue-select';
+import { GetModel, SaveModel, CreateModel } from 'api/Hotel/HotelPrice';
+import { GetBedList } from 'api/Hotel/common';
 export default {
   name: 'HotelPriceEdit',
   props: {
@@ -60,7 +56,7 @@ export default {
     mode: String,
     priceID: Number
   },
-  data () {
+  data() {
     return {
       model: {
         id: 0,
@@ -72,64 +68,67 @@ export default {
       id: 0,
       beds: [],
       selbeds: []
-    }
+    };
   },
   components: {
     Modal,
     Multiselect,
     vSelect
   },
-  created: async function () {
-    console.log('created:HotelBaseEdit')
+  created: async function() {
+    console.log('created:HotelBaseEdit');
     // debugger
     if (this.mode === 'edit' && this.priceID > 0) {
-      this.Get(this.priceID)
+      this.Get(this.priceID);
     }
-    this.beds = await GetBedList()
+    this.beds = await GetBedList();
   },
   methods: {
-    Get: async function (id) {
+    Get: async function(id) {
       // debugger
-      const data = await GetModel(id)
-      this.model = data
+      const data = await GetModel(id);
+      this.model = data;
+
       // debugger
     },
-    Create: async function (obj) {
-      await CreateModel(obj)
+    Create: async function(obj) {
+      await CreateModel(obj);
     },
-    Save: async function (obj) {
+    Save: async function(obj) {
       // debugger
-      await SaveModel(obj)
+      await SaveModel(obj);
+
       // const data = await SaveModel(obj)
+
       // this.model = data.data
     },
-    SumitHotelPrice: async function () {
-      let postobj = this.fomateObject(this.model)
+    SumitHotelPrice: async function() {
+      const postobj = this.fomateObject(this.model);
       // debugger
       if (this.mode === 'add') {
-        await this.Create(postobj)
+        await this.Create(postobj);
       } else {
-        await this.Save(postobj)
+        await this.Save(postobj);
       }
-      this.$emit('Sumit')
+      this.$emit('Sumit');
     },
-    Cancel () {
-      this.$emit('Cancel')
+    Cancel() {
+      this.$emit('Cancel');
     },
-    fomateObject: function (obj) {
+    fomateObject: function(obj) {
       // 床型映射表，
-      console.log('fomateObject')
-      obj.hotelID = this.hotelID
+      console.log('fomateObject');
+      obj.hotelID = this.hotelID;
       if (this.selbeds && this.selbeds.length > 0) {
-        obj.beds = []
+        obj.beds = [];
         for (var i of this.selbeds) {
-          obj.beds.push({id: i.id})
+          obj.beds.push({ id: i.id });
         }
       } else {
-        obj.beds = null
+        obj.beds = null;
       }
-      return obj
+      return obj;
     }
   }
-}
+};
 </script>

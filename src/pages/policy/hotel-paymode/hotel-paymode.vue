@@ -233,14 +233,14 @@ export default {
     },
     async fetchData(page) {
       // param: sort way
-      let sortWay = this.filters.sortWay && this.filters.sortWay.prop
+      const sortWay = this.filters.sortWay && this.filters.sortWay.prop
         ? this.filters.sortWay
         : '';
 
       // param: page
       this.page = page || this.page;
 
-      let options = {
+      const options = {
         page: this.page,
         ModeName: this.filters.labelVal === '1' ? this.filters.ModeName : null,
         sortWay: sortWay,

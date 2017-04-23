@@ -95,7 +95,7 @@ export default {
   methods: {
     async fetchData(page) {
       this.page = page || this.page;
-      let options = {
+      const options = {
         id: this.id,
         page: this.page,
         hotelName: this.hotelName,
@@ -103,7 +103,7 @@ export default {
         date2: this.date2
       };
       await imagesInfoApi.fetchImages(options).then(data => {
-        let { code, imagesInfo_list } = data;
+        const { code, imagesInfo_list } = data;
         if (code === 200) {
           this.imagesInfo = imagesInfo_list;
         }

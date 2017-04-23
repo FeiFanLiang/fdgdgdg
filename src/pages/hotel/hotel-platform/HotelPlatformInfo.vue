@@ -223,7 +223,7 @@ export default {
       }
     },
     async fetchData() {
-      let hotelID = this.hotelID;
+      const hotelID = this.hotelID;
       const res = await HotelPlatformApi.getList(hotelID);
       //console.log(res)
       this.list = res.data;

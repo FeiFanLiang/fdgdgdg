@@ -500,7 +500,7 @@ export default {
       }
     },
     async fetchData() {
-      let hotelID = this.hotelID;
+      const hotelID = this.hotelID;
       const res = await HotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     }

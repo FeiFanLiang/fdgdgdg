@@ -51,40 +51,41 @@ export default {
   },
   methods: {
     async register() {
-      if (!this.username) {
-        this.$message.error('请填写用户名！！！');
+      const _self = this;
+      if (!_self.username) {
+        _self.$message.error('请填写用户名！！！');
         return;
       }
-      if (!this.password) {
-        this.$message.error('请填写密码');
+      if (!_self.password) {
+        _self.$message.error('请填写密码');
         return;
       }
-      let registerParams = {
-        username: this.username,
-        password: this.password
+      const registerParams = {
+        username: _self.username,
+        password: _self.password
       };
-      this.isBtnLoading = true;
+      _self.isBtnLoading = true;
       try {
         const data = await AccountApi.register(registerParams);
-        this.isBtnLoading = false;
-        let { msg, code, user } = data;
+        _self.isBtnLoading = false;
+        const { msg, code, user } = data;
         if (code !== 200) {
-          this.$message.error(msg);
+          _self.$message.error(msg);
         } else {
-          this.isBtnLoading = true;
+          _self.isBtnLoading = true;
           const data = await AccountApi.login(registerParams);
-          this.isBtnLoading = false;
-          let { msg, code, user } = data;
+          _self.isBtnLoading = false;
+          const { msg, code, user } = data;
           if (code !== 200) {
-            this.$message.error(msg);
+            _self.$message.error(msg);
           } else {
             localStorage.setItem('user', JSON.stringify(user));
-            if (this.$route.query.redirect) {
-              this.$router.push({
-                path: this.$route.query.redirect
+            if (_self.$route.query.redirect) {
+              _self.$router.push({
+                path: _self.$route.query.redirect
               });
             } else {
-              this.$router.push({
+              _self.$router.push({
                 path: '/'
               });
             }

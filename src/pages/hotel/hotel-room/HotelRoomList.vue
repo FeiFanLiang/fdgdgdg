@@ -197,7 +197,7 @@ export default {
       }
     },
     async fetchData() {
-      let hotelID = this.hotelID;
+      const hotelID = this.hotelID;
       const res = await HotelRoomApi.list(hotelID);
       this.hotelroomlist = res.data;
     }
