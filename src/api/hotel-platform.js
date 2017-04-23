@@ -4,8 +4,9 @@ export default {
     getList(id) {
         return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/hotel/${id}`);
     },
-    add(params) {
-        return axios.post(path.apiBaseUrl + `Hotel/HotelPlatform/add`);
+    addInfo(params) {
+      console.log(params)
+        return axios.post(path.apiBaseUrl + `Hotel/HotelPlatform`, params);
     },
     remove(id) {
         return axios.delete(path.apiBaseUrl + `Hotel/HotelPlatform/remove/${id}`);
