@@ -159,22 +159,41 @@ export default {
   },
   created() {
     const _self = this;
+
     _self.getPayModeOptions();
+
     _self.getStarOptions();
+
     _self.getAreaOptions();
   },
   methods: {
     async getAreaOptions(query) {
-      const res = await hotelAreaApi.listByQuery(query);
-      this.AreaOptions = res.data;
+      try {
+        const res = await hotelAreaApi.listByQuery(query);
+        console.log(res);
+
+        // 这个接口返回的数据量过大,会造成页面卡顿和假死
+
+        // this.AreaOptions = res.data;
+      } catch (e) {
+        console.error(e);
+      }
     },
     async getPayModeOptions() {
-      const res = await hotelPayModeApi.getList();
-      this.PayModeOptions = res.data;
+      try {
+        const res = await hotelPayModeApi.getList();
+        this.PayModeOptions = res.data;
+      } catch (e) {
+        console.error(e);
+      }
     },
     async getStarOptions() {
-      const res = await hotelStarApi.list();
-      this.StarOptions = res.data;
+      try {
+        const res = await hotelStarApi.list();
+        this.StarOptions = res.data;
+      } catch (e) {
+        console.error(e);
+      }
     },
     onSubmit(formName) {
       const _self = this;

@@ -4,7 +4,7 @@ export default {
   listByPArea(PArea) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelArea/pid/${PArea}`);
   },
-  listByQuery(params) {
+  listByQuery(params = {}) {
     return axios.get(path.apiBaseUrl + 'Hotel/HotelArea/query', {
       params: params
     });
