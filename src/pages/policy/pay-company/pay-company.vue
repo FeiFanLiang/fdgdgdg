@@ -38,11 +38,11 @@
         <el-table-column prop="AccountName" label="账户名称" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="AccountNum" sortable="custom" label="银行帐户" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="Remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column :context="_self" width="150" inline-template label="操作">
-          <div>
-            <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
-          </div>
+        <el-table-column  width="150"  label="操作">
+          <template scope="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+           </template>
         </el-table-column>
       </el-table>
       <!-- table end  -->

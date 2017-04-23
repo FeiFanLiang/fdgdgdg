@@ -33,11 +33,11 @@
         <el-table-column prop="ID" label="ID" width="180" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="ModeName" label="账户名称" :show-overflow-tooltip="true"></el-table-column>
         <el-table-column prop="Remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column :context="_self" width="150" inline-template label="操作">
-          <div>
-            <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button>
-          </div>
+        <el-table-column  width="150"  label="操作">
+          <template scope="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <!-- table end  -->
@@ -96,176 +96,177 @@ import { hotelPayModeApi } from 'api';
 // import Vue from 'vue';
 
 export default {
-    data() {
-        return {
-            list: [],
-            total: 0,
-            page: 0,
-            loading: true,
-            editDialog: false,
-            createDialog: false,
-            filters: {
-                sortWay: '',
-                ModeName: '',
-                labelVal: '1',
-                Remark: ''
-            },
-            editForm: {
-                ID: '',
-                ModeName: '',
-                Remark: ''
-            },
-            createForm: {
-                ID: 0,
-                ModeName: '',
-                Remark: ''
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: 'remark'
-                }
-
-            ],
-            rules: {
-                ModeName: [{
-                    required: true,
-                    message: '请输入账户名称',
-                    trigger: 'blur'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        handleSortChange(sortWay) {
-            this.filters.sortWay = {
-                prop: sortWay.prop,
-                order: sortWay.order
-            };
-            this.fetchData();
+  data() {
+    return {
+      list: [],
+      total: 0,
+      page: 0,
+      loading: true,
+      editDialog: false,
+      createDialog: false,
+      filters: {
+        sortWay: '',
+        ModeName: '',
+        labelVal: '1',
+        Remark: ''
+      },
+      editForm: {
+        ID: '',
+        ModeName: '',
+        Remark: ''
+      },
+      createForm: {
+        ID: 0,
+        ModeName: '',
+        Remark: ''
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '账户名称'
         },
-        clickCrate() {
-            this.createDialog = true
-            this.createForm = {
-                ID: 0,
-                ModeName: '',
-                Remark: ''
-            }
-        },
-        async handleEditSave(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    try {
-                        console.log(this.editForm)
-                        hotelPayModeApi.editInfo(this.editForm);
-                        this.fetchData();
-                        this.editDialog = false;
-                        this.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            })
-        },
-        async handleSave(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    try {
-                        hotelPayModeApi.addInfo(this.createForm);
-                        this.fetchData();
-                        this.createDialog = false;
-                        this.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            })
-
-        },
-        async handleEdit($index, row) {
-            this.editDialog = true;
-            try {
-                const res = await hotelPayModeApi.getDetail(row.ID);
-                this.editForm = { ...res.data
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async handleDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await hotelPayModeApi.delInfo(row.ID);
-                this.fetchData();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        handleSearch() {
-            this.fetchData();
-        },
-        handleCurrentChange(val) {
-            this.fetchData(val);
-        },
-        async fetchData(page) {
-            // param: sort way
-            let sortWay = this.filters.sortWay && this.filters.sortWay.prop ?
-                this.filters.sortWay :
-                '';
-
-            // param: page
-            this.page = page || this.page;
-
-            let options = {
-                page: this.page,
-                ModeName: this.filters.labelVal === '1' ? this.filters.ModeName : null,
-                sortWay: sortWay,
-                Remark: this.filters.labelVal === '2' ? this.filters.Remark : null,
-            };
-            //      console.log('[dashboard]:your post params');
-            //      console.log(options);
-
-            this.loading = true;
-            try {
-                console.log(options)
-                const res = await hotelPayModeApi.getList(options);
-                // clear selection
-                this.$refs.table.clearSelection();
-                // lazy render data
-                this.list = res.data;
-                this.total = res.data.total;
-                this.loading = false;
-            } catch (e) {
-                console.error(e);
-            }
-
+        {
+          value: '2',
+          label: 'remark'
         }
+      ],
+      rules: {
+        ModeName: [
+          {
+            required: true,
+            message: '请输入账户名称',
+            trigger: 'blur'
+          }
+        ]
+      }
+    };
+  },
+
+  methods: {
+    handleSortChange(sortWay) {
+      this.filters.sortWay = {
+        prop: sortWay.prop,
+        order: sortWay.order
+      };
+      this.fetchData();
     },
-    mounted() {
+    clickCrate() {
+      this.createDialog = true;
+      this.createForm = {
+        ID: 0,
+        ModeName: '',
+        Remark: ''
+      };
+    },
+    async handleEditSave(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          try {
+            console.log(this.editForm);
+            hotelPayModeApi.editInfo(this.editForm);
+            this.fetchData();
+            this.editDialog = false;
+            this.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async handleSave(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          try {
+            hotelPayModeApi.addInfo(this.createForm);
+            this.fetchData();
+            this.createDialog = false;
+            this.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async handleEdit($index, row) {
+      this.editDialog = true;
+      try {
+        const res = await hotelPayModeApi.getDetail(row.ID);
+        this.editForm = {
+          ...res.data
+        };
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async handleDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await hotelPayModeApi.delInfo(row.ID);
         this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    handleSearch() {
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.fetchData(val);
+    },
+    async fetchData(page) {
+      // param: sort way
+      let sortWay = this.filters.sortWay && this.filters.sortWay.prop
+        ? this.filters.sortWay
+        : '';
+
+      // param: page
+      this.page = page || this.page;
+
+      let options = {
+        page: this.page,
+        ModeName: this.filters.labelVal === '1' ? this.filters.ModeName : null,
+        sortWay: sortWay,
+        Remark: this.filters.labelVal === '2' ? this.filters.Remark : null
+      };
+      //      console.log('[dashboard]:your post params');
+      //      console.log(options);
+
+      this.loading = true;
+      try {
+        console.log(options);
+        const res = await hotelPayModeApi.getList(options);
+        // clear selection
+        this.$refs.table.clearSelection();
+        // lazy render data
+        this.list = res.data;
+        this.total = res.data.total;
+        this.loading = false;
+      } catch (e) {
+        console.error(e);
+      }
     }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 

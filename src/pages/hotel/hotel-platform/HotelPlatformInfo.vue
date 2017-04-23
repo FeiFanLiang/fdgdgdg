@@ -12,12 +12,12 @@
       <el-table-column prop="PlatHotelName_En" label="平台酒店英文名"></el-table-column>
       <el-table-column prop="PlatURL" label="平台访问路径"></el-table-column>
       <el-table-column prop="Remark" label="备注"></el-table-column>
-      <el-table-column :context="_self" inline-template label="操作" width="180">
-        <div>
-          <el-button type="primary" size="mini" @click="addInfo">添加</el-button>
-          <el-button type="primary" size="mini" @click="platforminfoEdit($index, row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="platforminfoDelete($index, row)">删除</el-button>
-        </div>
+      <el-table-column   label="操作" width="180">
+          <template scope="scope">
+            <el-button type="primary" size="mini" @click="addInfo">添加</el-button>
+            <el-button type="primary" size="mini" @click="platforminfoEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="platforminfoDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
       </el-table-column>
 
     </el-table>
@@ -123,110 +123,108 @@
 </template>
 
 <script>
-import {
-    HotelPlatformApi
-} from 'api';
+import { HotelPlatformApi } from 'api';
 export default {
-    props: {
-      hotelID: Number
-    },
-    data() {
-        return {
-            list: [],
-            createDialog: false,
-            editDialog: false,
-            createForm: {
-                ID: '',
-                PlatformID: '',
-                HotelID: '',
-                PlatHotelID: '',
-                PlatURL: '',
-                PlatHotelName: '',
-                PlatHotelName_En: '',
-                Remark: ''
-            },
-            editForm: {
-                ID: '',
-                PlatformID: '',
-                HotelID: '',
-                PlatHotelID: '',
-                PlatURL: '',
-                PlatHotelName: '',
-                PlatHotelName_En: '',
-                Remark: ''
-            }
-        };
-    },
-    mounted() {
+  props: {
+    hotelID: Number
+  },
+  data() {
+    return {
+      list: [],
+      createDialog: false,
+      editDialog: false,
+      createForm: {
+        ID: '',
+        PlatformID: '',
+        HotelID: '',
+        PlatHotelID: '',
+        PlatURL: '',
+        PlatHotelName: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      },
+      editForm: {
+        ID: '',
+        PlatformID: '',
+        HotelID: '',
+        PlatHotelID: '',
+        PlatURL: '',
+        PlatHotelName: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      }
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods: {
+    async platforminfoSave() {
+      try {
+        await HotelPlatformApi.add(this.createForm);
         this.fetchData();
+        this.createDialog = false;
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
-    methods: {
-        async platforminfoSave() {
-            try {
-                await HotelPlatformApi.add(this.createForm);
-                this.fetchData();
-                this.createDialog = false;
-                this.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async platforminfoEditSave() {
-            try {
-                await HotelPlatformApi.edit(this.editForm);
-                this.fetchData();
-                this.editDialog = false;
-                this.$message({
-                    message: '编辑成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        addInfo() {
-            this.createDialog = true;
-        },
-        platforminfoEdit($index, row) {
-            this.editForm.ID = row.ID;
-            this.editForm.PlatformID = row.PlatformID;
-            this.editForm.HotelID = row.HotelID;
-            this.editForm.PlatHotelID = row.PlatHotelID;
-            this.editForm.PlatURL = row.PlatURL;
-            this.editForm.PlatHotelName = row.PlatHotelName;
-            this.editForm.PlatHotelName_En = row.PlatHotelName_En;
-            this.editForm.Remark = row.Remark;
-            this.editDialog = true;
-        },
-        async platforminfoDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await HotelPlatformApi.remove({
-                    ID: row.ID
-                });
-                this.fetchData();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async fetchData() {
-            let hotelID = this.hotelID;
-            const res = await HotelPlatformApi.getList(hotelID);
-            //console.log(res)
-            this.list = res.data;
-        }
+    async platforminfoEditSave() {
+      try {
+        await HotelPlatformApi.edit(this.editForm);
+        this.fetchData();
+        this.editDialog = false;
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    addInfo() {
+      this.createDialog = true;
+    },
+    platforminfoEdit($index, row) {
+      this.editForm.ID = row.ID;
+      this.editForm.PlatformID = row.PlatformID;
+      this.editForm.HotelID = row.HotelID;
+      this.editForm.PlatHotelID = row.PlatHotelID;
+      this.editForm.PlatURL = row.PlatURL;
+      this.editForm.PlatHotelName = row.PlatHotelName;
+      this.editForm.PlatHotelName_En = row.PlatHotelName_En;
+      this.editForm.Remark = row.Remark;
+      this.editDialog = true;
+    },
+    async platforminfoDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await HotelPlatformApi.remove({
+          ID: row.ID
+        });
+        this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async fetchData() {
+      let hotelID = this.hotelID;
+      const res = await HotelPlatformApi.getList(hotelID);
+      //console.log(res)
+      this.list = res.data;
     }
+  }
 };
 </script>
 <style lang="scss">

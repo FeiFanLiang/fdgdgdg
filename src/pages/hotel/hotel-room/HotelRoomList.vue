@@ -13,12 +13,12 @@
     <el-table-column prop="Beds" label="床型"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
-    <el-table-column :context="_self" inline-template label="操作" width="180">
-      <div>
-        <el-button size="mini" @click="hotelroomAdd">添加</el-button>
-        <el-button size="mini" @click="hotelroomEdit($index, row)">编辑</el-button>         
-        <el-button size="mini" type="danger" @click="hotelroomDelete($index, row)">删除</el-button>
-      </div>
+    <el-table-column   label="操作" width="180">
+        <template scope="scope">
+          <el-button size="mini" @click="hotelroomAdd">添加</el-button>
+          <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
     </el-table-column>
 
   </el-table>
@@ -91,7 +91,7 @@
       </span>
     </el-dialog>
     <!-- edit dialog end -->
-   
+
 
 </div>
 </template>
@@ -99,46 +99,46 @@
 <script>
 import { HotelRoomApi, hotelRoomBedApi } from 'api';
 
-  export default {
-    props: {
-      hotelID: Number
-    },
-    data() {
-      return {
-        bedsOptions: [],
-        hotelroomlist: [],
-        createDialog: false,
-        editDialog: false,
-        createForm: {
-          ID: '',
-          HotelID: '',
-          RoomName: '',
-          Beds: '',
-          RoomCount: '',
-          Remark: '',
-          IsDelete: ''
-        },
-        editForm: {
-          ID: '',
-          HotelID: '',
-          RoomName: '',
-          Beds: '',
-          RoomCount: '',
-          Remark: '',
-          IsDelete: ''
-        }
-     }
-    },
-    mounted() {      
-      this.fetchData();
-      this.getBeds();
-    },
-    methods: {
-      async getBeds() {
-        const res = await hotelRoomBedApi.list();
-        this.bedsOptions = res.data;
+export default {
+  props: {
+    hotelID: Number
+  },
+  data() {
+    return {
+      bedsOptions: [],
+      hotelroomlist: [],
+      createDialog: false,
+      editDialog: false,
+      createForm: {
+        ID: '',
+        HotelID: '',
+        RoomName: '',
+        Beds: '',
+        RoomCount: '',
+        Remark: '',
+        IsDelete: ''
       },
-      async hotelroomSave() {
+      editForm: {
+        ID: '',
+        HotelID: '',
+        RoomName: '',
+        Beds: '',
+        RoomCount: '',
+        Remark: '',
+        IsDelete: ''
+      }
+    };
+  },
+  mounted() {
+    this.fetchData();
+    this.getBeds();
+  },
+  methods: {
+    async getBeds() {
+      const res = await hotelRoomBedApi.list();
+      this.bedsOptions = res.data;
+    },
+    async hotelroomSave() {
       try {
         await HotelRoomApi.add(this.createForm);
         this.fetchData();
@@ -196,11 +196,11 @@ import { HotelRoomApi, hotelRoomBedApi } from 'api';
         console.error(e);
       }
     },
-      async fetchData() {
-        let hotelID = this.hotelID;
-        const res = await HotelRoomApi.list(hotelID);
-        this.hotelroomlist = res.data;
+    async fetchData() {
+      let hotelID = this.hotelID;
+      const res = await HotelRoomApi.list(hotelID);
+      this.hotelroomlist = res.data;
     }
   }
-}
+};
 </script>

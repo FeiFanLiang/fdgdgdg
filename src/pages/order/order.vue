@@ -48,11 +48,11 @@
         <el-table-column prop="IsAudit" label="审核" width="65"></el-table-column>
         <el-table-column prop="IsEdit" label="编辑" width="65"></el-table-column>
         <el-table-column prop="SubmitterName" label="提交人" width="95"></el-table-column>
-        <el-table-column :context="_self" width="150" inline-template label="操作">
-          <div>
-            <!-- <el-button size="small" @click="handleEdit($index, row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete($index, row)">删除</el-button> -->
-          </div>
+        <el-table-column  width="150"  label="操作">
+            <template scope="scope">
+              <!-- <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+            </template>
         </el-table-column>
       </el-table>
       <!-- table end  -->
@@ -72,118 +72,125 @@
 </template>
 
 <script>
-import {
-    orderApi
-} from 'api';
+import { orderApi } from 'api';
 
 export default {
-    data() {
-        return {
-            list: [],
-            total: 0,
-            page: 0,
-            loading: true,
-            editDialog: false,
-            createDialog: false,
-            filters: {
-                sortWay: '',
-                AccountName: '',
-                labelVal: '1',
-                AccountNum: ''
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: '银行账户'
-                }
-            ],
-            rules: {
-                AccountName: [{
-                    required: true,
-                    message: '请输入账户名称',
-                    trigger: 'blur'
-                }],
-                AccountNum: [{
-                    required: true,
-                    message: '请输入银行账户',
-                    trigger: 'blur'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        handleSortChange(sortWay) {
-            this.filters.sortWay = {
-                prop: sortWay.prop,
-                order: sortWay.order
-            };
-            this.fetchData();
+  data() {
+    return {
+      list: [],
+      total: 0,
+      page: 0,
+      loading: true,
+      editDialog: false,
+      createDialog: false,
+      filters: {
+        sortWay: '',
+        AccountName: '',
+        labelVal: '1',
+        AccountNum: ''
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '账户名称'
         },
-        async handleDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await orderApi.delInfo({
-                    id: row.ID
-                });
-                this.fetchData();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        handleSearch() {
-            this.fetchData();
-        },
-        handleCurrentChange(val) {
-            this.fetchData(val);
-        },
-        async fetchData(page) {
-            // param: sort way
-            let sortWay = this.filters.sortWay && this.filters.sortWay.prop ?
-                this.filters.sortWay :
-                '';
-
-            // param: page
-            this.page = page || this.page;
-
-            let options = {
-                page: this.page,
-                AccountName: this.filters.labelVal === '1' ? this.filters.AccountName : null,
-                sortWay: sortWay,
-                AccountNum: this.filters.labelVal === '2' ? this.filters.AccountNum : null
-            };
-            //      console.log('[dashboard]:your post params');
-            //      console.log(options);
-
-            this.loading = true;
-            try {
-                const res = await orderApi.getList(options);
-                console.log(res.data);
-                // clear selection
-                this.$refs.table.clearSelection();
-                // lazy render data
-                this.list = res.data.list;
-                this.total = res.data.total;
-                this.loading = false;
-            } catch (e) {
-                console.error(e);
-            }
+        {
+          value: '2',
+          label: '银行账户'
         }
+      ],
+      rules: {
+        AccountName: [
+          {
+            required: true,
+            message: '请输入账户名称',
+            trigger: 'blur'
+          }
+        ],
+        AccountNum: [
+          {
+            required: true,
+            message: '请输入银行账户',
+            trigger: 'blur'
+          }
+        ]
+      }
+    };
+  },
+
+  methods: {
+    handleSortChange(sortWay) {
+      this.filters.sortWay = {
+        prop: sortWay.prop,
+        order: sortWay.order
+      };
+      this.fetchData();
     },
-    mounted() {
+    async handleDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await orderApi.delInfo({
+          id: row.ID
+        });
         this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    handleSearch() {
+      this.fetchData();
+    },
+    handleCurrentChange(val) {
+      this.fetchData(val);
+    },
+    async fetchData(page) {
+      // param: sort way
+      let sortWay = this.filters.sortWay && this.filters.sortWay.prop
+        ? this.filters.sortWay
+        : '';
+
+      // param: page
+      this.page = page || this.page;
+
+      let options = {
+        page: this.page,
+        AccountName: this.filters.labelVal === '1'
+          ? this.filters.AccountName
+          : null,
+        sortWay: sortWay,
+        AccountNum: this.filters.labelVal === '2'
+          ? this.filters.AccountNum
+          : null
+      };
+      //      console.log('[dashboard]:your post params');
+      //      console.log(options);
+
+      this.loading = true;
+      try {
+        const res = await orderApi.getList(options);
+        console.log(res.data);
+        // clear selection
+        this.$refs.table.clearSelection();
+        // lazy render data
+        this.list = res.data.list;
+        this.total = res.data.total;
+        this.loading = false;
+      } catch (e) {
+        console.error(e);
+      }
     }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 

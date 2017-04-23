@@ -38,19 +38,20 @@
         stripe
         style="width: 100%">
         <el-table-column prop="hotelName" label="酒店名称"></el-table-column>
-        <el-table-column :context="_self" inline-template label="截图信息">
-            <div>
-                 <!--<router-link id="look" @click="imagesInfos($index, row)">点击查看</router-link>-->
-                 <router-link id="look" :to="{name: 'imagesInfoList',params: { id: id }}">点击查看</router-link>
-            </div>
+        <el-table-column   label="截图信息">
+
+            <template scope="scope">
+              <!--<router-link id="look" @click="imagesInfos(scope.$index, scope.row)">点击查看</router-link>-->
+              <router-link id="look" :to="{name: 'imagesInfoList',params: { id: scope.row.id }}">点击查看</router-link>
+             </template>
         </el-table-column>
         <el-table-column prop="uploadDate" label="上传日期"></el-table-column>
         <el-table-column prop="upPersonName" label="上传人"></el-table-column>
-        <el-table-column :context="_self" inline-template label="操作">
-            <div>
-                <el-button size="mini" type="primary" @click="imagesInfoEdit($index, row)">修改</el-button>
-                <el-button size="mini" type="danger" @click="imagesInfoDelete($index, row)">删除</el-button>
-            </div>
+        <el-table-column  label="操作">
+            <template scope="scope">
+              <el-button size="mini" type="primary" @click="imagesInfoEdit(scope.$index, scope.row)">修改</el-button>
+              <el-button size="mini" type="danger" @click="imagesInfoDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
         </el-table-column>
       </el-table>
       <!-- table end -->
@@ -64,57 +65,57 @@
         </el-pagination>
       </div>
     <!-- pagination end  -->
-				
+
 </div>
 </template>
 
 <script>
-import {imagesInfoApi} from 'api'
+import { imagesInfoApi } from 'api';
 export default {
-    data() {
-        return {
-            id: 1,
-            page: 0,
-            imagesInfo:[
-                {  
-                   id: 1,
-                   hotelName: 'aaa',
-                   uploadDate: '11.21',
-                   upPersonName: 'cdd' 
-                }
-            ],
-            hotelName: '',
-            date1: '',
-            date2: ''
-        };
+  data() {
+    return {
+      id: 1,
+      page: 0,
+      imagesInfo: [
+        {
+          id: 1,
+          hotelName: 'aaa',
+          uploadDate: '11.21',
+          upPersonName: 'cdd'
+        }
+      ],
+      hotelName: '',
+      date1: '',
+      date2: ''
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods: {
+    async fetchData(page) {
+      this.page = page || this.page;
+      let options = {
+        id: this.id,
+        page: this.page,
+        hotelName: this.hotelName,
+        date1: this.date1,
+        date2: this.date2
+      };
+      await imagesInfoApi.fetchImages(options).then(data => {
+        let { code, imagesInfo_list } = data;
+        if (code === 200) {
+          this.imagesInfo = imagesInfo_list;
+        }
+      });
     },
-    mounted () {
-        this.fetchData()
+    handleCurrentChange(val) {
+      this.fetchData(val);
     },
-    methods: {
-      async fetchData(page) {
-          this.page = page || this.page;
-          let options = {
-              id: this.id,
-              page: this.page,
-              hotelName: this.hotelName,
-              date1: this.date1,
-              date2: this.date2
-          };
-          await imagesInfoApi.fetchImages(options).then(data => {
-              let { code, imagesInfo_list } = data;
-              if (code === 200) {
-                this.imagesInfo = imagesInfo_list;
-              }
-          });
-      },
-      handleCurrentChange(val) {
-          this.fetchData(val);
-      },
-      imagesSearch() {
-          this.fetchData();
-      },
-      async imagesInfoDelete($index, row) {
+    imagesSearch() {
+      this.fetchData();
+    },
+    async imagesInfoDelete($index, row) {
       try {
         await this.$confirm('是否删除此条信息?', '提示', {
           confirmButtonText: '确定',
@@ -139,8 +140,6 @@ export default {
         params: { id: row.id }
       });
     }
-
-
   }
 };
 </script>

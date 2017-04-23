@@ -41,11 +41,9 @@
         prop="Ramark"
         label="平台信息">
       </el-table-column>
-      <el-table-column :context="_self" inline-template label="操作">
-        <div>
-          <el-button size="small" @click="platformEdit($index, row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="platformDelete($index, row)">删除</el-button>
-        </div>
+      <el-table-column   label="操作">
+        <template scope="scope">  <el-button size="small" @click="platformEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="platformDelete(scope.$index, scope.row)">删除</el-button>  </template>
       </el-table-column>
     </el-table>
     <!-- table end -->
@@ -93,111 +91,112 @@
 </template>
 
 <script>
-import {
-  HotelThreePlatInfoApi
-} from 'api';
+import { HotelThreePlatInfoApi } from 'api';
 
-  export default {
-    data() {
-      return {
-        platform: [],
-        createDialog: false,
-        editDialog: false,
-        filters: {
-          PlatName: '',
-          id: '',
-          labelVal: '1'
-        },
-        createForm: {
-          id: '',
-          PlatName: '',
-          Ramark: ''
-        },
-        editForm: {
-          id: '',
-          PlatName: '',
-          Ramark: ''
-        },
-        selectedOptions: [{
+export default {
+  data() {
+    return {
+      platform: [],
+      createDialog: false,
+      editDialog: false,
+      filters: {
+        PlatName: '',
+        id: '',
+        labelVal: '1'
+      },
+      createForm: {
+        id: '',
+        PlatName: '',
+        Ramark: ''
+      },
+      editForm: {
+        id: '',
+        PlatName: '',
+        Ramark: ''
+      },
+      selectedOptions: [
+        {
           value: '1',
           label: '平台ID'
-          }, {
+        },
+        {
           value: '2',
           label: '平台名称'
-        }]
+        }
+      ]
+    };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    async platformSave() {
+      try {
+        await HotelThreePlatInfoApi.add(this.createForm);
+        this.fetchData();
+        this.createDialog = false;
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
       }
     },
-    created() {
+    async platformEditSave() {
+      try {
+        await HotelThreePlatInfoApi.edit(this.editForm);
+        this.fetchData();
+        this.editDialog = false;
+        this.$message({
+          message: '编辑成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    platformEdit($index, row) {
+      this.editForm.id = row.id;
+      this.editForm.PlatName = row.PlatName;
+      this.editForm.Ramark = row.Ramark;
+      this.editDialog = true;
+    },
+    async platformDelete($index, row) {
+      try {
+        await this.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await HotelThreePlatInfoApi.remove({
+          id: row.id
+        });
+        this.fetchData();
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    platformSearch() {
       this.fetchData();
     },
-    methods: {
-      async platformSave() {
-        try {
-                await HotelThreePlatInfoApi.add(this.createForm)
-                this.fetchData();
-                this.createDialog = false;
-                this.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-      },
-      async platformEditSave() {
-            try {
-                await HotelThreePlatInfoApi.edit(this.editForm)
-                this.fetchData();
-                this.editDialog = false;
-                this.$message({
-                    message: '编辑成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e)
-            }
-      },
-      platformEdit($index, row) {
-            this.editForm.id = row.id;
-            this.editForm.PlatName = row.PlatName;
-            this.editForm.Ramark = row.Ramark;
-            this.editDialog = true;
-      },
-      async platformDelete($index, row) {
-            try {
-                await this.$confirm('是否删除此条信息?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
-                await HotelThreePlatInfoApi.remove({
-                    id: row.id
-                })
-                this.fetchData();
-                this.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-      },
-      platformSearch() {
-        this.fetchData();
-      },
-      async fetchData() {
-        let options = {
-          PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
-          id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
-        };
-        const res = await HotelThreePlatInfoApi.listAll(options);
-        this.platform = res.data;
-      },
-      mounted() {
-        this.fetchData();
-      }
+    async fetchData() {
+      let options = {
+        PlatName: this.filters.labelVal === '2' ? this.filters.PlatName : null,
+        id: this.filters.labelVal === '1' ? parseInt(this.filters.id, 10) : null
+      };
+      const res = await HotelThreePlatInfoApi.listAll(options);
+      this.platform = res.data;
+    },
+    mounted() {
+      this.fetchData();
     }
   }
+};
 </script>
 
 <style lang="scss">

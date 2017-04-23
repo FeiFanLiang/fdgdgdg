@@ -8,7 +8,7 @@
     <!-- search start -->
     <div class="filters">
         <div class="filter">
-          <el-select v-model="filters.labelVal" clearable placeholder="请选择">
+          <el-select v-model="filters.labelVal"  placeholder="请选择">
             <el-option
                 v-for="item in selectedOptions"
                 :label="item.label"
@@ -45,11 +45,11 @@
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
         <el-table-column prop="PayMode" label="结款"></el-table-column>
-        <el-table-column :context="_self" inline-template label="操作" width="150">
-          <div>
-            <el-button size="small" @click="hotelbaseEdit($index, row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="hotelbaseDelete($index, row)">删除</el-button>
-          </div>
+        <el-table-column   label="操作" width="150">
+          <template scope="scope">
+            <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" type="danger" @click="hotelbaseDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -112,12 +112,24 @@ export default {
         pageSize: 10,
         order: 'ID',
         query: [
-          {ID: this.filters.labelVal === '1' ? parseInt(this.filters.ID, 10) : null},
-          {HotelName: this.filters.labelVal === '2' ? this.filters.HotelName : null},
-          {HotelName_En: this.filters.labelVal === '3' ? this.filters.HotelName_En : null}
+          {
+            ID: this.filters.labelVal === '1'
+              ? parseInt(this.filters.ID, 10)
+              : null
+          },
+          {
+            HotelName: this.filters.labelVal === '2'
+              ? this.filters.HotelName
+              : null
+          },
+          {
+            HotelName_En: this.filters.labelVal === '3'
+              ? this.filters.HotelName_En
+              : null
+          }
         ]
       };
-      const res = await HotelBaseApi.listAll(options)
+      const res = await HotelBaseApi.listAll(options);
       this.hotelbase = res.data.Data;
     },
     handleCurrentChange(val) {
@@ -126,7 +138,9 @@ export default {
     hotelbaseEdit($index, row) {
       this.$router.push({
         name: 'HotelBaseEdit',
-        params: { ID: row.ID }
+        params: {
+          ID: row.ID
+        }
       });
     },
     async hotelbaseDelete($index, row) {
@@ -153,29 +167,29 @@ export default {
 <style lang="scss">
 #HotelBasePage {
 
-  .filters {
-    margin: 20px 0 0 0;
-    border: 1px #efefef solid;
-    padding: 10px;
-    background: #f9f9f9;
+    .filters {
+        margin: 20px 0 0;
+        border: 1px #efefef solid;
+        padding: 10px;
+        background: #f9f9f9;
 
-  .filter {
-    display: inline-block;
-    width: auto;
-    padding: 10px;
-    border-radius: 5px;
-    .el-select {
-      display: inline-block;
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+
+        .el-input {
+            width: 150px;
+            display: inline-block;
+        }
     }
-  }
 
-  .el-input {
-    width: 150px;
-    display: inline-block;
-  }
-  }
-
-  .pagination-wrapper {
+    .pagination-wrapper {
         text-align: center;
         padding: 30px;
     }

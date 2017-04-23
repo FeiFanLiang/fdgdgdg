@@ -25,12 +25,12 @@
     <el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>
 
-    <el-table-column :context="_self" inline-template label="操作" width="180">
-      <div>
-        <el-button type="primary" size="mini" @click="hotelpolicyAdd">添加</el-button>
-        <el-button type="primary" size="mini" @click="hotelpolicyEdit($index, row)">编辑</el-button>
-        <el-button size="mini" type="danger" @click="hotelpolicyDelete($index, row)">删除</el-button>
-      </div>
+    <el-table-column   label="操作" width="180">
+        <template scope="scope">
+          <el-button type="primary" size="mini" @click="hotelpolicyAdd">添加</el-button>
+          <el-button type="primary" size="mini" @click="hotelpolicyEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
     </el-table-column>
   </el-table>
   <!-- table end -->
@@ -110,7 +110,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
 
       <el-row :gutter="20">
         <el-col :span="6">
@@ -139,7 +139,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="6">
           <div class="grid-content bg-purple">
@@ -162,7 +162,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
@@ -182,7 +182,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="createDialog = false">取 消</el-button>
@@ -266,7 +266,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
 
       <el-row :gutter="20">
         <el-col :span="6">
@@ -295,7 +295,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="6">
           <div class="grid-content bg-purple">
@@ -318,7 +318,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
       <el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
@@ -338,7 +338,7 @@
           </div>
         </el-col>
       </el-row>
-      
+
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="editDialog = false">取 消</el-button>
@@ -351,7 +351,12 @@
 </template>
 
 <script>
-import { HotelPolicyApi, secretTypeApi, rserveModeApi, payCompanyApi } from 'api';
+import {
+  HotelPolicyApi,
+  secretTypeApi,
+  rserveModeApi,
+  payCompanyApi
+} from 'api';
 
 export default {
   props: {
@@ -403,7 +408,7 @@ export default {
         ReserveMode: '',
         IsDefault: ''
       }
-    }
+    };
   },
   mounted() {
     this.fetchData();
@@ -499,7 +504,6 @@ export default {
       const res = await HotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     }
-  },
-
-}
+  }
+};
 </script>

@@ -89,7 +89,7 @@
         </div>
       </el-col>
     </el-row>
-      
+
     <el-row :gutter="20">
       <el-col :span="20">
         <div class="grid-content bg-purple">
@@ -118,14 +118,11 @@
     </el-row>
 
   </el-form>
-
-
-
 </div>
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi,hotelAreaApi } from 'api';
+import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 
 export default {
   data() {
