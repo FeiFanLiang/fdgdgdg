@@ -1,5 +1,6 @@
 <template>
 <div>
+    <el-button size="mini" @click="hotelroomAdd">添加</el-button>
   <!-- table start -->
   <el-table
     :data="hotelroomlist"
@@ -15,7 +16,6 @@
     <el-table-column prop="Remark" label="备注"></el-table-column>
     <el-table-column   label="操作" width="180">
         <template scope="scope">
-          <el-button size="mini" @click="hotelroomAdd">添加</el-button>
           <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>

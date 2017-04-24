@@ -150,7 +150,7 @@ export default {
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
-        name: 'HotelBaseEdit',
+        name: 'HotelBaseEditBase',
         params: {
           ID: row.ID
         }

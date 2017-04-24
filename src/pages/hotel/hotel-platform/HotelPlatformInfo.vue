@@ -123,60 +123,14 @@
 </template>
 
 <script>
-import { HotelPlatformApi } from 'api';
+import {
+    HotelPlatformApi
+} from 'api';
 export default {
-  props: {
-    hotelID: Number
-  },
-  data() {
-    return {
-      list: [],
-      createDialog: false,
-      editDialog: false,
-      createForm: {
-        ID: 0,
-        PlatformID: 0,
-        HotelID: 0,
-        PlatHotelName: '',
-        PlatURL: '',
-        IsValid: '',
-        PlatHotelID: 0,
-        Platform: '',
-        Hotel: '',
-        PlatHotelName_En: '',
-        Remark: ''
-      },
-      editForm: {
-        ID: '',
-        PlatformID: '',
-        HotelID: '',
-        PlatHotelID: '',
-        PlatURL: '',
-        PlatHotelName: '',
-        PlatHotelName_En: '',
-        Remark: ''
-      }
-    };
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    async platforminfoSave() {
-      const _self = this;
-      try {
-        console.log(_self.createForm);
-        await HotelPlatformApi.addInfo(_self.createForm);
-        _self.fetchData();
-        _self.createDialog = false;
-        _self.$message({
-          message: '保存成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
+    props: {
+        hotelID: Number
     },
+<<<<<<< HEAD
     async platforminfoEditSave() {
       const _self = this;
       try {
@@ -190,49 +144,120 @@ export default {
       } catch (e) {
         console.error(e);
       }
+=======
+    data() {
+        return {
+            list: [],
+            createDialog: false,
+            editDialog: false,
+            createForm: {
+                ID: 0,
+                PlatformID: 0,
+                HotelID: 0,
+                PlatHotelName: '',
+                PlatURL: '',
+                IsValid: '',
+                PlatHotelID: 0,
+                Platform: '',
+                Hotel: '',
+                PlatHotelName_En: '',
+                Remark: ''
+            },
+            editForm: {
+                ID: '',
+                PlatformID: '',
+                HotelID: '',
+                PlatHotelID: '',
+                PlatURL: '',
+                PlatHotelName: '',
+                PlatHotelName_En: '',
+                Remark: ''
+            }
+        };
+>>>>>>> 51943615a48aec885acc04ac6eb9205a0111462c
     },
-    addPlatforminfo() {
-      this.createDialog = true;
+    mounted() {
+        this.fetchData();
     },
-    platforminfoEdit($index, row) {
-      const _self = this;
-      _self.editForm.ID = row.ID;
-      _self.editForm.PlatformID = row.PlatformID;
-      _self.editForm.HotelID = row.HotelID;
-      _self.editForm.PlatHotelID = row.PlatHotelID;
-      _self.editForm.PlatURL = row.PlatURL;
-      _self.editForm.PlatHotelName = row.PlatHotelName;
-      _self.editForm.PlatHotelName_En = row.PlatHotelName_En;
-      _self.editForm.Remark = row.Remark;
-      _self.editDialog = true;
-    },
-    async platforminfoDelete($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await HotelPlatformApi.remove({
-          ID: row.ID
-        });
-        _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async fetchData() {
-      const hotelID = this.hotelID;
-      const res = await HotelPlatformApi.getList(hotelID);
-      //console.log(res)
-      this.list = res.data;
+    methods: {
+        async platforminfoSave() {
+            const _self = this;
+            try {
+                console.log(_self.createForm);
+                await HotelPlatformApi.addInfo(_self.createForm);
+                _self.fetchData();
+                _self.createDialog = false;
+                _self.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        async platforminfoEditSave() {
+            const _self = this;
+            try {
+                await HotelPlatformApi.editInfo(_self.editForm);
+                _self.fetchData();
+                _self.editDialog = false;
+                _self.$message({
+                    message: '编辑成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        addPlatforminfo() {
+            this.createDialog = true;
+        },
+        async platforminfoEdit($index, row) {
+            const _self = this;
+            _self.editDialog = true;
+            try {
+                const res = await HotelPlatformApi.getDetail(row.HotelID);
+                this.editForm = { ...res.data
+                };
+            } catch (e) {
+                console.error(e);
+            }
+            // _self.editForm.ID = row.ID;
+            // _self.editForm.PlatformID = row.PlatformID;
+            // _self.editForm.HotelID = row.HotelID;
+            // _self.editForm.PlatHotelID = row.PlatHotelID;
+            // _self.editForm.PlatURL = row.PlatURL;
+            // _self.editForm.PlatHotelName = row.PlatHotelName;
+            // _self.editForm.PlatHotelName_En = row.PlatHotelName_En;
+            // _self.editForm.Remark = row.Remark;
+        },
+        async platforminfoDelete($index, row) {
+            const _self = this;
+            try {
+                await _self.$confirm('是否删除此条信息?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                });
+                await HotelPlatformApi.delInfo({
+                    ID: row.ID
+                });
+                _self.fetchData();
+                _self.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        async fetchData() {
+            const hotelID = this.hotelID;
+            const res = await HotelPlatformApi.getHotelList(hotelID);
+            //console.log(res)
+            this.list = res.data;
+        }
     }
-  }
 };
 </script>
 <style lang="scss">
