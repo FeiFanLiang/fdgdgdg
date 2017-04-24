@@ -90,7 +90,7 @@
         </div>
       </el-col>
     </el-row>
-      
+
     <el-row :gutter="20">
       <el-col :span="20">
         <div class="grid-content bg-purple">
@@ -122,7 +122,17 @@
   <!-- form end -->
 
   <!-- tab start -->
-  <el-tabs v-model="activeName" type="card">
+  <el-button-group>
+    <router-link :to="{path:'policy'}">政策信息</router-link>
+      <router-link :to="{path:'room'}">房型信息</router-link>
+        <router-link :to="{path:'price'}">价格信息</router-link>
+          <router-link :to="{path:'platform'}">平台映射</router-link>
+  <!-- <el-button type="text" @click>政策信息</el-button>
+  <el-button type="text">房型信息</el-button>
+<el-button type="text">价格信息</el-button>
+<el-button type="text">平台映射</el-button> -->
+</el-button-group>
+  <!-- <el-tabs v-model="activeName" type="card">
     <el-tab-pane label="政策信息" name="first">政策信息
       <HotelPolicyList :hotelID='Number(this.$route.params.ID)'></HotelPolicyList>
     </el-tab-pane>
@@ -133,7 +143,7 @@
     <el-tab-pane label="平台映射" name="fourth">平台映射
       <HotelPlatformInfo :hotelID='Number(this.$route.params.ID)'></HotelPlatformInfo>
     </el-tab-pane>
-  </el-tabs>
+  </el-tabs> -->
   <!-- tab end -->
 </div>
 </template>
@@ -174,12 +184,12 @@ export default {
     HotelPolicyList
   },
 
-  mounted () {
-    this.ID = this.$route.params.ID;   
+  mounted() {
+    this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
     this.getStarOptions();
-    this.getAreaOptions();
+    // this.getAreaOptions();
   },
   methods: {
     async getAreaOptions(query) {
