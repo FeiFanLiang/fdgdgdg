@@ -1,5 +1,9 @@
 <template lang="html">
 <div id="HotelbaseEdit">
+  <el-menu   mode="horizontal" >
+  <el-menu-item v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
+</el-menu>
+<div class="line"></div>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
@@ -105,7 +109,7 @@
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -120,17 +124,11 @@
 
   </el-form>
   <!-- form end -->
-  <el-button-group>
-  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
-</el-button-group>
 </div>
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
-import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
-import HotelRoomList from '../hotel-room/HotelRoomList';
-import HotelPolicyList from '../hotel-policy/HotelPolicyList';
+import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 
 export default {
   data() {
@@ -149,7 +147,6 @@ export default {
         PayMode: '',
         Remark: ''
       },
-      //ID: 0,
       AreaOptions: [],
       StarOptions: [],
       PayModeOptions: [],
@@ -161,16 +158,7 @@ export default {
       ]
     };
   },
-
-  components: {
-    HotelPlatformInfo,
-    HotelRoomList,
-    HotelPolicyList
-  },
-
-
-  mounted () {
-
+  mounted() {
     this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
@@ -195,12 +183,12 @@ export default {
     },
     async getHotelbaseList(ID) {
       ID = this.ID;
-      const res = await HotelBaseApi.detailsById(ID);
+      const res = await hotelBaseApi.detailsById(ID);
       this.form = res.data;
     },
     onSubmit() {
       try {
-        HotelBaseApi.edit(this.form.ID, this.form);
+        hotelBaseApi.edit(this.form.ID, this.form);
         this.$message({
           message: '保存成功',
           type: 'success'

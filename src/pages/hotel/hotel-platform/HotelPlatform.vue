@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { HotelThreePlatInfoApi } from 'api';
+import { hotelThreePlatInfoApi } from 'api';
 
 export default {
   data() {
@@ -134,7 +134,7 @@ export default {
       const _self = this;
       try {
         console.log(_self.createForm)
-        const a = await HotelThreePlatInfoApi.add(_self.createForm);
+        const a = await hotelThreePlatInfoApi.add(_self.createForm);
         console.log(a)
         _self.fetchData();
         _self.createDialog = false;
@@ -149,7 +149,7 @@ export default {
     async platformEditSave() {
       const _self = this;
       try {
-        await HotelThreePlatInfoApi.edit(_self.editForm.ID,_self.editForm);
+        await hotelThreePlatInfoApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({
@@ -175,7 +175,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelThreePlatInfoApi.remove({
+        await hotelThreePlatInfoApi.remove({
           ID: row.ID
         });
         _self.fetchData();
@@ -200,7 +200,7 @@ export default {
           ? parseInt(_self.filters.ID, 10)
           : null
       };
-      const res = await HotelThreePlatInfoApi.listAll(options);
+      const res = await hotelThreePlatInfoApi.listAll(options);
       _self.platform = res.data;
     },
     mounted() {

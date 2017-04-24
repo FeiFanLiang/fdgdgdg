@@ -352,16 +352,13 @@
 
 <script>
 import {
-  HotelPolicyApi,
+  hotelPolicyApi,
   secretTypeApi,
   rserveModeApi,
   payCompanyApi
 } from 'api';
 
 export default {
-  props: {
-    hotelID: Number
-  },
   data() {
     return {
       PayCompanyOptions: [],
@@ -434,7 +431,7 @@ export default {
     async hotelpolicySave() {
       const _self = this;
       try {
-        await HotelPolicyApi.add(_self.createForm);
+        await hotelPolicyApi.add(_self.createForm);
         _self.fetchData();
         _self.createDialog = false;
         _self.$message({
@@ -448,7 +445,7 @@ export default {
     async hotelpolicyEditSave() {
       const _self = this;
       try {
-        await HotelPolicyApi.edit(_self.editForm.ID,_self.editForm);
+        await hotelPolicyApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({
@@ -492,7 +489,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelPolicyApi.remove({
+        await hotelPolicyApi.remove({
           ID: row.ID
         });
         _self.fetchData();
@@ -505,8 +502,8 @@ export default {
       }
     },
     async fetchData() {
-      const hotelID = this.hotelID;
-      const res = await HotelPolicyApi.listByHotelID(hotelID);
+      const hotelID = this.$route.params.ID;
+      const res = await hotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     }
   }

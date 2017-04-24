@@ -1,25 +1,25 @@
 <template lang="html">
 <div id="HotelbaseAdd">
-<el-form :rules="rules" ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
+<el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店编号" prop="HotelNum" required>
+          <el-form-item label="酒店编号" prop="HotelNum" >
             <el-input v-model="form.HotelNum"></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店名称" prop="HotelName" required>
+          <el-form-item label="酒店名称" prop="HotelName" >
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="酒店英文名称" prop="HotelName_En" required>
+          <el-form-item label="酒店英文名称" prop="HotelName_En" >
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
         </div>
@@ -28,7 +28,7 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="星级" prop="Star" required>
+          <el-form-item label="星级" prop="Star" >
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
               <el-option v-for="item in StarOptions" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
@@ -37,7 +37,7 @@
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="区域" prop="Area" required>
+          <el-form-item label="区域" prop="Area" >
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
               <el-option v-for="item in AreaOptions" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>
@@ -46,7 +46,7 @@
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="地址" prop="Address" required>
+          <el-form-item label="地址" prop="Address" >
             <el-input v-model="form.Address"></el-input>
           </el-form-item>
         </div>
@@ -55,7 +55,7 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="结款" prop="PayMode" required>
+          <el-form-item label="结款" prop="PayMode" >
             <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户" >
               <el-option v-for="item in PayModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
+import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 
 export default {
   data() {
@@ -124,7 +124,7 @@ export default {
         PayMode: '',
         Remark: ''
       },
-      rules: {
+      /*rules: {
         HotelNum: [{ required: true, message: '请输入酒店编号', trigger: 'blur' }],
         HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }],
         HotelName_En: [
@@ -139,7 +139,7 @@ export default {
         PurchasingName: [
           { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
         ]
-      },
+      },*/
       AreaOptions: [],
       StarOptions: [],
       PayModeOptions: []
@@ -188,7 +188,7 @@ export default {
       _self.$refs[formName].validate(async valid => {
         if (valid) {
           try {
-            const data = await HotelBaseApi.add(_self.form);
+            const data = await hotelBaseApi.add(_self.form);
             _self.$route.params.form;
             _self.$message({
               message: '保存成功',

@@ -33,18 +33,18 @@
       border stripe
       :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
-        <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>
-        <el-table-column prop="HotelNum" label="酒店编号"></el-table-column>
-        <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
-        <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
-        <el-table-column prop="FaxNum" label="传真号"></el-table-column>
-        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Area.AreaName" label="区域"></el-table-column>
+        <!-- <el-table-column prop="ID" label="酒店ID" sortable></el-table-column> -->
+        <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="HotelName_En" label="英文名称" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="FaxNum" label="传真号"></el-table-column>
+        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column> -->
+        <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Star.StarName" label="星级"></el-table-column>
+        <!-- <el-table-column prop="Star.StarName" label="星级"></el-table-column>
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
-        <el-table-column prop="PayMode" label="结款"></el-table-column>
+        <el-table-column prop="PayMode" label="结款"></el-table-column> -->
         <el-table-column   label="操作" width="150">
           <template scope="scope">
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
@@ -64,7 +64,7 @@
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-size="pageSize"
-          :total="300">
+          :total="count">
         </el-pagination>
       </div>
     <!-- pagination end  -->
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { HotelBaseApi } from 'api';
+import { hotelBaseApi } from 'api';
 
 export default {
   data() {
@@ -81,6 +81,7 @@ export default {
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
+      count:0,
       filters: {
         ID: '',
         HotelName: '',
@@ -137,8 +138,9 @@ export default {
           }
         ]
       };
-      const res = await HotelBaseApi.listAll(options);
+      const res = await hotelBaseApi.listAll(options);
       _self.hotelbase = res.data.Data;
+      _self.count=res.data.Count;
     },
     handleSizeChange(val) {
       this.pageSize  = val
@@ -164,7 +166,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelBaseApi.remove(row.ID);
+        await hotelBaseApi.remove(row.ID);
         _self.getHotelbaseList();
         _self.$message({
           message: '删除成功',

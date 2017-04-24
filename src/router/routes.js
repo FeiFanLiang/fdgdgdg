@@ -164,13 +164,13 @@ let routes = [
         children: [
           {
             path: 'imagesInfo',
-            component: Pages.imagesInfo,
+            component: Pages.ImagesInfo,
             name: '截图信息',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           },
           {
             path: 'imagesInfoAdd',
-            component: Pages.imagesInfoAdd,
+            component: Pages.ImagesInfoAdd,
             name: 'imagesInfoAdd',
             meta: {
               hidden: true
@@ -178,7 +178,7 @@ let routes = [
           },
           {
             path: 'imagesInfoEdit/:id',
-            component: Pages.imagesInfoEdit,
+            component: Pages.ImagesInfoEdit,
             name: 'imagesInfoEdit',
             meta: {
               hidden: true
@@ -186,7 +186,7 @@ let routes = [
           },
           {
             path: 'imagesInfoList/:id',
-            component: Pages.imagesInfoList,
+            component: Pages.ImagesInfoList,
             name: 'imagesInfoList',
             meta: {
               hidden: true

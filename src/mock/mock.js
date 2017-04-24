@@ -1,24 +1,24 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import AccountApi from './Account';
+import accountApi from './Account';
 import HotelBaseAPI from './HotelBase';
 import HotelPlatformAPI from './HotelPlatform';
 import HotelThreePlatInfoAPI from './HotelThreePlatInfo';
 import PayCompanyApi from './PayCompany';
 import HotelPayModeApi from './HotelPayMode';
-import HotelRoomApi from './HotelRoom';
-import HotelPolicyApi from './HotelPolicy';
+import hotelRoomApi from './HotelRoom';
+import hotelPolicyApi from './HotelPolicy';
 import imagesInfoApi from './imagesInfo';
 
 export default {
   bootstrap() {
     let mock = new MockAdapter(axios);
-    AccountApi.bootstrap(mock);
+    accountApi.bootstrap(mock);
     HotelBaseAPI.bootstrap(mock);
     HotelPayModeApi.bootstrap(mock);
     HotelPlatformAPI.bootstrap(mock);
-    HotelPolicyApi.bootstrap(mock);
-    HotelRoomApi.bootstrap(mock);
+    hotelPolicyApi.bootstrap(mock);
+    hotelRoomApi.bootstrap(mock);
     HotelThreePlatInfoAPI.bootstrap(mock);
     imagesInfoApi.bootstrap(mock);
     PayCompanyApi.bootstrap(mock);

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { AccountApi } from 'api';
+import { accountApi } from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
@@ -80,14 +80,14 @@ export default {
       };
       _self.isBtnLoading = true;
       try {
-        const data = await AccountApi.register(registerParams);
+        const data = await accountApi.register(registerParams);
         _self.isBtnLoading = false;
         const { msg, code, user } = data;
         if (code !== 200) {
           _self.$message.error(msg);
         } else {
           _self.isBtnLoading = true;
-          const data = await AccountApi.login(registerParams);
+          const data = await accountApi.login(registerParams);
           _self.isBtnLoading = false;
           const { msg, code, user } = data;
           if (code !== 200) {
