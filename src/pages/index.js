@@ -11,6 +11,7 @@ import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
 import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
 import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
 import HotelPrice from './hotel/hotel-price/HotelPrice';
+import HotelRoomList from './hotel/hotel-room/HotelRoomList';
 
 // policy
 import PayCompany from './policy/pay-company/pay-company';
@@ -44,6 +45,7 @@ export default {
   Order,
   HotelPolicyList,
   HotelPrice,
+  HotelRoomList,
   imagesInfo,
   imagesInfoAdd,
   imagesInfoEdit,

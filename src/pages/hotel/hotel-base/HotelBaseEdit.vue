@@ -120,6 +120,7 @@
 
   </el-form>
   <!-- form end -->
+<<<<<<< HEAD
 
   <!-- tab start -->
   <el-button-group type="primary">
@@ -127,20 +128,11 @@
     <el-button type="primary"><router-link :to="{path:'room'}">房型信息</router-link></el-button>
     <el-button type="primary"><router-link :to="{path:'price'}">价格信息</router-link></el-button>
     <el-button type="primary"><router-link :to="{path:'platform'}">平台映射</router-link></el-button>
+=======
+  <el-button-group>
+  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
+>>>>>>> a452ac6ab2790c3c16906c05121215285a0a47db
 </el-button-group>
-  <!-- <el-tabs v-model="activeName" type="card">
-    <el-tab-pane label="政策信息" name="first">政策信息
-      <HotelPolicyList :hotelID='Number(this.$route.params.ID)'></HotelPolicyList>
-    </el-tab-pane>
-    <el-tab-pane label="房型信息" name="second">房型信息
-      <HotelRoomList :hotelID='Number(this.$route.params.ID)'></HotelRoomList>
-    </el-tab-pane>
-    <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
-    <el-tab-pane label="平台映射" name="fourth">平台映射
-      <HotelPlatformInfo :hotelID='Number(this.$route.params.ID)'></HotelPlatformInfo>
-    </el-tab-pane>
-  </el-tabs> -->
-  <!-- tab end -->
 </div>
 </template>
 
@@ -170,7 +162,13 @@ export default {
       //ID: 0,
       AreaOptions: [],
       StarOptions: [],
-      PayModeOptions: []
+      PayModeOptions: [],
+      routers: [
+        { path: 'policy', text: '政策信息' },
+        { path: 'room', text: '房型信息' },
+        { path: 'price', text: '价格信息' },
+        { path: 'platform', text: '平台映射' }
+      ]
     };
   },
 
@@ -180,7 +178,9 @@ export default {
     HotelPolicyList
   },
 
-  mounted() {
+
+  mounted () {
+
     this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
@@ -188,6 +188,9 @@ export default {
     // this.getAreaOptions();
   },
   methods: {
+    goNextPage(path) {
+      this.$router.push({ path });
+    },
     async getAreaOptions(query) {
       const res = await hotelAreaApi.listByQuery(query);
       //this.AreaOptions = res.data;
@@ -207,7 +210,7 @@ export default {
     },
     onSubmit() {
       try {
-        HotelBaseApi.edit(this.form.ID,this.form);
+        HotelBaseApi.edit(this.form.ID, this.form);
         this.$message({
           message: '保存成功',
           type: 'success'
