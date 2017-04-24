@@ -5,9 +5,16 @@
         <div class="title">美票</div>
         <el-input
           :autofocus="true"
-          placeholder="请输入用户名"
+          placeholder="请输入姓名"
           icon="message"
           v-model="username">
+        </el-input>
+      </div>
+      <div class="input-group">
+        <el-input
+          placeholder="请输入用户名"
+          icon="message"
+          v-model="userID">
         </el-input>
       </div>
       <div class="input-group">
@@ -46,8 +53,9 @@ export default {
   },
   data() {
     return {
-      username: 'hha',
-      password: 'hha',
+      userID: 'hhaa',
+      username: 'hhaa',
+      password: 'hhaa',
       rememberMe: false,
       isBtnLoading: false
     };
@@ -65,17 +73,23 @@ export default {
         _self.$message.error('请填写用户名！！！');
         return;
       }
+      if (!_self.userID) {
+        _self.$message.error('请填写用户名！！！');
+        return;
+      }
       if (!_self.password) {
         _self.$message.error('请填写密码');
         return;
       }
+
       const loginParams = {
+        userID: _self.userID,
         username: _self.username,
         password: _self.password
       };
       _self.isBtnLoading = true;
       try {
-        // const data = await AccountApi.login(loginParams);
+        const data = await AccountApi.login(loginParams);
         _self.isBtnLoading = false;
         const user = {
           id: '1',
@@ -137,7 +151,7 @@ export default {
         flex-direction: column;
         align-items: center;
         width: 500px;
-        height: 400px;
+        height: 450px;
         border-radius: 10px;
         background: white;
         border: 1px #eaeaea solid;

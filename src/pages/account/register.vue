@@ -5,9 +5,16 @@
         <div class="title">美票</div>
         <el-input
           :autofocus="true"
-          placeholder="请输入用户名"
+          placeholder="请输入姓名"
           icon="message"
           v-model="username">
+        </el-input>
+      </div>
+      <div class="input-group">
+        <el-input
+          placeholder="请输入用户名"
+          icon="message"
+          v-model="userID">
         </el-input>
       </div>
       <div class="input-group">
@@ -37,6 +44,7 @@ export default {
   },
   data() {
     return {
+      userID: '',
       username: '',
       password: '',
       rememberMe: false,
@@ -53,6 +61,10 @@ export default {
     async register() {
       const _self = this;
       if (!_self.username) {
+        _self.$message.error('请填写姓名！！！');
+        return;
+      }
+      if (!_self.userID) {
         _self.$message.error('请填写用户名！！！');
         return;
       }
@@ -60,7 +72,9 @@ export default {
         _self.$message.error('请填写密码');
         return;
       }
+
       const registerParams = {
+        userID: _self.userID,
         username: _self.username,
         password: _self.password
       };
