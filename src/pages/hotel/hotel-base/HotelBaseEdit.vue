@@ -1,5 +1,9 @@
 <template lang="html">
 <div id="HotelbaseEdit">
+  <el-menu   mode="horizontal" >
+  <el-menu-item v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
+</el-menu>
+<div class="line"></div>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
@@ -105,7 +109,7 @@
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -120,9 +124,7 @@
 
   </el-form>
   <!-- form end -->
-  <el-button-group>
-  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
-</el-button-group>
+
 </div>
 </template>
 
