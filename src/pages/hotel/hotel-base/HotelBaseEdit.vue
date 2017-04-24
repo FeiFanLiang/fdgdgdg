@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
+import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 
 export default {
   data() {
@@ -183,12 +183,12 @@ export default {
     },
     async getHotelbaseList(ID) {
       ID = this.ID;
-      const res = await HotelBaseApi.detailsById(ID);
+      const res = await hotelBaseApi.detailsById(ID);
       this.form = res.data;
     },
     onSubmit() {
       try {
-        HotelBaseApi.edit(this.form.ID, this.form);
+        hotelBaseApi.edit(this.form.ID, this.form);
         this.$message({
           message: '保存成功',
           type: 'success'

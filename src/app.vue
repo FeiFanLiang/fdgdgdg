@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { AccountApi } from 'api';
+import { accountApi } from 'api';
 export default {
   data() {
     return {
@@ -93,7 +93,7 @@ export default {
         localStorage.removeItem('user');
 
         this.$router.push({ path: '/login' });
-        await AccountApi.logout();
+        await accountApi.logout();
       } catch (e) {
         console.error(e);
       }

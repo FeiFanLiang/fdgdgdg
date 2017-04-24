@@ -21,10 +21,10 @@ import PolicyImages from './policy/policy-images/policy-images';
 import Order from './order/order';
 
 // images
-import imagesInfo from './images/imagesInfo';
-import imagesInfoAdd from './images/imagesInfoAdd';
-import imagesInfoEdit from './images/imagesInfoEdit';
-import imagesInfoList from './images/imagesInfoList';
+import ImagesInfo from './images/imagesInfo';
+import ImagesInfoAdd from './images/imagesInfoAdd';
+import ImagesInfoEdit from './images/imagesInfoEdit';
+import ImagesInfoList from './images/imagesInfoList';
 
 // test
 import Test from './test/test';
@@ -46,10 +46,10 @@ export default {
   HotelPolicyList,
   HotelPrice,
   HotelRoomList,
-  imagesInfo,
-  imagesInfoAdd,
-  imagesInfoEdit,
-  imagesInfoList,
+  ImagesInfo,
+  ImagesInfoAdd,
+  ImagesInfoEdit,
+  ImagesInfoList,
   Test,
   TestOne
 };

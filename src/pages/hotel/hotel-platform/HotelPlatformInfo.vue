@@ -152,8 +152,8 @@
 
 <script>
 import {
-    HotelPlatformApi,
-    HotelThreePlatInfoApi
+    hotelPlatformApi,
+    hotelThreePlatInfoApi
 } from 'api';
 
 export default {
@@ -197,7 +197,7 @@ export default {
             const _self = this;
             try {
                 console.log(_self.createForm);
-                await HotelPlatformApi.addInfo(_self.createForm);
+                await hotelPlatformApi.addInfo(_self.createForm);
                 _self.fetchData();
                 _self.createDialog = false;
                 _self.$message({
@@ -211,7 +211,7 @@ export default {
         async platforminfoEditSave() {
             const _self = this;
             try {
-                await HotelPlatformApi.editInfo(_self.editForm);
+                await hotelPlatformApi.editInfo(_self.editForm);
                 _self.fetchData();
                 _self.editDialog = false;
                 _self.$message({
@@ -243,7 +243,7 @@ export default {
             const _self = this;
             _self.editDialog = true;
             try {
-                const res = await HotelPlatformApi.getDetail(row.ID);
+                const res = await hotelPlatformApi.getDetail(row.ID);
                 this.editForm = { ...res.data
                 };
                 console.log(res.data)
@@ -259,7 +259,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await HotelPlatformApi.delInfo(row.ID);
+                await hotelPlatformApi.delInfo(row.ID);
                 _self.fetchData();
                 _self.$message({
                     message: '删除成功',
@@ -271,13 +271,13 @@ export default {
         },
         async fetchData() {
 
-            const res = await HotelPlatformApi.getHotelList(this.$route.params.ID);
+            const res = await hotelPlatformApi.getHotelList(this.$route.params.ID);
             console.log(res.data)
 
             this.list = res.data;
         },
         async getHotelThreePlatInfoList() {
-            const res = await HotelThreePlatInfoApi.getList();
+            const res = await hotelThreePlatInfoApi.getList();
             this.platInfoList = res.data;
         }
     }

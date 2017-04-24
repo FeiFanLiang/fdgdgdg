@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { HotelBaseApi } from 'api';
+import { hotelBaseApi } from 'api';
 
 export default {
   data() {
@@ -138,7 +138,7 @@ export default {
           }
         ]
       };
-      const res = await HotelBaseApi.listAll(options);
+      const res = await hotelBaseApi.listAll(options);
       _self.hotelbase = res.data.Data;
       _self.count=res.data.Count;
     },
@@ -166,7 +166,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelBaseApi.remove(row.ID);
+        await hotelBaseApi.remove(row.ID);
         _self.getHotelbaseList();
         _self.$message({
           message: '删除成功',

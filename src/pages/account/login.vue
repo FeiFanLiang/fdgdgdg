@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { AccountApi } from 'api';
+import { accountApi } from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
@@ -89,7 +89,7 @@ export default {
       };
       _self.isBtnLoading = true;
       try {
-        const data = await AccountApi.login(loginParams);
+        const data = await accountApi.login(loginParams);
         _self.isBtnLoading = false;
         const user = {
           id: '1',

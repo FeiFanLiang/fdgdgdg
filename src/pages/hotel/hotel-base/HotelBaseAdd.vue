@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
+import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 
 export default {
   data() {
@@ -188,7 +188,7 @@ export default {
       _self.$refs[formName].validate(async valid => {
         if (valid) {
           try {
-            const data = await HotelBaseApi.add(_self.form);
+            const data = await hotelBaseApi.add(_self.form);
             _self.$route.params.form;
             _self.$message({
               message: '保存成功',

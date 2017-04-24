@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { HotelRoomApi, hotelRoomBedApi } from 'api';
+import { hotelRoomApi, hotelRoomBedApi } from 'api';
 
 export default {
   props: {
@@ -141,7 +141,7 @@ export default {
     async hotelroomSave() {
       const _self = this;
       try {
-        await HotelRoomApi.add(_self.createForm);
+        await hotelRoomApi.add(_self.createForm);
         _self.fetchData();
         _self.createDialog = false;
         _self.$message({
@@ -155,7 +155,7 @@ export default {
     async hotelroomEditSave() {
       const _self = this;
       try {
-        await HotelRoomApi.edit(_self.editForm.ID,_self.editForm);
+        await hotelRoomApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({
@@ -188,7 +188,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await HotelRoomApi.remove({
+        await hotelRoomApi.remove({
           ID: row.ID
         });
         _self.fetchData();
@@ -202,7 +202,7 @@ export default {
     },
     async fetchData() {
       const hotelID = this.$route.params.ID;
-      const res = await HotelRoomApi.list(hotelID);
+      const res = await hotelRoomApi.list(hotelID);
       this.hotelroomlist = res.data;
     }
   }
