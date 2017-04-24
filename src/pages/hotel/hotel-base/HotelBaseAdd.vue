@@ -3,13 +3,6 @@
 <el-form :rules="rules" ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
-      <!-- <el-col :span="6">
-        <div class="grid-content bg-purple">
-          <el-form-item label="酒店ID" prop="id">
-            <el-input v-model="form.id" :disabled='true'></el-input>
-          </el-form-item>
-        </div>
-      </el-col> -->
       <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店编号" prop="HotelNum" required>
@@ -17,14 +10,14 @@
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店名称" prop="HotelName" required>
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="酒店英文名称" prop="HotelName_En" required>
             <el-input v-model="form.HotelName_En"></el-input>
@@ -33,7 +26,16 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="5">
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <el-form-item label="星级" prop="Star" required>
+            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
+              <el-option v-for="item in StarOptions" :label="item.StarName" :value="item.ID"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="区域" prop="Area" required>
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
@@ -42,7 +44,7 @@
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="地址" prop="Address" required>
             <el-input v-model="form.Address"></el-input>
@@ -51,37 +53,26 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="5">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
-          <el-form-item label="星级" prop="Star">
-            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
-              <el-option v-for="item in StarOptions" :label="item.StarName" :value="item.ID"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-      </el-col>
-      <el-col :span="5">
-        <div class="grid-content bg-purple">
-          <el-form-item label="结款" prop="PayMode">
+          <el-form-item label="结款" prop="PayMode" required>
             <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户" >
               <el-option v-for="item in PayModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
       </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
-          <el-form-item label="传真号" prop="FaxNum">
-            <el-input v-model="form.FaxNum"></el-input>
-          </el-form-item>
-        </div>
-      </el-col>
-      <el-col :span="7">
+      <el-col :span="6">
         <div class="grid-content bg-purple">
           <el-form-item label="前台电话" prop="FrontPhone">
             <el-input v-model="form.FrontPhone"></el-input>
+          </el-form-item>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content bg-purple">
+          <el-form-item label="传真号" prop="FaxNum">
+            <el-input v-model="form.FaxNum"></el-input>
           </el-form-item>
         </div>
       </el-col>
@@ -111,7 +102,6 @@
         </div>
       </el-col>
     </el-row>
-
   </el-form>
 </div>
 </template>
@@ -124,7 +114,6 @@ export default {
     return {
       labelPosition: 'top',
       form: {
-        id: '',
         HotelNum: '',
         HotelName: '',
         HotelName_En: '',
@@ -136,12 +125,16 @@ export default {
         Remark: ''
       },
       rules: {
+        HotelNum: [{ required: true, message: '请输入酒店编号', trigger: 'blur' }],
         HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }],
         HotelName_En: [
           { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
         ],
         FrontPhone: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
+        Area: [{ required: true, message: '请选择区域', trigger: 'blur' }],
         Address: [{ required: true, message: '请输入酒店地址', trigger: 'blur' }],
+        PayMode: [{ required: true, message: '请输入结款账户', trigger: 'blur' }],
+        Star: [{ required: true, message: '请输入酒店星级', trigger: 'blur' }],
         PersonName: [{ required: true, message: '请输入采购人姓名', trigger: 'blur' }],
         PurchasingName: [
           { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
