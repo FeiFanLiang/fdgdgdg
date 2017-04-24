@@ -120,31 +120,9 @@
 
   </el-form>
   <!-- form end -->
-
-  <!-- tab start -->
   <el-button-group>
-    <router-link :to="{path:'policy'}">政策信息</router-link>
-      <router-link :to="{path:'room'}">房型信息</router-link>
-        <router-link :to="{path:'price'}">价格信息</router-link>
-          <router-link :to="{path:'platform'}">平台映射</router-link>
-  <!-- <el-button type="text" @click>政策信息</el-button>
-  <el-button type="text">房型信息</el-button>
-<el-button type="text">价格信息</el-button>
-<el-button type="text">平台映射</el-button> -->
+  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
 </el-button-group>
-  <!-- <el-tabs v-model="activeName" type="card">
-    <el-tab-pane label="政策信息" name="first">政策信息
-      <HotelPolicyList :hotelID='Number(this.$route.params.ID)'></HotelPolicyList>
-    </el-tab-pane>
-    <el-tab-pane label="房型信息" name="second">房型信息
-      <HotelRoomList :hotelID='Number(this.$route.params.ID)'></HotelRoomList>
-    </el-tab-pane>
-    <el-tab-pane label="价格信息" name="third">价格信息</el-tab-pane>
-    <el-tab-pane label="平台映射" name="fourth">平台映射
-      <HotelPlatformInfo :hotelID='Number(this.$route.params.ID)'></HotelPlatformInfo>
-    </el-tab-pane>
-  </el-tabs> -->
-  <!-- tab end -->
 </div>
 </template>
 
@@ -174,7 +152,13 @@ export default {
       //ID: 0,
       AreaOptions: [],
       StarOptions: [],
-      PayModeOptions: []
+      PayModeOptions: [],
+      routers: [
+        { path: 'policy', text: '政策信息' },
+        { path: 'room', text: '房型信息' },
+        { path: 'price', text: '价格信息' },
+        { path: 'platform', text: '平台映射' }
+      ]
     };
   },
 
@@ -192,6 +176,9 @@ export default {
     // this.getAreaOptions();
   },
   methods: {
+    goNextPage(path) {
+      this.$router.push({ path });
+    },
     async getAreaOptions(query) {
       const res = await hotelAreaApi.listByQuery(query);
       //this.AreaOptions = res.data;
@@ -211,7 +198,7 @@ export default {
     },
     onSubmit() {
       try {
-        HotelBaseApi.edit(this.form.ID,this.form);
+        HotelBaseApi.edit(this.form.ID, this.form);
         this.$message({
           message: '保存成功',
           type: 'success'
