@@ -17,11 +17,11 @@
     <el-table :data="list" border style="width: 100%">
       <el-table-column prop="ID" label="ID" width="80"></el-table-column>
       <el-table-column prop="PlatHotelID" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="HotelID" label="酒店名称" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="HotelID" label="酒店名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
-      <el-table-column prop="PlatHotelName" label="平台酒店名称" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column label="平台访问路径" :show-overflow-tooltip="true">
+      <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
+      <el-table-column label="平台访问路径" show-overflow-tooltip>
         <template scope="scope">
             <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
         </template>
@@ -32,7 +32,7 @@
 <i class="el-icon-circle-close" v-else></i>
 </template>
       </el-table-column>
-      <el-table-column prop="Remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  label="操作" width="120">
         <template scope="scope">
 <el-button size="mini" @click="platforminfoEdit(scope.$index, scope.row)">

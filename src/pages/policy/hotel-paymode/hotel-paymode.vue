@@ -30,9 +30,9 @@
         stripe
         v-loading="loading"
         @sort-change="handleSortChange">
-        <el-table-column prop="ID" label="ID" width="180" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="ModeName" label="账户名称" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="Remark" label="备注" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="ModeName" label="账户名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column  width="150"  label="操作">
           <template scope="scope">
             <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
