@@ -130,21 +130,6 @@ export default {
     props: {
         hotelID: Number
     },
-<<<<<<< HEAD
-    async platforminfoEditSave() {
-      const _self = this;
-      try {
-        await HotelPlatformApi.edit(_self.editForm.ID,_self.editForm);
-        _self.fetchData();
-        _self.editDialog = false;
-        _self.$message({
-          message: '编辑成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
-=======
     data() {
         return {
             list: [],
@@ -174,7 +159,6 @@ export default {
                 Remark: ''
             }
         };
->>>>>>> 51943615a48aec885acc04ac6eb9205a0111462c
     },
     mounted() {
         this.fetchData();
@@ -252,7 +236,7 @@ export default {
             }
         },
         async fetchData() {
-            const hotelID = this.hotelID;
+            const hotelID = this.$route.params.ID;
             const res = await HotelPlatformApi.getHotelList(hotelID);
             //console.log(res)
             this.list = res.data;

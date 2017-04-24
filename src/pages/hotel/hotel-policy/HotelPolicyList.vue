@@ -359,9 +359,6 @@ import {
 } from 'api';
 
 export default {
-  props: {
-    hotelID: Number
-  },
   data() {
     return {
       PayCompanyOptions: [],
@@ -505,7 +502,7 @@ export default {
       }
     },
     async fetchData() {
-      const hotelID = this.hotelID;
+      const hotelID = this.$route.params.ID;
       const res = await HotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     }

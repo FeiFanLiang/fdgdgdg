@@ -105,7 +105,7 @@
       <el-col :span="5" :offset="5">
         <div class="grid-content bg-purple">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
           </el-form-item>
         </div>
       </el-col>
@@ -122,15 +122,11 @@
   <!-- form end -->
 
   <!-- tab start -->
-  <el-button-group>
-    <router-link :to="{path:'policy'}">政策信息</router-link>
-      <router-link :to="{path:'room'}">房型信息</router-link>
-        <router-link :to="{path:'price'}">价格信息</router-link>
-          <router-link :to="{path:'platform'}">平台映射</router-link>
-  <!-- <el-button type="text" @click>政策信息</el-button>
-  <el-button type="text">房型信息</el-button>
-<el-button type="text">价格信息</el-button>
-<el-button type="text">平台映射</el-button> -->
+  <el-button-group type="primary">
+    <el-button type="primary"><router-link :to="{path:'policy'}">政策信息</router-link></el-button>
+    <el-button type="primary"><router-link :to="{path:'room'}">房型信息</router-link></el-button>
+    <el-button type="primary"><router-link :to="{path:'price'}">价格信息</router-link></el-button>
+    <el-button type="primary"><router-link :to="{path:'platform'}">平台映射</router-link></el-button>
 </el-button-group>
   <!-- <el-tabs v-model="activeName" type="card">
     <el-tab-pane label="政策信息" name="first">政策信息
