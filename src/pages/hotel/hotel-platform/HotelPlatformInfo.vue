@@ -157,6 +157,7 @@ import {
 } from 'api';
 
 export default {
+
     data() {
         return {
             list: [],
@@ -177,6 +178,7 @@ export default {
                 PlatURL: '',
                 PlatHotelName: '',
                 PlatHotelName_En: '',
+
                 Remark: '',
                 IsValid: true
                 // Platform: {},
@@ -184,6 +186,7 @@ export default {
             },
             editForm: {}
         }
+
     },
     mounted() {
         this.fetchData();
@@ -267,8 +270,10 @@ export default {
             }
         },
         async fetchData() {
+
             const res = await HotelPlatformApi.getHotelList(this.$route.params.ID);
             console.log(res.data)
+
             this.list = res.data;
         },
         async getHotelThreePlatInfoList() {

@@ -125,6 +125,13 @@
   </el-form>
   <!-- form end -->
 
+
+
+  <el-button-group>
+  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
+
+</el-button-group>
+
 </div>
 </template>
 
@@ -170,9 +177,7 @@ export default {
     HotelPolicyList
   },
 
-
-  mounted () {
-
+  mounted() {
     this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
