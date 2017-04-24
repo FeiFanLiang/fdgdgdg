@@ -33,18 +33,18 @@
       border stripe
       :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
-        <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>
-        <el-table-column prop="HotelNum" label="酒店编号"></el-table-column>
-        <el-table-column prop="HotelName" label="酒店名称"></el-table-column>
-        <el-table-column prop="HotelName_En" label="英文名称"></el-table-column>
-        <el-table-column prop="FaxNum" label="传真号"></el-table-column>
-        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Area.AreaName" label="区域"></el-table-column>
+        <!-- <el-table-column prop="ID" label="酒店ID" sortable></el-table-column> -->
+        <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="HotelName_En" label="英文名称" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="FaxNum" label="传真号"></el-table-column>
+        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column> -->
+        <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Star.StarName" label="星级"></el-table-column>
+        <!-- <el-table-column prop="Star.StarName" label="星级"></el-table-column>
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
-        <el-table-column prop="PayMode" label="结款"></el-table-column>
+        <el-table-column prop="PayMode" label="结款"></el-table-column> -->
         <el-table-column   label="操作" width="150">
           <template scope="scope">
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
