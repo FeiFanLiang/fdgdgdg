@@ -182,10 +182,10 @@ export default {
     },
     async handleEditSave(formName) {
       const _self = this;
-      _self.$refs[formName].validate(valid => {
+      _self.$refs[formName].validate(async valid => {
         if (valid) {
           try {
-            payCompanyApi.editInfo(_self.editForm.ID,_self.editForm);
+            await payCompanyApi.editInfo(_self.editForm.ID,_self.editForm);
             _self.fetchData();
             _self.editDialog = false;
             _self.$message({
@@ -202,10 +202,10 @@ export default {
     },
     async handleSave(formName) {
       const _self = this;
-      _self.$refs[formName].validate(valid => {
+      _self.$refs[formName].validate(async valid => {
         if (valid) {
           try {
-            payCompanyApi.addInfo(_self.createForm);
+            await payCompanyApi.addInfo(_self.createForm);
             _self.fetchData();
             _self.createDialog = false;
             _self.$message({
