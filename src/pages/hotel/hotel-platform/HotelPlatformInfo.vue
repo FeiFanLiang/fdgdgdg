@@ -1,5 +1,18 @@
 <template lang="html">
   <div id="HotelPlatformInfo">
+    <!-- filters start -->
+    <div class="filters">
+      <div class="filter">
+        <el-select clearable placeholder="请选择">
+          <el-option></el-option>
+        </el-select>
+        <el-input></el-input>
+        <el-input></el-input>
+      </div>
+      <el-button type="primary" >搜索</el-button>
+      <el-button type="primary" @click="addPlatforminfo">创建</el-button>
+    </div>
+    <!-- filters end -->
     <!-- table start -->
     <el-table :data="list" border style="width: 100%">
       <el-table-column prop="ID" label="ID"></el-table-column>
@@ -12,9 +25,9 @@
       <el-table-column prop="PlatHotelName_En" label="平台酒店英文名"></el-table-column>
       <el-table-column prop="PlatURL" label="平台访问路径"></el-table-column>
       <el-table-column prop="Remark" label="备注"></el-table-column>
-      <el-table-column  label="操作" width="180">
+      <el-table-column  label="操作" width="120">
           <template scope="scope">
-            <el-button type="primary" size="mini" @click="addPlatforminfo">添加</el-button>
+            <!-- <el-button type="primary" size="mini" @click="addPlatforminfo">添加</el-button> -->
             <el-button type="primary" size="mini" @click="platforminfoEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="platforminfoDelete(scope.$index, scope.row)">删除</el-button>
             </template>
@@ -148,6 +161,12 @@ export default {
         return {
             list: [],
             platInfoList: [],
+            filters: {
+                sortWay: '',
+                AccountName: '',
+                labelVal: '1',
+                AccountNum: ''
+            },
             createDialog: false,
             editDialog: false,
             createForm: {
@@ -261,6 +280,31 @@ export default {
 </script>
 <style lang="scss">
 #HotelPlatformInfo {
+    .filters {
+        margin: 0 0 20px;
+        border: 1px #efefef solid;
+        padding: 10px;
+        background: #f9f9f9;
+
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+
+        .el-input {
+            width: 150px;
+            display: inline-block;
+        }
+    }
+    .pagination-wrapper {
+        text-align: center;
+        padding: 30px;
+    }
     .around {
         display: flex;
         justify-content: space-around;
