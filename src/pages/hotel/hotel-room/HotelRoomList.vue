@@ -1,6 +1,15 @@
 <template>
-<div>
-  <el-button size="mini" @click="hotelroomAdd">添加</el-button>
+<div id="hotel-platform-info">
+  <div class="filters">
+    <div class="filter">
+      <el-select clearable placeholder="请选择">
+        <el-option></el-option>
+      </el-select>
+      <el-input></el-input>
+    </div>
+    <el-button type="primary" >搜索</el-button>
+    <el-button type="primary" @click="hotelroomAdd">创建</el-button>
+  </div>
   <!-- table start -->
   <el-table :data="hotelroomlist" border style="width: 100%">
 
@@ -221,3 +230,28 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+#hotel-platform-info {
+    .filters {
+        margin: 0 0 20px;
+        border: 1px #efefef solid;
+        padding: 10px;
+        background: #f9f9f9;
+
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+
+        .el-input {
+            width: 150px;
+            display: inline-block;
+        }
+    }
+}
+</style>
