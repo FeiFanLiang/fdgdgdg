@@ -197,23 +197,22 @@ export default {
     },
     onSubmit(formName) {
       const _self = this;
-      _self.$refs[formName].validate(valid => {
+      _self.$refs[formName].validate(async valid => {
         if (valid) {
-          alert('submit!');
+          try {
+            const data = await HotelBaseApi.add(_self.form);
+            _self.$route.params.form;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
         } else {
           return false;
         }
       });
-      try {
-        const data = HotelBaseApi.add(_self.form);
-        _self.$route.params.form;
-        _self.$message({
-          message: '保存成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
     },
     Cancel() {
       this.$router.go(-1);
