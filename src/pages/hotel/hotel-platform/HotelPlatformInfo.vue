@@ -143,8 +143,57 @@ import {
     HotelThreePlatInfoApi
 } from 'api';
 export default {
-    props: {
-        hotelID: Number
+  props: {
+    hotelID: Number
+  },
+  data() {
+    return {
+      list: [],
+      createDialog: false,
+      editDialog: false,
+      createForm: {
+        ID: 0,
+        PlatformID: 0,
+        HotelID: 0,
+        PlatHotelName: '',
+        PlatURL: '',
+        IsValid: '',
+        PlatHotelID: 0,
+        Platform: '',
+        Hotel: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      },
+      editForm: {
+        ID: '',
+        PlatformID: '',
+        HotelID: '',
+        PlatHotelID: '',
+        PlatURL: '',
+        PlatHotelName: '',
+        PlatHotelName_En: '',
+        Remark: ''
+      }
+    };
+  },
+  mounted() {
+    this.fetchData();
+  },
+  methods: {
+    async platforminfoSave() {
+      const _self = this;
+      try {
+        console.log(_self.createForm);
+        await HotelPlatformApi.addInfo(_self.createForm);
+        _self.fetchData();
+        _self.createDialog = false;
+        _self.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
     data() {
         return {
@@ -167,6 +216,17 @@ export default {
             },
             editForm: {}
         };
+      } catch (e) {
+        console.error(e);
+      }
+      // _self.editForm.ID = row.ID;
+      // _self.editForm.PlatformID = row.PlatformID;
+      // _self.editForm.HotelID = row.HotelID;
+      // _self.editForm.PlatHotelID = row.PlatHotelID;
+      // _self.editForm.PlatURL = row.PlatURL;
+      // _self.editForm.PlatHotelName = row.PlatHotelName;
+      // _self.editForm.PlatHotelName_En = row.PlatHotelName_En;
+      // _self.editForm.Remark = row.Remark;
     },
     mounted() {
         this.fetchData();
@@ -261,6 +321,7 @@ export default {
             this.platInfoList = res.data;
         }
     }
+  }
 };
 </script>
 <style lang="scss">

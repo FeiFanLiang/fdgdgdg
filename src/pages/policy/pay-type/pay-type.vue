@@ -185,7 +185,7 @@ export default {
       _self.$refs[formName].validate(valid => {
         if (valid) {
           try {
-            payCompanyApi.editInfo(_self.editForm);
+            payCompanyApi.editInfo(_self.editForm.ID,_self.editForm);
             _self.fetchData();
             _self.editDialog = false;
             _self.$message({

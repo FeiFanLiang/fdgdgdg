@@ -56,12 +56,12 @@ let routes = [
         name: '酒店',
         iconClass: 'el-icon-setting',
         children: [
-          {
-            path: 'HotelPlatform',
-            component: Pages.HotelPlatform,
-            name: '酒店平台',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
+          // {
+          //   path: 'HotelPlatform',
+          //   component: Pages.HotelPlatform,
+          //   name: '酒店平台',
+          //   imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          // },
           {
             path: 'HotelBase',
             component: Pages.HotelBase,
@@ -78,8 +78,35 @@ let routes = [
           },
           {
             path: 'HotelBaseEdit/:ID',
-            component: Pages.HotelBaseEdit,
+            component: Pages.Abstract,
             name: 'HotelBaseEdit',
+            children: [
+              {
+                path: '',
+                component: Pages.HotelBaseEdit,
+                name: 'HotelBaseEditBase'
+              },
+              {
+                path: 'policy',
+                component: Pages.HotelPolicyList,
+                name: 'HotelBaseEdit.PolicyList'
+              },
+              {
+                path: 'room',
+                component: Pages.HotelRoomList,
+                name: 'HotelBaseEdit.RoomList'
+              },
+              {
+                path: 'platform',
+                component: Pages.HotelPlatformInfo,
+                name: 'HotelBaseEdit.Platform'
+              },
+              {
+                path: 'price',
+                component: Pages.HotelPrice,
+                name: 'HotelBaseEdit.Price'
+              }
+            ],
             meta: {
               hidden: true
             }

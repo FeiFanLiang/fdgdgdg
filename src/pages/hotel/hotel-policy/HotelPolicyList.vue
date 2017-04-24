@@ -1,6 +1,7 @@
 <template lang="html">
 <div id="HotelPollicyList">
   <!-- table start -->
+    <el-button type="primary"  @click="hotelpolicyAdd">添加</el-button>
   <el-table
     :data="hotelpolicy"
     border
@@ -27,7 +28,6 @@
 
     <el-table-column   label="操作" width="180">
         <template scope="scope">
-          <el-button type="primary" size="mini" @click="hotelpolicyAdd">添加</el-button>
           <el-button type="primary" size="mini" @click="hotelpolicyEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -448,7 +448,7 @@ export default {
     async hotelpolicyEditSave() {
       const _self = this;
       try {
-        await HotelPolicyApi.edit(_self.editForm);
+        await HotelPolicyApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({

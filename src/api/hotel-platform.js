@@ -1,7 +1,6 @@
 import axios from 'axios';
 import path from './api';
 export default {
-
     getHotelList(hotelid) {
         return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/hotel/${hotelid}`);
     },
