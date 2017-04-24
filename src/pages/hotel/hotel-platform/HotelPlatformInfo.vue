@@ -180,7 +180,7 @@ export default {
     async platforminfoEditSave() {
       const _self = this;
       try {
-        await HotelPlatformApi.edit(_self.editForm);
+        await HotelPlatformApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({

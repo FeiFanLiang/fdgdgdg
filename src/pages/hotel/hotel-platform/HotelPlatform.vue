@@ -15,7 +15,7 @@
                 :value="item.value">
             </el-option>
           </el-select>
-          <el-input placeholder="请输入平台ID" v-model="filters.id" v-show="filters.labelVal == '1'"></el-input>
+          <el-input placeholder="请输入平台ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
           <el-input placeholder="请输入平台名称" v-model="filters.PlatName" v-show="filters.labelVal == '2'"></el-input>
         </div>
         <el-button type="primary" @click="platformSearch()">搜索</el-button>
@@ -28,7 +28,7 @@
     :data="platform"
     style="width: 100%">
       <el-table-column
-        prop="id"
+        prop="ID"
         label="平台ID"
         width="180">
       </el-table-column>
@@ -52,7 +52,7 @@
     <el-dialog title="添加新平台信息" v-model="createDialog" size="small">
       <el-form ref="createForm" :model="createForm" label-width="80px">
         <el-form-item label="平台ID">
-          <el-input v-model="createForm.id" class="el-col-24" :disabled="true"></el-input>
+          <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="平台名称">
           <el-input v-model="createForm.PlatName" class="el-col-24"></el-input>
@@ -72,7 +72,7 @@
     <el-dialog title="编辑平台信息" v-model="editDialog" size="small">
       <el-form ref="editForm" :model="editForm" label-width="80px">
         <el-form-item label="平台ID">
-          <el-input v-model="editForm.id" class="el-col-24" :disabled="true"></el-input>
+          <el-input v-model="editForm.ID" class="el-col-24" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="平台名称">
           <el-input v-model="editForm.PlatName" class="el-col-24"></el-input>
@@ -101,16 +101,16 @@ export default {
       editDialog: false,
       filters: {
         PlatName: '',
-        id: '',
+        ID: '',
         labelVal: '1'
       },
       createForm: {
-        id: '',
+        ID: 0,
         PlatName: '',
         Ramark: ''
       },
       editForm: {
-        id: '',
+        ID: 0,
         PlatName: '',
         Ramark: ''
       },
@@ -126,14 +126,16 @@ export default {
       ]
     };
   },
-  created() {
+  mounted() {
     this.fetchData();
   },
   methods: {
     async platformSave() {
       const _self = this;
       try {
-        await HotelThreePlatInfoApi.add(_self.createForm);
+        console.log(_self.createForm)
+        const a = await HotelThreePlatInfoApi.add(_self.createForm);
+        console.log(a)
         _self.fetchData();
         _self.createDialog = false;
         _self.$message({
@@ -147,7 +149,7 @@ export default {
     async platformEditSave() {
       const _self = this;
       try {
-        await HotelThreePlatInfoApi.edit(_self.editForm);
+        await HotelThreePlatInfoApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({
@@ -160,7 +162,7 @@ export default {
     },
     platformEdit($index, row) {
       const _self = this;
-      _self.editForm.id = row.id;
+      _self.editForm.ID = row.ID;
       _self.editForm.PlatName = row.PlatName;
       _self.editForm.Ramark = row.Ramark;
       _self.editDialog = true;
@@ -174,7 +176,7 @@ export default {
           type: 'warning'
         });
         await HotelThreePlatInfoApi.remove({
-          id: row.id
+          ID: row.ID
         });
         _self.fetchData();
         _self.$message({
@@ -194,8 +196,8 @@ export default {
         PlatName: _self.filters.labelVal === '2'
           ? _self.filters.PlatName
           : null,
-        id: _self.filters.labelVal === '1'
-          ? parseInt(_self.filters.id, 10)
+        ID: _self.filters.labelVal === '1'
+          ? parseInt(_self.filters.ID, 10)
           : null
       };
       const res = await HotelThreePlatInfoApi.listAll(options);

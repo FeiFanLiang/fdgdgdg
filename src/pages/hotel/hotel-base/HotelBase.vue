@@ -58,9 +58,13 @@
     <!-- pagination start  -->
       <div class="pagination-wrapper" style="align=center">
         <el-pagination
-          layout="prev, pager, next"
+          layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[10, 20, 30]"
+          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :page-size="10">
+          :current-page="currentPage"
+          :page-size="pageSize"
+          :total="300">
         </el-pagination>
       </div>
     <!-- pagination end  -->
@@ -75,7 +79,8 @@ export default {
   data() {
     return {
       hotelbase: [],
-      page: 1,
+      currentPage: 1,
+      pageSize: 10,
       filters: {
         ID: '',
         HotelName: '',
@@ -98,20 +103,22 @@ export default {
       ]
     };
   },
-  created() {
+  mounted() {
     this.getHotelbaseList();
   },
   methods: {
     hotelbaseSearch() {
       this.getHotelbaseList();
     },
-    async getHotelbaseList(page) {
+    async getHotelbaseList(currentPage, pageSize) {
       const _self = this;
-      _self.page = page || _self.page;
+      _self.currentPage = currentPage || _self.currentPage;
+      _self.pageSize = pageSize || _self.pageSize
       const options = {
-        pageIndex: _self.page,
-        pageSize: 10,
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
         order: 'ID',
+        /*{ID:'1',HotelName:'HHH',HotelName_En:'3242'}*/
         query: [
           {
             ID: _self.filters.labelVal === '1'
@@ -133,8 +140,13 @@ export default {
       const res = await HotelBaseApi.listAll(options);
       _self.hotelbase = res.data.Data;
     },
+    handleSizeChange(val) {
+      this.pageSize  = val
+      this.getHotelbaseList(this.pageSize);
+    },
     handleCurrentChange(val) {
-      this.getHotelbaseList(val);
+      this.currentPage = val;
+      this.getHotelbaseList(this.currentPage);
     },
     hotelbaseEdit($index, row) {
       this.$router.push({

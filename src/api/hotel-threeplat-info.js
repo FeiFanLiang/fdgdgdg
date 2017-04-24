@@ -5,12 +5,12 @@ export default {
     return axios.get(path.apiBaseUrl + 'Hotel/HotelThreePlatInfo');
   },
   add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelThreePlatInfo/add', params);
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelThreePlatInfo', params);
   },
   remove(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/remove/${id}`);
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/${id}`);
   },
   edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/edit/${id}`, params);
+    return axios.put(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/${id}`, params);
   }
 }

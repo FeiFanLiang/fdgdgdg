@@ -448,7 +448,7 @@ export default {
     async hotelpolicyEditSave() {
       const _self = this;
       try {
-        await HotelPolicyApi.edit(_self.editForm);
+        await HotelPolicyApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({

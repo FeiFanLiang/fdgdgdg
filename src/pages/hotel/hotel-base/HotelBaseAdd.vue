@@ -157,7 +157,7 @@ export default {
       PayModeOptions: []
     };
   },
-  created() {
+  mounted() {
     const _self = this;
 
     _self.getPayModeOptions();
@@ -174,7 +174,7 @@ export default {
 
         // 这个接口返回的数据量过大,会造成页面卡顿和假死
 
-        // this.AreaOptions = res.data;
+        //this.AreaOptions = res.data;
       } catch (e) {
         console.error(e);
       }

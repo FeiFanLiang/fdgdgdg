@@ -184,7 +184,7 @@ export default {
   methods: {
     async getAreaOptions(query) {
       const res = await hotelAreaApi.listByQuery(query);
-      this.AreaOptions = res.data;
+      //this.AreaOptions = res.data;
     },
     async getPayModeOptions() {
       const res = await hotelPayModeApi.getList();
@@ -201,7 +201,7 @@ export default {
     },
     onSubmit() {
       try {
-        HotelBaseApi.edit(this.form);
+        HotelBaseApi.edit(this.form.ID,this.form);
         this.$message({
           message: '保存成功',
           type: 'success'

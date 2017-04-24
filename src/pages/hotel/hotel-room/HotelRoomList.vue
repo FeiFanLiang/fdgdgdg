@@ -155,7 +155,7 @@ export default {
     async hotelroomEditSave() {
       const _self = this;
       try {
-        await HotelRoomApi.edit(_self.editForm);
+        await HotelRoomApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
         _self.$message({

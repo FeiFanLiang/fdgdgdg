@@ -9,9 +9,9 @@ export default {
         return axios.post(path.apiBaseUrl + `Hotel/HotelPlatform`, params);
     },
     remove(id) {
-        return axios.delete(path.apiBaseUrl + `Hotel/HotelPlatform/remove/${id}`);
+        return axios.delete(path.apiBaseUrl + `Hotel/HotelPlatform/${id}`);
     },
     edit(id, params) {
-        return axios.put(path.apiBaseUrl + `Hotel/HotelPlatform/edit/${id}`, params);
+        return axios.put(path.apiBaseUrl + `Hotel/HotelPlatform/${id}`, params);
     }
 }
