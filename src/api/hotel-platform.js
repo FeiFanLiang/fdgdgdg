@@ -9,7 +9,6 @@ export default {
         return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/${id}`);
     },
     addInfo(params) {
-        console.log(params)
         return axios.post(path.apiBaseUrl + `Hotel/HotelPlatform`, params);
     },
     delInfo(id) {

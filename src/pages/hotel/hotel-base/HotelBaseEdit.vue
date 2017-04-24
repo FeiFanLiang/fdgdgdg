@@ -90,7 +90,7 @@
         </div>
       </el-col>
     </el-row>
-      
+
     <el-row :gutter="20">
       <el-col :span="20">
         <div class="grid-content bg-purple">
@@ -175,7 +175,7 @@ export default {
   },
 
   mounted () {
-    this.ID = this.$route.params.ID;   
+    this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
     this.getStarOptions();

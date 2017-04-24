@@ -2,12 +2,12 @@
   <div id="HotelPlatformInfo">
     <!-- table start -->
     <el-table :data="list" border style="width: 100%">
-      <el-table-column prop="ID" label="ID" width="55"></el-table-column>
+      <el-table-column prop="ID" label="ID"></el-table-column>
       <el-table-column prop="Hotel" label="Hotel"></el-table-column>
-      <el-table-column prop="HotelID" label="酒店ID" width="80"></el-table-column>
+      <el-table-column prop="HotelID" label="酒店ID"></el-table-column>
       <el-table-column prop="PlatHotelID" label="平台酒店ID"></el-table-column>
-      <el-table-column prop="PlatformID" label="平台ID" width="80"></el-table-column>
-      <el-table-column prop="IsValid" label="IsValid" width="85"></el-table-column>
+      <el-table-column prop="Platform.PlatName" label="平台"></el-table-column>
+      <el-table-column prop="IsValid" label="IsValid"></el-table-column>
       <el-table-column prop="PlatHotelName" label="平台酒店名称"></el-table-column>
       <el-table-column prop="PlatHotelName_En" label="平台酒店英文名"></el-table-column>
       <el-table-column prop="PlatURL" label="平台访问路径"></el-table-column>
@@ -27,43 +27,51 @@
     <el-dialog title="添加新平台映射信息" v-model="createDialog" size="small">
       <el-form class="around" ref="createForm" :model="createForm">
         <div>
-          <el-form-item label="ID">
+          <!-- <el-form-item label="ID">
             <el-input v-model="createForm.ID" :disabled="true"></el-input>
+          </el-form-item> -->
+          <el-form-item label="酒店ID">
+            <el-input v-model="createForm.HotelID" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="平台ID">
-            <el-input v-model="createForm.PlatformID"></el-input>
-          </el-form-item>
-            <el-form-item label="酒店ID">
-              <el-input v-model="createForm.HotelID"></el-input>
-            </el-form-item>
           <el-form-item label="平台酒店名称">
             <el-input v-model="createForm.PlatHotelName"></el-input>
           </el-form-item>
           <el-form-item label="平台访问路径">
             <el-input v-model="createForm.PlatURL"></el-input>
           </el-form-item>
-          <el-form-item label="IsValid">
-           <el-input v-model="createForm.IsValid"></el-input>
-         </el-form-item>
+          <el-form-item label="备注">
+            <el-input class="w193" type="textarea" v-model="createForm.Remark"></el-input>
+            <!-- <textarea name="name" rows="6" cols="24" v-model="createForm.Remark"></textarea> -->
+          </el-form-item>
         </div>
         <div>
+          <el-form-item label="平台名称">
+            <el-select class="w193" v-model="createForm.PlatformID" placeholder="请选择">
+              <el-option
+                v-for="item in platInfoList"
+                :label="item.PlatName"
+                :value="item.ID">
+              </el-option>
+            </el-select>
+            <!-- <el-input v-model="createForm.PlatformID"></el-input> -->
+          </el-form-item>
+
           <el-form-item label="平台酒店ID">
             <el-input v-model="createForm.PlatHotelID"></el-input>
           </el-form-item>
-          <el-form-item label="平台名称">
+          <!-- <el-form-item label="平台名称">
             <el-input v-model="createForm.Platform"></el-input>
           </el-form-item>
           <el-form-item label="酒店名称">
             <el-input v-model="createForm.Hotel"></el-input>
-          </el-form-item>
+          </el-form-item> -->
            <el-form-item label="平台酒店英文名称">
             <el-input v-model="createForm.PlatHotelName_En"></el-input>
           </el-form-item>
-          <el-form-item label="备注">
-            <textarea name="name" rows="6" cols="24" v-model="createForm.Remark"></textarea>
-          </el-form-item>
+          <el-form-item label="IsValid">
+           <el-switch v-model="createForm.IsValid" on-text="" off-text=""></el-switch>
+         </el-form-item>
         </div>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="createDialog = false">取 消</el-button>
@@ -79,38 +87,45 @@
           <el-form-item label="ID">
             <el-input v-model="editForm.ID" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="平台ID">
-            <el-input v-model="editForm.PlatformID"></el-input>
+          <el-form-item label="酒店ID">
+            <el-input v-model="editForm.HotelID" :disabled="true"></el-input>
           </el-form-item>
-            <el-form-item label="酒店ID">
-              <el-input v-model="editForm.HotelID"></el-input>
-            </el-form-item>
           <el-form-item label="平台酒店名称">
             <el-input v-model="editForm.PlatHotelName"></el-input>
           </el-form-item>
           <el-form-item label="平台访问路径">
             <el-input v-model="editForm.PlatURL"></el-input>
           </el-form-item>
-          <el-form-item label="IsValid">
-           <el-input v-model="editForm.IsValid"></el-input>
-         </el-form-item>
+          <el-form-item label="备注">
+            <el-input class="w193" type="textarea" v-model="editForm.Remark"></el-input>
+          </el-form-item>
         </div>
         <div>
+          <el-form-item label="平台名称">
+            <!-- <el-input v-model="editForm.PlatformID"></el-input> -->
+            <el-select v-model="editForm.PlatformID" placeholder="请选择">
+              <el-option
+                v-for="item in platInfoList"
+                :label="item.PlatName"
+                :value="item.ID">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="平台酒店ID">
             <el-input v-model="editForm.PlatHotelID"></el-input>
           </el-form-item>
-          <el-form-item label="平台名称">
+          <!-- <el-form-item label="平台名称">
             <el-input v-model="editForm.Platform"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="酒店名称">
             <el-input v-model="editForm.Hotel"></el-input>
           </el-form-item>
            <el-form-item label="平台酒店英文名称">
             <el-input v-model="editForm.PlatHotelName_En"></el-input>
           </el-form-item>
-          <el-form-item label="备注">
-            <textarea name="name" rows="6" cols="24"></textarea>
-          </el-form-item>
+          <el-form-item label="IsValid">
+           <el-switch v-model="editForm.IsValid" on-text="" off-text=""></el-switch>
+         </el-form-item>
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -124,7 +139,8 @@
 
 <script>
 import {
-    HotelPlatformApi
+    HotelPlatformApi,
+    HotelThreePlatInfoApi
 } from 'api';
 export default {
     props: {
@@ -133,35 +149,28 @@ export default {
     data() {
         return {
             list: [],
+            platInfoList: [],
             createDialog: false,
             editDialog: false,
             createForm: {
-                ID: 0,
-                PlatformID: 0,
-                HotelID: 0,
-                PlatHotelName: '',
-                PlatURL: '',
-                IsValid: '',
-                PlatHotelID: 0,
-                Platform: '',
-                Hotel: '',
-                PlatHotelName_En: '',
-                Remark: ''
-            },
-            editForm: {
-                ID: '',
+                // ID: 0,
                 PlatformID: '',
-                HotelID: '',
+                HotelID: this.hotelID,
                 PlatHotelID: '',
                 PlatURL: '',
                 PlatHotelName: '',
                 PlatHotelName_En: '',
-                Remark: ''
-            }
+                Remark: '',
+                IsValid: true
+                // Platform: {},
+                // Hotel: {},
+            },
+            editForm: {}
         };
     },
     mounted() {
         this.fetchData();
+        this.getHotelThreePlatInfoList();
     },
     methods: {
         async platforminfoSave() {
@@ -194,26 +203,33 @@ export default {
             }
         },
         addPlatforminfo() {
-            this.createDialog = true;
+            const _self = this;
+            _self.createDialog = true;
+            _self.createForm = {
+                // ID: 0,
+                PlatformID: '',
+                HotelID: _self.hotelID,
+                PlatHotelID: '',
+                PlatURL: '',
+                PlatHotelName: '',
+                PlatHotelName_En: '',
+                Remark: '',
+                IsValid: true
+                // Platform: {},
+                // Hotel: {},
+            }
         },
         async platforminfoEdit($index, row) {
             const _self = this;
             _self.editDialog = true;
             try {
-                const res = await HotelPlatformApi.getDetail(row.HotelID);
+                const res = await HotelPlatformApi.getDetail(row.ID);
                 this.editForm = { ...res.data
                 };
+                console.log(res.data)
             } catch (e) {
                 console.error(e);
             }
-            // _self.editForm.ID = row.ID;
-            // _self.editForm.PlatformID = row.PlatformID;
-            // _self.editForm.HotelID = row.HotelID;
-            // _self.editForm.PlatHotelID = row.PlatHotelID;
-            // _self.editForm.PlatURL = row.PlatURL;
-            // _self.editForm.PlatHotelName = row.PlatHotelName;
-            // _self.editForm.PlatHotelName_En = row.PlatHotelName_En;
-            // _self.editForm.Remark = row.Remark;
         },
         async platforminfoDelete($index, row) {
             const _self = this;
@@ -223,9 +239,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await HotelPlatformApi.delInfo({
-                    ID: row.ID
-                });
+                await HotelPlatformApi.delInfo(row.ID);
                 _self.fetchData();
                 _self.$message({
                     message: '删除成功',
@@ -238,8 +252,13 @@ export default {
         async fetchData() {
             const hotelID = this.hotelID;
             const res = await HotelPlatformApi.getHotelList(hotelID);
-            //console.log(res)
+            console.log(res.data)
             this.list = res.data;
+        },
+        async getHotelThreePlatInfoList() {
+            const res = await HotelThreePlatInfoApi.getList();
+            console.log(res.data)
+            this.platInfoList = res.data;
         }
     }
 };
@@ -248,7 +267,6 @@ export default {
 #HotelPlatformInfo {
     .around {
         display: flex;
-        align-items: center;
         justify-content: space-around;
     }
     .el-form-item {
@@ -257,9 +275,8 @@ export default {
         align-items: center;
         justify-content: flex-end;
     }
-    textarea {
-        border: 1px solid #bfcbd9;
-        border-radius: 4px;
+    .w193 {
+        width: 193px;
     }
 }
 </style>
