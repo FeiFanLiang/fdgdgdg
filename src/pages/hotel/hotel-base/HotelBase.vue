@@ -64,7 +64,7 @@
           @current-change="handleCurrentChange"
           :current-page="currentPage"
           :page-size="pageSize"
-          :total="300">
+          :total="count">
         </el-pagination>
       </div>
     <!-- pagination end  -->
@@ -81,6 +81,7 @@ export default {
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
+      count:0,
       filters: {
         ID: '',
         HotelName: '',
@@ -139,6 +140,7 @@ export default {
       };
       const res = await HotelBaseApi.listAll(options);
       _self.hotelbase = res.data.Data;
+      _self.count=res.data.Count;
     },
     handleSizeChange(val) {
       this.pageSize  = val

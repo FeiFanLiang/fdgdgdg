@@ -124,22 +124,11 @@
 
   </el-form>
   <!-- form end -->
-
-
-
-  <el-button-group>
-  <el-button type="primary" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-button>
-
-</el-button-group>
-
 </div>
 </template>
 
 <script>
 import { hotelPayModeApi, HotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
-import HotelPlatformInfo from '../hotel-platform/HotelPlatformInfo';
-import HotelRoomList from '../hotel-room/HotelRoomList';
-import HotelPolicyList from '../hotel-policy/HotelPolicyList';
 
 export default {
   data() {
@@ -158,7 +147,6 @@ export default {
         PayMode: '',
         Remark: ''
       },
-      //ID: 0,
       AreaOptions: [],
       StarOptions: [],
       PayModeOptions: [],
@@ -170,13 +158,6 @@ export default {
       ]
     };
   },
-
-  components: {
-    HotelPlatformInfo,
-    HotelRoomList,
-    HotelPolicyList
-  },
-
   mounted() {
     this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
