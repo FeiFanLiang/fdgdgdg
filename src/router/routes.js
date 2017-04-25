@@ -71,7 +71,7 @@ let routes = [
           {
             path: 'HotelBaseAdd',
             component: Pages.HotelBaseAdd,
-            name: 'HotelBaseAdd',
+            name: '添加酒店',
             meta: {
               hidden: true
             }
