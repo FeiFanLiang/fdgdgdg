@@ -1,6 +1,4 @@
 import Breadcrumb from './breadcrumb';
 import Calendar from './calendar';
-export default {
-  Breadcrumb,
-  Calendar
-};
+import Menu from './menu';
+export { Breadcrumb, Calendar, Menu };

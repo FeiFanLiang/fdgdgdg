@@ -29,7 +29,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
       const children = vm.$route.meta.children;
-      console.log(children);
       if (children) {
         vm.children = children;
       } else {
