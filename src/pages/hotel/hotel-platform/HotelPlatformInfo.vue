@@ -1,18 +1,8 @@
 <template lang="html">
   <div id="HotelPlatformInfo">
-    <!-- filters start -->
-    <div class="filters">
-      <div class="filter">
-        <!-- <el-select clearable placeholder="请选择">
-          <el-option></el-option>
-        </el-select> -->
-        <el-input></el-input>
-        <el-input></el-input>
-      </div>
-      <el-button type="primary" >搜索</el-button>
+    <Menu path="platform">
       <el-button type="primary" @click="addBtn('form')">创建</el-button>
-    </div>
-    <!-- filters end -->
+    </Menu>
     <!-- table start -->
     <el-table :data="list" border style="width: 100%">
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
@@ -84,7 +74,7 @@
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
+        <el-button @click="closeDialog('form')">取 消</el-button>
         <el-button type="primary" @click="submitForm('form')">确 定</el-button>
       </span>
     </el-dialog>
@@ -98,13 +88,18 @@ import {
     hotelThreePlatInfoApi
 } from 'api';
 
-export default {
+import {
+    Menu
+} from 'components'
 
+export default {
+    components: {
+        Menu
+    },
     data() {
         return {
             list: [],
             platInfoList: [],
-            filters: {},
             showDialog: false,
             dialogTitle: '',
             dialogTag: '',
@@ -151,6 +146,7 @@ export default {
                         _self.form.platHotelName_En = _self.form.platHotelNameEn;
                         await hotelPlatformApi.addInfo(_self.form);
                         _self.fetchData();
+                        _self.$refs[a].resetFields();
                         _self.showDialog = false;
                         _self.$message({
                             message: '保存成功',
@@ -172,6 +168,7 @@ export default {
                         _self.form.platHotelName_En = _self.form.platHotelNameEn;
                         await hotelPlatformApi.editInfo(_self.form);
                         _self.fetchData();
+                        _self.$refs[a].resetFields();
                         _self.showDialog = false;
                         _self.$message({
                             message: '编辑成功',
@@ -184,6 +181,11 @@ export default {
                     return false;
                 }
             });
+        },
+        closeDialog(a) {
+            const _self = this;
+            _self.showDialog = false;
+            _self.$refs[a].resetFields();
         },
         submitForm(a) {
             const _self = this;
@@ -206,7 +208,7 @@ export default {
                 remark: '',
                 isValid: true
             }
-            _self.$refs[a].resetFields();
+
         },
         async editBtn($index, row) {
             const _self = this;
@@ -264,6 +266,7 @@ export default {
                 // _self.list[index].hotel = elem.Hotel;
                 // _self.list[index].platform = elem.Platform;
                 _self.list[index].platName = elem.Platform.PlatName;
+                console.log(_self.list);
             }
         },
         async getHotelThreePlatInfoList() {
@@ -276,27 +279,6 @@ export default {
 </script>
 <style lang="scss">
 #HotelPlatformInfo {
-    .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
-
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
