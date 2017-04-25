@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="HotelbaseAdd">
-<el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
+<el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px" :rules="rules">
 
     <el-row :gutter="20">
       <el-col :span="6">
@@ -30,7 +30,7 @@
         <div class="grid-content bg-purple">
           <el-form-item label="星级" prop="Star" >
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
-              <el-option v-for="item in StarOptions" :label="item.StarName" :value="item.ID"></el-option>
+              <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -39,7 +39,7 @@
         <div class="grid-content bg-purple">
           <el-form-item label="区域" prop="Area" >
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
-              <el-option v-for="item in AreaOptions" :label="item.AreaName" :value="item.ID"></el-option>
+              <el-option v-for="item in areaOptions" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -57,7 +57,7 @@
         <div class="grid-content bg-purple">
           <el-form-item label="结款" prop="PayMode" >
             <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户" >
-              <el-option v-for="item in PayModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+              <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
@@ -124,25 +124,15 @@ export default {
         PayMode: '',
         Remark: ''
       },
-      /*rules: {
-        HotelNum: [{ required: true, message: '请输入酒店编号', trigger: 'blur' }],
+      rules: {
         HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }],
         HotelName_En: [
           { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
-        ],
-        FrontPhone: [{ required: true, message: '请输入联系人电话', trigger: 'blur' }],
-        Area: [{ required: true, message: '请选择区域', trigger: 'blur' }],
-        Address: [{ required: true, message: '请输入酒店地址', trigger: 'blur' }],
-        PayMode: [{ required: true, message: '请输入结款账户', trigger: 'blur' }],
-        Star: [{ required: true, message: '请输入酒店星级', trigger: 'blur' }],
-        PersonName: [{ required: true, message: '请输入采购人姓名', trigger: 'blur' }],
-        PurchasingName: [
-          { required: true, message: '请输入政策负责人姓名', trigger: 'blur' }
         ]
-      },*/
-      AreaOptions: [],
-      StarOptions: [],
-      PayModeOptions: []
+      },
+      areaOptions: [],
+      starOptions: [],
+      payModeOptions: []
     };
   },
   mounted() {
@@ -162,7 +152,7 @@ export default {
 
         // 这个接口返回的数据量过大,会造成页面卡顿和假死
 
-        //this.AreaOptions = res.data;
+        //this.areaOptions = res.data;
       } catch (e) {
         console.error(e);
       }
@@ -170,7 +160,7 @@ export default {
     async getPayModeOptions() {
       try {
         const res = await hotelPayModeApi.getList();
-        this.PayModeOptions = res.data;
+        this.payModeOptions = res.data;
       } catch (e) {
         console.error(e);
       }
@@ -178,7 +168,7 @@ export default {
     async getStarOptions() {
       try {
         const res = await hotelStarApi.list();
-        this.StarOptions = res.data;
+        this.starOptions = res.data;
       } catch (e) {
         console.error(e);
       }
