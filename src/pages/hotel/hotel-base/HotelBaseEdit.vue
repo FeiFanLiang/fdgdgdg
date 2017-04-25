@@ -1,7 +1,7 @@
 <template lang="html">
-<div id="HotelbaseEdit">
-  <el-menu   mode="horizontal" >
-    <el-menu-item v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
+<div id="hotelbaseEdit">
+  <el-menu mode="horizontal" >
+    <el-menu-item index="item" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
   </el-menu>
   <div class="line"></div>
   <!-- form start -->
@@ -58,25 +58,13 @@
     <el-row :gutter="20">
       <el-col :span="5">
         <div class="grid-content bg-purple">
-          <el-form-item label="星级" prop="Star">
+          <el-form-item label="星级">
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
               <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
         </div>
       </el-col>
-      <!--<el-col :span="5">
-        <div class="grid-content bg-purple">
-          <el-form-item label="结款" prop="PayMode">
-            <el-select v-model="form.PayMode" clearable  placeholder="请选择结款账户" >
-              <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-      </el-col>-->
-    </el-row>
-
-    <el-row :gutter="20">
       <el-col :span="5">
         <div class="grid-content bg-purple">
           <el-form-item label="区域" prop="Area">
@@ -86,13 +74,22 @@
           </el-form-item>
         </div>
       </el-col>
-      <el-col :span="13">
+      <el-col :span="10">
         <div class="grid-content bg-purple">
           <el-form-item label="地址" prop="Address">
             <el-input v-model="form.Address"></el-input>
           </el-form-item>
         </div>
       </el-col>
+      <!--<el-col :span="5">
+        <div class="grid-content bg-purple">
+          <el-form-item label="结款">
+            <el-select v-model="form.PayMode" clearable  placeholder="请选择结款账户" >
+              <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+      </el-col>-->
     </el-row>
 
     <el-row :gutter="20">
@@ -133,15 +130,14 @@ import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 export default {
   data() {
     return {
-      activeName: 'first',
       labelPosition: 'top',
       form: {
-        /*Star: [],
-        PayMode: []*/
+        Star: '',
+        PayMode: ''
       },
       areaOptions: [],
       starOptions: [],
-      //payModeOptions: [],
+      payModeOptions: [],
       routers: [
         { path: 'policy', text: '政策信息' },
         { path: 'room', text: '房型信息' },
@@ -153,7 +149,7 @@ export default {
   mounted() {
     this.ID = this.$route.params.ID;
     this.getHotelbaseList(this.ID);
-    //this.getPayModeOptions();
+    this.getPayModeOptions();
     this.getStarOptions();
     // this.getAreaOptions();
   },
@@ -165,10 +161,10 @@ export default {
       const res = await hotelAreaApi.listByQuery(query);
       //this.areaOptions = res.data;
     },
-    /*async getPayModeOptions() {
+    async getPayModeOptions() {
       const res = await hotelPayModeApi.getList();
       this.payModeOptions = res.data;
-    },*/
+    },
     async getStarOptions() {
       const res = await hotelStarApi.list();
       this.starOptions = res.data;
@@ -195,7 +191,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #HotelbaseEdit {
+  #hotelbaseEdit {
     margin: 20px;
   }
   .el-row {

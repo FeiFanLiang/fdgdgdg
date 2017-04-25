@@ -1,7 +1,22 @@
 <template lang="html">
-<div id="HotelPollicyList">
+<div id="hotelPollicyList">
+
+  <div class="filters">
+    <div class="filter">
+      <el-select clearable placeholder="请选择" v-model="value">
+        <el-option 
+           v-for="item in selectedOptions"
+           :label="item.label"
+           :value="item.value">
+        </el-option>
+      </el-select>
+      <el-input v-model="IDS"></el-input>
+    </div>
+    <el-button type="primary">搜索</el-button>
+    <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
+  </div>
+
   <!-- table start -->
-    <el-button type="primary"  @click="hotelpolicyAdd" style="margin-bottom:10px">添加</el-button>
   <el-table
     :data="hotelpolicy"
     border
@@ -11,7 +26,6 @@
     <el-table-column prop="PurchasingName" label="政策采购人"></el-table-column>
     <el-table-column prop="LinkMan" label="酒店联系人"></el-table-column>
     <el-table-column prop="PhoneNum" label="酒店联系电话"></el-table-column>
-
     <!--<el-table-column prop="BankName" label="酒店开户行"></el-table-column>
     <el-table-column prop="AccountName" label="酒店账户"></el-table-column>
     <el-table-column prop="AccountNum" label="酒店账号"></el-table-column>
@@ -123,7 +137,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="支付账户">
-              <el-select v-model="createForm.PayCompany" clearable placeholder="请选择支付账户">
+              <el-select v-model="createForm.PayCompanyID" clearable placeholder="请选择支付账户">
                 <el-option v-for="item in PayCompanyOptions" :label="item.AccountName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -135,7 +149,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="保密类型">
-              <el-select v-model="createForm.SecretType" clearable placeholder="请选择保密类型">
+              <el-select v-model="createForm.SecretTypeID" clearable placeholder="请选择保密类型">
                 <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -144,7 +158,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店预订方式">
-              <el-select v-model="createForm.ReserveMode" clearable placeholder="请选择预订方式">
+              <el-select v-model="createForm.ReserveModeID" clearable placeholder="请选择预订方式">
                 <el-option v-for="item in ReserveModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -275,7 +289,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="支付账户">
-              <el-select v-model="editForm.PayCompany" clearable placeholder="请选择支付账户">
+              <el-select v-model="editForm.PayCompanyID" clearable placeholder="请选择支付账户">
                 <el-option v-for="item in PayCompanyOptions" :label="item.AccountName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -288,7 +302,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="保密类型">
-              <el-select v-model="editForm.SecretType" clearable placeholder="请选择保密类型">
+              <el-select v-model="editForm.SecretTypeID" clearable placeholder="请选择保密类型">
                 <el-option v-for="item in SecretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -297,7 +311,7 @@
         <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店预订方式">
-              <el-select v-model="editForm.ReserveMode" clearable placeholder="请选择预订方式">
+              <el-select v-model="editForm.ReserveModeID" clearable placeholder="请选择预订方式">
                 <el-option v-for="item in ReserveModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -354,6 +368,14 @@ import {
 export default {
   data() {
     return {
+      value: '',
+      IDS: '',
+      selectedOptions: [
+        {
+          value: '1',
+          label: 'ID'
+        }
+      ],
       PayCompanyOptions: [],
       ReserveModeOptions: [],
       SecretTypeOptions: [],
@@ -361,42 +383,40 @@ export default {
       createDialog: false,
       editDialog: false,
       createForm: {
-        ID: '',
-        PersonName: '',
-        LinkMan: '',
-        PurchasingName: '',
-        PhoneNum: '',
-        BankName: '',
-        AccountName: '',
-        AccountNum: '',
-        FinanceLinkMan: '',
-        FinancePhoneNum: '',
-        PayCompany: '',
-        FinanceRemark: '',
-        Remark1: '',
-        PayMode: '',
-        SecretType: '',
-        ReserveMode: '',
-        IsDefault: ''
+        hotelID: this.$route.params.ID,
+        PayCompanyID: '',
+        SecretTypeID: '',
+        ReserveModeID: '',
       },
       editForm: {
-        ID: '',
+        /*SecretType: '',
+        PayCompany: '',
+        ReserveMode: '',*/
+        /*ID: '',
+        hotelID: this.$route.params.ID,
+        //Hotel: '',
         PersonName: '',
-        LinkMan: '',
         PurchasingName: '',
-        PhoneNum: '',
+        IsDefault: '',
         BankName: '',
         AccountName: '',
         AccountNum: '',
         FinanceLinkMan: '',
         FinancePhoneNum: '',
         PayCompany: '',
+        //PayCompanyID: '',
         FinanceRemark: '',
-        Remark1: '',
-        PayMode: '',
+        LinkMan: '',
+        PhoneNum: '',
         SecretType: '',
+        //SecretTypeID: '',
         ReserveMode: '',
-        IsDefault: ''
+        //ReserveModeID: '',
+        PayMode: '',
+        //PayModeID: '',
+        PayPeriod: '',
+        Remark1: '',
+        Remark2: ''*/
       }
     };
   },
@@ -428,7 +448,7 @@ export default {
         _self.fetchData();
         _self.createDialog = false;
         _self.$message({
-          message: '保存成功',
+          message: '添加成功',
           type: 'success'
         });
       } catch (e) {
@@ -438,6 +458,7 @@ export default {
     async hotelpolicyEditSave() {
       const _self = this;
       try {
+        console.log(_self.editForm)
         await hotelPolicyApi.edit(_self.editForm.ID,_self.editForm);
         _self.fetchData();
         _self.editDialog = false;
@@ -452,26 +473,10 @@ export default {
     hotelpolicyAdd() {
       this.createDialog = true;
     },
-    hotelpolicyEdit($index, row) {
+    async hotelpolicyEdit($index, row) {
       const _self = this;
-      _self.editForm.ID = row.ID;
-      _self.editForm.PersonName = row.PersonName;
-      _self.editForm.PurchasingName = row.PurchasingName;
-      _self.editForm.PhoneNum = row.PhoneNum;
-      _self.editForm.SecretType = row.SecretType;
-      _self.editForm.ReserveMode = row.ReserveMode;
-      _self.editForm.LinkMan = row.LinkMan;
-      _self.editForm.PhoneNum = row.PhoneNum;
-      _self.editForm.BankName = row.BankName;
-      _self.editForm.AccountName = row.AccountName;
-      _self.editForm.AccountNum = row.AccountNum;
-      _self.editForm.FinanceLinkMan = row.FinanceLinkMan;
-      _self.editForm.FinancePhoneNum = row.FinancePhoneNum;
-      _self.editForm.PayCompany = row.PayCompany;
-      _self.editForm.FinanceRemark = row.FinanceRemark;
-      _self.editForm.PayMode = row.PayMode;
-      _self.editForm.Remark1 = row.Remark1;
-      _self.editForm.IsDefault = row.IsDefault;
+      const res = await hotelPolicyApi.listByID(row.ID);
+      _self.editForm = res.data;
       _self.editDialog = true;
     },
     async hotelpolicyDelete($index, row) {
@@ -500,3 +505,29 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+ #hotelPollicyList {
+    .filters {
+        margin: 0 0 20px;
+        border: 1px #efefef solid;
+        padding: 10px;
+        background: #f9f9f9;
+
+        .filter {
+            display: inline-block;
+            width: auto;
+            padding: 10px;
+            border-radius: 5px;
+            .el-select {
+                display: inline-block;
+            }
+        }
+
+        .el-input {
+            width: 150px;
+            display: inline-block;
+        }
+    }
+}
+</style>

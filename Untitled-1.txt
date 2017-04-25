@@ -9,3 +9,9 @@ GET /Hotel/HotelBase?page=1&pageIndex=1&pageSize=10&order=ID
 
 HTTP/1.1
 
+{
+  "ID": 1,
+  "HotelID": 51,
+  "PersonName": "aaa",
+  "PurchasingName": "string"
+}

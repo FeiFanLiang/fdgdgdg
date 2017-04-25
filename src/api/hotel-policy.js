@@ -1,6 +1,9 @@
 import axios from 'axios';
 import path from './api';
 export default {
+  listByID(id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelPolicy/${id}`);
+  },
   listByHotelID(hotelid) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPolicy/Hotel/${hotelid}`);
   },
