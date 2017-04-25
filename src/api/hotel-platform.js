@@ -15,9 +15,7 @@ export default {
   },
   editInfo(params) {
     return axios.put(
-      path.apiBaseUrl + `Hotel/HotelPlatform/${params.ID}`,
-      params
-    );
+      path.apiBaseUrl + `Hotel/HotelPlatform/${params.id}`,  params);
   },
   getPlatformList(platid) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/plat/${platid}`);

@@ -1,13 +1,13 @@
 <template lang="html">
   <div id="HotelPlatformInfo">
     <Menu path="platform">
-      <el-button type="primary" @click="addBtn('form')">创建</el-button>
+      <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </Menu>
     <!-- table start -->
-    <el-table :data="list" border style="width: 100%">
+    <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
       <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="hotelId" label="酒店名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="platName" label="平台名称"></el-table-column>
       <el-table-column prop="platHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="platHotelNameEn" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
@@ -18,20 +18,33 @@
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
         <template scope="scope">
-<i class="el-icon-circle-check" v-if="scope.row.isValid"></i>
-<i class="el-icon-circle-close" v-else></i>
-</template>
+          <i class="el-icon-circle-check" v-if="scope.row.isValid"></i>
+          <i class="el-icon-circle-close" v-else></i>
+        </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  label="操作" width="120">
         <template scope="scope">
-<el-button size="mini" @click="editBtn(scope.$index, scope.row)">
-    编辑</el-button>
-<el-button size="mini" type="danger" @click="delBtn(scope.$index, scope.row)">删除</el-button>
-</template>
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
     <!-- table end -->
+
+    <!-- pagination start  -->
+    <div class="pagination-wrapper" v-show="!loading&&list.length">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[1, 5, 10]"
+        :page-size="100"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+    </el-pagination>
+    </div>
+    <!-- pagination end  -->
 
     <!-- dialog start -->
     <el-dialog :title="dialogTitle" v-model="showDialog" size="small" :modal-append-to-body="false">
@@ -99,7 +112,10 @@ export default {
     data() {
         return {
             list: [],
+            total: 0,
+            currentPage: 1,
             platInfoList: [],
+            loading: true,
             showDialog: false,
             dialogTitle: '',
             dialogTag: '',
@@ -138,6 +154,89 @@ export default {
         this.getHotelThreePlatInfoList();
     },
     methods: {
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            console.log(`当前页: ${val}`);
+        },
+        handleSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+        },
+        async fetchData() {
+            const _self = this;
+            _self.loading = true;
+            _self.list = [];
+            const res = await hotelPlatformApi.getHotelList(this.$route.params.ID);
+            for (let [index, elem] of res.data.entries()) {
+                _self.list.push({});
+                _self.list[index].platformId = elem.PlatformID;
+                _self.list[index].hotelId = elem.HotelID;
+                _self.list[index].platHotelId = elem.PlatHotelID;
+                _self.list[index].platUrl = elem.PlatURL;
+                _self.list[index].platHotelName = elem.PlatHotelName;
+                _self.list[index].platHotelNameEn = elem.PlatHotelName_En;
+                _self.list[index].remark = elem.Remark;
+                _self.list[index].isValid = elem.IsValid;
+                _self.list[index].id = elem.ID;
+                _self.list[index].hotelName = elem.Hotel.HotelName;
+                _self.list[index].platName = elem.Platform.PlatName;
+            }
+            _self.total = _self.list.length;
+            _self.loading = false;
+            console.log(_self.list);
+        },
+        async getHotelThreePlatInfoList() {
+            const _self = this;
+            const res = await hotelThreePlatInfoApi.getList();
+            _self.platInfoList = res.data;
+        },
+        clickAddBtn() {
+            const _self = this;
+            _self.showDialog = true;
+            _self.dialogTag = 1;
+            _self.dialogTitle = "添加平台映射信息";
+            _self.form = {
+                // id: '',
+                platformId: '',
+                hotelId: this.$route.params.ID,
+                platHotelId: '',
+                platUrl: '',
+                platHotelName: '',
+                platHotelNameEn: '',
+                remark: '',
+                isValid: true
+            }
+
+        },
+        async clickEditBtn($index, row) {
+            const _self = this;
+            try {
+                const res = await hotelPlatformApi.getDetail(row.id);
+                _self.showDialog = true;
+                _self.dialogTag = 2;
+                _self.dialogTitle = "编辑平台映射信息";
+                _self.form.id = res.data.ID;
+                _self.form.platformId = res.data.PlatformID;
+                _self.form.hotelId = res.data.HotelID;
+                _self.form.platHotelId = Number(res.data.PlatHotelID);
+                _self.form.platUrl = res.data.PlatURL;
+                _self.form.platHotelName = res.data.PlatHotelName;
+                _self.form.platHotelNameEn = res.data.PlatHotelName_En;
+                _self.form.remark = res.data.Remark;
+                _self.form.isValid = res.data.IsValid;
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        closeDialog(a) {
+            const _self = this;
+            _self.showDialog = false;
+            _self.$refs[a].resetFields();
+        },
+        submitForm(a) {
+            const _self = this;
+            if (_self.dialogTag === 1) _self.addSave(a);
+            if (_self.dialogTag === 2) _self.editSave(a);
+        },
         async addSave(a) {
             const _self = this;
             _self.$refs[a].validate(async valid => {
@@ -182,55 +281,7 @@ export default {
                 }
             });
         },
-        closeDialog(a) {
-            const _self = this;
-            _self.showDialog = false;
-            _self.$refs[a].resetFields();
-        },
-        submitForm(a) {
-            const _self = this;
-            if (_self.dialogTag === 1) _self.addSave(a);
-            if (_self.dialogTag === 2) _self.editSave(a);
-        },
-        addBtn(a) {
-            const _self = this;
-            _self.showDialog = true;
-            _self.dialogTag = 1;
-            _self.dialogTitle = "添加平台映射信息";
-            _self.form = {
-                // id: '',
-                platformId: '',
-                hotelId: this.$route.params.ID,
-                platHotelId: '',
-                platUrl: '',
-                platHotelName: '',
-                platHotelNameEn: '',
-                remark: '',
-                isValid: true
-            }
-
-        },
-        async editBtn($index, row) {
-            const _self = this;
-            try {
-                const res = await hotelPlatformApi.getDetail(row.id);
-                _self.showDialog = true;
-                _self.dialogTag = 2;
-                _self.dialogTitle = "编辑平台映射信息";
-                _self.form.id = res.data.ID;
-                _self.form.platformId = res.data.PlatformID;
-                _self.form.hotelId = res.data.HotelID;
-                _self.form.platHotelId = Number(res.data.PlatHotelID);
-                _self.form.platUrl = res.data.PlatURL;
-                _self.form.platHotelName = res.data.PlatHotelName;
-                _self.form.platHotelNameEn = res.data.PlatHotelName_En;
-                _self.form.remark = res.data.Remark;
-                _self.form.isValid = res.data.IsValid;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async delBtn($index, row) {
+        async clickDelBtn($index, row) {
             const _self = this;
             try {
                 await _self.$confirm('是否删除此条信息?', '提示', {
@@ -247,32 +298,6 @@ export default {
             } catch (e) {
                 console.error(e);
             }
-        },
-        async fetchData() {
-            const _self = this;
-            _self.list = [];
-            const res = await hotelPlatformApi.getHotelList(this.$route.params.ID);
-            for (let [index, elem] of res.data.entries()) {
-                _self.list.push({});
-                _self.list[index].platformId = elem.PlatformID;
-                _self.list[index].hotelId = elem.HotelID;
-                _self.list[index].platHotelId = elem.PlatHotelID;
-                _self.list[index].platUrl = elem.PlatURL;
-                _self.list[index].platHotelName = elem.PlatHotelName;
-                _self.list[index].platHotelNameEn = elem.PlatHotelName_En;
-                _self.list[index].remark = elem.Remark;
-                _self.list[index].isValid = elem.IsValid;
-                _self.list[index].id = elem.ID;
-                // _self.list[index].hotel = elem.Hotel;
-                // _self.list[index].platform = elem.Platform;
-                _self.list[index].platName = elem.Platform.PlatName;
-                console.log(_self.list);
-            }
-        },
-        async getHotelThreePlatInfoList() {
-            const _self = this;
-            const res = await hotelThreePlatInfoApi.getList();
-            _self.platInfoList = res.data;
         }
     }
 }
