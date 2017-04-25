@@ -1,5 +1,9 @@
 <template lang="html">
 <div id="hotelbaseEdit">
+  <!-- <el-card class="box-card">
+{{hotelName}}
+</el-card> -->
+
   <el-menu mode="horizontal" >
     <el-menu-item index="item" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
   </el-menu>
@@ -130,6 +134,7 @@ import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 export default {
   data() {
     return {
+      hotelName:'',
       labelPosition: 'top',
       form: {
         Star: '',
@@ -148,6 +153,7 @@ export default {
   },
   mounted() {
     this.ID = this.$route.params.ID;
+    this.hotelName=this.$route.query.name;
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
     this.getStarOptions();
@@ -191,9 +197,7 @@ export default {
 </script>
 
 <style lang="scss">
-  #hotelbaseEdit {
-    margin: 20px;
-  }
+
   .el-row {
     margin-bottom: 20px;
     &:last-child {
