@@ -1,17 +1,8 @@
 <template>
 <div id="hotel-platform-info">
-
-  <div class="filters">
-    <div class="filter">
-      <el-select clearable placeholder="请选择">
-        <el-option></el-option>
-      </el-select>
-      <el-input></el-input>
-    </div>
-    <el-button type="primary">搜索</el-button>
+  <Menu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
-  </div>
-
+  </Menu>
   <el-table :data="hotelroomlist" border style="width: 100%">
     <el-table-column prop="RoomName" label="房间名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
@@ -26,7 +17,7 @@
   </el-table>
 
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
-    <el-form ref="form" :model="form" :rules="rules"  label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row>
         <el-col :span="11">
           <el-form-item label="房间名称" prop="roomName">
@@ -46,7 +37,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="备注" >
+          <el-form-item label="备注">
             <el-input v-model="form.remark" type="textarea"></el-input>
           </el-form-item>
         </el-col>
@@ -65,8 +56,11 @@
 import {
   hotelRoomApi,
 } from 'api';
-
+import Menu from '../../../components/menu.vue'
 export default {
+  components: {
+    Menu
+  },
   data() {
     return {
       form: {
@@ -77,16 +71,22 @@ export default {
         remark: ''
       },
       rules: {
-          roomName: [
-            { required: true, message: '请填写房间名称', trigger: 'blur' }
-          ],
-          RoomCode: [
-            { required: true, message: '请填写房间编号', trigger: 'blur' }
-          ],
-          roomCount: [
-            { required: true, message: '请填写房间数量', trigger: 'blur' }
-          ]
-        },
+        roomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        RoomCode: [{
+          required: true,
+          message: '请填写房间编号',
+          trigger: 'blur'
+        }],
+        roomCount: [{
+          required: true,
+          message: '请填写房间数量',
+          trigger: 'blur'
+        }]
+      },
       dialogVisible: false,
       bedsOptions: [],
       hotelroomlist: [],
@@ -105,26 +105,26 @@ export default {
     async handleSaveAndEdit() {
       const _self = this;
       _self.$refs['form'].validate(async valid => {
-          if (valid) {
-            try {
-              if (_self.form.ID) {
-                await hotelRoomApi.edit(_self.form.ID, _self.form);
-              } else {
-                await hotelRoomApi.add(_self.form);
-              }
-              _self.fetchData();
-              _self.dialogVisible = false;
-              _self.$message({
-                message: '保存成功',
-                type: 'success'
-              });
-            } catch (e) {
-              console.error(e);
+        if (valid) {
+          try {
+            if (_self.form.ID) {
+              await hotelRoomApi.edit(_self.form.ID, _self.form);
+            } else {
+              await hotelRoomApi.add(_self.form);
             }
-          } else {
-            return false;
+            _self.fetchData();
+            _self.dialogVisible = false;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
           }
-        });
+        } else {
+          return false;
+        }
+      });
 
     },
     hotelroomAdd() {
@@ -158,7 +158,7 @@ export default {
       }
     },
     async fetchData() {
-      if(!this.$route.params.ID) return;
+      if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
     }
