@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Calendar from '../../components/calendar.vue';
+import {Calendar} from 'components';
 // console.log(Calendar);
 
 export default {

@@ -1,14 +1,16 @@
 <template lang="html">
   <div class="">
   <Menu path="price"><el-button type="primary" @click="hotelroomAdd">创建</el-button></Menu >
+      <Calendar></Calendar>
   </div>
 </template>
 
 <script>
-import Menu from '../../../components/menu.vue'
+import {Menu,Calendar} from 'components'
 export default {
   components: {
-    Menu
+    Menu,
+    Calendar
   },
   created() {
     // 组件创建完后获取数据，

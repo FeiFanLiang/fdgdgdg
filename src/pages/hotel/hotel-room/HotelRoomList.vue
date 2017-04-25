@@ -10,12 +10,65 @@
     <el-table-column prop="Remark" label="备注"></el-table-column>
     <el-table-column label="操作" width="180">
       <template scope="scope">
+        <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">配置子房间</el-button>
           <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
     </el-table-column>
   </el-table>
-
+  <div class="ui-table sheet">
+              <div class="ui-table-header">
+                  <table>
+                      <tbody>
+                      <tr>
+                          <th class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox"> 房型名称
+                          </th>
+                          <th class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox"> 产品名称
+                          </th>
+                          <th class="ui-table-col-center w50">早餐</th>
+                          <th class="ui-table-col-center w80">支付方式</th>
+                          <th class="ui-table-col-center w250">退款规则</th>
+                          <th class="ui-table-col-center w250">生效规则</th>
+                          <th class="ui-table-col-center w80">状态</th>
+                          <th class="ui-table-col-center w80"> 操作
+                          </th>
+                      </tr>
+                      </tbody>
+                  </table>
+              </div>
+              <div class="ui-table-body">
+                  <table>
+                      <tbody>
+                        <tr>
+                          <td class="ui-table-col-left w150" rowspan="2">
+                              <input type="checkbox" class="checkbox" value="2536469">
+                              单人间
+                          </td>
+                          <td class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox" value="3693326">
+                              <!-- 当点击一个ruleName的时候，批量设置规则 batchEdit -->
+                                  <a href="javascript: void 0">预付无早
+                                      <i class="ui-icon" title="批量编辑同名称产品"></i>
+                                  </a>
+                          </td>
+                          <td class="ui-table-col-center w50">无早</td>
+                          <td class="ui-table-col-center w80">预付</td>
+                          <td class="ui-table-col-center w250">不可退改
+                          </td>
+                          <td class="ui-table-col-center w250"> 仅07:00:00到当日23:00:00可售 需提前7天22:00:00之前可订</td>
+                          <td class="ui-table-col-center w80">
+                              <i class="ui-icon green"></i>
+                              <!--ms-if--></td>
+                          <td class="ui-table-col-center w80">
+                              <a href="/web/hotel/modifyProduction?hotelId=1054691&amp;productId=3693326" data-auth-uri="/product/api/product/edit">编辑</a>
+                          </td>
+                      </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row>
@@ -56,7 +109,7 @@
 import {
   hotelRoomApi,
 } from 'api';
-import Menu from '../../../components/menu.vue'
+import {Menu} from 'components'
 export default {
   components: {
     Menu
@@ -97,6 +150,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    hotelSonRoomEdit(index,row){
+
+    },
     dialogClose() {
       for (let item in this.form) {
         this.form[item] = '';
