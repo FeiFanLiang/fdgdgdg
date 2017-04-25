@@ -10,7 +10,6 @@
     <el-table-column prop="Remark" label="备注"></el-table-column>
     <el-table-column label="操作" width="180">
       <template scope="scope">
-        <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">配置子房间</el-button>
           <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -70,7 +69,7 @@
               </div>
           </div>
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
         <el-col :span="11">
           <el-form-item label="房间名称" prop="roomName">
