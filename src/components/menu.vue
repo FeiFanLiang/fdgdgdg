@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     goNextPage(path) {
-      this.$router.push({
+      this.$router.replace({
         path
       });
     },
