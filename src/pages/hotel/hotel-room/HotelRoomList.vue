@@ -1,5 +1,6 @@
 <template>
 <div id="hotel-platform-info">
+
   <div class="filters">
     <div class="filter">
       <el-select clearable placeholder="请选择">
@@ -10,9 +11,8 @@
     <el-button type="primary">搜索</el-button>
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </div>
-  <!-- table start -->
-  <el-table :data="hotelroomlist" border style="width: 100%">
 
+  <el-table :data="hotelroomlist" border style="width: 100%">
     <el-table-column prop="RoomName" label="房间名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
@@ -23,11 +23,9 @@
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
     </el-table-column>
-
   </el-table>
-  <!-- table end -->
 
-  <el-dialog title="添加房间信息" v-model="dialogVisible" size="small" @close="dialogClose">
+  <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
     <el-form ref="form" :model="form" :rules="rules"  label-width="80px">
       <el-row>
         <el-col :span="11">
@@ -53,7 +51,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -125,7 +122,6 @@ export default {
               console.error(e);
             }
           } else {
-
             return false;
           }
         });
@@ -162,8 +158,8 @@ export default {
       }
     },
     async fetchData() {
-      const hotelID = this.$route.params.ID;
-      const res = await hotelRoomApi.list(hotelID);
+      if(!this.$route.params.ID) return;
+      const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
     }
   }
