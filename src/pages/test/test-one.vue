@@ -231,9 +231,9 @@
 <script>
 import Vue from 'vue';
 
-import vueEventCalendar from '../../components/vue-event-calendar';
-
-Vue.use(vueEventCalendar, { locale: 'zh' });
+// import {vueEventCalendar} from 'components';
+//
+// Vue.use(vueEventCalendar, { locale: 'zh' });
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export default {
   data() {

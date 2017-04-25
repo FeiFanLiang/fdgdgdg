@@ -1,7 +1,7 @@
 <template lang="html">
 <div id="HotelPollicyList">
   <!-- table start -->
-    <el-button type="primary"  @click="hotelpolicyAdd">添加</el-button>
+    <el-button type="primary"  @click="hotelpolicyAdd" style="margin-bottom:10px">添加</el-button>
   <el-table
     :data="hotelpolicy"
     border
@@ -12,21 +12,21 @@
     <el-table-column prop="LinkMan" label="酒店联系人"></el-table-column>
     <el-table-column prop="PhoneNum" label="酒店联系电话"></el-table-column>
 
-    <el-table-column prop="BankName" label="酒店开户行"></el-table-column>
+    <!--<el-table-column prop="BankName" label="酒店开户行"></el-table-column>
     <el-table-column prop="AccountName" label="酒店账户"></el-table-column>
     <el-table-column prop="AccountNum" label="酒店账号"></el-table-column>
     <el-table-column prop="FinanceLinkMan" label="酒店财务负责人"></el-table-column>
-    <el-table-column prop="FinancePhoneNum" label="酒店财务电话"></el-table-column>
+    <el-table-column prop="FinancePhoneNum" label="酒店财务电话"></el-table-column>-->
     <el-table-column prop="PayCompany.AccountName" label="支付账户"></el-table-column>
 
     <el-table-column prop="SecretType.SecretName" label="保密类型"></el-table-column>
     <el-table-column prop="ReserveMode.ModeName" label="酒店预订方式"></el-table-column>
-    <el-table-column prop="IsDefault" label="默认政策"></el-table-column>
+    <!--<el-table-column prop="IsDefault" label="默认政策"></el-table-column>-->
 
-    <el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
-    <el-table-column prop="Remark1" label="备注"></el-table-column>
+    <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
+    <el-table-column prop="Remark1" label="备注"></el-table-column>-->
 
-    <el-table-column   label="操作" width="180">
+    <el-table-column   label="操作">
         <template scope="scope">
           <el-button type="primary" size="mini" @click="hotelpolicyEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">删除</el-button>
@@ -36,58 +36,51 @@
   <!-- table end -->
 
   <!-- create dialog start -->
-  <el-dialog title="添加酒店政策信息" v-model="createDialog" size="large">
+  <el-dialog title="添加酒店政策信息" v-model="createDialog" size="small">
     <el-form ref="createForm" :model="createForm" label-width="80px">
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="ID">
               <el-input v-model="createForm.ID" class="el-col-24" :disabled="true"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="政策负责人">
               <el-input v-model="createForm.PersonName"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
-          <div class="grid-content bg-purple">
-            <el-form-item label="政策采购人">
-              <el-input v-model="createForm.PurchasingName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
       </el-row>
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店联系人">
               <el-input v-model="createForm.LinkMan"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店联系电话">
               <el-input v-model="createForm.PhoneNum"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <!--<el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店开户行">
               <el-input v-model="createForm.BankName"></el-input>
             </el-form-item>
           </div>
-        </el-col>
+        </el-col>-->
       </el-row>
 
-      <el-row :gutter="20">
+      <!--<el-row :gutter="20">
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店账户">
@@ -109,18 +102,25 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
 
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <!--<el-col :span="6">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店财务电话">
               <el-input v-model="createForm.FinancePhoneNum"></el-input>
             </el-form-item>
           </div>
+        </el-col>-->
+        <el-col :span="10">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策采购人">
+              <el-input v-model="createForm.PurchasingName"></el-input>
+            </el-form-item>
+          </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="支付账户">
               <el-select v-model="createForm.PayCompany" clearable placeholder="请选择支付账户">
@@ -129,7 +129,10 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+      </el-row>
+
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="保密类型">
               <el-select v-model="createForm.SecretType" clearable placeholder="请选择保密类型">
@@ -138,10 +141,7 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
-
-      <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店预订方式">
               <el-select v-model="createForm.ReserveMode" clearable placeholder="请选择预订方式">
@@ -150,20 +150,16 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <!--<el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="默认政策">
               <el-input v-model="createForm.IsDefault"></el-input>
             </el-form-item>
           </div>
-        </el-col>
-        <el-col :span="7">
-          <div class="grid-content bg-purple">
-          </div>
-        </el-col>
+        </el-col>-->
       </el-row>
 
-      <el-row :gutter="20">
+      <!--<el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
             <el-form-item label="财务备注">
@@ -181,7 +177,7 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
 
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -192,58 +188,51 @@
   <!-- create dialog end -->
 
   <!-- edit dialog start -->
-  <el-dialog title="编辑酒店政策信息" v-model="editDialog" size="large">
+  <el-dialog title="编辑酒店政策信息" v-model="editDialog" size="small">
     <el-form ref="editForm" :model="editForm" label-width="80px">
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="ID">
               <el-input v-model="editForm.ID" class="el-col-24" :disabled="true"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="政策负责人">
               <el-input v-model="editForm.PersonName"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
-          <div class="grid-content bg-purple">
-            <el-form-item label="政策采购人">
-              <el-input v-model="editForm.PurchasingName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
       </el-row>
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店联系人">
               <el-input v-model="editForm.LinkMan"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店联系电话">
               <el-input v-model="editForm.PhoneNum"></el-input>
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <!--<el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店开户行">
               <el-input v-model="editForm.BankName"></el-input>
             </el-form-item>
           </div>
-        </el-col>
+        </el-col>-->
       </el-row>
 
-      <el-row :gutter="20">
+      <!--<el-row :gutter="20">
         <el-col :span="6">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店账户">
@@ -265,18 +254,25 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
 
 
-      <el-row :gutter="20">
-        <el-col :span="6">
+      <el-row :gutter="24">
+        <!--<el-col :span="6">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店财务电话">
               <el-input v-model="editForm.FinancePhoneNum"></el-input>
             </el-form-item>
           </div>
+        </el-col>-->
+        <el-col :span="10">
+          <div class="grid-content bg-purple">
+            <el-form-item label="政策采购人">
+              <el-input v-model="editForm.PurchasingName"></el-input>
+            </el-form-item>
+          </div>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="支付账户">
               <el-select v-model="editForm.PayCompany" clearable placeholder="请选择支付账户">
@@ -285,7 +281,11 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        
+      </el-row>
+
+      <el-row :gutter="24">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="保密类型">
               <el-select v-model="editForm.SecretType" clearable placeholder="请选择保密类型">
@@ -294,10 +294,7 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
-
-      <el-row :gutter="20">
-        <el-col :span="6">
+        <el-col :span="10">
           <div class="grid-content bg-purple">
             <el-form-item label="酒店预订方式">
               <el-select v-model="editForm.ReserveMode" clearable placeholder="请选择预订方式">
@@ -306,20 +303,16 @@
             </el-form-item>
           </div>
         </el-col>
-        <el-col :span="7">
+        <!--<el-col :span="7">
           <div class="grid-content bg-purple">
             <el-form-item label="默认政策">
               <el-input v-model="editForm.IsDefault"></el-input>
             </el-form-item>
           </div>
-        </el-col>
-        <el-col :span="7">
-          <div class="grid-content bg-purple">
-          </div>
-        </el-col>
+        </el-col>-->
       </el-row>
 
-      <el-row :gutter="20">
+      <!--<el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
             <el-form-item label="财务备注">
@@ -327,9 +320,9 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
 
-      <el-row :gutter="20">
+      <!--<el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
             <el-form-item label="备注">
@@ -337,7 +330,7 @@
             </el-form-item>
           </div>
         </el-col>
-      </el-row>
+      </el-row>-->
 
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -489,9 +482,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await hotelPolicyApi.remove({
-          ID: row.ID
-        });
+        await hotelPolicyApi.remove(row.ID);
         _self.fetchData();
         _self.$message({
           message: '删除成功',

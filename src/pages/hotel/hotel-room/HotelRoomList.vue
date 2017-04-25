@@ -1,62 +1,100 @@
 <template>
 <div id="hotel-platform-info">
-  <div class="filters">
-    <div class="filter">
-      <el-select clearable placeholder="请选择">
-        <el-option></el-option>
-      </el-select>
-      <el-input></el-input>
-    </div>
-    <el-button type="primary" >搜索</el-button>
+  <Menu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
-  </div>
-  <!-- table start -->
+  </Menu>
   <el-table :data="hotelroomlist" border style="width: 100%">
-
-    <el-table-column prop="ID" label="ID" width="60"></el-table-column>
-    <el-table-column prop="HotelID" label="酒店ID"></el-table-column>
     <el-table-column prop="RoomName" label="房间名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
-    <el-table-column prop="Beds" label="床型"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
     <el-table-column label="操作" width="180">
       <template scope="scope">
+        <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">配置子房间</el-button>
           <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
     </el-table-column>
-
   </el-table>
-  <!-- table end -->
-
-  <el-dialog title="添加房间信息" v-model="dialogVisible" size="small" @close="dialogClose">
-    <el-form ref="form" :model="form" label-width="80px">
+  <div class="ui-table sheet">
+              <div class="ui-table-header">
+                  <table>
+                      <tbody>
+                      <tr>
+                          <th class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox"> 房型名称
+                          </th>
+                          <th class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox"> 产品名称
+                          </th>
+                          <th class="ui-table-col-center w50">早餐</th>
+                          <th class="ui-table-col-center w80">支付方式</th>
+                          <th class="ui-table-col-center w250">退款规则</th>
+                          <th class="ui-table-col-center w250">生效规则</th>
+                          <th class="ui-table-col-center w80">状态</th>
+                          <th class="ui-table-col-center w80"> 操作
+                          </th>
+                      </tr>
+                      </tbody>
+                  </table>
+              </div>
+              <div class="ui-table-body">
+                  <table>
+                      <tbody>
+                        <tr>
+                          <td class="ui-table-col-left w150" rowspan="2">
+                              <input type="checkbox" class="checkbox" value="2536469">
+                              单人间
+                          </td>
+                          <td class="ui-table-col-left w150">
+                              <input type="checkbox" class="checkbox" value="3693326">
+                              <!-- 当点击一个ruleName的时候，批量设置规则 batchEdit -->
+                                  <a href="javascript: void 0">预付无早
+                                      <i class="ui-icon" title="批量编辑同名称产品"></i>
+                                  </a>
+                          </td>
+                          <td class="ui-table-col-center w50">无早</td>
+                          <td class="ui-table-col-center w80">预付</td>
+                          <td class="ui-table-col-center w250">不可退改
+                          </td>
+                          <td class="ui-table-col-center w250"> 仅07:00:00到当日23:00:00可售 需提前7天22:00:00之前可订</td>
+                          <td class="ui-table-col-center w80">
+                              <i class="ui-icon green"></i>
+                              <!--ms-if--></td>
+                          <td class="ui-table-col-center w80">
+                              <a href="/web/hotel/modifyProduction?hotelId=1054691&amp;productId=3693326" data-auth-uri="/product/api/product/edit">编辑</a>
+                          </td>
+                      </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+  <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
+    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="房间名称">
-            <el-input v-model="form.RoomName"></el-input>
+          <el-form-item label="房间名称" prop="roomName">
+            <el-input v-model="form.roomName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="房间编号">
+          <el-form-item label="房间编号" prop="RoomCode">
             <el-input v-model="form.RoomCode"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="11" >
-          <el-form-item label="数量">
-            <el-input v-model="form.RoomCount"></el-input>
+        <el-col :span="11">
+          <el-form-item label="数量" prop="roomCount">
+            <el-input v-model="form.roomCount"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="备注">
-            <el-input v-model="form.Remark" type="textarea"></el-input>
+            <el-input v-model="form.remark" type="textarea"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -71,49 +109,79 @@
 import {
   hotelRoomApi,
 } from 'api';
-
+import {Menu} from 'components'
 export default {
+  components: {
+    Menu
+  },
   data() {
     return {
-      form:{
-        "HotelID": 3,
-          "RoomName": "string",
-          "RoomCode": "string",
-          "RoomCount": 0,
-          "Remark": "string"
+      form: {
+        hotelId: '',
+        roomName: '',
+        RoomCode: '',
+        roomCount: '',
+        remark: ''
       },
-      dialogVisible :false,
+      rules: {
+        roomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        RoomCode: [{
+          required: true,
+          message: '请填写房间编号',
+          trigger: 'blur'
+        }],
+        roomCount: [{
+          required: true,
+          message: '请填写房间数量',
+          trigger: 'blur'
+        }]
+      },
+      dialogVisible: false,
       bedsOptions: [],
       hotelroomlist: [],
     };
   },
   mounted() {
-    this.form.HotelID = this.$route.params.ID
+    this.form.hotelId = this.$route.params.ID
     this.fetchData();
   },
   methods: {
-    dialogClose(){
-      for(let item in this.form){
-        this.form[item]='';
+    hotelSonRoomEdit(index,row){
+
+    },
+    dialogClose() {
+      for (let item in this.form) {
+        this.form[item] = '';
       }
     },
     async handleSaveAndEdit() {
       const _self = this;
-      try {
-        if(_self.form.ID){
-          await hotelRoomApi.edit(_self.form.ID, _self.form);
-        }else{
-             await hotelRoomApi.add(_self.form);
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            if (_self.form.ID) {
+              await hotelRoomApi.edit(_self.form.ID, _self.form);
+            } else {
+              await hotelRoomApi.add(_self.form);
+            }
+            _self.fetchData();
+            _self.dialogVisible = false;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
         }
-        _self.fetchData();
-        _self.dialogVisible = false;
-        _self.$message({
-          message: '保存成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
+      });
+
     },
     hotelroomAdd() {
       this.dialogVisible = true;
@@ -121,10 +189,10 @@ export default {
     hotelroomEdit($index, row) {
       const _self = this;
       _self.form.ID = row.ID;
-      _self.form.HotelID = row.HotelID;
-      _self.form.RoomName = row.RoomName;
-      _self.form.RoomCount = row.RoomCount;
-      _self.form.Remark = row.Remark;
+      _self.form.hotelId = row.HotelID;
+      _self.form.roomName = row.RoomName;
+      _self.form.roomCount = row.RoomCount;
+      _self.form.remark = row.Remark;
       _self.dialogVisible = true;
     },
     async hotelroomDelete($index, row) {
@@ -146,8 +214,8 @@ export default {
       }
     },
     async fetchData() {
-      const hotelID = this.$route.params.ID;
-      const res = await hotelRoomApi.list(hotelID);
+      if (!this.$route.params.ID) return;
+      const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
     }
   }
