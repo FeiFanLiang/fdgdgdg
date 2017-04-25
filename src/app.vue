@@ -1,9 +1,13 @@
 <template>
   <section class="db">
     <template v-if="!$route.meta.alone">
-<!-- <template > -->
-      <header class="db-header">
-        <router-link class="logo" :to="{path: '/list/filters'}">美票</router-link>
+      <header class="db-header-left">
+        <router-link class="logo" :to="{path: '/'}">美票</router-link>
+      </header>
+      <header class="db-header-right">
+        <div class="db-title">
+          {{hotelName}}
+        </div>
         <div class="user-info" v-if="user.id">
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
@@ -18,11 +22,7 @@
           </el-dropdown>
         </div>
       </header>
-
-      <!-- body start  -->
       <div class="db-body">
-
-        <!-- menu start -->
         <aside class="db-menu-wrapper">
           <el-menu :default-active="activeMenu" class="db-menu-bar" router>
             <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children">
@@ -39,17 +39,12 @@
             </template>
           </el-menu>
         </aside>
-        <!-- menu end -->
-
-        <!-- content start -->
         <div class="db-content-wrapper">
           <section class="db-content">
             <router-view></router-view>
           </section>
         </div>
-        <!-- content end -->
       </div>
-      <!-- body end  -->
     </template>
     <template v-else>
       <router-view></router-view>
@@ -62,6 +57,7 @@ import { accountApi } from 'api';
 export default {
   data() {
     return {
+      hotelName:'',
       user: {
         id: '',
         username: '',
@@ -69,6 +65,9 @@ export default {
       },
       activeMenu: ''
     };
+  },
+  mounted() {
+    this.hotelName=this.$route.query.hotelName;
   },
   created() {
     this.activeMenu = this.$route.name;
@@ -110,10 +109,10 @@ export default {
     margin-top: 20px;
   }
   // header
-  .db-header {
-    width: 100%;
+  .db-header-left {
+    width: 200px;
     height: 60px;
-    background: #20A0FF;
+    background: #58B7FF;
     padding: 13px 20px;
     box-sizing: border-box;
     color: #ffffff;
@@ -121,14 +120,32 @@ export default {
     position: fixed;
     left: 0;
     top: 0;
-
     .logo{
       font-size: 2.4rem;
     }
 
+  }
+  .db-header-right {
+    width: calc(100% - 200px);
+    height: 60px;
+    background: #58B7FF;
+    padding: 0 20px;
+    box-sizing: border-box;
+    color: #ffffff;
+    z-index: 99;
+    position: fixed;
+    left: 200px;
+    top: 0;
+
+    .db-title{
+      float: left;
+      height: 60px;
+    line-height: 60px;
+    }
     .user-info {
       float: right;
-
+      height: 60px;
+          line-height: 60px;
       img {
         width: 25px;
         height: 25px;

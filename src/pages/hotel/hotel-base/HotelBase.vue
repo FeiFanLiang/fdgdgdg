@@ -66,6 +66,7 @@
           :page-size="pageSize"
           :total="count">
         </el-pagination>
+
       </div>
     <!-- pagination end  -->
 
@@ -119,24 +120,11 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
-        /*{ID:'1',HotelName:'HHH',HotelName_En:'3242'}*/
-        query: [
-          {
-            ID: _self.filters.labelVal === '1'
-              ? parseInt(_self.filters.ID, 10)
-              : null
-          },
-          {
-            HotelName: _self.filters.labelVal === '2'
-              ? _self.filters.HotelName
-              : null
-          },
-          {
-            HotelName_En: _self.filters.labelVal === '3'
-              ? _self.filters.HotelName_En
-              : null
-          }
-        ]
+        query :{
+                ID:_self.filters.labelVal === '1' ? _self.filters.ID : '',
+                HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+                HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+               }
       };
       const res = await hotelBaseApi.listAll(options);
       _self.hotelbase = res.data.Data;
@@ -155,7 +143,8 @@ export default {
         name: 'HotelBaseEditBase',
         params: {
           ID: row.ID
-        }
+        },
+        query:{hotelName:row.HotelName}
       });
     },
     async hotelbaseDelete($index, row) {

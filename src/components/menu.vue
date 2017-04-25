@@ -1,5 +1,6 @@
 <template lang="html">
   <div class="">
+      <!-- <db-breadcrumb></db-breadcrumb> -->
     <el-menu :default-active="activeMenu"  mode="horizontal" >
       <el-menu-item v-for="(item,index) in routers" :index="index+''" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
         <div style="margin-top: 12px;">
