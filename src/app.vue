@@ -66,8 +66,16 @@ export default {
       activeMenu: ''
     };
   },
-  mounted() {
-    this.hotelName=this.$route.query.hotelName;
+  beforeRouteUpdate (to,from,next){
+    console.log(1)
+
+    next(vm => {
+      console.log(to)
+      console.log(from)
+      console.log(next)
+      vm.hotelName=vm.$route.query.hotelName;
+ })
+
   },
   created() {
     this.activeMenu = this.$route.name;
