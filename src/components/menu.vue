@@ -50,7 +50,8 @@ export default {
   methods: {
     goNextPage(path) {
       this.$router.replace({
-        path
+        path,
+        query:{hotelName:this.$route.query.hotelName}
       });
     },
   }

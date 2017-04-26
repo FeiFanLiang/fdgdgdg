@@ -147,6 +147,7 @@ export default {
             float: left;
             height: 60px;
             line-height: 60px;
+            font-size: 18px;
         }
         .user-info {
             float: right;

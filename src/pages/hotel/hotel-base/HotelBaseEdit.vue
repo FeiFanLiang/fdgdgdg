@@ -1,12 +1,7 @@
 <template lang="html">
 <div id="hotelbaseEdit">
-  <!-- <el-card class="box-card">
-{{hotelName}}
-</el-card> -->
-
-  <el-menu mode="horizontal" >
-    <el-menu-item index="item" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
-  </el-menu>
+  <Menu path="">
+  </Menu>
   <div class="line"></div>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
@@ -130,8 +125,13 @@
 
 <script>
 import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
-
+import {
+    Menu
+} from 'components'
 export default {
+  components: {
+      Menu
+  },
   data() {
     return {
       hotelName:'',
@@ -143,12 +143,6 @@ export default {
       areaOptions: [],
       starOptions: [],
       payModeOptions: [],
-      routers: [
-        { path: 'policy', text: '政策信息' },
-        { path: 'room', text: '房型信息' },
-        { path: 'price', text: '价格信息' },
-        { path: 'platform', text: '平台映射' }
-      ]
     };
   },
   mounted() {
@@ -160,9 +154,6 @@ export default {
     // this.getAreaOptions();
   },
   methods: {
-    goNextPage(path) {
-      this.$router.push({ path });
-    },
     async getAreaOptions(query) {
       const res = await hotelAreaApi.listByQuery(query);
       //this.areaOptions = res.data;
