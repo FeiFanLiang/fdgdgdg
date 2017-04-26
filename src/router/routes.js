@@ -46,12 +46,6 @@ let routes = [
         name: '酒店',
         iconClass: 'el-icon-setting',
         children: [
-          // {
-          //   path: 'HotelPlatform',
-          //   component: Pages.HotelPlatform,
-          //   name: '酒店平台',
-          //   imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          // },
           {
             path: 'HotelBase',
             component: Pages.HotelBase,

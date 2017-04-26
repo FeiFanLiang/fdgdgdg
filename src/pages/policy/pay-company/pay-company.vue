@@ -32,17 +32,6 @@
            </template>
         </el-table-column>
       </el-table>
-      <div class="pagination-wrapper" v-show="!loading&&list.length">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[1, 5, 10]"
-          :page-size="100"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-      </el-pagination>
-    </div>
       <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
         <el-form :rules="rules" ref="form" :model="form" >
           <el-form-item label="账户名称" prop="accountName">
@@ -73,8 +62,6 @@ export default {
     data() {
         return {
             list: [],
-            total: 0,
-            currentPage: 1,
             loading: true,
             showDialog: false,
             dialogTitle: '',
@@ -116,10 +103,6 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
-            console.log(`当前页: ${val}`);
-        },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
         },
         handleSortChange(sortWay) {
             this.filters.sortWay = {
@@ -131,23 +114,8 @@ export default {
         handleSearch() {
             this.fetchData();
         },
-        async fetchData(currentPage, pageSize) {
+        async fetchData() {
             const _self = this;
-
-            // const sortWay = _self.filters.sortWay && _self.filters.sortWay.prop ? _self.filters.sortWay : '';
-            // _self.currentPage = currentPage || _self.currentPage;
-            // _self.currentPage = pageSize || _self.pageSize;
-            //
-            // const options = {
-            //     currentPage: _self.currentPage,
-            //     pageSize: _self.pageSize,
-            //     accountName: _self.filters.labelVal === '1' ?
-            //         _self.filters.accountName : null,
-            //     sortWay: sortWay,
-            //     accountNum: _self.filters.labelVal === '2' ?
-            //         _self.filters.accountNum : null
-            // };
-
             _self.loading = true;
             _self.list = [];
             try {
@@ -159,8 +127,6 @@ export default {
                     _self.list[index].accountNum = elem.AccountNum;
                     _self.list[index].remark = elem.Remark;
                 }
-                console.log(_self.list);
-                _self.total = _self.list.length;
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -288,10 +254,6 @@ export default {
             width: 150px;
             display: inline-block;
         }
-    }
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
     }
 }
 </style>

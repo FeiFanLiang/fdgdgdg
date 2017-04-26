@@ -156,10 +156,8 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
-            console.log(`当前页: ${val}`);
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
         },
         async fetchData() {
             const _self = this;
@@ -182,7 +180,6 @@ export default {
             }
             _self.total = _self.list.length;
             _self.loading = false;
-            console.log(_self.list);
         },
         async getHotelThreePlatInfoList() {
             const _self = this;

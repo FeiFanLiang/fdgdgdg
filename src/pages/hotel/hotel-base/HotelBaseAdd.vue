@@ -148,7 +148,6 @@ export default {
     async getAreaOptions(query) {
       try {
         const res = await hotelAreaApi.listByQuery(query);
-        console.log(res);
 
         // 这个接口返回的数据量过大,会造成页面卡顿和假死
 
