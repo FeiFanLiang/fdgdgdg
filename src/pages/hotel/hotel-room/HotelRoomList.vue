@@ -3,8 +3,9 @@
   <Menu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </Menu>
-  <!-- <el-table :data="hotelroomlist" border style="width: 100%">
-    <el-table-column prop="RoomName" label="房间名称"></el-table-column>
+  <el-table :data="hotelroomlist" border style="width: 100%">
+    <el-table-column prop="RoomName" label="房型名称"></el-table-column>
+    <el-table-column prop="RoomName" label="产品名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
@@ -14,8 +15,8 @@
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
     </el-table-column>
-  </el-table> -->
-  <Uitable></Uitable>
+  </el-table>
+  <!-- <Uitable></Uitable> -->
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
