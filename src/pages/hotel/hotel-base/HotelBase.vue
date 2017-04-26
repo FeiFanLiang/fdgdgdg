@@ -26,7 +26,7 @@
     <div class="eltable">
       <el-table
       :data="hotelbase"
-      border stripe
+      border
       :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
         <!-- <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column> -->
@@ -182,10 +182,7 @@ export default {
 #HotelBasePage {
 
     .filters {
-        margin: 20px 0 0;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
+      
 
         .filter {
             display: inline-block;

@@ -1,5 +1,6 @@
 // global styles
-html{
+
+html {
   height: 100%;
   margin: 0;
   font-size: 62.5%;
@@ -18,12 +19,21 @@ a {
   text-decoration: none;
   color: inherit;
 }
-
 // override element style
 // hack
+
 .el-loading-mask {
   z-index: 1000;
 }
-.line{    height: 1px;
-    background-color: #e0e6ed;
-    margin: 25px -24px;}
+
+.line {
+  height: 1px;
+  background-color: #e0e6ed;
+  margin: 25px -24px;
+}
+
+.line-top {
+  height: 1px;
+  background-color: #e0e6ed;
+  margin: 25px -24px 0 0;
+}

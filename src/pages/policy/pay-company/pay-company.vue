@@ -1,12 +1,7 @@
 <template lang="html">
   <div id="PayCompany">
 
-    <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
-    <!-- breadcrumb end  -->
-
-    <div class="db-content-inner">
-      <!-- filters start -->
       <div class="filters">
         <div class="filter">
           <el-select v-model="filters.labelVal" clearable placeholder="请选择">
@@ -22,12 +17,9 @@
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </div>
-      <!-- filters end -->
-
-      <!-- table start  -->
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-        stripe
         v-loading="loading"
+        border
         @sort-change="handleSortChange">
         <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="accountName" label="账户名称" show-overflow-tooltip></el-table-column>
@@ -40,9 +32,6 @@
            </template>
         </el-table-column>
       </el-table>
-      <!-- table end  -->
-
-      <!-- pagination start  -->
       <div class="pagination-wrapper" v-show="!loading&&list.length">
         <el-pagination
           @size-change="handleSizeChange"
@@ -54,9 +43,6 @@
           :total="total">
       </el-pagination>
     </div>
-      <!-- pagination end  -->
-
-      <!-- dialog start -->
       <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
         <el-form :rules="rules" ref="form" :model="form" >
           <el-form-item label="账户名称" prop="accountName">
@@ -74,9 +60,6 @@
           <el-button type="primary" @click="submitForm('form')">确 定</el-button>
         </span>
       </el-dialog>
-
-      <!-- dialog end -->
-    </div>
   </div>
 </template>
 
@@ -290,10 +273,6 @@ export default {
 <style lang="scss">
 #PayCompany {
     .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
 
         .filter {
             display: inline-block;

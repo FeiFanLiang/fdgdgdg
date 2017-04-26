@@ -35,7 +35,6 @@
       <el-table
         :data="imagesInfo"
         border
-        stripe
         style="width: 100%">
         <el-table-column prop="hotelName" label="酒店名称"></el-table-column>
         <el-table-column   label="截图信息">

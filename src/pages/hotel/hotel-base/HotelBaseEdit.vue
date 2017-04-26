@@ -2,7 +2,6 @@
 <div id="hotelbaseEdit">
   <Menu path="">
   </Menu>
-  <div class="line"></div>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 

@@ -121,12 +121,6 @@ let routes = [
             name: '支付方式',
             component: Pages.HotelPayMode,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'PolicyImages',
-            name: '政策图片',
-            component: Pages.PolicyImages,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]
       },

@@ -31,8 +31,8 @@
 
       <!-- table start  -->
       <el-table :data="list" border ref="table" style="width: 100%" element-loading-text="拼命加载中"
-        stripe
         v-loading="loading"
+        border
         @sort-change="handleSortChange">
         <el-table-column type="selection" width="50"></el-table-column>
         <el-table-column prop="OrderNum" label="订单编号" width="200"></el-table-column>
