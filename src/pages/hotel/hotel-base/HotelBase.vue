@@ -33,7 +33,7 @@
         <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称" show-overflow-tooltip></el-table-column>
           <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
         <!-- <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>  -->
         <!-- <el-table-column prop="FaxNum" label="传真号"></el-table-column> -->
