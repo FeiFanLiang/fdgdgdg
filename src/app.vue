@@ -69,15 +69,17 @@ export default {
     };
   },
   created() {
-    this.activeMenu = this.$route.name;
-    this.hotelName = this.$route.query.hotelName;
-    this.user = JSON.parse(localStorage.getItem('user'));
+    const _self = this;
+    _self.activeMenu = _self.$route.name;
+    _self.hotelName = _self.$route.query.hotelName;
+    _self.user = JSON.parse(localStorage.getItem('user'));
   },
   watch: {
     $route(to, from) {
-      this.activeMenu = this.$route.name;
-      this.hotelName = this.$route.query.hotelName;
-      this.user = JSON.parse(localStorage.getItem('user'));
+      const _self = this;
+      _self.activeMenu = _self.$route.name;
+      _self.hotelName = _self.$route.query.hotelName;
+      _self.user = JSON.parse(localStorage.getItem('user'));
     }
   },
   methods: {
@@ -113,7 +115,7 @@ export default {
     .db-header-left {
         width: 200px;
         height: 60px;
-        background: #1F2D3D;
+        background: #324057;
         padding: 13px 20px;
         box-sizing: border-box;
         color: #ffffff;
@@ -121,6 +123,8 @@ export default {
         position: fixed;
         left: 0;
         top: 0;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.35);
+        border-right: 1px solid #eee;
         .logo {
             font-size: 2.4rem;
         }
@@ -169,6 +173,8 @@ export default {
             height: 100%;
             overflow: auto;
             z-index: 98;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.35);
+            border-right: 1px solid #eee;
             .db-menu-bar {
                 height: 100%;
                 flex-grow: 0;
