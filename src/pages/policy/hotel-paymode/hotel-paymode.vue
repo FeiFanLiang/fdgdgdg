@@ -1,80 +1,48 @@
 <template lang="html">
   <div id="HotelPayMode">
-
-    <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
-    <!-- breadcrumb end  -->
-
-    <div class="db-content-inner">
-
-      <!-- filters start -->
-      <div class="filters">
-        <div class="filter">
-          <el-select v-model="filters.labelVal" clearable placeholder="请选择">
-            <el-option
-                v-for="item in selectedOptions"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入Remark" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
-        </div>
-        <el-button type="primary" @click="handleSearch()">搜索</el-button>
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+    <div class="filters">
+      <div class="filter">
+        <el-select v-model="filters.labelVal" clearable placeholder="请选择">
+          <el-option
+              v-for="item in selectedOptions"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入Remark" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
       </div>
-      <!-- filters end -->
-
-      <!-- table start  -->
-      <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-        stripe
-        v-loading="loading"
-        @sort-change="handleSortChange">
-        <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="modeName" label="账户名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-        <el-table-column  width="150"  label="操作">
-          <template scope="scope">
-            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!-- table end  -->
-
-      <!-- pagination start  -->
-      <div class="pagination-wrapper" v-show="!loading&&list.length">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[1, 5, 10]"
-          :page-size="100"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-      </el-pagination>
+      <el-button type="primary" @click="handleSearch()">搜索</el-button>
+      <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </div>
-      <!-- pagination end  -->
 
-      <!-- dialog start -->
-      <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
-        <el-form :rules="rules" ref="form" :model="form">
-          <el-form-item label="账户名称" prop="modeName">
-            <el-input placeholder="请输入账户名称" v-model="form.modeName"></el-input>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input v-model="form.remark"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="closeDialog('form')">取 消</el-button>
-          <el-button type="primary" @click="submitForm('form')">确 定</el-button>
-        </span>
-      </el-dialog>
-
-      <!-- dialog end -->
-
-    </div>
+    <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+      v-loading="loading" border @sort-change="handleSortChange">
+      <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="modeName" label="账户名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+      <el-table-column  width="150"  label="操作">
+        <template scope="scope">
+          <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
+      <el-form :rules="rules" ref="form" :model="form">
+        <el-form-item label="账户名称" prop="modeName">
+          <el-input placeholder="请输入账户名称" v-model="form.modeName"></el-input>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.remark"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeDialog('form')">取 消</el-button>
+        <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,13 +51,10 @@ import {
     hotelPayModeApi
 } from 'api';
 
-
 export default {
     data() {
         return {
             list: [],
-            total: 0,
-            currentPage: 1,
             loading: true,
             showDialog: false,
             dialogTitle: '',
@@ -124,13 +89,6 @@ export default {
     },
 
     methods: {
-        handleCurrentChange(val) {
-            this.currentPage = val;
-            console.log(`当前页: ${val}`);
-        },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
         handleSortChange(sortWay) {
             this.filters.sortWay = {
                 prop: sortWay.prop,
@@ -141,20 +99,8 @@ export default {
         handleSearch() {
             this.fetchData();
         },
-        async fetchData(page) {
+        async fetchData() {
             const _self = this;
-
-            // const sortWay = _self.filters.sortWay && _self.filters.sortWay.prop ? _self.filters.sortWay : '';
-            // _self.page = page || _self.page;
-            //
-            // const options = {
-            //     page: _self.page,
-            //     modeName: _self.filters.labelVal === '1' ?
-            //         _self.filters.modeName : null,
-            //     sortWay: sortWay,
-            //     remark: _self.filters.labelVal === '2' ? _self.filters.remark : null
-            // };
-
             _self.loading = true;
             _self.list = [];
             try {
@@ -165,8 +111,6 @@ export default {
                     _self.list[index].modeName = elem.ModeName;
                     _self.list[index].remark = elem.Remark;
                 }
-                console.log(_self.list);
-                _self.total = _self.list.length;
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -277,10 +221,6 @@ export default {
 <style lang="scss">
 #HotelPayMode {
     .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
 
         .filter {
             display: inline-block;
@@ -298,10 +238,6 @@ export default {
         }
     }
 
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
-    }
     .el-table .cell {
         white-space: nowrap;
         word-break: break-all;

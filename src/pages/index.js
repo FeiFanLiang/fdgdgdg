@@ -16,7 +16,6 @@ import HotelRoomList from './hotel/hotel-room/HotelRoomList';
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
-import PolicyImages from './policy/policy-images/policy-images';
 // order
 import Order from './order/order';
 
@@ -26,9 +25,6 @@ import ImagesInfoAdd from './images/imagesInfoAdd';
 import ImagesInfoEdit from './images/imagesInfoEdit';
 import ImagesInfoList from './images/imagesInfoList';
 
-// test
-import Test from './test/test';
-import TestOne from './test/test-one';
 export default {
   Abstract,
   NotFound,
@@ -41,7 +37,6 @@ export default {
   HotelBaseAdd,
   HotelBaseEdit,
   HotelPlatformInfo,
-  PolicyImages,
   Order,
   HotelPolicyList,
   HotelPrice,
@@ -49,7 +44,5 @@ export default {
   ImagesInfo,
   ImagesInfoAdd,
   ImagesInfoEdit,
-  ImagesInfoList,
-  Test,
-  TestOne
+  ImagesInfoList
 };

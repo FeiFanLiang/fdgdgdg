@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
         <template scope="scope">
-          <i class="el-icon-circle-check" v-if="scope.row.isValid"></i>
+          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
           <i class="el-icon-circle-close" v-else></i>
         </template>
       </el-table-column>
@@ -38,7 +38,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[1, 5, 10]"
+        :page-sizes="[10, 20, 30]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
@@ -53,7 +53,7 @@
           <el-form-item label="ID" v-if="dialogTag === 2">
             <el-input v-model="form.id" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="酒店ID">
+          <el-form-item label="酒店ID" v-if="dialogTag === 2">
             <el-input v-model="form.hotelId" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="平台访问路径">
@@ -156,10 +156,8 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
-            console.log(`当前页: ${val}`);
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
         },
         async fetchData() {
             const _self = this;
@@ -182,7 +180,6 @@ export default {
             }
             _self.total = _self.list.length;
             _self.loading = false;
-            console.log(_self.list);
         },
         async getHotelThreePlatInfoList() {
             const _self = this;

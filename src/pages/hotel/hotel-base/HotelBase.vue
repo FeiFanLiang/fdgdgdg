@@ -1,11 +1,7 @@
 <template lang="html">
   <div id="HotelBasePage">
-
-    <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
-    <!-- breadcrumb end  -->
 
-    <!-- search start -->
     <div class="filters">
         <div class="filter">
           <el-select v-model="filters.labelVal"  placeholder="请选择">
@@ -20,33 +16,29 @@
           <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
       </div>
         <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
-        <el-button type="primary">
-          <router-link :to="{path: 'HotelBaseAdd'}">创建</router-link>
+        <el-button type="primary" @click="dialogTableVisible=true">
+            创建
         </el-button>
     </div>
-    <!-- search end -->
 
-    <!-- table start -->
     <div class="eltable">
       <el-table
       :data="hotelbase"
-      border stripe
+      border
       :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
-        <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column>
+          <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-
-        <!--<el-table-column prop="ID" label="酒店ID" sortable></el-table-column> 
-        <el-table-column prop="FaxNum" label="传真号"></el-table-column>
-        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column> 
+        <!-- <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>  -->
+        <!-- <el-table-column prop="FaxNum" label="传真号"></el-table-column> -->
         <el-table-column prop="Star.StarName" label="星级"></el-table-column>
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
-        <el-table-column prop="PayMode" label="结款"></el-table-column> -->
-        
+        <el-table-column prop="Policys.PayMode.ModeName" label="结款"></el-table-column>
         <el-table-column   label="操作" width="150">
           <template scope="scope">
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
@@ -55,9 +47,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <!-- table end -->
-
-    <!-- pagination start  -->
       <div class="pagination-wrapper" style="align=center">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -68,19 +57,23 @@
           :page-size="pageSize"
           :total="count">
         </el-pagination>
-
       </div>
-    <!-- pagination end  -->
-
+      <el-dialog title="创建酒店" v-model="dialogTableVisible">
+        <HotelBaseAdd @hide="dialogTableVisible=false"></HotelBaseAdd>
+      </el-dialog>
   </div>
 </template>
 
 <script>
 import { hotelBaseApi } from 'api';
-
+import HotelBaseAdd from './HotelBaseAdd.vue'
 export default {
+  components:{
+    HotelBaseAdd
+  },
   data() {
     return {
+      dialogTableVisible:false,
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
@@ -129,8 +122,21 @@ export default {
                }
       };
       const res = await hotelBaseApi.listAll(options);
-      _self.hotelbase = res.data.Data;
-      _self.count=res.data.Count;
+      if(res&&res.data&&res.data.Data){
+        let data =res.data.Data
+        for(let item of data){
+          if(item.Policys&&Array.isArray(item.Policys)&&item.Policys.length>0){
+            for(let n of item.Policys){
+              if(n.IsDefault){
+                item.Policys=n
+              }
+            }
+          }
+        }
+        _self.hotelbase = data;
+        _self.count=res.data.Count;
+      }
+
     },
     handleSizeChange(val) {
       this.pageSize  = val
@@ -175,10 +181,7 @@ export default {
 #HotelBasePage {
 
     .filters {
-        margin: 20px 0 0;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
+
 
         .filter {
             display: inline-block;

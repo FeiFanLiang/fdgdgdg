@@ -39,16 +39,6 @@ let routes = [
       requiresAuth: true
     },
     children: [
-      {
-        path: '/test',
-        component: Pages.Test,
-        name: 'test'
-      },
-      {
-        path: '/testone',
-        component: Pages.TestOne,
-        name: 'testone'
-      },
       // hotel
       {
         path: 'hotel',
@@ -56,12 +46,6 @@ let routes = [
         name: '酒店',
         iconClass: 'el-icon-setting',
         children: [
-          // {
-          //   path: 'HotelPlatform',
-          //   component: Pages.HotelPlatform,
-          //   name: '酒店平台',
-          //   imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          // },
           {
             path: 'HotelBase',
             component: Pages.HotelBase,
@@ -130,12 +114,6 @@ let routes = [
             path: 'hotel-paymode',
             name: '支付方式',
             component: Pages.HotelPayMode,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'PolicyImages',
-            name: '政策图片',
-            component: Pages.PolicyImages,
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]

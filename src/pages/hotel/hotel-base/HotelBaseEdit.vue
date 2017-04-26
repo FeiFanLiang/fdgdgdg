@@ -1,128 +1,91 @@
 <template lang="html">
 <div id="hotelbaseEdit">
-  <!-- <el-card class="box-card">
-{{hotelName}}
-</el-card> -->
-
-  <el-menu mode="horizontal" >
-    <el-menu-item index="item" v-for="item in routers" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
-  </el-menu>
-  <div class="line"></div>
+  <Menu path="">
+  </Menu>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
     <el-row :gutter="20">
       <el-col :span="6">
-        <div class="grid-content bg-purple">
           <el-form-item label="酒店ID" prop="ID">
             <el-input v-model="form.ID" :disabled='true'></el-input>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
+      <el-col :span="6">
           <el-form-item label="酒店编号" prop="HotelNum">
             <el-input v-model="form.HotelNum"></el-input>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
-          <el-form-item label="传真号" prop="FaxNum">
-            <el-input v-model="form.FaxNum"></el-input>
-          </el-form-item>
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20">
       <el-col :span="6">
-        <div class="grid-content bg-purple">
           <el-form-item label="酒店名称" prop="HotelName">
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
+      <el-col :span="6">
           <el-form-item label="酒店英文名称" prop="HotelName_En">
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
-        </div>
-      </el-col>
-      <el-col :span="7">
-        <div class="grid-content bg-purple">
-          <el-form-item label="前台电话" prop="FrontPhone">
-            <el-input v-model="form.FrontPhone"></el-input>
-          </el-form-item>
-        </div>
       </el-col>
     </el-row>
 
     <el-row :gutter="20">
-      <el-col :span="5">
-        <div class="grid-content bg-purple">
-          <el-form-item label="星级">
-            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
-              <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
-            </el-select>
+
+      <el-col :span="6">
+          <el-form-item label="前台电话" prop="FrontPhone">
+            <el-input v-model="form.FrontPhone"></el-input>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="5">
-        <div class="grid-content bg-purple">
+      <el-col :span="6">
+          <el-form-item label="传真号" prop="FaxNum">
+            <el-input v-model="form.FaxNum"></el-input>
+          </el-form-item>
+      </el-col>
+      <el-col :span="6">
           <el-form-item label="区域" prop="Area">
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
               <el-option v-for="item in areaOptions" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="10">
-        <div class="grid-content bg-purple">
+      <el-col :span="6">
           <el-form-item label="地址" prop="Address">
             <el-input v-model="form.Address"></el-input>
           </el-form-item>
-        </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6">
+          <el-form-item label="星级">
+            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
+              <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
+            </el-select>
+          </el-form-item>
+      </el-col>
+      <el-col :span="18">
+          <el-form-item label="备注" prop="Remark">
+            <el-input type="textarea" v-model="form.Remark"></el-input>
+          </el-form-item>
       </el-col>
       <!--<el-col :span="5">
-        <div class="grid-content bg-purple">
           <el-form-item label="结款">
             <el-select v-model="form.PayMode" clearable  placeholder="请选择结款账户" >
               <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
-        </div>
       </el-col>-->
     </el-row>
-
-    <el-row :gutter="20">
-      <el-col :span="20">
-        <div class="grid-content bg-purple">
-          <el-form-item label="备注" prop="Remark">
-            <el-input type="textarea" v-model="form.Remark"></el-input>
-          </el-form-item>
-        </div>
-      </el-col>
-    </el-row>
-
     <el-row :gutter="18">
-      <el-col :span="5" :offset="5">
-        <div class="grid-content bg-purple">
+      <el-col :span="3" :offset="18">
           <el-form-item>
             <el-button type="primary" @click="onSubmit('form')">保存</el-button>
           </el-form-item>
-        </div>
       </el-col>
-      <el-col :span="5">
-        <div class="grid-content bg-purple">
+      <el-col :span="3">
           <el-form-item>
             <el-button @click="Cancel">取消</el-button>
           </el-form-item>
-        </div>
       </el-col>
     </el-row>
-
   </el-form>
   <!-- form end -->
 </div>
@@ -130,8 +93,13 @@
 
 <script>
 import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
-
+import {
+    Menu
+} from 'components'
 export default {
+  components: {
+      Menu
+  },
   data() {
     return {
       hotelName:'',
@@ -143,12 +111,6 @@ export default {
       areaOptions: [],
       starOptions: [],
       payModeOptions: [],
-      routers: [
-        { path: 'policy', text: '政策信息' },
-        { path: 'room', text: '房型信息' },
-        { path: 'price', text: '价格信息' },
-        { path: 'platform', text: '平台映射' }
-      ]
     };
   },
   mounted() {
@@ -160,9 +122,6 @@ export default {
     // this.getAreaOptions();
   },
   methods: {
-    goNextPage(path) {
-      this.$router.push({ path });
-    },
     async getAreaOptions(query) {
       const res = await hotelAreaApi.listByQuery(query);
       //this.areaOptions = res.data;
@@ -206,10 +165,6 @@ export default {
   }
   .el-col {
     border-radius: 4px;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
   }
   .row-bg {
     padding: 10px 0;

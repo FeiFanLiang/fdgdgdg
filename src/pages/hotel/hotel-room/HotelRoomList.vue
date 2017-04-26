@@ -4,7 +4,8 @@
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </Menu>
   <el-table :data="hotelroomlist" border style="width: 100%">
-    <el-table-column prop="RoomName" label="房间名称"></el-table-column>
+    <el-table-column prop="RoomName" label="房型名称"></el-table-column>
+    <el-table-column prop="RoomName" label="产品名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
@@ -15,59 +16,7 @@
         </template>
     </el-table-column>
   </el-table>
-  <div class="ui-table sheet">
-              <div class="ui-table-header">
-                  <table>
-                      <tbody>
-                      <tr>
-                          <th class="ui-table-col-left w150">
-                              <input type="checkbox" class="checkbox"> 房型名称
-                          </th>
-                          <th class="ui-table-col-left w150">
-                              <input type="checkbox" class="checkbox"> 产品名称
-                          </th>
-                          <th class="ui-table-col-center w50">早餐</th>
-                          <th class="ui-table-col-center w80">支付方式</th>
-                          <th class="ui-table-col-center w250">退款规则</th>
-                          <th class="ui-table-col-center w250">生效规则</th>
-                          <th class="ui-table-col-center w80">状态</th>
-                          <th class="ui-table-col-center w80"> 操作
-                          </th>
-                      </tr>
-                      </tbody>
-                  </table>
-              </div>
-              <div class="ui-table-body">
-                  <table>
-                      <tbody>
-                        <tr>
-                          <td class="ui-table-col-left w150" rowspan="2">
-                              <input type="checkbox" class="checkbox" value="2536469">
-                              单人间
-                          </td>
-                          <td class="ui-table-col-left w150">
-                              <input type="checkbox" class="checkbox" value="3693326">
-                              <!-- 当点击一个ruleName的时候，批量设置规则 batchEdit -->
-                                  <a href="javascript: void 0">预付无早
-                                      <i class="ui-icon" title="批量编辑同名称产品"></i>
-                                  </a>
-                          </td>
-                          <td class="ui-table-col-center w50">无早</td>
-                          <td class="ui-table-col-center w80">预付</td>
-                          <td class="ui-table-col-center w250">不可退改
-                          </td>
-                          <td class="ui-table-col-center w250"> 仅07:00:00到当日23:00:00可售 需提前7天22:00:00之前可订</td>
-                          <td class="ui-table-col-center w80">
-                              <i class="ui-icon green"></i>
-                              <!--ms-if--></td>
-                          <td class="ui-table-col-center w80">
-                              <a href="/web/hotel/modifyProduction?hotelId=1054691&amp;productId=3693326" data-auth-uri="/product/api/product/edit">编辑</a>
-                          </td>
-                      </tr>
-                      </tbody>
-                  </table>
-              </div>
-          </div>
+  <!-- <Uitable></Uitable> -->
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
@@ -108,10 +57,11 @@
 import {
   hotelRoomApi,
 } from 'api';
-import {Menu} from 'components'
+import {Menu,Uitable} from 'components'
 export default {
   components: {
-    Menu
+    Menu,
+    Uitable
   },
   data() {
     return {
@@ -145,6 +95,7 @@ export default {
     };
   },
   mounted() {
+    console.dir(this.$parent)
     this.form.hotelId = this.$route.params.ID
     this.fetchData();
   },
@@ -244,4 +195,5 @@ export default {
         }
     }
 }
+
 </style>

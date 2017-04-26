@@ -1,12 +1,7 @@
 <template lang="html">
   <div id="PayCompany">
 
-    <!-- breadcrumb start  -->
     <db-breadcrumb></db-breadcrumb>
-    <!-- breadcrumb end  -->
-
-    <div class="db-content-inner">
-      <!-- filters start -->
       <div class="filters">
         <div class="filter">
           <el-select v-model="filters.labelVal" clearable placeholder="请选择">
@@ -22,12 +17,9 @@
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </div>
-      <!-- filters end -->
-
-      <!-- table start  -->
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-        stripe
         v-loading="loading"
+        border
         @sort-change="handleSortChange">
         <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="accountName" label="账户名称" show-overflow-tooltip></el-table-column>
@@ -40,23 +32,6 @@
            </template>
         </el-table-column>
       </el-table>
-      <!-- table end  -->
-
-      <!-- pagination start  -->
-      <div class="pagination-wrapper" v-show="!loading&&list.length">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[1, 5, 10]"
-          :page-size="100"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-      </el-pagination>
-    </div>
-      <!-- pagination end  -->
-
-      <!-- dialog start -->
       <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
         <el-form :rules="rules" ref="form" :model="form" >
           <el-form-item label="账户名称" prop="accountName">
@@ -74,9 +49,6 @@
           <el-button type="primary" @click="submitForm('form')">确 定</el-button>
         </span>
       </el-dialog>
-
-      <!-- dialog end -->
-    </div>
   </div>
 </template>
 
@@ -90,8 +62,6 @@ export default {
     data() {
         return {
             list: [],
-            total: 0,
-            currentPage: 1,
             loading: true,
             showDialog: false,
             dialogTitle: '',
@@ -133,10 +103,6 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
-            console.log(`当前页: ${val}`);
-        },
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
         },
         handleSortChange(sortWay) {
             this.filters.sortWay = {
@@ -148,23 +114,8 @@ export default {
         handleSearch() {
             this.fetchData();
         },
-        async fetchData(currentPage, pageSize) {
+        async fetchData() {
             const _self = this;
-
-            // const sortWay = _self.filters.sortWay && _self.filters.sortWay.prop ? _self.filters.sortWay : '';
-            // _self.currentPage = currentPage || _self.currentPage;
-            // _self.currentPage = pageSize || _self.pageSize;
-            //
-            // const options = {
-            //     currentPage: _self.currentPage,
-            //     pageSize: _self.pageSize,
-            //     accountName: _self.filters.labelVal === '1' ?
-            //         _self.filters.accountName : null,
-            //     sortWay: sortWay,
-            //     accountNum: _self.filters.labelVal === '2' ?
-            //         _self.filters.accountNum : null
-            // };
-
             _self.loading = true;
             _self.list = [];
             try {
@@ -176,8 +127,6 @@ export default {
                     _self.list[index].accountNum = elem.AccountNum;
                     _self.list[index].remark = elem.Remark;
                 }
-                console.log(_self.list);
-                _self.total = _self.list.length;
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -290,10 +239,6 @@ export default {
 <style lang="scss">
 #PayCompany {
     .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
 
         .filter {
             display: inline-block;
@@ -309,10 +254,6 @@ export default {
             width: 150px;
             display: inline-block;
         }
-    }
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
     }
 }
 </style>
