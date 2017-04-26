@@ -12,7 +12,7 @@ export default {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelPayMode', params);
   },
   editInfo(params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPayMode/${params.ID}`, params);
+    return axios.put(path.apiBaseUrl + `Hotel/HotelPayMode/${params.id}`, params);
   },
   delInfo(id) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelPayMode/${id}`);
