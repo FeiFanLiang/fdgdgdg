@@ -12,7 +12,7 @@
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
-              <img :src="user.avatar">
+              <img src="./assets/images/common/hh.png">
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人信息</el-dropdown-item>
@@ -129,7 +129,7 @@ export default {
     .db-header-right {
         width: calc(100% - 200px);
         height: 60px;
-        background: #F9FAFC;
+        background: #fff;
         padding: 0 20px;
         box-sizing: border-box;
         z-index: 99;
