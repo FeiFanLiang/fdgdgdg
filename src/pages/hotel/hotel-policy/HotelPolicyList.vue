@@ -44,14 +44,14 @@
 
       <el-row :gutter="24">
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="ID">
               <el-input v-model="form.ID" class="el-col-24" :disabled="true"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="政策负责人" prop="PersonName">
               <el-input v-model="form.PersonName"></el-input>
             </el-form-item>
@@ -61,21 +61,21 @@
 
       <el-row :gutter="24">
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店联系人">
               <el-input v-model="form.LinkMan"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店联系电话">
               <el-input v-model="form.PhoneNum"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <!--<el-col :span="7">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店开户行">
               <el-input v-model="createForm.BankName"></el-input>
             </el-form-item>
@@ -85,21 +85,21 @@
 
       <!--<el-row :gutter="20">
         <el-col :span="6">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店账户">
               <el-input v-model="createForm.AccountName"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="7">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店账号">
              <el-input v-model="createForm.AccountNum"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="7">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店财务负责人">
               <el-input v-model="createForm.FinanceLinkMan"></el-input>
             </el-form-item>
@@ -110,21 +110,21 @@
 
       <el-row :gutter="24">
         <!--<el-col :span="6">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店财务电话">
               <el-input v-model="createForm.FinancePhoneNum"></el-input>
             </el-form-item>
           </div>
         </el-col>-->
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="政策采购人">
               <el-input v-model="form.PurchasingName"></el-input>
             </el-form-item>
           </div>
         </el-col>
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="支付账户">
               <el-select v-model="form.PayCompanyID" clearable placeholder="请选择支付账户">
                 <el-option v-for="item in payCompanyOptions" :label="item.AccountName" :value="item.ID"></el-option>
@@ -136,7 +136,7 @@
 
       <el-row :gutter="24">
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="保密类型">
               <el-select v-model="form.SecretTypeID" clearable placeholder="请选择保密类型">
                 <el-option v-for="item in secretTypeOptions" :label="item.SecretName" :value="item.ID"></el-option>
@@ -145,7 +145,7 @@
           </div>
         </el-col>
         <el-col :span="10">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="酒店预订方式">
               <el-select v-model="form.ReserveModeID" clearable placeholder="请选择预订方式">
                 <el-option v-for="item in reserveModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
@@ -154,7 +154,7 @@
           </div>
         </el-col>
         <!--<el-col :span="7">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="默认政策">
               <el-input v-model="createForm.IsDefault"></el-input>
             </el-form-item>
@@ -164,7 +164,7 @@
 
       <!--<el-row :gutter="20">
         <el-col :span="20">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="财务备注">
               <el-input type="textarea" v-model="createForm.FinanceRemark"></el-input>
             </el-form-item>
@@ -174,7 +174,7 @@
 
       <el-row :gutter="20">
         <el-col :span="20">
-          <div class="grid-content bg-purple">
+          <div >
             <el-form-item label="备注">
               <el-input type="textarea" v-model="createForm.Remark1"></el-input>
             </el-form-item>

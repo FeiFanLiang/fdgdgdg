@@ -1,7 +1,6 @@
 <template lang="html">
   <div id="HotelPayMode">
     <db-breadcrumb></db-breadcrumb>
-
     <div class="filters">
       <div class="filter">
         <el-select v-model="filters.labelVal" clearable placeholder="请选择">
@@ -19,9 +18,7 @@
     </div>
 
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-      v-loading="loading"
-      border
-      @sort-change="handleSortChange">
+      v-loading="loading" border @sort-change="handleSortChange">
       <el-table-column prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
       <el-table-column prop="modeName" label="账户名称" show-overflow-tooltip></el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
@@ -53,7 +50,6 @@
 import {
     hotelPayModeApi
 } from 'api';
-
 
 export default {
     data() {

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div >
   <Menu path="price"><el-button type="primary" @click="hotelroomAdd">创建</el-button></Menu >
       <Calendar></Calendar>
   </div>

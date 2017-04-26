@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="HotelBasePage">
     <db-breadcrumb></db-breadcrumb>
-    <!-- search start -->
+
     <div class="filters">
         <div class="filter">
           <el-select v-model="filters.labelVal"  placeholder="请选择">
@@ -16,13 +16,11 @@
           <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
       </div>
         <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
-        <el-button type="primary">
-          <router-link :to="{path: 'HotelBaseAdd'}">创建</router-link>
+        <el-button type="primary" @click="dialogTableVisible=true">
+            创建
         </el-button>
     </div>
-    <!-- search end -->
 
-    <!-- table start -->
     <div class="eltable">
       <el-table
       :data="hotelbase"
@@ -49,9 +47,6 @@
         </el-table-column>
       </el-table>
     </div>
-    <!-- table end -->
-
-    <!-- pagination start  -->
       <div class="pagination-wrapper" style="align=center">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
@@ -62,19 +57,23 @@
           :page-size="pageSize"
           :total="count">
         </el-pagination>
-
       </div>
-    <!-- pagination end  -->
-
+      <el-dialog title="创建酒店" v-model="dialogTableVisible">
+        <HotelBaseAdd @hide="dialogTableVisible=false"></HotelBaseAdd>
+      </el-dialog>
   </div>
 </template>
 
 <script>
 import { hotelBaseApi } from 'api';
-
+import HotelBaseAdd from './HotelBaseAdd.vue'
 export default {
+  components:{
+    HotelBaseAdd
+  },
   data() {
     return {
+      dialogTableVisible:false,
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
@@ -182,7 +181,7 @@ export default {
 #HotelBasePage {
 
     .filters {
-      
+
 
         .filter {
             display: inline-block;
