@@ -39,16 +39,6 @@ let routes = [
       requiresAuth: true
     },
     children: [
-      {
-        path: '/test',
-        component: Pages.Test,
-        name: 'test'
-      },
-      {
-        path: '/testone',
-        component: Pages.TestOne,
-        name: 'testone'
-      },
       // hotel
       {
         path: 'hotel',
