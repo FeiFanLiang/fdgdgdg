@@ -3,7 +3,7 @@
       <!-- <db-breadcrumb></db-breadcrumb> -->
     <el-menu :default-active="activeMenu"  mode="horizontal" >
       <el-menu-item v-for="(item,index) in routers" :index="index+''" @click="goNextPage(item.path)">{{item.text}}</el-menu-item>
-        <div style="margin-top: 12px;">
+        <div style="margin-top: 12px;margin-left: 500px;">
           <slot/>
         </div>
     </el-menu>

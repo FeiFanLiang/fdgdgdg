@@ -50,8 +50,6 @@
                         </el-dropdown-menu>
                       </el-dropdown>
                   </div>
-                  <!-- 渠道 -->
-                  <!-- 渠道dropdown -->
                 <div class="l-bar-item">
                     <el-dropdown trigger="click" @command="toggleStatus">
                       <el-button type="primary">售卖价
@@ -70,7 +68,6 @@
                   </div>
             </div>
             <div class="right">
-                  <!-- 展示方式，按周展示，按月展示 -->
                 <div class="mydate">
                    <el-dropdown trigger="click" @command="togglePeriod">
                       <span class="el-dropdown-link">按周显示
@@ -86,9 +83,7 @@
                 <el-date-picker class="mydate"
                     v-model="chosenDate"
                     type="date"
-                    placeholder="选择日期"
-
-                    :picker-options="pickerOptions0">
+                    placeholder="选择日期">
                 </el-date-picker>
                 <el-button type="primary" @click="next">后一月<i class="el-icon-arrow-right el-icon--right"></i></el-button>
             </div>
@@ -115,32 +110,28 @@
             <div class="ui-table-body m-roomcontrol-sheet">
                 <table>
                     <tbody v-for="n in list">
-                        <!-- 房型tr -->
-                        <tr>
+                        <tr @click="expand(n)">
                             <td style="background: #f8f8f8;border-right-color: #f8f8f8;border-top:2px solid #2eb5e7;" colspan="9">
-                                <span @click="expand(n)">
+                                <span >
                                     <i :class="n.isExpand?'el-icon-arrow-up':'el-icon-arrow-down'" style="margin-right:10px"></i>{{n.name}}
                                 </span>
                             </td>
                         </tr>
-                          <!-- 产品tr -->
                         <template v-if="n.isExpand">
                           <tr v-for="(week,index) in dayList" >
-                              <!-- 产品名称 -->
                               <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                                   <div style="margin-left: 30px;">
                                       标准房-预付无早（双床双人入住）
                                       <span class="gray" style="display: none;">(无效)</span>
                                   </div>
                               </td>
-                              <td class="ui-table-col-center w80 current " v-for="day in week" @click="priceOne('2017-01-01')">
+                              <td class="ui-table-col-center w80 current " v-for="day in week" @click="priceOne(day.date)">
                                   <div class="dayname">{{day.date}}</div>
                                   <div class="price">CNY{{day.CNY}}</div>
                                   <div class="remain">余{{day.odd}}</div>
                               </td>
                           </tr>
                           <tr v-for="(week,index) in dayList" >
-                              <!-- 产品名称 -->
                               <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                                   <div style="margin-left: 30px;">
                                       标准房-预付有早（双床双人入住）
@@ -287,7 +278,7 @@
             </td>
           </tr>
           <tr>
-            <!--ms-if-->
+
             <td>
               预付含早（双床双人入住）
             </td>
@@ -393,16 +384,13 @@ export default {
     return {
       stateText: '全部',
       chosenDate: '',
-      list:[{name:'单人间',isExpand:false},{name:'双人(Double)',isExpand:false}],
-      demoEvents: [
-        {
-          date: '2016/12/15',
-          title: 'eat',
-          desc: 'longlonglong description'
+      list: [{
+          name: '单人间',
+          isExpand: false
         },
         {
-          date: '2016/11/12',
-          title: 'this is a title'
+          name: '双人(Double)',
+          isExpand: false
         }
       ],
       cycle: ['one'],
@@ -415,28 +403,6 @@ export default {
       homeType: ['标准房', '单人房'],
       isIndeterminate: true,
       radio2: 3,
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
       chosenDelete: ''
     };
   },
@@ -461,7 +427,8 @@ export default {
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );
       let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
-      let item, status, tempArr = [], tempItem;
+      let item, status, tempArr = [],
+        tempItem;
       for (let i = 0; i < 42; i++) {
         item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
         if (this.calendar.curMonth === item.getMonth()) {
@@ -471,7 +438,9 @@ export default {
         }
         tempItem = {
           date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
-          status: status
+          status: status,
+          CNY:'100',
+          odd:'3'
         };
         // this.events.forEach(event => {
         //   if (isEqualDateStr(event.date, tempItem.date)) {
@@ -485,8 +454,8 @@ export default {
     }
   },
   methods: {
-    expand(item){
-      item.isExpand=!item.isExpand;
+    expand(item) {
+      item.isExpand = !item.isExpand;
     },
     pre() {
       let nowdays = new Date(this.chosenDate);
@@ -518,14 +487,6 @@ export default {
     editPrice(day) {
       alert(JSON.stringify(day));
     },
-    handleCommand(command) {
-      this.stateText = command;
-    },
-    pickerOptions0: {
-      disabledDate(time) {
-        return time.getTime() < Date.now() - 8.64e7;
-      }
-    },
     showDelete(item) {
       this.chosenDelete = item;
     },
@@ -535,8 +496,10 @@ export default {
     deleteCycle(item, index) {
       this.cycle.splice(index, 1);
     },
-    priceOne() {
+    priceOne(date) {
       this.priceChangeForOne = true;
+      this.value7=[new Date(date),new Date(date)];
+
     },
     priceMore() {
       this.priceChangeForMore = true;
@@ -572,9 +535,9 @@ export default {
         if (new RegExp('(' + k + ')').test(fmt))
           fmt = fmt.replace(
             RegExp.$1,
-            RegExp.$1.length == 1
-              ? o[k]
-              : ('00' + o[k]).substr(('' + o[k]).length)
+            RegExp.$1.length == 1 ?
+            o[k] :
+            ('00' + o[k]).substr(('' + o[k]).length)
           );
       return fmt;
     };
@@ -584,20 +547,20 @@ export default {
 </script>
 
 <style lang="scss">
-.smalltext{
+.smalltext {
     font-size: 10px;
 }
-.mydate{
+.mydate {
     display: inline-block;
-    margin: 0px 10px;
+    margin: 0 10px;
 }
-.listp{
+.listp {
     display: flex;
     flex-flow: row wrap;
     align-content: flex-start;
-    padding: 0px !important;
+    padding: 0 !important;
 }
-.listc{
+.listc {
     box-sizing: border-box;
     -ms-flex: 0 0 14.28%;
     flex: 0 0 14.28%;
@@ -609,54 +572,200 @@ export default {
     line-height: 20px;
     font-size: 10px;
 }
-html{background:#fff none;color:#333;font:normal 12px/1.5 tahoma,arial,"hiragino sans gb",simsun,sans-serif;-moz-font-feature-settings:"liga","kern";-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-body,dd,dl,form,p,pre{margin:0}
-table{border-collapse:collapse;border-spacing:0}
-ol,ul{list-style:none;margin:0;padding:0}
-em,i{font-style:normal}
-.block{display:block}
-.inline{display:inline}
-.inlineblock{display:inline-block;*display:inline;vertical-align:middle;*zoom:1}
-.left{display:inline;float:left}
-.right{display:inline;float:right}
-.w960{width:960px}
+html {
+    background: #fff none;
+    color: #333;
+    font: normal 12px/1.5 tahoma,arial,"hiragino sans gb",simsun,sans-serif;
+    -moz-font-feature-settings: "liga","kern";
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+body,
+dd,
+dl,
+form,
+p,
+pre {
+    margin: 0;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+ol,
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+em,
+i {
+    font-style: normal;
+}
+.block {
+    display: block;
+}
+.inline {
+    display: inline;
+}
+.inlineblock {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    *zoom: 1;
+}
+.left {
+    display: inline;
+    float: left;
+}
+.right {
+    display: inline;
+    float: right;
+}
+.w960 {
+    width: 960px;
+}
 
-.ui-table table{width:100%}
-.ui-table td,.ui-table th{border-bottom:1px solid #ececec;font-weight:400;padding:11px 5px}
-.ui-table th{color:#9e9e9e;cursor:default}
+.ui-table table {
+    width: 100%;
+}
+.ui-table td,
+.ui-table th {
+    border-bottom: 1px solid #ececec;
+    font-weight: 400;
+    padding: 11px 5px;
+}
+.ui-table th {
+    color: #9e9e9e;
+    cursor: default;
+}
 
-.ui-table-dark th{background-color:#353a47;border-bottom:0 none;color:#fff}
+.ui-table-dark th {
+    background-color: #353a47;
+    border-bottom: 0 none;
+    color: #fff;
+}
 
-.ui-table-bordered table,.ui-table-bordered td,.ui-table-bordered th{border:1px solid #ececec}
-.ui-table-bordered .ui-table-header{margin-bottom:-1px}
-.ui-table-bordered .ui-table-dark th{border:1px solid #353a47}
-.ui-table-bordered .ui-table-child .ui-table{margin:0 -1px;position:relative;top:-1px}
+.ui-table-bordered table,
+.ui-table-bordered td,
+.ui-table-bordered th {
+    border: 1px solid #ececec;
+}
+.ui-table-bordered .ui-table-header {
+    margin-bottom: -1px;
+}
+.ui-table-bordered .ui-table-dark th {
+    border: 1px solid #353a47;
+}
+.ui-table-bordered .ui-table-child .ui-table {
+    margin: 0 -1px;
+    position: relative;
+    top: -1px;
+}
 
-.l-bar{zoom:1;font-size:0;margin-bottom:20px}
-.l-bar:after{clear:both;content:"\0020";display:block;height:0;overflow:hidden}
-.l-bar-item{display:inline-block;*display:inline;vertical-align:middle;*zoom:1;font-size:12px;margin-right:5px}
+.l-bar {
+    zoom: 1;
+    font-size: 0;
+    margin-bottom: 20px;
+}
+.l-bar:after {
+    clear: both;
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+.l-bar-item {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    *zoom: 1;
+    font-size: 12px;
+    margin-right: 5px;
+}
 
-.l-bar-label{display:inline-block;*display:inline;vertical-align:middle;*zoom:1;margin-right:1px;*margin-right:5px;text-align:right;white-space:nowrap}
+.l-bar-label {
+    display: inline-block;
+    *display: inline;
+    vertical-align: middle;
+    *zoom: 1;
+    margin-right: 1px;
+    *margin-right: 5px;
+    text-align: right;
+    white-space: nowrap;
+}
 
-.m-roomcontrol-legend{zoom:1}
-.m-roomcontrol-legend:after{clear:both;content:"\0020";display:block;height:0;overflow:hidden}
-.m-roomcontrol-legend .item{display:inline;float:left;margin-right:15px}
-.m-roomcontrol-legend dt{display:inline;float:left;margin:1px 3px 0 0;background-color:#fff;border:1px solid #e1e1e1;height:14px;overflow:hidden;text-align:center;width:14px}
-.m-roomcontrol-legend dt.close{background-color:#ff7474;border-color:#ff7474}
+.m-roomcontrol-legend {
+    zoom: 1;
+}
+.m-roomcontrol-legend:after {
+    clear: both;
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+}
+.m-roomcontrol-legend .item {
+    display: inline;
+    float: left;
+    margin-right: 15px;
+}
+.m-roomcontrol-legend dt {
+    display: inline;
+    float: left;
+    margin: 1px 3px 0 0;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    height: 14px;
+    overflow: hidden;
+    text-align: center;
+    width: 14px;
+}
+.m-roomcontrol-legend dt.close {
+    background-color: #ff7474;
+    border-color: #ff7474;
+}
 
-.m-roomcontrol-legend dt.disable{background-color:#e0e0e0;border-color:#e0e0e0}
+.m-roomcontrol-legend dt.disable {
+    background-color: #e0e0e0;
+    border-color: #e0e0e0;
+}
 
-.m-roomcontrol-legend dd{display:inline;float:left}
-.m-roomcontrol-legend .oversale{color:#52be7f}
-.m-roomcontrol-legend .oversale .ui-icon{font-size:12px;position:relative;top:-2px}
+.m-roomcontrol-legend dd {
+    display: inline;
+    float: left;
+}
+.m-roomcontrol-legend .oversale {
+    color: #52be7f;
+}
+.m-roomcontrol-legend .oversale .ui-icon {
+    font-size: 12px;
+    position: relative;
+    top: -2px;
+}
 
-.m-roomcontrol-sheet .disable{background-color:#e0e0e0}
+.m-roomcontrol-sheet .disable {
+    background-color: #e0e0e0;
+}
 
-.m-sysbar .userinfo .lang{display:inline;float:left;border-left:1px solid #e0e0e0;padding-left:20px}
-.m-sysbar .userinfo .info{display:inline;float:left;border-left:1px solid #e0e0e0;margin-left:20px}
+.m-sysbar .userinfo .lang {
+    display: inline;
+    float: left;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 20px;
+}
+.m-sysbar .userinfo .info {
+    display: inline;
+    float: left;
+    border-left: 1px solid #e0e0e0;
+    margin-left: 20px;
+}
 
 .m-price-sheet .current {
     background-color: #fbfbfb;
     cursor: pointer;
-    vertical-align: top;}
+    vertical-align: top;
+}
 </style>
