@@ -3,10 +3,14 @@
   <Menu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
   </Menu>
+  {{expandRowKeys}}
   <el-table
     :data="hotelpolicy"
+    @expand="handleExpand"
+    @row-click="show"
+    :row-key="getRowKeys"
+    :expand-row-keys="expandRowKeys"
     border
-    @row-click='show'
     style="width: 100%">
     <el-table-column type="expand">
       <template scope="props" >
@@ -147,7 +151,9 @@
               list-type="picture-card"
               :file-list=" [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
+              :on-remove="handleRemove"
+              :on-success="handleSuccess"
+              :on-error="handleError">
               <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog v-model="dialogVisible" >
@@ -342,7 +348,9 @@ import {
   payCompanyApi,
   hotelPolicyImageApi
 } from 'api';
-import {Menu} from 'components'
+import {
+  Menu
+} from 'components'
 
 export default {
   components: {
@@ -351,11 +359,12 @@ export default {
   data() {
     return {
       dialogImageUrl: '',
-        dialogVisible: false,
+      dialogVisible: false,
       fileList: [],
+      expandRowKeys: [],
       forms: {
         IsDefault: true,
-        ID:''
+        ID: ''
       },
       form: {
         hotelId: '',
@@ -394,6 +403,7 @@ export default {
     };
   },
   mounted() {
+
     const _self = this;
     _self.form.hotelId = _self.$route.params.ID
     _self.fetchData();
@@ -498,27 +508,49 @@ export default {
       const res = await hotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
-        }
-        return isJPG;
-      },
-      handleRemove(file, fileList) {
-        // hotelPolicyImageApi
-          console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-          this.dialogImageUrl = file.url;
-          this.dialogVisible = true;
-        },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+      }
+      return isJPG;
+    },
+    handleExpand(row, expanded) {
+      if (expanded) {
+        this.expandRowKeys.length = 0;
+        this.expandRowKeys.push(row.ID)
+      }
+    },
+    getRowKeys(row) {
+      console.log(row)
+      return row.ID;
+    },
+    handleRemove(file, fileList) {
+      console.log(file)
+      console.log(fileList)
+    },
+    handlePictureCardPreview(file) {
+      console.log(file)
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+    handleSuccess(response, file, fileList) {
+      this.$message({
+        message: '上传成功',
+        type: 'success'
+      });
+      console.log(response)
+
+    },
+    handleError(err, file, fileList) {
+      this.$message.error(err);
+    }
   }
 };
 </script>
 
 <style lang="scss">
- #hotelPollicyList {
+#hotelPollicyList {
     .filters {
         margin: 0 0 20px;
         border: 1px #efefef solid;
