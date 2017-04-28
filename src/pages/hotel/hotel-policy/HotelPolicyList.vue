@@ -3,12 +3,11 @@
   <Menu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
   </Menu>
-  {{expandRowKeys}}
   <el-table
     :data="hotelpolicy"
     @expand="handleExpand"
     @row-click="show"
-    :row-key="getRowKeys"
+    row-key="ID"
     :expand-row-keys="expandRowKeys"
     border
     style="width: 100%">
@@ -487,7 +486,7 @@ export default {
     async hotelpolicyDelete($index, row) {
       const _self = this;
       try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm(`是否删除ID${row.ID}?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -507,6 +506,7 @@ export default {
       const hotelID = this.$route.params.ID;
       const res = await hotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
+      this.expandRowKeys.push(this.hotelpolicy[0].ID)
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -520,10 +520,6 @@ export default {
         this.expandRowKeys.length = 0;
         this.expandRowKeys.push(row.ID)
       }
-    },
-    getRowKeys(row) {
-      console.log(row)
-      return row.ID;
     },
     handleRemove(file, fileList) {
       console.log(file)
