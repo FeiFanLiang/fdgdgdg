@@ -281,7 +281,7 @@ export default {
         async clickDelBtn($index, row) {
             const _self = this;
             try {
-                await _self.$confirm('是否删除此条信息?', '提示', {
+                await _self.$confirm(`是否删除${row.platName}?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'

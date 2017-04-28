@@ -4,7 +4,6 @@ import NotFound from './common/404';
 import Login from './account/login';
 import Register from './account/register';
 // hotel
-import HotelPlatform from './hotel/hotel-platform/HotelPlatform';
 import HotelBase from './hotel/hotel-base/HotelBase';
 import HotelBaseAdd from './hotel/hotel-base/HotelBaseAdd';
 import HotelBaseEdit from './hotel/hotel-base/HotelBaseEdit';
@@ -30,7 +29,6 @@ export default {
   NotFound,
   Login,
   Register,
-  HotelPlatform,
   HotelBase,
   PayCompany,
   HotelPayMode,
