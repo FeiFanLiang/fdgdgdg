@@ -1,11 +1,8 @@
 <template lang="html">
 <div id="hotelPollicyList">
-
   <Menu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
   </Menu>
-
-  <!-- table start -->
   <el-table
     :data="hotelpolicy"
     border
@@ -14,7 +11,6 @@
     <el-table-column type="expand">
       <template scope="props" >
         <el-form label-position="left" inline class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
-
           <el-row :gutter="24">
             <el-col :span="5">
               <div class="grid-content bg-purple">
@@ -45,7 +41,6 @@
               </div>
             </el-col>
           </el-row>
-
           <el-row :gutter="24">
             <el-col :span="5">
               <div class="grid-content bg-purple">
@@ -76,7 +71,6 @@
               </div>
             </el-col>
           </el-row>
-
           <el-row :gutter="24">
             <el-col :span="5">
               <div class="grid-content bg-purple">
@@ -113,7 +107,6 @@
               </div>
             </el-col>
           </el-row>
-
           <el-row :gutter="24">
             <el-col :span="5">
               <div class="grid-content bg-purple">
@@ -147,7 +140,20 @@
                 </div>
             </el-col>
           </el-row>
-
+          <el-row>
+            <el-upload
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :before-upload="beforeAvatarUpload"
+              list-type="picture-card"
+              :file-list=" [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            <el-dialog v-model="dialogVisible" >
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
+          </el-row>
           <el-row :gutter="24">
             <el-col :span="5">
               <div class="grid-content bg-purple">
@@ -155,44 +161,6 @@
               </div>
             </el-col>
           </el-row>
-
-        
-
-        <hr style="color:darkgray;margin:15px 0">
-
-        <el-row :gutter="24">
-            <el-col :span="10">
-              <div class="grid-content bg-purple">
-                <el-upload
-                    class="upload-demo"
-                    ref="upload" 
-                    action="http://192.168.10.95:8500/Hotel/HotelPolicyImage"
-                    :file-list="fileList"
-                    :auto-upload="false"
-                    list-type="picture"
-                    :before-upload="beforeAvatarUpload">
-                    <el-button slot="trigger" size="small" type="primary">添加截图信息</el-button>
-                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
-                </el-upload>
-                 <!--action="https://jsonplaceholder.typicode.com/posts/"-->  
-
-              </div>
-            </el-col>
-
-            <el-col :span="10">
-              <div class="grid-content bg-purple">
-                 <el-button size="small" type="primary"  @click="toggle">查看截图信息</el-button>
-              </div>
-            </el-col>
-        </el-row>
-
-        <div v-if="showImage">
-            <img :src="imgs" width="200px" height="200px">       
-            <img :src="img1" width="200px" height="200px">
-            <img :src="img2" width="200px" height="200px">
-            <img :src="img1" width="200px" height="200px">
-            <img :src="img2" width="200px" height="200px">
-        </div>
      </el-form>
       </template>
     </el-table-column>
@@ -225,11 +193,8 @@
     </el-table-column>
   </el-table>
   <!-- table end -->
-
-  <!-- create dialog start -->
   <el-dialog title="添加政策信息" v-model="createDialog" size="small">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -246,7 +211,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -263,7 +227,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -280,8 +243,6 @@
           </div>
         </el-col>
       </el-row>
-
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -298,7 +259,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -317,7 +277,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="24">
         <el-col :span="10">
           <div class="grid-content bg-purple">
@@ -348,7 +307,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
@@ -358,7 +316,6 @@
           </div>
         </el-col>
       </el-row>
-
       <el-row :gutter="20">
         <el-col :span="20">
           <div class="grid-content bg-purple">
@@ -368,17 +325,12 @@
           </div>
         </el-col>
       </el-row>
-
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="createDialog = false">取 消</el-button>
       <el-button type="primary" @click="handleSave()">确 定</el-button>
     </span>
   </el-dialog>
-  <!-- create dialog end -->
-
-
-
 </div>
 </template>
 
@@ -391,8 +343,6 @@ import {
   hotelPolicyImageApi
 } from 'api';
 import {Menu} from 'components'
-import imgsrc1 from 'assets/images/img/dog.jpg'
-import imgsrc2 from 'assets/images/img/zu.png'
 
 export default {
   components: {
@@ -400,11 +350,9 @@ export default {
   },
   data() {
     return {
-      showImage: false,
-      imgs: [],
+      dialogImageUrl: '',
+        dialogVisible: false,
       fileList: [],
-      img1:  imgsrc1,
-      img2:  imgsrc2,
       forms: {
         IsDefault: true,
         ID:''
@@ -455,6 +403,13 @@ export default {
   },
 
   methods: {
+    handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
+      },
     async getPayCompany() {
       const res = await payCompanyApi.getList();
       this.payCompanyOptions = res.data;
@@ -495,14 +450,8 @@ export default {
       this.createDialog = true;
     },
     async show(row) {
-      this.imgs = '';
       const res = await hotelPolicyApi.listByID(row.ID);
       this.forms = res.data;
-      console.log(row.ID)
-      const res2 = await hotelPolicyImageApi.detailsByPid(row.ID);
-      this.imgs = res2.data.Path
-      console.log('ccccccccccccccc')
-      console.log(res2.data.Path)
     },
     async hotelpolicyEdit() {
       const _self = this;
@@ -556,14 +505,6 @@ export default {
       const res = await hotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
     },
-
-      async submitUpload() {
-        console.log('qqqqqqqqqqqqqqqqqqqq');
-        this.$refs.PolicyID = this.forms.ID;
-        console.log(this.$refs);
-        //const res = await hotelPolicyImageApi.add(this.$refs.PolicyID);
-        this.$refs.upload.submit();
-      },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -576,10 +517,7 @@ export default {
         }
         return isJPG && isLt2M;
       },
-      toggle() {
-        this.showImage = !this.showImage;
-      }
-      
+
 
   }
 };
