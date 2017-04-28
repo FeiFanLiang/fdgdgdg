@@ -124,16 +124,6 @@
             </el-col>
             <el-col :span="6">
               <div class="grid-content bg-purple">
-                <!--<el-form-item label="默认政策" prop="IsDefault">
-                  <el-input v-model="props.row.IsDefault"></el-input>
-                </el-form-item>
-                <el-form-item label="默认政策" prop="IsDefault">
-                  <el-switch on-text="" off-text="" v-model="ruleForm.delivery"></el-switch>
-                </el-form-item>-->
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
                 <el-form-item label="财务备注">
                   <el-input type="textarea" v-model="forms.FinanceRemark"></el-input>
                 </el-form-item>
@@ -146,6 +136,16 @@
                 </el-form-item>
               </div>
             </el-col>
+            <el-col :span="3" :offset="1">
+                <div class="grid-content bg-purple">
+                  <!--<el-form-item label="默认政策" prop="IsDefault">
+                    <el-input v-model="forms.IsDefault"></el-input>
+                  </el-form-item>-->
+                  <el-form-item label="默认政策" prop="IsDefault">
+                    <el-switch on-text="是" off-text="否" v-model="forms.IsDefault"></el-switch>
+                  </el-form-item>
+                </div>
+            </el-col>
           </el-row>
 
           <el-row :gutter="24">
@@ -156,7 +156,44 @@
             </el-col>
           </el-row>
 
-        </el-form>
+        
+
+        <hr style="color:darkgray;margin:15px 0">
+
+        <el-row :gutter="24">
+            <el-col :span="10">
+              <div class="grid-content bg-purple">
+                <el-upload
+                    class="upload-demo"
+                    ref="upload" 
+                    action="http://192.168.10.95:8500/Hotel/HotelPolicyImage"
+                    :file-list="fileList"
+                    :auto-upload="false"
+                    list-type="picture"
+                    :before-upload="beforeAvatarUpload">
+                    <el-button slot="trigger" size="small" type="primary">添加截图信息</el-button>
+                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
+                </el-upload>
+                 <!--action="https://jsonplaceholder.typicode.com/posts/"-->  
+
+              </div>
+            </el-col>
+
+            <el-col :span="10">
+              <div class="grid-content bg-purple">
+                 <el-button size="small" type="primary"  @click="toggle">查看截图信息</el-button>
+              </div>
+            </el-col>
+        </el-row>
+
+        <div v-if="showImage">
+            <img :src="imgs" width="200px" height="200px">       
+            <img :src="img1" width="200px" height="200px">
+            <img :src="img2" width="200px" height="200px">
+            <img :src="img1" width="200px" height="200px">
+            <img :src="img2" width="200px" height="200px">
+        </div>
+     </el-form>
       </template>
     </el-table-column>
     <el-table-column prop="ID" label="ID"></el-table-column>
@@ -172,7 +209,12 @@
     <!--<el-table-column prop="PayCompany.AccountName" label="支付账户"></el-table-column>-->
     <el-table-column prop="SecretType.SecretName" label="保密类型"></el-table-column>
     <el-table-column prop="ReserveMode.ModeName" label="酒店预订方式"></el-table-column>
-    <!--<el-table-column prop="IsDefault" label="默认政策"></el-table-column>-->
+    <el-table-column label="默认政策" align="center">
+      <template scope="scope">
+          <i v-if="scope.row.IsDefault">是</i>
+          <i v-else>否</i>
+        </template>
+    </el-table-column>
     <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>-->
 
@@ -297,12 +339,12 @@
         </el-col>
         <el-col :span="10">
           <div class="grid-content bg-purple">
-            <el-form-item label="默认政策" prop="IsDefault">
-              <el-input v-model="form.IsDefault"></el-input>
-            </el-form-item>
             <!--<el-form-item label="默认政策" prop="IsDefault">
-              <el-switch on-text="" off-text="" v-model="ruleForm.delivery"></el-switch>
+              <el-input v-model="form.IsDefault"></el-input>
             </el-form-item>-->
+            <el-form-item label="默认政策" prop="IsDefault">
+              <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
+            </el-form-item>
           </div>
         </el-col>
       </el-row>
@@ -345,26 +387,34 @@ import {
   hotelPolicyApi,
   secretTypeApi,
   rserveModeApi,
-  payCompanyApi
+  payCompanyApi,
+  hotelPolicyImageApi
 } from 'api';
 import {Menu} from 'components'
+import imgsrc1 from 'assets/images/img/dog.jpg'
+import imgsrc2 from 'assets/images/img/zu.png'
+
 export default {
   components: {
     Menu
   },
   data() {
     return {
+      showImage: false,
+      imgs: [],
+      fileList: [],
+      img1:  imgsrc1,
+      img2:  imgsrc2,
       forms: {
-         hotelId: '',
-        PayCompanyID: '',
-        SecretTypeID: '',
-        ReserveModeID: '',
+        IsDefault: true,
+        ID:''
       },
       form: {
         hotelId: '',
         PayCompanyID: '',
         SecretTypeID: '',
         ReserveModeID: '',
+        IsDefault: true
       },
       payCompanyOptions: [],
       reserveModeOptions: [],
@@ -445,11 +495,14 @@ export default {
       this.createDialog = true;
     },
     async show(row) {
-      console.log('1234567489');
-      console.log(row.ID);
+      this.imgs = '';
       const res = await hotelPolicyApi.listByID(row.ID);
-      console.log(res);
       this.forms = res.data;
+      console.log(row.ID)
+      const res2 = await hotelPolicyImageApi.detailsByPid(row.ID);
+      this.imgs = res2.data.Path
+      console.log('ccccccccccccccc')
+      console.log(res2.data.Path)
     },
     async hotelpolicyEdit() {
       const _self = this;
@@ -502,7 +555,32 @@ export default {
       const hotelID = this.$route.params.ID;
       const res = await hotelPolicyApi.listByHotelID(hotelID);
       this.hotelpolicy = res.data;
-    }
+    },
+
+      async submitUpload() {
+        console.log('qqqqqqqqqqqqqqqqqqqq');
+        this.$refs.PolicyID = this.forms.ID;
+        console.log(this.$refs);
+        //const res = await hotelPolicyImageApi.add(this.$refs.PolicyID);
+        this.$refs.upload.submit();
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      toggle() {
+        this.showImage = !this.showImage;
+      }
+      
+
   }
 };
 </script>
