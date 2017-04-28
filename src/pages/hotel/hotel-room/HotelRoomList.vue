@@ -5,14 +5,27 @@
   </Menu>
   <el-table :data="hotelroomlist" border style="width: 100%" default-expand-all>
     <el-table-column prop="RoomName" label="房型名称" type="expand">
-      <Uitable></Uitable>
+      <template scope="scope">
+        <el-table :data="hotelroomlist" border style="width: 100%" >
+          <el-table-column prop="RoomName" label="子房型名称"></el-table-column>
+          <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
+          <el-table-column prop="Remark" label="备注"></el-table-column>
+          <el-table-column label="操作" width="180">
+            <template scope="scope">
+                <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
+              </template>
+          </el-table-column>
+        </el-table>
+        </template>
     </el-table-column>
     <el-table-column prop="RoomName" label="产品名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
-    <el-table-column label="操作" width="180">
+    <el-table-column label="操作" width="280">
       <template scope="scope">
+        <el-button size="mini" @click="addSonRoom(scope.$index, scope.row)">添加子房型</el-button>
           <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -102,6 +115,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    addSonRoom(){
+
+    },
     hotelSonRoomEdit(index,row){
 
     },
