@@ -3,20 +3,34 @@
   <Menu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </Menu>
-  <el-table :data="hotelroomlist" border style="width: 100%" default-expand-all>
+  <!-- table start -->
+  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show'>
     <el-table-column prop="RoomName" label="房型名称" type="expand">
       <template scope="scope">
-        <el-table :data="hotelroomlist" border style="width: 100%" >
-          <el-table-column prop="RoomName" label="子房型名称"></el-table-column>
-          <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
-          <el-table-column prop="Remark" label="备注"></el-table-column>
-          <el-table-column label="操作" width="180">
-            <template scope="scope">
-                <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
-              </template>
-          </el-table-column>
-        </el-table>
+        <h1>子房型信息</h1>
+        <el-collapse v-for="item in sonRoomList" accordion>
+          <el-collapse-item >
+            <template slot="title">
+              {{item.SonRoomName}}
+            </template>
+            <div style="margin:5px 0">
+                <el-button type="primary" icon="edit" size="mini" @click="hotelSonRoomEdit(item.ID)"></el-button>
+                <el-button type="primary" icon="delete" size="mini" @click="hotelSonRoomDelete(item.ID)"></el-button>
+            </div>
+            <p><strong>ID:</strong>{{item.ID}}</p>
+            <p><strong>RoomID:</strong>{{item.RoomID}}</p>
+            <p><strong>子房型名称:</strong>{{item.SonRoomName}}</p>
+            <p><strong>房间编号:</strong>{{item.SonRoomCode}}</p>
+            <p><strong>早餐类型:</strong>{{item.BreakfastType}}</p>
+            <p>
+              <strong>房间状态:</strong>
+              <i v-if="item.IsStop">开房</i>
+              <i v-else>关房</i>
+            </p>
+            <p><strong>备注:</strong>{{item.Remark}} && {{item.Remark2}}</p>
+          </el-collapse-item>
+        </el-collapse>
+
         </template>
     </el-table-column>
     <el-table-column prop="RoomName" label="产品名称"></el-table-column>
@@ -31,7 +45,9 @@
         </template>
     </el-table-column>
   </el-table>
+  <!-- table end -->
 
+  <!-- addANDedit hotelRoom dialog start -->
   <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
@@ -48,8 +64,8 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="数量" prop="roomCount">
-            <el-input v-model="form.roomCount"></el-input>
+          <el-form-item label="数量" prop="RoomCount">
+            <el-input v-model="form.RoomCount"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
@@ -64,13 +80,61 @@
         <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
       </span>
   </el-dialog>
+  <!-- addANDedit hotelRoom dialog end -->
+
+  <!-- addANDedit hotelSonRoom dialog start -->
+  <el-dialog  :title="editAdd?'编辑子房间信息':'添加子房间信息'" v-model="dialogVisible2" size="small" @close="dialogClose">
+    <el-form ref="sonform" :model="sonform" :rules="rules" label-width="100px">
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="子房间名称" prop="SonRoomName">
+            <el-input v-model="sonform.SonRoomName"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="子房间编号" prop="SonRoomCode">
+            <el-input v-model="sonform.SonRoomCode"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="早餐类型" prop="BreakfastType">
+            <el-input v-model="sonform.BreakfastType"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="备注">
+            <el-input v-model="sonform.Remark" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="房间信息" prop="IsStop">
+              <el-switch on-text="开房" off-text="关房" v-model="sonform.IsStop"></el-switch>
+            </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="备注2">
+            <el-input v-model="sonform.Remark2" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="handleSaveAndEdit2()">确 定</el-button>
+      </span>
+  </el-dialog>
+  <!-- addANDedit hotelSonRoom dialog end -->
 
 </div>
 </template>
 
 <script>
 import {
-  hotelRoomApi,
+  hotelRoomApi, sonRoomApi
 } from 'api';
 import {Menu,Uitable} from 'components'
 export default {
@@ -84,9 +148,13 @@ export default {
         hotelId: '',
         roomName: '',
         RoomCode: '',
-        roomCount: '',
+        RoomCount: '',
         remark: ''
       },
+      sonform: {
+        IsStop: true
+      },
+      editAdd: '',
       rules: {
         roomName: [{
           required: true,
@@ -98,32 +166,90 @@ export default {
           message: '请填写房间编号',
           trigger: 'blur'
         }],
-        roomCount: [{
+        RoomCount: [{
           required: true,
           message: '请填写房间数量',
           trigger: 'blur'
-        }]
+        }],
+        SonRoomCode: [{
+          required: true,
+          message: '请填写子房间编号',
+          trigger: 'blur'
+        }],
       },
       dialogVisible: false,
+      dialogVisible2: false,
       bedsOptions: [],
       hotelroomlist: [],
+      sonRoomList: []
     };
   },
   mounted() {
     console.dir(this.$parent)
-    this.form.hotelId = this.$route.params.ID
+    this.form.hotelId = this.$route.params.ID;
     this.fetchData();
   },
   methods: {
-    addSonRoom(){
-
+    addSonRoom($index, row){
+      this.sonform.RoomID = row.ID;
+      this.dialogVisible2 = true;
+      this.editAdd = false;
     },
-    hotelSonRoomEdit(index,row){
+    async hotelSonRoomEdit(ID){
+        this.dialogVisible2 = true;
+        this.editAdd = true;
+        const res = await sonRoomApi.detailById(ID);
+        this.sonform = res.data;
+    },
+    async hotelSonRoomDelete(ID) {
+      const _self = this;
+      try {
+        await _self.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await sonRoomApi.remove(ID);
+        _self.fetchData();
+        _self.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async handleSaveAndEdit2() {
+      const _self = this;
+      _self.$refs['sonform'].validate(async valid => {
+        if (valid) {
+          try {
+            if (_self.sonform.ID) {
+              await sonRoomApi.edit(_self.sonform.ID, _self.sonform);
+            } else {
+              await sonRoomApi.add(_self.sonform);
+            }
+            _self.fetchData();
+            _self.dialogVisible2 = false;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
 
     },
     dialogClose() {
       for (let item in this.form) {
         this.form[item] = '';
+      }
+      for (let item in this.sonform) {
+        this.sonform[item] = '';
       }
     },
     async handleSaveAndEdit() {
@@ -134,7 +260,8 @@ export default {
             if (_self.form.ID) {
               await hotelRoomApi.edit(_self.form.ID, _self.form);
             } else {
-              await hotelRoomApi.add(_self.form);
+              this.form.hotelId = _self.$route.params.ID;
+              const a = await hotelRoomApi.add(_self.form);
             }
             _self.fetchData();
             _self.dialogVisible = false;
@@ -158,8 +285,9 @@ export default {
       const _self = this;
       _self.form.ID = row.ID;
       _self.form.hotelId = row.HotelID;
+      _self.form.RoomCode = row.RoomCode;
       _self.form.roomName = row.RoomName;
-      _self.form.roomCount = row.RoomCount;
+      _self.form.RoomCount = row.RoomCount;
       _self.form.remark = row.Remark;
       _self.dialogVisible = true;
     },
@@ -185,7 +313,12 @@ export default {
       if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
-    }
+    },
+    async show(row) {
+      this.sonRoomList = "";
+      const res = await sonRoomApi.detailRoomById(row.ID);
+      this.sonRoomList = res.data;
+    },
   }
 };
 </script>
