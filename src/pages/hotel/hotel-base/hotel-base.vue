@@ -66,7 +66,7 @@
 
 <script>
 import { hotelBaseApi } from 'api';
-import HotelBaseAdd from './HotelBaseAdd.vue'
+import HotelBaseAdd from './hotel-base-add.vue'
 export default {
   components:{
     HotelBaseAdd
