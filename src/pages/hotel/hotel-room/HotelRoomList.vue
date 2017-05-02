@@ -2,12 +2,10 @@
 <div id="hotel-platform-info">
   <HotelTopMenu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
-
   </HotelTopMenu>
   <!-- table start -->
   <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show'>
     <el-table-column prop="RoomName" label="房型名称" type="expand">
-
       <template scope="scope">
         <el-table :data="hotelroomlist" border style="width: 100%" >
           <el-table-column prop="SonRoomName" label="子房型名称"></el-table-column>
