@@ -23,7 +23,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column  label="操作" width="120">
+      <el-table-column  label="操作" width="120" fixed="right">
         <template scope="scope">
           <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>

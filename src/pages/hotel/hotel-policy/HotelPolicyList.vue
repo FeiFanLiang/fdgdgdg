@@ -191,7 +191,7 @@
     <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>-->
 
-    <el-table-column   label="操作">
+    <el-table-column   label="操作" fixed="right">
         <template scope="scope">
           <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">删除</el-button>
         </template>

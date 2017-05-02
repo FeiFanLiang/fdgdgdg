@@ -176,14 +176,14 @@
     style="width: 100%">
     <el-table-column type="expand" label="周日">
       <template scope="props">
-        <!-- <tr v-for="(week,index) in dayList" style="float: right;">
+        <!-- <tr v-for="(week,index) in monthList" style="float: right;">
             <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">CNY{{day.CNY}}</div>
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr> -->
-        <tr v-for="(week,index) in dayList" style="float: right;" v-if="periodType==='month'">
+        <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付无早（双床双人入住）
@@ -196,7 +196,7 @@
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr>
-        <tr v-for="(week,index) in dayList" style="float: right;" v-if="periodType==='month'">
+        <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付有早（双床双人入住）
@@ -338,7 +338,7 @@ export default {
         curDay: arry[2]
       };
     },
-    dayList() {
+    monthList() {
       let firstDay = new Date(
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );

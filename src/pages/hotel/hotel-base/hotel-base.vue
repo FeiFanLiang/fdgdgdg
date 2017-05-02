@@ -39,7 +39,7 @@
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
         <el-table-column prop="Policys.PayMode.ModeName" label="结款"></el-table-column>
-        <el-table-column   label="操作" width="150">
+        <el-table-column   label="操作" width="150" fixed="right">
           <template scope="scope">
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="hotelbaseDelete(scope.$index, scope.row)">删除</el-button>
