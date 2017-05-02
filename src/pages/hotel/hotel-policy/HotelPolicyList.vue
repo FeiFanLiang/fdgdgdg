@@ -1,8 +1,8 @@
 <template lang="html">
 <div id="hotelPollicyList">
-  <Menu path="policy">
+  <HotelTopMenu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
-  </Menu>
+  </HotelTopMenu>
   <el-table
     :data="hotelpolicy"
     @expand="handleExpand"
@@ -348,12 +348,12 @@ import {
   hotelPolicyImageApi
 } from 'api';
 import {
-  Menu
+  HotelTopMenu
 } from 'components'
 
 export default {
   components: {
-    Menu
+    HotelTopMenu
   },
   data() {
     return {

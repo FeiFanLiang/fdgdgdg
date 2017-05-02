@@ -1,8 +1,8 @@
 <template lang="html">
   <div id="HotelPlatformInfo">
-    <Menu path="platform">
+    <HotelTopMenu path="platform">
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-    </Menu>
+    </HotelTopMenu>
     <!-- table start -->
     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
       <el-table-column prop="id" label="ID" width="80"></el-table-column>
@@ -102,12 +102,12 @@ import {
 } from 'api';
 
 import {
-    Menu
+    HotelTopMenu
 } from 'components'
 
 export default {
     components: {
-        Menu
+        HotelTopMenu
     },
     data() {
         return {

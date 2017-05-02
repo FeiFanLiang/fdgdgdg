@@ -1,11 +1,18 @@
 <template>
 <div id="hotel-platform-info">
-  <Menu path="room">
+  <HotelTopMenu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
+<<<<<<< HEAD
   </Menu>
   <el-table :data="hotelroomlist" border style="width: 100%" default-expand-all
   >
     <el-table-column prop="SonRooms" label="房型名称" type="expand">
+=======
+  </HotelTopMenu>
+  <!-- table start -->
+  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show'>
+    <el-table-column prop="RoomName" label="房型名称" type="expand">
+>>>>>>> 619d95035251be204fa7c223307909aba2c8531d
       <template scope="scope">
         <el-table :data="hotelroomlist" border style="width: 100%" >
           <el-table-column prop="SonRoomName" label="子房型名称"></el-table-column>
@@ -128,10 +135,10 @@
 import {
   hotelRoomApi, sonRoomApi
 } from 'api';
-import {Menu,Uitable} from 'components'
+import {HotelTopMenu,Uitable} from 'components'
 export default {
   components: {
-    Menu,
+    HotelTopMenu,
     Uitable
   },
   data() {
