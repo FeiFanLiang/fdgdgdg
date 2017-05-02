@@ -172,8 +172,8 @@
         <i class="el-icon-caret-bottom el-icon--right"></i>
       </el-button>
        <el-dropdown-menu slot="dropdown">
-         <el-dropdown-item command="按周显示">按周显示</el-dropdown-item>
-         <el-dropdown-item command="按月显示">按月显示</el-dropdown-item>
+         <el-dropdown-item command="week">按周显示</el-dropdown-item>
+         <el-dropdown-item command="month">按月显示</el-dropdown-item>
        </el-dropdown-menu>
      </el-dropdown>
   </el-col>
@@ -243,57 +243,60 @@
 
 <script>
 import chunk from 'lodash/chunk';
-import {HotelTopMenu} from 'components';
+import {
+  HotelTopMenu
+} from 'components';
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export default {
 
-  data(){
+  data() {
     return {
-      input3:'',
+      input3: '',
       tableData: [{
-           date: '2016-05-02',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1518 弄'
-         }, {
-           date: '2016-05-04',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1517 弄'
-         }, {
-           date: '2016-05-01',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1519 弄'
-         }, {
-           date: '2016-05-03',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1516 弄'
-         }],
-        chosenDate: '',
-        expandRowKeys: [],
-        list: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
+      chosenDate: '',
+      expandRowKeys: [],
+      list: [{
           id: '1',
-            name: '单人间',
-            isExpand: false
-          },
-          {
-            id: '2',
-            name: '双人(Double)',
-            isExpand: false
-          }
-        ],
-        cycle: ['one'],
-        priceChangeForOne: false,
-        priceChangeForMore: false,
-        value7: '',
-        checkAll: true,
-        checkedCities: cityOptions,
-        cities: cityOptions,
-        homeType: ['标准房', '单人房'],
-        isIndeterminate: true,
-        radio2: 3,
-        chosenDelete: ''
+          name: '单人间',
+          isExpand: false
+        },
+        {
+          id: '2',
+          name: '双人(Double)',
+          isExpand: false
+        }
+      ],
+      cycle: ['one'],
+      priceChangeForOne: false,
+      priceChangeForMore: false,
+      value7: '',
+      checkAll: true,
+      checkedCities: cityOptions,
+      cities: cityOptions,
+      homeType: ['标准房', '单人房'],
+      isIndeterminate: true,
+      radio2: 3,
+      chosenDelete: '',
+      periodType: 'month',
     }
   },
-  computed:{
+  computed: {
     calendar() {
       if (!this.chosenDate) return
       let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd');
@@ -321,8 +324,8 @@ export default {
         tempItem = {
           date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
           status: status,
-          CNY:'100',
-          odd:'3'
+          CNY: '100',
+          odd: '3'
         };
         // this.events.forEach(event => {
         //   if (isEqualDateStr(event.date, tempItem.date)) {
@@ -333,6 +336,21 @@ export default {
         tempArr.push(tempItem);
       }
       return chunk(tempArr, 7);
+    },
+    weekList() {
+      var now = new Date();
+      var nowTime = now.getTime();
+      var day = now.getDay();
+      var oneDayTime = 24 * 60 * 60 * 1000;
+
+      //显示周一
+      var MondayTime = nowTime - (day - 1) * oneDayTime;
+      //显示周日
+      var SundayTime = nowTime + (6 - day) * oneDayTime;
+
+      //初始化日期时间
+      var monday = new Date(MondayTime);
+      var sunday = new Date(SundayTime);
     }
   },
   methods: {
@@ -377,7 +395,7 @@ export default {
     },
     priceOne(date) {
       this.priceChangeForOne = true;
-      this.value7=[new Date(date),new Date(date)];
+      this.value7 = [new Date(date), new Date(date)];
     },
     priceMore() {
       this.priceChangeForMore = true;
@@ -392,8 +410,10 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cities.length;
     },
-    toggleStatus(){},
-    togglePeriod(){},
+    toggleStatus() {},
+    togglePeriod(type) {
+      this.periodType = type;
+    },
   },
   mounted() {
     this.expandRowKeys.push(this.list[0].id)
