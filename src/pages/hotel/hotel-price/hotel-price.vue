@@ -1,7 +1,6 @@
 <template lang="html">
   <div >
     <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
-
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker
                   v-model="value7"
@@ -10,48 +9,38 @@
                   placeholder="选择日期范围"
                   >
                 </el-date-picker></el-col>
-
     </el-row>
-
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
       <el-checkbox v-for="city in cities" :label="city">{{city}}</el-checkbox>
     </el-checkbox-group></el-col>
   </el-row>
-
     <el-row>
       <el-col :span="12" :offset="1"><el-input placeholder="最高采购价" v-model="input3">
      <template slot="prepend">最高采购价</template>
      <template slot="append">CNY</template>
    </el-input></el-col>
      </el-row>
-
      <el-row>
          <el-col :span="12" :offset="1"><el-input placeholder="售卖价" v-model="input3">
         <template slot="prepend">售卖价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</template>
         <template slot="append">CNY</template>
         </el-input></el-col>
       </el-row>
-
       <el-row>  <el-col :span="23" :offset="1"><el-radio-group v-model="radio2">
         <el-radio :label="3">不变</el-radio>
         <el-radio :label="6">开房</el-radio>
         <el-radio :label="9">关房</el-radio>
       </el-radio-group></el-col>
     </el-row>
-
     <div slot="footer" class="dialog-footer">
       <el-button @click="priceChangeForOne = false">取 消</el-button>
       <el-button type="primary" @click="priceChangeForOne = false">确 定</el-button>
     </div>
-
   </el-dialog>
-
-
   <el-dialog title="批量修改售卖价" v-model="priceChangeForMore" >
     <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
-
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker
                   v-model="value7"
@@ -60,9 +49,7 @@
                   placeholder="选择日期范围"
                   >
                 </el-date-picker></el-col>
-
     </el-row>
-
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -73,11 +60,9 @@
       top: 50%;
       right: 0;" @click="deleteCycle(n,index)" v-show="chosenDelete===n&&cycle.length>1"></i>
   </div>
-
   <el-row>
     <el-col :span="23" :offset="1"><el-button type="text" @click="addCycle" >添加周期</el-button></el-col>
     </el-row>
-
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -167,15 +152,14 @@
     </el-dropdown>
   </el-col>
   <el-col :span="3" :offset="5">
-    <el-dropdown trigger="click" @command="togglePeriod">
-      <el-button >按周显示
-        <i class="el-icon-caret-bottom el-icon--right"></i>
-      </el-button>
-       <el-dropdown-menu slot="dropdown">
-         <el-dropdown-item command="week">按周显示</el-dropdown-item>
-         <el-dropdown-item command="month">按月显示</el-dropdown-item>
-       </el-dropdown-menu>
-     </el-dropdown>
+    <el-select v-model="periodType" placeholder="请选择">
+   <el-option
+     v-for="item in [{label:'按周显示',key:'week'},{label:'按月显示',key:'month'}]"
+     :key="item.key"
+     :label="item.label"
+     :value="item.key">
+   </el-option>
+ </el-select>
   </el-col>
   <el-col :span="10" >
     <el-button  icon="arrow-left" @click="pre">前一月</el-button>
@@ -201,7 +185,7 @@
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr> -->
-        <tr v-for="(week,index) in dayList" style="float: right;">
+        <tr v-for="(week,index) in dayList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付无早（双床双人入住）
@@ -214,7 +198,7 @@
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr>
-        <tr v-for="(week,index) in dayList" style="float: right;">
+        <tr v-for="(week,index) in dayList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付有早（双床双人入住）
@@ -222,6 +206,32 @@
                 </div>
             </td>
             <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
+                <div class="dayname">{{day.date}}</div>
+                <div class="price">CNY{{day.CNY}}</div>
+                <div class="remain">余{{day.odd}}</div>
+            </td>
+        </tr>
+        <tr  style="float: right;" v-if="periodType==='week'">
+            <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                <div style="margin-left: 30px;">
+                    标准房-预付无早（双床双人入住）
+                    <span class="gray" style="display: none;">(无效)</span>
+                </div>
+            </td>
+            <td class="ui-table-col-center w100 current " v-for="day in weekList" @click="priceOne(day.date)">
+                <div class="dayname">{{day.date}}</div>
+                <div class="price">CNY{{day.CNY}}</div>
+                <div class="remain">余{{day.odd}}</div>
+            </td>
+        </tr>
+        <tr  style="float: right;" v-if="periodType==='week'">
+            <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                <div style="margin-left: 30px;">
+                    标准房-预付有早（双床双人入住）
+                    <span class="gray" style="display: none;">(无效)</span>
+                </div>
+            </td>
+            <td class="ui-table-col-center w100 current " v-for="day in weekList" @click="priceOne(day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">CNY{{day.CNY}}</div>
                 <div class="remain">余{{day.odd}}</div>
@@ -312,8 +322,7 @@ export default {
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );
       let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
-      let item, status, tempArr = [],
-        tempItem;
+      let item, status, tempArr = [],tempItem;
       for (let i = 0; i < 42; i++) {
         item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
         if (this.calendar.curMonth === item.getMonth()) {
@@ -322,7 +331,8 @@ export default {
           status = 0;
         }
         tempItem = {
-          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          date:item.toLocaleDateString(),
           status: status,
           CNY: '100',
           odd: '3'
@@ -338,19 +348,23 @@ export default {
       return chunk(tempArr, 7);
     },
     weekList() {
-      var now = new Date();
-      var nowTime = now.getTime();
-      var day = now.getDay();
-      var oneDayTime = 24 * 60 * 60 * 1000;
-
-      //显示周一
-      var MondayTime = nowTime - (day - 1) * oneDayTime;
-      //显示周日
-      var SundayTime = nowTime + (6 - day) * oneDayTime;
-
-      //初始化日期时间
-      var monday = new Date(MondayTime);
-      var sunday = new Date(SundayTime);
+      const weekList=[];
+      const now = new Date(this.chosenDate);
+      const nowTime = now.getTime();
+      const day = now.getDay();
+      const oneDayTime = 24 * 60 * 60 * 1000;
+      const SundayTime = nowTime + (6 - day) * oneDayTime;
+      new Array(7).fill(1).forEach((item,index)=>{
+        weekList.unshift(
+          {
+            date:new Date(SundayTime-(index) * oneDayTime).toLocaleDateString(),
+            status: false,
+            CNY: '100',
+            odd: '3'
+          }
+          )
+      })
+     return   weekList;
     }
   },
   methods: {
@@ -411,9 +425,6 @@ export default {
         checkedCount > 0 && checkedCount < this.cities.length;
     },
     toggleStatus() {},
-    togglePeriod(type) {
-      this.periodType = type;
-    },
   },
   mounted() {
     this.expandRowKeys.push(this.list[0].id)
