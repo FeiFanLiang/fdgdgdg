@@ -9,7 +9,7 @@
     <el-table-column prop="RoomName" label="房型名称" type="expand">
 
       <template scope="scope">
-        <el-table :data="hotelroomlist" border style="width: 100%" >
+        <el-table :data="SonRooms" border style="width: 100%" >
           <el-table-column prop="SonRoomName" label="子房型名称"></el-table-column>
           <el-table-column prop="SonRoomCode" label="房间编号"></el-table-column>
           <el-table-column prop="BreakfastType" label="早餐类型"></el-table-column>
