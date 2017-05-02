@@ -110,18 +110,7 @@
   <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#FF4949"></dt><dd>关房</dd></el-col>
   <el-col :span="2"><dt class="legend"><i class="el-icon-caret-top" style="color:#13CE66"></i></dt><dd>允许超售</dd></el-col>
   <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#D3DCE6"></dt><dd>不可售</dd></el-col>
-  <el-col :span="3">
-    <el-dropdown trigger="click" @command="toggleStatus" menu-align="start">
-      <span class="el-dropdown-link">
-        状态<i class="el-icon-caret-bottom el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>全部</el-dropdown-item>
-        <el-dropdown-item>有效</el-dropdown-item>
-        <el-dropdown-item>无效</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </el-col>
+
 </el-row>
 <el-row :gutter="20">
   <el-col :span="3" >
@@ -136,28 +125,37 @@
     </el-dropdown>
   </el-col>
   <el-col :span="3" >
-    <el-dropdown trigger="click" @command="toggleStatus">
-      <el-button >售卖价
-        <i class="el-icon-caret-bottom el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="售卖价" disabled>售卖价</el-dropdown-item>
-        <el-dropdown-item command="售卖价" class="smalltext" divided>售卖价</el-dropdown-item>
-        <el-dropdown-item command="渠道价" disabled>渠道价</el-dropdown-item>
-        <el-dropdown-item command="渠道价B" class="smalltext" divided>渠道价B</el-dropdown-item>
-        <el-dropdown-item command="渠道价C" class="smalltext">渠道价C</el-dropdown-item>
-        <el-dropdown-item command="采购价" disabled>采购价</el-dropdown-item>
-        <el-dropdown-item command="采购价" class="smalltext" divided>采购价</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-select v-model="value7" placeholder="请选择">
+    <el-option-group
+      v-for="group in options3"
+      :key="group.label"
+      :label="group.label">
+      <el-option
+        v-for="item in group.options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-option-group>
+  </el-select>
   </el-col>
-  <el-col :span="3" :offset="5">
+  <el-col :span="3">
+    <el-select v-model="status" placeholder="请选择状态">
+    <el-option
+      v-for="item in [{value:'0',label:'全部'},{value:'1',label:'有效'},{value:'2',label:'无效'}]"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
+  </el-col>
+  <el-col :span="3" :offset="2">
     <el-select v-model="periodType" placeholder="请选择">
    <el-option
-     v-for="item in [{label:'按周显示',key:'week'},{label:'按月显示',key:'month'}]"
-     :key="item.key"
+     v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]"
+     :key="item.value"
      :label="item.label"
-     :value="item.key">
+     :value="item.value">
    </el-option>
  </el-select>
   </el-col>
@@ -261,6 +259,7 @@ export default {
 
   data() {
     return {
+      status: '1',
       input3: '',
       tableData: [{
         date: '2016-05-02',
@@ -304,6 +303,28 @@ export default {
       radio2: 3,
       chosenDelete: '',
       periodType: 'month',
+      options3: [{
+        label: '售卖价',
+        options: [{
+          value: 'Shanghai',
+          label: '售卖价'
+        }]
+      }, {
+        label: '渠道价',
+        options: [{
+          value: 'Chengdu',
+          label: '去哪儿B'
+        }, {
+          value: 'Shenzhen',
+          label: '去哪儿C'
+        }]
+      }, {
+        label: '采购价',
+        options: [{
+          value: 'Beijing',
+          label: '采购价'
+        }]
+      }],
     }
   },
   computed: {
@@ -435,7 +456,6 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cities.length;
     },
-    toggleStatus() {},
   },
   mounted() {
     this.expandRowKeys.push(this.list[0].id)
