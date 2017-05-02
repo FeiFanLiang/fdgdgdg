@@ -290,7 +290,9 @@
   </el-col>
 </el-row>
       <el-table
-    :data="tableData5"
+    :data="list"
+    row-key="id"
+      :expand-row-keys="expandRowKeys"
     style="width: 100%">
     <el-table-column type="expand" label="周日">
       <template scope="props">
@@ -321,7 +323,7 @@
                     <span class="gray" style="display: none;">(无效)</span>
                 </div>
             </td>
-            <td class="ui-table-col-center w100 current " v-for="day in week" @click="editPrice(day)">
+            <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">CNY{{day.CNY}}</div>
                 <div class="remain">余{{day.odd}}</div>
@@ -329,7 +331,7 @@
         </tr>
       </template>
     </el-table-column>
-    <el-table-column label="房型" prop="type" min-width="400"></el-table-column>
+    <el-table-column label="房型" prop="name" min-width="400"></el-table-column>
     <el-table-column label="周日" width="100"></el-table-column>
     <el-table-column label="周一" width="100"></el-table-column>
     <el-table-column label="周二" width="100"></el-table-column>
@@ -349,22 +351,16 @@ export default {
 
   data(){
     return {
-      tableData5: [{
-          id: '12987122',
-          name: '好滋好味鸡蛋仔',
-          type: '单人间',
-        }, {
-          id: '12987123',
-          name: '好滋好味鸡蛋仔',
-          type: '双人间',
-        }],
         stateText: '全部',
         chosenDate: '',
+        expandRowKeys: [],
         list: [{
+          id: '1',
             name: '单人间',
             isExpand: false
           },
           {
+            id: '2',
             name: '双人(Double)',
             isExpand: false
           }
@@ -460,9 +456,6 @@ export default {
       }
       this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
-    editPrice(day) {
-      alert(JSON.stringify(day));
-    },
     showDelete(item) {
       this.chosenDelete = item;
     },
@@ -492,6 +485,7 @@ export default {
     }
   },
   mounted() {
+    this.expandRowKeys.push(this.list[0].id)
     Date.prototype.Format = function(fmt) {
       let o = {
         'M+': this.getMonth() + 1, //月份

@@ -138,7 +138,7 @@
                                       <span class="gray" style="display: none;">(无效)</span>
                                   </div>
                               </td>
-                              <td class="ui-table-col-center w80 current " v-for="day in week" @click="editPrice(day)">
+                              <td class="ui-table-col-center w80 current " v-for="day in week" @click="priceOne(day.date)">
                                   <div class="dayname">{{day.date}}</div>
                                   <div class="price">CNY{{day.CNY}}</div>
                                   <div class="remain">余{{day.odd}}</div>
