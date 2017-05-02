@@ -84,145 +84,43 @@
     <el-checkbox v-for="type in homeType" :label="type">{{type}}</el-checkbox>
   </el-checkbox-group></el-col>
   </el-row>
-
-  <div class="ui-table ui-table-bordered">
-    <table>
-      <thead>
-        <tr>
-          <th class="ui-table-col-center w170">房型名称</th>
-          <th class="ui-table-col-center w170">产品名称</th>
-          <th class="ui-table-col-center w100">早餐</th>
-          <th class="ui-table-col-center w120">最高采购价
-            <i class="ui-icon helper" title="所选有效日期段的最高采购价"></i>
-          </th>
-          <th class="ui-table-col-center w150">售卖价</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td rowspan="2">
-            <div style="margin-left: 5px;">标准房</div>
-          </td>
-          <td>
-            预付无早（双床双人入住）
-          </td>
-          <td class="ui-table-col-center">
-            无早
-          </td>
-          <!-- 今日最高采购价 -->
-          <td class="ui-table-col-center">
-            <span>
-                                          --
-                                          <a target="_blank" href="javascript:void(0)">录入</a>
-                                          </span>
-            <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-          </td>
-          <td class="ui-table-col-center">
-            <div class="oni-textbox">
-              <div class="oni-textbox-input-wrap">
-                <!--ms-if-->
-                <input data-textbox-width="60" maxlength="8" avalonctrl="textbox223286466218" class="oni-textbox-input" style="width: 60px;"></div>
-            </div>
-            CNY
-          </td>
-        </tr>
-        <tr>
-
-          <td>
-            预付含早（双床双人入住）
-          </td>
-          <td class="ui-table-col-center">
-            双早
-          </td>
-          <!-- 今日最高采购价 -->
-          <td class="ui-table-col-center">
-            <span>
-                                          --
-                                          <a target="_blank" href="javascript:void(0)">录入</a>
-                                          </span>
-            <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-          </td>
-          <td class="ui-table-col-center">
-            <div class="oni-textbox">
-              <div class="oni-textbox-input-wrap">
-                <!--ms-if-->
-                <input data-textbox-width="60" maxlength="8" avalonctrl="textbox834999740479" class="oni-textbox-input" style="width: 60px;"></div>
-            </div>
-            CNY
-          </td>
-        </tr>
-      </tbody>
-      <tbody>
-        <tr>
-          <td rowspan="2">
-            <div style="margin-left: 5px;">单人房</div>
-          </td>
-          <td>
-            预付无早
-          </td>
-          <td class="ui-table-col-center">
-            无早
-          </td>
-          <!-- 今日最高采购价 -->
-          <td class="ui-table-col-center">
-            <span>
-                                          --
-                                          <a target="_blank" href="javascript:void(0)">录入</a>
-                                          </span>
-            <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-          </td>
-          <td class="ui-table-col-center">
-            <div class="oni-textbox">
-              <div class="oni-textbox-input-wrap">
-                <!--ms-if-->
-                <input data-textbox-width="60" maxlength="8" avalonctrl="textbox904173609814" class="oni-textbox-input" style="width: 60px;"></div>
-            </div>
-            CNY
-          </td>
-        </tr>
-        <tr>
-          <!--ms-if-->
-          <td>
-            预付含早
-          </td>
-          <td class="ui-table-col-center">
-            单早
-          </td>
-          <!-- 今日最高采购价 -->
-          <td class="ui-table-col-center">
-            <span>
-                                          --
-                                          <a target="_blank" href="javascript:void(0)">录入</a>
-                                          </span>
-            <span class="helper" title="供应商:undefined" style="display: none;">0 CNY</span>
-          </td>
-          <td class="ui-table-col-center">
-            <div class="oni-textbox">
-              <div class="oni-textbox-input-wrap">
-                <!--ms-if-->
-                <input data-textbox-width="60" maxlength="8" avalonctrl="textbox09802206752" class="oni-textbox-input" style="width: 60px;"></div>
-
-            </div>
-            CNY
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-
-    <el-row>  <el-col :span="23" :offset="1"><el-radio-group v-model="radio2">
-      <el-radio :label="3">不变</el-radio>
-      <el-radio :label="6">开房</el-radio>
-      <el-radio :label="9">关房</el-radio>
-    </el-radio-group></el-col></el-row>
-
+  <el-table
+        :data="tableData"
+        style="width: 100%">
+        <el-table-column
+        show-overflow-tooltip
+          prop="date"
+          label="房型名称"
+          >
+        </el-table-column>
+        <el-table-column
+        show-overflow-tooltip
+          prop="name"
+          label="产品名称"
+          >
+        </el-table-column>
+        <el-table-column
+        show-overflow-tooltip
+          prop="address"
+          label="早餐">
+        </el-table-column>
+        <el-table-column
+        show-overflow-tooltip
+          prop="address"
+          label="最高采购价">
+        </el-table-column>
+        <el-table-column
+        show-overflow-tooltip
+          prop="address"
+          label="售卖价">
+        </el-table-column>
+      </el-table>
   <div slot="footer" class="dialog-footer">
     <el-button @click="priceChangeForMore = false">取 消</el-button>
     <el-button type="primary" @click="priceChangeForMore = false">确 定</el-button>
   </div>
   </el-dialog>
-  <Menu path="price"><el-button type="primary" @click="hotelroomAdd">创建</el-button></Menu >
+  <HotelTopMenu path="price"></HotelTopMenu >
     <el-row>
   <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#FF4949"></dt><dd>关房</dd></el-col>
   <el-col :span="2"><dt class="legend"><i class="el-icon-caret-top" style="color:#13CE66"></i></dt><dd>允许超售</dd></el-col>
@@ -345,13 +243,30 @@
 
 <script>
 import chunk from 'lodash/chunk';
-import {Menu} from 'components';
+import {HotelTopMenu} from 'components';
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 export default {
 
   data(){
     return {
-        stateText: '全部',
+      input3:'',
+      tableData: [{
+           date: '2016-05-02',
+           name: '王小虎',
+           address: '上海市普陀区金沙江路 1518 弄'
+         }, {
+           date: '2016-05-04',
+           name: '王小虎',
+           address: '上海市普陀区金沙江路 1517 弄'
+         }, {
+           date: '2016-05-01',
+           name: '王小虎',
+           address: '上海市普陀区金沙江路 1519 弄'
+         }, {
+           date: '2016-05-03',
+           name: '王小虎',
+           address: '上海市普陀区金沙江路 1516 弄'
+         }],
         chosenDate: '',
         expandRowKeys: [],
         list: [{
@@ -370,7 +285,7 @@ export default {
         priceChangeForMore: false,
         value7: '',
         checkAll: true,
-        checkedCities: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+        checkedCities: cityOptions,
         cities: cityOptions,
         homeType: ['标准房', '单人房'],
         isIndeterminate: true,
@@ -380,12 +295,7 @@ export default {
   },
   computed:{
     calendar() {
-      if (!this.chosenDate)
-        return {
-          curYear: '2017',
-          curMonth: '4',
-          curDay: '12'
-        };
+      if (!this.chosenDate) return
       let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd');
       let arry = time1.split('-');
       return {
@@ -468,7 +378,6 @@ export default {
     priceOne(date) {
       this.priceChangeForOne = true;
       this.value7=[new Date(date),new Date(date)];
-
     },
     priceMore() {
       this.priceChangeForMore = true;
@@ -482,7 +391,9 @@ export default {
       this.checkAll = checkedCount === this.cities.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cities.length;
-    }
+    },
+    toggleStatus(){},
+    togglePeriod(){},
   },
   mounted() {
     this.expandRowKeys.push(this.list[0].id)
@@ -514,7 +425,7 @@ export default {
     this.chosenDate = Date.now();
   },
   components: {
-    Menu
+    HotelTopMenu
   },
   created() {
     // 组件创建完后获取数据，
@@ -535,5 +446,11 @@ export default {
     overflow: hidden;
     text-align: center;
     width: 14px;
+}
+.ui-table-col-center{
+  background-color: #fbfbfb;
+cursor: pointer;
+vertical-align: top;
+border: 1px solid #ececec;
 }
 </style>

@@ -1,7 +1,7 @@
 <template lang="html">
 <div id="hotelbaseEdit">
-  <Menu path="">
-  </Menu>
+  <HotelTopMenu path="">
+  </HotelTopMenu>
   <!-- form start -->
   <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
 
@@ -94,11 +94,11 @@
 <script>
 import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 import {
-    Menu
+    HotelTopMenu
 } from 'components'
 export default {
   components: {
-      Menu
+      HotelTopMenu
   },
   data() {
     return {
