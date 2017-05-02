@@ -162,13 +162,13 @@
  </el-select>
   </el-col>
   <el-col :span="10" >
-    <el-button  icon="arrow-left" @click="pre">前一月</el-button>
+    <el-button  icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
     <el-date-picker class="mydate"
         v-model="chosenDate"
         type="date"
         placeholder="选择日期">
     </el-date-picker>
-    <el-button  @click="next">后一月<i class="el-icon-arrow-right "></i></el-button>
+    <el-button  @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
   </el-col>
 </el-row>
       <el-table
@@ -322,7 +322,8 @@ export default {
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );
       let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
-      let item, status, tempArr = [],tempItem;
+      let item, status, tempArr = [],
+        tempItem;
       for (let i = 0; i < 42; i++) {
         item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
         if (this.calendar.curMonth === item.getMonth()) {
@@ -332,7 +333,7 @@ export default {
         }
         tempItem = {
           // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
-          date:item.toLocaleDateString(),
+          date: item.toLocaleDateString(),
           status: status,
           CNY: '100',
           odd: '3'
@@ -348,23 +349,21 @@ export default {
       return chunk(tempArr, 7);
     },
     weekList() {
-      const weekList=[];
+      const weekList = [];
       const now = new Date(this.chosenDate);
       const nowTime = now.getTime();
       const day = now.getDay();
       const oneDayTime = 24 * 60 * 60 * 1000;
       const SundayTime = nowTime + (6 - day) * oneDayTime;
-      new Array(7).fill(1).forEach((item,index)=>{
-        weekList.unshift(
-          {
-            date:new Date(SundayTime-(index) * oneDayTime).toLocaleDateString(),
-            status: false,
-            CNY: '100',
-            odd: '3'
-          }
-          )
+      new Array(7).fill(1).forEach((item, index) => {
+        weekList.unshift({
+          date: new Date(SundayTime - (index) * oneDayTime).toLocaleDateString(),
+          status: false,
+          CNY: '100',
+          odd: '3'
+        })
       })
-     return   weekList;
+      return weekList;
     }
   },
   methods: {
@@ -373,30 +372,42 @@ export default {
     },
     pre() {
       let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
-      if (month == 0) {
-        month = 12;
-        year = year - 1;
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000;
+        this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString();
       }
-      if (month < 10) {
-        month = '0' + month;
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear();
+        let month = nowdays.getMonth();
+        if (month == 0) {
+          month = 12;
+          year = year - 1;
+        }
+        if (month < 10) {
+          month = '0' + month;
+        }
+        this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
     next() {
       let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
-      if (month == 11) {
-        month = -1;
-        year = year + 1;
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000;
+        this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString();
       }
-      month += 2;
-      if (month < 10) {
-        month = '0' + month;
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear();
+        let month = nowdays.getMonth();
+        if (month == 11) {
+          month = -1;
+          year = year + 1;
+        }
+        month += 2;
+        if (month < 10) {
+          month = '0' + month;
+        }
+        this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
     showDelete(item) {
       this.chosenDelete = item;
