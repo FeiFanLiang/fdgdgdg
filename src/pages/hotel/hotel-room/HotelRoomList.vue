@@ -4,18 +4,18 @@
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </HotelTopMenu>
   <!-- table start -->
-  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show'>
+  <el-table :data="hotelroomlist" border style="width: 100%" default-expand-all>
     <el-table-column prop="RoomName" label="房型名称" type="expand">
       <template scope="scope">
-        <el-table :data="hotelroomlist" border style="width: 100%" >
+        <el-table :data="SonRooms" border style="width: 100%" >
           <el-table-column prop="SonRoomName" label="子房型名称"></el-table-column>
           <el-table-column prop="SonRoomCode" label="房间编号"></el-table-column>
           <el-table-column prop="BreakfastType" label="早餐类型"></el-table-column>
           <el-table-column label="房间状态">
-            <!--<template scope="scope">
+            <template scope="scope">
               <i v-if="scope.row.IsStop">开房</i>
               <i v-else>关房</i>
-            </template>-->
+            </template>
           </el-table-column>
           <el-table-column prop="Remark" label="备注"></el-table-column>
           <el-table-column label="操作" width="180">
@@ -28,16 +28,18 @@
 
       </template>
     </el-table-column>
+    <el-table-column prop="ID" label="ID"></el-table-column>
     <el-table-column prop="RoomName" label="产品名称"></el-table-column>
     <el-table-column prop="RoomCode" label="房间编号"></el-table-column>
     <el-table-column prop="RoomCount" label="数量"></el-table-column>
     <el-table-column prop="Remark" label="备注"></el-table-column>
     <el-table-column label="操作" width="280">
       <template scope="scope">
+        <!--<el-button size="mini" @click="show(scope.$index, scope.row)">查看</el-button>-->
         <el-button size="mini" @click="addSonRoom(scope.$index, scope.row)">添加子房型</el-button>
-          <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
+        <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
+      </template>
     </el-table-column>
   </el-table>
 
@@ -105,7 +107,7 @@
         <el-col :span="11">
           <el-form-item label="房间信息" prop="IsStop">
               <el-switch on-text="开房" off-text="关房" v-model="sonform.IsStop"></el-switch>
-            </el-form-item>
+          </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="备注2">
@@ -117,10 +119,10 @@
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible2 = false">取 消</el-button>
         <el-button type="primary" @click="handleSaveAndEdit2()">确 定</el-button>
-      </span>
+    </span>
   </el-dialog>
   <!-- addANDedit hotelSonRoom dialog end -->
- 
+
 </div>
 </template>
 
@@ -169,7 +171,7 @@ export default {
       dialogVisible2: false,
       bedsOptions: [],
       hotelroomlist: [],
-      //SonRooms: []
+      SonRooms: []
     };
   },
   mounted() {
@@ -183,7 +185,7 @@ export default {
       this.dialogVisible2 = true;
       this.editAdd = false;
     },
-    async hotelSonRoomEdit(index,row){
+    async hotelSonRoomEdit($index,row){
       this.dialogVisible2 = true;
       this.editAdd = true;
       const res = await sonRoomApi.detailById(row.ID);
@@ -197,7 +199,7 @@ export default {
         this.sonform[item] = '';
       }
     },
-    async hotelSonRoomDelete(ID) {
+    async hotelSonRoomDelete($index, row) {
       const _self = this;
       try {
         await _self.$confirm('是否删除此条信息?', '提示', {
@@ -205,7 +207,8 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await sonRoomApi.remove(ID);
+        await sonRoomApi.remove(row.ID);
+        console.log(row.ID)
         _self.fetchData();
         _self.$message({
           message: '删除成功',
@@ -223,6 +226,7 @@ export default {
             if (_self.sonform.ID) {
               await sonRoomApi.edit(_self.sonform.ID, _self.sonform);
             } else {
+              console.log(_self.sonform.RoomID);
               await sonRoomApi.add(_self.sonform);
             }
             _self.fetchData();
@@ -299,18 +303,15 @@ export default {
       if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
+      console.log(res.data.SonRooms)
+      this.SonRooms = this.hotelroomlist.SonRooms;
       console.log(this.hotelroomlist)
+      console.log(this.SonRooms)
     },
-    /*async show(row) {
+    /*async show($index,row) {
       this.sonRoomList = "";
       const res = await sonRoomApi.detailRoomById(row.ID);
-      this.sonRoomList = res.data;
-    },*/
-    /*async handleExpand(row, expanded) {
-      if (expanded) {
-        const res = await sonRoomApi.detailRoomById(row.ID);
-        this.sonRoomList = res.data;
-      }
+      this.SonRooms = res.data;
     },*/
 
   }
