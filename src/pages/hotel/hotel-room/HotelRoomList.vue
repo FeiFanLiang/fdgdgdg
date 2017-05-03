@@ -5,7 +5,7 @@
 
   </HotelTopMenu>
   <!-- table start -->
-  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show'>
+  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show' :row-class-name="tableRowClassName" :default-expand-all="true">
     <el-table-column prop="RoomName" label="房型名称" type="expand">
 
       <template scope="scope">
@@ -180,6 +180,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    tableRowClassName(row, index) {
+      return 'info-row';
+     },
     addSonRoom($index, row){
       this.sonform.RoomID = row.ID;
       this.dialogVisible2 = true;
@@ -341,6 +344,10 @@ export default {
             display: inline-block;
         }
     }
+    .el-table .info-row {
+    background: #c9e5f5;
+  }
+
 }
 
 </style>
