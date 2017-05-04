@@ -3,15 +3,13 @@
   <HotelTopMenu path="room">
     <el-button type="primary" >创建</el-button>
   </HotelTopMenu>
-<<<<<<< HEAD
-=======
+
   <!-- table start -->
-  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show' :row-class-name="tableRowClassName" :default-expand-all="true">
-    <el-table-column prop="RoomName" label="房型名称" type="expand">
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
+  <!-- <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show' :row-class-name="tableRowClassName" :default-expand-all="true">
+    <el-table-column prop="RoomName" label="房型名称" type="expand"> -->
 
  <el-table
-    :data="hotelroomlist2"    
+    :data="hotelroomlist2"
     style="width: 100%;text-align:center;">
     <el-table-column prop="RoomName" label="产品名称">
       <template scope="scope">
@@ -30,42 +28,42 @@
 
       <el-table-column label="子房型名称">
         <template scope="scope">
-          <tr v-for="item in scope.row.SonRooms" style="background-color:white;opacity:0.5;">
-            <td>子房型名称: {{ item.SonRoomName }}</td>
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
+            <td >子房型名称: {{ item.SonRoomName }}</td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="房间编号">
+      <el-table-column label="房间编号" class="child-table" >
         <template scope="scope" >
-          <tr v-for="item in scope.row.SonRooms">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>房间编号: </td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="早餐类型">
+      <el-table-column label="早餐类型" >
         <template scope="scope">
-          <tr v-for="item in scope.row.SonRooms">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>早餐类型: </td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="房间状态">
         <template scope="scope" >
-          <tr v-for="item in scope.row.SonRooms">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>房间状态: </td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="备注">
         <template scope="scope">
-          <tr v-for="item in scope.row.SonRooms">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>备注: </td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
-          <tr v-for="item in scope.row.SonRooms">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>
               <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="hotelSonRoomDelete(scope.$index, scope.row)">删除</el-button>
@@ -73,11 +71,11 @@
           </tr>
         </template>
       </el-table-column>
-      
+
     </el-table-column>
     <el-table-column width="150">
       <template scope="scope">
-          <tr>
+          <tr class="child-table">
             <td>
               <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">添加子房型</el-button>
             </td>
@@ -86,7 +84,7 @@
     </el-table-column>
   </el-table>
 
-  
+
 
 </div>
 </template>
@@ -133,8 +131,6 @@ export default {
     //this.show();
   },
   methods: {
-<<<<<<< HEAD
-=======
     tableRowClassName(row, index) {
       return 'info-row';
      },
@@ -255,7 +251,6 @@ export default {
         console.error(e);
       }
     },
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
     async fetchData() {
       if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
@@ -267,7 +262,7 @@ export default {
       this.SonRooms = res.data;
     },*/
   }
-  
+
 };
 </script>
 <style lang="scss">
@@ -293,16 +288,17 @@ export default {
             display: inline-block;
         }
     }
-<<<<<<< HEAD
 
-    tr{
-      background-color:white;opacity:0.8;
-    }
-=======
+    // tr{
+    //   background-color:white;opacity:0.8;
+    // }
     .el-table .info-row {
     background: #c9e5f5;
   }
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: #fff;
+  }
+  .child-table >td{border-bottom:0}
 
 }
 
