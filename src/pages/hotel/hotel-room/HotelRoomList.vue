@@ -1,16 +1,8 @@
 <template>
 <div id="hotel-room-list" style="color:gray;">
   <HotelTopMenu path="room">
-    <el-button type="primary" >创建</el-button>
+    <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </HotelTopMenu>
-<<<<<<< HEAD
-=======
-
-  <!-- table start -->
-  <!-- <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show' :row-class-name="tableRowClassName" :default-expand-all="true">
-    <el-table-column prop="RoomName" label="房型名称" type="expand"> -->
-
->>>>>>> 2de3bc4e633c4968986fa4c46301ca79d9bb75d2
  <el-table
     :data="hotelroomlist2"
     style="width: 100%;text-align:center;">
@@ -96,11 +88,10 @@
 import {
   hotelRoomApi, sonRoomApi
 } from 'api';
-import {HotelTopMenu,Uitable} from 'components'
+import {HotelTopMenu} from 'components'
 export default {
   components: {
     HotelTopMenu,
-    Uitable
   },
   data() {
     return {
@@ -287,14 +278,6 @@ export default {
         }
     }
 
-<<<<<<< HEAD
-    tr{
-      background-color:white;opacity:0.8;
-    }
-    .el-table .info-row {
-    background: #c9e5f5;
-  }
-=======
     // tr{
     //   background-color:white;opacity:0.8;
     // }
@@ -305,7 +288,6 @@ export default {
     background-color: #fff;
   }
   .child-table >td{border-bottom:0}
->>>>>>> 2de3bc4e633c4968986fa4c46301ca79d9bb75d2
 
 }
 
