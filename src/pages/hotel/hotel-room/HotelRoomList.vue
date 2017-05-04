@@ -3,13 +3,6 @@
   <HotelTopMenu path="room">
     <el-button type="primary" >创建</el-button>
   </HotelTopMenu>
-<<<<<<< HEAD
-=======
-  <!-- table start -->
-  <el-table :data="hotelroomlist" border style="width: 100%" @row-click='show' :row-class-name="tableRowClassName" :default-expand-all="true">
-    <el-table-column prop="RoomName" label="房型名称" type="expand">
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
-
  <el-table
     :data="hotelroomlist2"    
     style="width: 100%;text-align:center;">
@@ -121,11 +114,6 @@ export default {
         }
       ],
       SonRooms: [],
-      aaa: [
-        {a:1,b:2},
-        {a:1,c:3,d:4},
-        {a:1}
-      ],
     }
   },
   mounted() {
@@ -133,8 +121,6 @@ export default {
     //this.show();
   },
   methods: {
-<<<<<<< HEAD
-=======
     tableRowClassName(row, index) {
       return 'info-row';
      },
@@ -255,7 +241,6 @@ export default {
         console.error(e);
       }
     },
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
     async fetchData() {
       if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
@@ -293,16 +278,13 @@ export default {
             display: inline-block;
         }
     }
-<<<<<<< HEAD
 
     tr{
       background-color:white;opacity:0.8;
     }
-=======
     .el-table .info-row {
     background: #c9e5f5;
   }
->>>>>>> b9ba5b791c4d350b7dc57dec4378fbbcaca552f8
 
 }
 
