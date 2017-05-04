@@ -23,39 +23,39 @@
       <el-table-column label="子房型名称" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td >子房型名称: {{ item.SonRoomName }}</td>
+            <td >{{ item.SonRoomName }}</td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="房间编号" class="child-table" show-overflow-tooltip>
         <template scope="scope" >
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td>房间编号: </td>
+            <td></td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="早餐类型" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td>早餐类型: </td>
+            <td></td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="房间状态" show-overflow-tooltip>
         <template scope="scope" >
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td>房间状态: </td>
+            <td></td>
           </tr>
         </template>
       </el-table-column>
       <el-table-column label="备注" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td>备注: </td>
+            <td></td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="子房型操作">
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>
@@ -66,7 +66,7 @@
         </template>
       </el-table-column>
 
-    <el-table-column width="240">
+    <el-table-column width="240" label="房型操作">
       <template scope="scope">
           <tr class="child-table">
             <td>
