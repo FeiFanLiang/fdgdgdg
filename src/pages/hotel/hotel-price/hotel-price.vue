@@ -1,7 +1,6 @@
 <template lang="html">
   <div >
     <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
-
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker
                   v-model="value7"
@@ -10,48 +9,38 @@
                   placeholder="选择日期范围"
                   >
                 </el-date-picker></el-col>
-
     </el-row>
-
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
       <el-checkbox v-for="city in cities" :label="city">{{city}}</el-checkbox>
     </el-checkbox-group></el-col>
   </el-row>
-
     <el-row>
       <el-col :span="12" :offset="1"><el-input placeholder="最高采购价" v-model="input3">
      <template slot="prepend">最高采购价</template>
      <template slot="append">CNY</template>
    </el-input></el-col>
      </el-row>
-
      <el-row>
          <el-col :span="12" :offset="1"><el-input placeholder="售卖价" v-model="input3">
         <template slot="prepend">售卖价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</template>
         <template slot="append">CNY</template>
         </el-input></el-col>
       </el-row>
-
       <el-row>  <el-col :span="23" :offset="1"><el-radio-group v-model="radio2">
         <el-radio :label="3">不变</el-radio>
         <el-radio :label="6">开房</el-radio>
         <el-radio :label="9">关房</el-radio>
       </el-radio-group></el-col>
     </el-row>
-
     <div slot="footer" class="dialog-footer">
       <el-button @click="priceChangeForOne = false">取 消</el-button>
       <el-button type="primary" @click="priceChangeForOne = false">确 定</el-button>
     </div>
-
   </el-dialog>
-
-
   <el-dialog title="批量修改售卖价" v-model="priceChangeForMore" >
     <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
-
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker
                   v-model="value7"
@@ -60,9 +49,7 @@
                   placeholder="选择日期范围"
                   >
                 </el-date-picker></el-col>
-
     </el-row>
-
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -73,11 +60,9 @@
       top: 50%;
       right: 0;" @click="deleteCycle(n,index)" v-show="chosenDelete===n&&cycle.length>1"></i>
   </div>
-
   <el-row>
     <el-col :span="23" :offset="1"><el-button type="text" @click="addCycle" >添加周期</el-button></el-col>
     </el-row>
-
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
@@ -125,18 +110,7 @@
   <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#FF4949"></dt><dd>关房</dd></el-col>
   <el-col :span="2"><dt class="legend"><i class="el-icon-caret-top" style="color:#13CE66"></i></dt><dd>允许超售</dd></el-col>
   <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#D3DCE6"></dt><dd>不可售</dd></el-col>
-  <el-col :span="3">
-    <el-dropdown trigger="click" @command="toggleStatus" menu-align="start">
-      <span class="el-dropdown-link">
-        状态<i class="el-icon-caret-bottom el-icon--right"></i>
-      </span>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item>全部</el-dropdown-item>
-        <el-dropdown-item>有效</el-dropdown-item>
-        <el-dropdown-item>无效</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </el-col>
+
 </el-row>
 <el-row :gutter="20">
   <el-col :span="3" >
@@ -151,40 +125,48 @@
     </el-dropdown>
   </el-col>
   <el-col :span="3" >
-    <el-dropdown trigger="click" @command="toggleStatus">
-      <el-button >售卖价
-        <i class="el-icon-caret-bottom el-icon--right"></i>
-      </el-button>
-      <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="售卖价" disabled>售卖价</el-dropdown-item>
-        <el-dropdown-item command="售卖价" class="smalltext" divided>售卖价</el-dropdown-item>
-        <el-dropdown-item command="渠道价" disabled>渠道价</el-dropdown-item>
-        <el-dropdown-item command="渠道价B" class="smalltext" divided>渠道价B</el-dropdown-item>
-        <el-dropdown-item command="渠道价C" class="smalltext">渠道价C</el-dropdown-item>
-        <el-dropdown-item command="采购价" disabled>采购价</el-dropdown-item>
-        <el-dropdown-item command="采购价" class="smalltext" divided>采购价</el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
+    <el-select v-model="value7" placeholder="请选择">
+    <el-option-group
+      v-for="group in options3"
+      :key="group.label"
+      :label="group.label">
+      <el-option
+        v-for="item in group.options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-option-group>
+  </el-select>
   </el-col>
-  <el-col :span="3" :offset="5">
-    <el-dropdown trigger="click" @command="togglePeriod">
-      <el-button >按周显示
-        <i class="el-icon-caret-bottom el-icon--right"></i>
-      </el-button>
-       <el-dropdown-menu slot="dropdown">
-         <el-dropdown-item command="week">按周显示</el-dropdown-item>
-         <el-dropdown-item command="month">按月显示</el-dropdown-item>
-       </el-dropdown-menu>
-     </el-dropdown>
+  <el-col :span="3">
+    <el-select v-model="status" placeholder="请选择状态">
+    <el-option
+      v-for="item in [{value:'0',label:'全部'},{value:'1',label:'有效'},{value:'2',label:'无效'}]"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
+  </el-col>
+  <el-col :span="3" :offset="2">
+    <el-select v-model="periodType" placeholder="请选择">
+   <el-option
+     v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]"
+     :key="item.value"
+     :label="item.label"
+     :value="item.value">
+   </el-option>
+ </el-select>
   </el-col>
   <el-col :span="10" >
-    <el-button  icon="arrow-left" @click="pre">前一月</el-button>
+    <el-button  icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
     <el-date-picker class="mydate"
         v-model="chosenDate"
         type="date"
         placeholder="选择日期">
     </el-date-picker>
-    <el-button  @click="next">后一月<i class="el-icon-arrow-right "></i></el-button>
+    <el-button  @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
   </el-col>
 </el-row>
       <el-table
@@ -194,14 +176,14 @@
     style="width: 100%">
     <el-table-column type="expand" label="周日">
       <template scope="props">
-        <!-- <tr v-for="(week,index) in dayList" style="float: right;">
+        <!-- <tr v-for="(week,index) in monthList" style="float: right;">
             <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">CNY{{day.CNY}}</div>
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr> -->
-        <tr v-for="(week,index) in dayList" style="float: right;">
+        <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付无早（双床双人入住）
@@ -214,7 +196,7 @@
                 <div class="remain">余{{day.odd}}</div>
             </td>
         </tr>
-        <tr v-for="(week,index) in dayList" style="float: right;">
+        <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                 <div style="margin-left: 30px;">
                     标准房-预付有早（双床双人入住）
@@ -222,6 +204,32 @@
                 </div>
             </td>
             <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
+                <div class="dayname">{{day.date}}</div>
+                <div class="price">CNY{{day.CNY}}</div>
+                <div class="remain">余{{day.odd}}</div>
+            </td>
+        </tr>
+        <tr  style="float: right;" v-if="periodType==='week'">
+            <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                <div style="margin-left: 30px;">
+                    标准房-预付无早（双床双人入住）
+                    <span class="gray" style="display: none;">(无效)</span>
+                </div>
+            </td>
+            <td class="ui-table-col-center w100 current " v-for="day in weekList" @click="priceOne(day.date)">
+                <div class="dayname">{{day.date}}</div>
+                <div class="price">CNY{{day.CNY}}</div>
+                <div class="remain">余{{day.odd}}</div>
+            </td>
+        </tr>
+        <tr  style="float: right;" v-if="periodType==='week'">
+            <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                <div style="margin-left: 30px;">
+                    标准房-预付有早（双床双人入住）
+                    <span class="gray" style="display: none;">(无效)</span>
+                </div>
+            </td>
+            <td class="ui-table-col-center w100 current " v-for="day in weekList" @click="priceOne(day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">CNY{{day.CNY}}</div>
                 <div class="remain">余{{day.odd}}</div>
@@ -251,6 +259,7 @@ export default {
 
   data() {
     return {
+      status: '1',
       input3: '',
       tableData: [{
         date: '2016-05-02',
@@ -294,6 +303,28 @@ export default {
       radio2: 3,
       chosenDelete: '',
       periodType: 'month',
+      options3: [{
+        label: '售卖价',
+        options: [{
+          value: 'Shanghai',
+          label: '售卖价'
+        }]
+      }, {
+        label: '渠道价',
+        options: [{
+          value: 'Chengdu',
+          label: '去哪儿B'
+        }, {
+          value: 'Shenzhen',
+          label: '去哪儿C'
+        }]
+      }, {
+        label: '采购价',
+        options: [{
+          value: 'Beijing',
+          label: '采购价'
+        }]
+      }],
     }
   },
   computed: {
@@ -307,7 +338,7 @@ export default {
         curDay: arry[2]
       };
     },
-    dayList() {
+    monthList() {
       let firstDay = new Date(
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
       );
@@ -322,7 +353,8 @@ export default {
           status = 0;
         }
         tempItem = {
-          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          date: item.toLocaleDateString(),
           status: status,
           CNY: '100',
           odd: '3'
@@ -338,19 +370,21 @@ export default {
       return chunk(tempArr, 7);
     },
     weekList() {
-      var now = new Date();
-      var nowTime = now.getTime();
-      var day = now.getDay();
-      var oneDayTime = 24 * 60 * 60 * 1000;
-
-      //显示周一
-      var MondayTime = nowTime - (day - 1) * oneDayTime;
-      //显示周日
-      var SundayTime = nowTime + (6 - day) * oneDayTime;
-
-      //初始化日期时间
-      var monday = new Date(MondayTime);
-      var sunday = new Date(SundayTime);
+      const weekList = [];
+      const now = new Date(this.chosenDate);
+      const nowTime = now.getTime();
+      const day = now.getDay();
+      const oneDayTime = 24 * 60 * 60 * 1000;
+      const SundayTime = nowTime + (6 - day) * oneDayTime;
+      new Array(7).fill(1).forEach((item, index) => {
+        weekList.unshift({
+          date: new Date(SundayTime - (index) * oneDayTime).toLocaleDateString(),
+          status: false,
+          CNY: '100',
+          odd: '3'
+        })
+      })
+      return weekList;
     }
   },
   methods: {
@@ -359,30 +393,42 @@ export default {
     },
     pre() {
       let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
-      if (month == 0) {
-        month = 12;
-        year = year - 1;
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000;
+        this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString();
       }
-      if (month < 10) {
-        month = '0' + month;
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear();
+        let month = nowdays.getMonth();
+        if (month == 0) {
+          month = 12;
+          year = year - 1;
+        }
+        if (month < 10) {
+          month = '0' + month;
+        }
+        this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
     next() {
       let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
-      if (month == 11) {
-        month = -1;
-        year = year + 1;
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000;
+        this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString();
       }
-      month += 2;
-      if (month < 10) {
-        month = '0' + month;
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear();
+        let month = nowdays.getMonth();
+        if (month == 11) {
+          month = -1;
+          year = year + 1;
+        }
+        month += 2;
+        if (month < 10) {
+          month = '0' + month;
+        }
+        this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
     },
     showDelete(item) {
       this.chosenDelete = item;
@@ -409,10 +455,6 @@ export default {
       this.checkAll = checkedCount === this.cities.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cities.length;
-    },
-    toggleStatus() {},
-    togglePeriod(type) {
-      this.periodType = type;
     },
   },
   mounted() {

@@ -22,7 +22,7 @@
       <el-table-column sortable prop="id" label="ID"  width="180" show-overflow-tooltip></el-table-column>
       <el-table-column sortable prop="modeName" label="账户名称"  show-overflow-tooltip></el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column  width="150"  label="操作">
+      <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
