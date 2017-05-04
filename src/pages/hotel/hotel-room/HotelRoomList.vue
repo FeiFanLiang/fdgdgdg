@@ -19,37 +19,36 @@
         </el-popover>
       </template>
     </el-table-column>
-    <el-table-column label="子房型信息" >
 
-      <el-table-column label="子房型名称">
+      <el-table-column label="子房型名称" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td >子房型名称: {{ item.SonRoomName }}</td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="房间编号" class="child-table" >
+      <el-table-column label="房间编号" class="child-table" show-overflow-tooltip>
         <template scope="scope" >
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>房间编号: </td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="早餐类型" >
+      <el-table-column label="早餐类型" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>早餐类型: </td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="房间状态">
+      <el-table-column label="房间状态" show-overflow-tooltip>
         <template scope="scope" >
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>房间状态: </td>
           </tr>
         </template>
       </el-table-column>
-      <el-table-column label="备注">
+      <el-table-column label="备注" show-overflow-tooltip>
         <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td>备注: </td>
@@ -67,19 +66,51 @@
         </template>
       </el-table-column>
 
-    </el-table-column>
-    <el-table-column width="150">
+    <el-table-column width="240">
       <template scope="scope">
           <tr class="child-table">
             <td>
+                <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
               <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">添加子房型</el-button>
+              <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
             </td>
           </tr>
         </template>
     </el-table-column>
   </el-table>
 
-
+  <el-dialog :title="form.hotelId?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
+    <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="房间名称" prop="roomName">
+            <el-input v-model="form.roomName"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="房间编号" prop="RoomCode">
+            <el-input v-model="form.RoomCode"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="数量" prop="roomCount">
+            <el-input v-model="form.roomCount"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="备注">
+            <el-input v-model="form.remark" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
+      </span>
+  </el-dialog>
 
 </div>
 </template>
@@ -95,6 +126,32 @@ export default {
   },
   data() {
     return {
+      form: {
+        hotelId: '',
+        roomName: '',
+        RoomCode: '',
+        roomCount: '',
+        remark: ''
+      },
+      rules: {
+        roomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        RoomCode: [{
+          required: true,
+          message: '请填写房间编号',
+          trigger: 'blur'
+        }],
+        roomCount: [{
+          required: true,
+          message: '请填写房间数量',
+          trigger: 'blur'
+        }]
+      },
+      dialogVisible: false,
+      bedsOptions: [],
       hotelroomlist: [],
       hotelroomlist2: [
         {
