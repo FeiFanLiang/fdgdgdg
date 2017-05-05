@@ -170,9 +170,12 @@ export default {
       sonForm: {
         id: '',
         roomID: '',
-        SonRoomName: '',
+        sonRoomName: '',
         sonRoomCode: '',
         remark: '',
+        remark2: '',
+        breakfastType: 0,
+        isStop: false,
       },
       rules: {
         roomName: [{
@@ -265,40 +268,6 @@ export default {
         console.error(e);
       }
     },
-    async handleSonRoomSaveAndEdit() {
-      const _self = this;
-      _self.$refs['sonForm'].validate(async valid => {
-        if (valid) {
-          try {
-            if (_self.sonForm.ID) {
-              await sonRoomApi.edit(_self.sonForm.ID, _self.sonForm);
-            } else {
-              let form = {
-                "RoomID": 831,
-                "SonRoomName": "SonRoomName",
-                "SonRoomCode": "SonRoomCode",
-                "BreakfastType": 0,
-                "IsStop": false,
-                "Remark": "string",
-                "Remark2": "string"
-              }
-              await sonRoomApi.add(form);
-            }
-            _self.fetchData();
-            _self.sonFormDialogVisible = false;
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
-        }
-      });
-
-    },
     async handleSaveAndEdit() {
       const _self = this;
       _self.$refs['form'].validate(async valid => {
@@ -325,13 +294,39 @@ export default {
           return false;
         }
       });
-
+    },
+    async handleSonRoomSaveAndEdit() {
+      const _self = this;
+      _self.$refs['sonForm'].validate(async valid => {
+        if (valid) {
+          try {
+            if (_self.sonForm.id) {
+              await sonRoomApi.edit(_self.sonForm.id, _self.sonForm);
+            } else {
+              let form = { ..._self.sonForm
+              }
+              delete form.id
+              await sonRoomApi.add(form);
+            }
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+            _self.sonFormDialogVisible = false;
+            _self.fetchData();
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
     },
     hotelroomAdd() {
       this.dialogVisible = true;
     },
     hotelSonRoomAdd(row) {
-      console.log(row)
+      this.sonForm.roomID=row.ID;
       this.sonFormDialogVisible = true;
     },
     hotelroomEdit($index, row) {
