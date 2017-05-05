@@ -17,7 +17,6 @@
         </el-popover>
       </template>
     </el-table-column>
-
     <el-table-column label="子房型名称" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
@@ -28,37 +27,47 @@
     <el-table-column label="房间编号" class="child-table" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td></td>
+            <td >{{ item.SonRoomCode }}</td>
           </tr>
         </template>
     </el-table-column>
     <el-table-column label="早餐类型" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td></td>
+            <td >{{ item.BreakfastType }}</td>
           </tr>
         </template>
     </el-table-column>
     <el-table-column label="房间状态" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td></td>
+              <td >
+              <i class="el-icon-circle-check" style="color:#13CE66" v-if="item.IsStop"></i>
+              <i class="el-icon-circle-close" v-else></i>
+              </td>
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="备注" show-overflow-tooltip>
+    <el-table-column label="备注一" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td></td>
+              <td >{{ item.Remark }}</td>
+          </tr>
+        </template>
+    </el-table-column>
+    <el-table-column label="备注二" show-overflow-tooltip>
+      <template scope="scope">
+          <tr v-for="item in scope.row.SonRooms" class="child-table">
+              <td >{{ item.Remark2 }}</td>
           </tr>
         </template>
     </el-table-column>
     <el-table-column label="子房型操作">
       <template scope="scope">
-          <tr v-for="item in scope.row.SonRooms" class="child-table">
+          <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
-              <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="hotelSonRoomDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="hotelSonRoomDelete(scope.row)">删除</el-button>
             </td>
           </tr>
         </template>
@@ -68,9 +77,9 @@
       <template scope="scope">
           <tr class="child-table">
             <td>
-                <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
               <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
-              <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
             </td>
           </tr>
         </template>
@@ -109,16 +118,16 @@
         <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
       </span>
   </el-dialog>
-  <el-dialog :title="sonForm.roomID?'编辑子房间信息':'添加子房间信息'" v-model="sonFormDialogVisible" size="small" @close="dialogClose">
+  <el-dialog :title="sonForm.id?'编辑子房间信息':'添加子房间信息'" v-model="sonFormDialogVisible" size="small" @close="dialogClose">
     <el-form ref="sonForm" :model="sonForm" :rules="sonRules" label-width="100px">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="房间名称" prop="roomName">
-            <el-input v-model="sonForm.SonRoomName"></el-input>
+          <el-form-item label="子房间名称" prop="roomName">
+            <el-input v-model="sonForm.sonRoomName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="房间编号" prop="roomCode">
+          <el-form-item label="子房间编号" prop="roomCode">
             <el-input v-model="sonForm.sonRoomCode"></el-input>
           </el-form-item>
         </el-col>
@@ -130,9 +139,32 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="备注">
+          <el-form-item label="早餐类型">
+            <el-select v-model="form.breakfastType" clearable placeholder="请选择预订方式">
+              <el-option v-for="item in [{name:'有早',value:0},{name:'无早',value:1}]" :label="item.name" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="备注一">
             <el-input v-model="sonForm.remark" type="textarea"></el-input>
           </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="备注二">
+            <el-input v-model="sonForm.remark2" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <div class="grid-content bg-purple">
+            <el-form-item label="是否开启" prop="isStop">
+              <el-switch on-text="是" off-text="否" v-model="sonForm.isStop"></el-switch>
+            </el-form-item>
+          </div>
         </el-col>
       </el-row>
     </el-form>
@@ -195,7 +227,7 @@ export default {
         }]
       },
       sonRules: {
-        SonRoomName: [{
+        sonRoomName: [{
           required: true,
           message: '请填写房间名称',
           trigger: 'blur'
@@ -210,21 +242,6 @@ export default {
       sonFormDialogVisible: false,
       bedsOptions: [],
       hotelroomlist: [],
-      hotelroomlist2: [{
-          RoomName: 'aaa',
-          SonRooms: [{
-            SonRoomName: '123',
-          }, {
-            SonRoomName: '222',
-          }, ]
-        },
-        {
-          RoomName: 'bbb',
-          SonRooms: {
-            SonRoomName: '456'
-          }
-        }
-      ],
       SonRooms: [],
     }
   },
@@ -234,14 +251,6 @@ export default {
     //this.show();
   },
   methods: {
-    tableRowClassName(row, index) {
-      return 'info-row';
-    },
-    // addSonRoom($index, row){
-    //   this.sonForm.RoomID = row.ID;
-    //   this.sonFormDialogVisible = true;
-    //   this.editAdd = false;
-    // },
     dialogClose() {
       for (let item in this.form) {
         this.form[item] = '';
@@ -326,10 +335,10 @@ export default {
       this.dialogVisible = true;
     },
     hotelSonRoomAdd(row) {
-      this.sonForm.roomID=row.ID;
+      this.sonForm.roomID = row.ID;
       this.sonFormDialogVisible = true;
     },
-    hotelroomEdit($index, row) {
+    hotelroomEdit(row) {
       const _self = this;
       _self.form.id = row.ID;
       _self.form.hotelId = row.HotelID;
@@ -340,12 +349,20 @@ export default {
       _self.dialogVisible = true;
     },
     async hotelSonRoomEdit(index, row) {
-      this.sonFormDialogVisible = true;
-      this.editAdd = true;
-      const res = await sonRoomApi.detailById(row.ID);
-      this.sonForm = res.data;
+      if (!row || !row.SonRooms) retrun;
+      const sonRooms = row.SonRooms[index]
+      const _self = this;
+      _self.sonFormDialogVisible = true;
+      _self.sonForm.id = sonRooms.ID;
+      _self.sonForm.roomID = sonRooms.roomID;
+      _self.sonForm.sonRoomName = sonRooms.SonRoomName;
+      _self.sonForm.sonRoomCode = sonRooms.SonRoomCode;
+      _self.sonForm.remark = sonRooms.Remark;
+      _self.sonForm.remark2 = sonRooms.Remark2;
+      _self.sonForm.breakfastType = sonRooms.BreakfastType;
+      _self.sonForm.isStop = sonRooms.IsStop;
     },
-    async hotelroomDelete($index, row) {
+    async hotelroomDelete(row) {
       const _self = this;
       try {
         await _self.$confirm(`是否删除${row.RoomName}?`, '提示', {
