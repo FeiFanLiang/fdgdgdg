@@ -35,7 +35,7 @@
            </template>
         </el-table-column>
       </el-table>
-      <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny" @close="resetForm('form')">
+      <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form"  >
           <el-form-item label="账户名称" prop="accountName">
             <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
@@ -48,8 +48,8 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="closeDialog('form')">取 消</el-button>
-          <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm()">确 定</el-button>
         </span>
       </el-dialog>
   </div>
@@ -67,8 +67,6 @@ export default {
       list: [],
       loading: true,
       showDialog: false,
-      dialogTitle: '',
-      dialogTag: '',
       filters: {
         sortWay: '',
         accountName: '',
@@ -131,22 +129,12 @@ export default {
     clickAddBtn() {
       const _self = this;
       _self.showDialog = true;
-      _self.dialogTag = 1;
-      _self.dialogTitle = "添加支付账户";
-      _self.form = {
-        id: 0,
-        accountName: '',
-        accountNum: '',
-        remark: ''
-      }
     },
     async clickEditBtn($index, row) {
       const _self = this;
       try {
         const res = await payCompanyApi.getDetail(row.id);
         _self.showDialog = true;
-        _self.dialogTag = 2;
-        _self.dialogTitle = "编辑账户信息";
         _self.form.id = res.data.ID;
         _self.form.accountName = res.data.AccountName;
         _self.form.accountNum = res.data.AccountNum;
@@ -155,24 +143,24 @@ export default {
         console.error(e);
       }
     },
-    closeDialog(a) {
+    submitForm() {
       const _self = this;
-      _self.showDialog = false;
-      _self.$refs[a].resetFields();
+      if(_self.form.id){
+        _self.editSave();
+      }else{
+        _self.addSave();
+      }
     },
-    submitForm(a) {
+    async addSave() {
       const _self = this;
-      if (_self.dialogTag === 1) _self.addSave(a);
-      if (_self.dialogTag === 2) _self.editSave(a);
-    },
-    async addSave(a) {
-      const _self = this;
-      _self.$refs[a].validate(async valid => {
+      _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            await payCompanyApi.addInfo(_self.form);
+            const form={..._self.form}
+            delete form.id
+            await payCompanyApi.addInfo(form);
             _self.fetchData();
-            _self.$refs[a].resetFields();
+            _self.$refs['form'].resetFields();
             _self.showDialog = false;
             _self.$message({
               message: '保存成功',
@@ -186,14 +174,14 @@ export default {
         }
       });
     },
-    async editSave(a) {
+    async editSave() {
       const _self = this;
-      _self.$refs[a].validate(async valid => {
+      _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
             await payCompanyApi.editInfo(_self.form);
             _self.fetchData();
-            _self.$refs[a].resetFields();
+            _self.$refs['form'].resetFields();
             _self.showDialog = false;
             _self.$message({
               message: '编辑成功',
