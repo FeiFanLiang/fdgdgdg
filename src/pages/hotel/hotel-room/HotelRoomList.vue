@@ -67,13 +67,13 @@
           <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
               <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="hotelSonRoomDelete(scope.row)">删除</el-button>
+              <el-button size="mini" type="danger" @click="hotelSonRoomDelete(index,scope.row)">删除</el-button>
             </td>
           </tr>
         </template>
     </el-table-column>
 
-    <el-table-column width="240" label="房型操作">
+    <el-table-column width="240" label="房型操作" >
       <template scope="scope">
           <tr class="child-table">
             <td>
@@ -140,8 +140,8 @@
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="早餐类型">
-            <el-select v-model="form.breakfastType" clearable placeholder="请选择预订方式">
-              <el-option v-for="item in [{name:'有早',value:0},{name:'无早',value:1}]" :label="item.name" :value="item.value"></el-option>
+            <el-select v-model="sonForm.breakfastType"  placeholder="请选择早餐类型">
+              <el-option v-for="item in breakfastTypes " :label="item.name" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -161,7 +161,7 @@
       <el-row>
         <el-col :span="11">
           <div class="grid-content bg-purple">
-            <el-form-item label="是否开启" prop="isStop">
+            <el-form-item label="是否开启" >
               <el-switch on-text="是" off-text="否" v-model="sonForm.isStop"></el-switch>
             </el-form-item>
           </div>
@@ -190,6 +190,7 @@ export default {
   },
   data() {
     return {
+      breakfastTypes:[{name:'有早',value:0},{name:'无早',value:1}],
       form: {
         id: '',
         hotelNum: '',
@@ -256,25 +257,11 @@ export default {
         this.form[item] = '';
       }
       for (let item in this.sonForm) {
-        this.sonForm[item] = '';
-      }
-    },
-    async hotelSonRoomDelete(ID) {
-      const _self = this;
-      try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await sonRoomApi.remove(ID);
-        _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
+        if(item==='isStop'){
+          this.sonForm[item] = false;
+        }else{
+          this.sonForm[item] = '';
+        }
       }
     },
     async handleSaveAndEdit() {
@@ -380,16 +367,30 @@ export default {
         console.error(e);
       }
     },
+    async hotelSonRoomDelete(index,row) {
+      if (!row || !row.SonRooms||!row.SonRooms[index]) retrun;
+      const _self = this;
+      try {
+        await _self.$confirm('是否删除此条信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await sonRoomApi.remove(row.SonRooms[index].ID);
+        _self.fetchData();
+        _self.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    },
     async fetchData() {
       if (!this.$route.params.ID) return;
       const res = await hotelRoomApi.list(this.$route.params.ID);
       this.hotelroomlist = res.data;
     },
-    /*async show(ID) {
-      console.log(ID)
-      const res = await sonRoomApi.detailRoomById(ID);
-      this.SonRooms = res.data;
-    },*/
   }
 
 };
