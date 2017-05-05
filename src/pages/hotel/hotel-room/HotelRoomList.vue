@@ -73,7 +73,7 @@
         </template>
     </el-table-column>
 
-    <el-table-column width="240" label="房型操作" >
+    <el-table-column width="240" label="房型操作">
       <template scope="scope">
           <tr class="child-table">
             <td>
@@ -140,7 +140,7 @@
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="早餐类型">
-            <el-select v-model="sonForm.breakfastType"  placeholder="请选择早餐类型">
+            <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型">
               <el-option v-for="item in breakfastTypes " :label="item.name" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -161,7 +161,7 @@
       <el-row>
         <el-col :span="11">
           <div class="grid-content bg-purple">
-            <el-form-item label="是否开启" >
+            <el-form-item label="是否开启">
               <el-switch on-text="是" off-text="否" v-model="sonForm.isStop"></el-switch>
             </el-form-item>
           </div>
@@ -190,7 +190,13 @@ export default {
   },
   data() {
     return {
-      breakfastTypes:[{name:'有早',value:0},{name:'无早',value:1}],
+      breakfastTypes: [{
+        name: '有早',
+        value: 0
+      }, {
+        name: '无早',
+        value: 1
+      }],
       form: {
         id: '',
         hotelNum: '',
@@ -257,9 +263,9 @@ export default {
         this.form[item] = '';
       }
       for (let item in this.sonForm) {
-        if(item==='isStop'){
+        if (item === 'isStop') {
           this.sonForm[item] = false;
-        }else{
+        } else {
           this.sonForm[item] = '';
         }
       }
@@ -367,8 +373,8 @@ export default {
         console.error(e);
       }
     },
-    async hotelSonRoomDelete(index,row) {
-      if (!row || !row.SonRooms||!row.SonRooms[index]) retrun;
+    async hotelSonRoomDelete(index, row) {
+      if (!row || !row.SonRooms || !row.SonRooms[index]) retrun;
       const _self = this;
       try {
         await _self.$confirm('是否删除此条信息?', '提示', {
@@ -397,31 +403,6 @@ export default {
 </script>
 <style lang="scss">
 #hotel-room-list {
-    .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
-
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
-
-    // tr{
-    //   background-color:white;opacity:0.8;
-    // }
     .el-table .info-row {
         background: #c9e5f5;
     }

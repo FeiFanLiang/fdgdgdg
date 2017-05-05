@@ -1,26 +1,22 @@
 <template lang="html">
   <div id="HotelBasePage">
     <db-breadcrumb></db-breadcrumb>
-
-    <div class="filters">
-        <div class="filter">
-          <el-select v-model="filters.labelVal"  placeholder="请选择">
-            <el-option
-                v-for="item in selectedOptions"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
-          <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
-      </div>
-        <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
-        <el-button type="primary" @click="dialogTableVisible=true">
-            创建
-        </el-button>
-    </div>
-
+    <el-row :gutter="20">
+      <el-col :span="3"><el-select v-model="filters.labelVal"  placeholder="请选择">
+        <el-option
+            v-for="item in selectedOptions"
+            :label="item.label"
+            :value="item.value">
+        </el-option>
+      </el-select></el-col>
+      <el-col :span="3"><el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
+      <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
+      <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input></el-col>
+      <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
+      <el-button type="primary" @click="dialogTableVisible=true">
+          创建
+      </el-button>
+    </el-row>
     <div class="eltable">
       <el-table
       :data="hotelbase"
@@ -47,7 +43,7 @@
         </el-table-column>
       </el-table>
     </div>
-      <div class="pagination-wrapper" style="align=center">
+      <div class="pagination-wrapper" >
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper"
           :page-sizes="[10, 20, 30]"
@@ -65,27 +61,28 @@
 </template>
 
 <script>
-import { hotelBaseApi } from 'api';
+import {
+  hotelBaseApi
+} from 'api';
 import HotelBaseAdd from './hotel-base-add.vue'
 export default {
-  components:{
+  components: {
     HotelBaseAdd
   },
   data() {
     return {
-      dialogTableVisible:false,
+      dialogTableVisible: false,
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
-      count:0,
+      count: 0,
       filters: {
         ID: '',
         HotelName: '',
         HotelName_En: '',
         labelVal: '1'
       },
-      selectedOptions: [
-        {
+      selectedOptions: [{
           value: '1',
           label: '酒店ID'
         },
@@ -115,31 +112,31 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
-        query :{
-                ID:_self.filters.labelVal === '1' ? _self.filters.ID : '',
-                HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-                HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
-               }
+        query: {
+          ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
+          HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+          HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+        }
       };
       const res = await hotelBaseApi.listAll(options);
-      if(res&&res.data&&res.data.Data){
-        let data =res.data.Data
-        for(let item of data){
-          if(item.Policys&&Array.isArray(item.Policys)&&item.Policys.length>0){
-            for(let n of item.Policys){
-              if(n.IsDefault){
-                item.Policys=n
+      if (res && res.data && res.data.Data) {
+        let data = res.data.Data
+        for (let item of data) {
+          if (item.Policys && Array.isArray(item.Policys) && item.Policys.length > 0) {
+            for (let n of item.Policys) {
+              if (n.IsDefault) {
+                item.Policys = n
               }
             }
           }
         }
         _self.hotelbase = data;
-        _self.count=res.data.Count;
+        _self.count = res.data.Count;
       }
 
     },
     handleSizeChange(val) {
-      this.pageSize  = val
+      this.pageSize = val
       this.getHotelbaseList(this.pageSize);
     },
     handleCurrentChange(val) {
@@ -152,7 +149,9 @@ export default {
         params: {
           ID: row.ID
         },
-        query:{hotelName:row.HotelName}
+        query: {
+          hotelName: row.HotelName
+        }
       });
     },
     async hotelbaseDelete($index, row) {
@@ -179,30 +178,9 @@ export default {
 
 <style lang="scss">
 #HotelBasePage {
-
-    .filters {
-
-
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
-
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
     }
-
 }
 </style>
