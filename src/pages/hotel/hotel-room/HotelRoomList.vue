@@ -4,7 +4,7 @@
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </HotelTopMenu>
  <el-table
-    :data="hotelroomlist2"
+    :data="hotelroomlist"
     style="width: 100%;text-align:center;">
     <el-table-column prop="RoomName" label="产品名称">
       <template scope="scope">
@@ -71,7 +71,7 @@
           <tr class="child-table">
             <td>
                 <el-button size="mini" @click="hotelroomEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" @click="hotelSonRoomEdit(scope.$index, scope.row)">添加子房型</el-button>
+              <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
               <el-button size="mini" type="danger" @click="hotelroomDelete(scope.$index, scope.row)">删除</el-button>
             </td>
           </tr>
@@ -88,8 +88,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="房间编号" prop="RoomCode">
-            <el-input v-model="form.RoomCode"></el-input>
+          <el-form-item label="房间编号" prop="roomCode">
+            <el-input v-model="form.roomCode"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -111,7 +111,38 @@
         <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
       </span>
   </el-dialog>
-
+  <el-dialog :title="sonForm.hotelId?'编辑子房间信息':'添加子房间信息'" v-model="sonFormDialogVisible" size="small" @close="dialogClose">
+    <el-form ref="sonForm" :model="sonForm" :rules="sonRules" label-width="100px">
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="房间名称" prop="roomName">
+            <el-input v-model="sonForm.roomName"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="房间编号" prop="roomCode">
+            <el-input v-model="sonForm.roomCode"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="数量" prop="roomCount">
+            <el-input v-model="sonForm.roomCount"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="备注">
+            <el-input v-model="sonForm.remark" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="sonFormDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
+      </span>
+  </el-dialog>
 </div>
 </template>
 
@@ -129,7 +160,14 @@ export default {
       form: {
         hotelId: '',
         roomName: '',
-        RoomCode: '',
+        roomCode: '',
+        roomCount: '',
+        remark: ''
+      },
+      sonForm: {
+        hotelId: '',
+        roomName: '',
+        roomCode: '',
         roomCount: '',
         remark: ''
       },
@@ -139,7 +177,24 @@ export default {
           message: '请填写房间名称',
           trigger: 'blur'
         }],
-        RoomCode: [{
+        roomCode: [{
+          required: true,
+          message: '请填写房间编号',
+          trigger: 'blur'
+        }],
+        roomCount: [{
+          required: true,
+          message: '请填写房间数量',
+          trigger: 'blur'
+        }]
+      },
+      sonRules: {
+        roomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        roomCode: [{
           required: true,
           message: '请填写房间编号',
           trigger: 'blur'
@@ -151,6 +206,7 @@ export default {
         }]
       },
       dialogVisible: false,
+      sonFormDialogVisible: false,
       bedsOptions: [],
       hotelroomlist: [],
       hotelroomlist2: [
@@ -180,23 +236,17 @@ export default {
     tableRowClassName(row, index) {
       return 'info-row';
      },
-    addSonRoom($index, row){
-      this.sonform.RoomID = row.ID;
-      this.dialogVisible2 = true;
-      this.editAdd = false;
-    },
-    async hotelSonRoomEdit(index,row){
-      this.dialogVisible2 = true;
-      this.editAdd = true;
-      const res = await sonRoomApi.detailById(row.ID);
-      this.sonform = res.data;
-    },
+    // addSonRoom($index, row){
+    //   this.sonForm.RoomID = row.ID;
+    //   this.sonFormDialogVisible = true;
+    //   this.editAdd = false;
+    // },
     dialogClose() {
       for (let item in this.form) {
         this.form[item] = '';
       }
-      for (let item in this.sonform) {
-        this.sonform[item] = '';
+      for (let item in this.sonForm) {
+        this.sonForm[item] = '';
       }
     },
     async hotelSonRoomDelete(ID) {
@@ -219,16 +269,16 @@ export default {
     },
     async handleSaveAndEdit2() {
       const _self = this;
-      _self.$refs['sonform'].validate(async valid => {
+      _self.$refs['sonForm'].validate(async valid => {
         if (valid) {
           try {
-            if (_self.sonform.ID) {
-              await sonRoomApi.edit(_self.sonform.ID, _self.sonform);
+            if (_self.sonForm.ID) {
+              await sonRoomApi.edit(_self.sonForm.ID, _self.sonForm);
             } else {
-              await sonRoomApi.add(_self.sonform);
+              await sonRoomApi.add(_self.sonForm);
             }
             _self.fetchData();
-            _self.dialogVisible2 = false;
+            _self.sonFormDialogVisible = false;
             _self.$message({
               message: '保存成功',
               type: 'success'
@@ -270,19 +320,30 @@ export default {
     hotelroomAdd() {
       this.dialogVisible = true;
     },
+    hotelSonRoomAdd(row) {
+      console.log(row)
+      this.sonFormDialogVisible = true;
+    },
     hotelroomEdit($index, row) {
       const _self = this;
       _self.form.ID = row.ID;
       _self.form.hotelId = row.HotelID;
       _self.form.roomName = row.RoomName;
-      _self.form.roomCount = row.RoomCount;
+      _self.form.roomCount = row.RoomCount+'';// 返回的是数字类型,表单验证会存在问题
+      _self.form.roomCode = row.RoomCode;
       _self.form.remark = row.Remark;
       _self.dialogVisible = true;
+    },
+    async hotelSonRoomEdit(index,row){
+      this.sonFormDialogVisible = true;
+      this.editAdd = true;
+      const res = await sonRoomApi.detailById(row.ID);
+      this.sonForm = res.data;
     },
     async hotelroomDelete($index, row) {
       const _self = this;
       try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
+        await _self.$confirm(`是否删除${row.RoomName}?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
