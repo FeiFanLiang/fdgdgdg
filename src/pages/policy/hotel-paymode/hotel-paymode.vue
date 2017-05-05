@@ -30,7 +30,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
+    <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny" @close="resetForm('form')">
       <el-form :rules="rules" ref="form" :model="form">
         <el-form-item label="账户名称" prop="modeName">
           <el-input placeholder="请输入账户名称" v-model="form.modeName"></el-input>

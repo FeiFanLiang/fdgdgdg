@@ -198,7 +198,7 @@
     </el-table-column>
   </el-table>
   <!-- table end -->
-  <el-dialog title="添加政策信息" v-model="createDialog" size="small">
+  <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row :gutter="24">
         <el-col :span="10">

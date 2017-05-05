@@ -47,7 +47,7 @@
     <!-- pagination end  -->
 
     <!-- dialog start -->
-    <el-dialog :title="dialogTitle" v-model="showDialog" size="small" :modal-append-to-body="false">
+    <el-dialog :title="dialogTitle" v-model="showDialog" size="small" :modal-append-to-body="false" @close="resetForm('form')">
       <el-form :rules="rules" class="around" ref="form" :model="form">
         <div>
           <el-form-item label="ID" v-if="dialogTag === 2">

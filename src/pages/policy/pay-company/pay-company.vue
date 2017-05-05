@@ -35,8 +35,8 @@
            </template>
         </el-table-column>
       </el-table>
-      <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
-        <el-form :rules="rules" ref="form" :model="form" >
+      <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny" @close="resetForm('form')">
+        <el-form :rules="rules" ref="form" :model="form"  >
           <el-form-item label="账户名称" prop="accountName">
             <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
           </el-form-item>
