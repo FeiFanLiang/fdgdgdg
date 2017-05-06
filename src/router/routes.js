@@ -133,6 +133,34 @@ let routes = [
           }
         ]
       },
+      {
+        path: 'user',
+        component: Pages.Abstract,
+        name: '用户管理',
+        iconClass: 'el-icon-setting',
+        children: [
+          {
+            path: 'user',
+            component: Pages.User,
+            name: '用户管理',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          }
+        ]
+      },
+      {
+        path: 'role',
+        component: Pages.Abstract,
+        name: '角色管理',
+        iconClass: 'el-icon-setting',
+        children: [
+          {
+            path: 'role',
+            component: Pages.Role,
+            name: '角色管理',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          }
+        ]
+      },
       // images
       {
         path: 'images',

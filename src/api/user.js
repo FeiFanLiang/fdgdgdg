@@ -15,7 +15,7 @@ export default {
       path.apiBaseUrl + `System/User/RestUserPassword/${userName}`
     );
   },
-  addUser(params) {
+  add(params) {
     return axios.post(path.apiBaseUrl + 'System/User', params);
   }
 };
