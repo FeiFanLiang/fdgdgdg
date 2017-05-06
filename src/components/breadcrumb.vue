@@ -6,36 +6,25 @@
         {{ item.name }}
       </el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="line">
-
-    </div>
+    <div class="line"></div>
   </div>
-
 </template>
 
 <script>
 export default {
   name: 'db-breadcrumb',
-
   data() {
     return {
       breadcrumbs: []
     };
   },
-  watch:{
-    breadcrumbs(){
-        console.log(this.breadcrumbs)
-    }
-  },
-
   mounted() {
     this.breadcrumbs = (this.$parent && this.$parent.$route && this.$parent.$route.matched) || [];
-
   }
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 .db-breadcrumb-loc {
   float: left;
 }
