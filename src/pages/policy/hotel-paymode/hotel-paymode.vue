@@ -1,5 +1,5 @@
 <template lang="html">
-  <div id="HotelPayMode">
+  <div id="hotel-paymode-page">
     <db-breadcrumb></db-breadcrumb>
     <el-row :gutter="20">
       <el-col :span="3">
@@ -202,7 +202,7 @@ export default {
 </script>
 
 <style lang="scss">
-#HotelPayMode {
+#hotel-paymode-page {
     .el-table .cell {
         white-space: nowrap;
         word-break: break-all;

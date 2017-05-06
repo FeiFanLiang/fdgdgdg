@@ -1,5 +1,6 @@
 <template lang="html">
 <div id="hotelbaseEdit">
+  <db-breadcrumb></db-breadcrumb>
   <HotelTopMenu path="">
   </HotelTopMenu>
   <!-- form start -->

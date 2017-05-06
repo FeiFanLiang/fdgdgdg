@@ -145,7 +145,7 @@ export default {
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
-        name: 'HotelBaseEditBase',
+        name: '酒店信息编辑',
         params: {
           ID: row.ID
         },

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div id="PayCompany">
+  <div id="pay-company-page">
 
     <db-breadcrumb></db-breadcrumb>
     <el-row :gutter="20">
@@ -221,5 +221,5 @@ export default {
 </script>
 
 <style lang="scss">
-#PayCompany {}
+#pay-company-page {}
 </style>
