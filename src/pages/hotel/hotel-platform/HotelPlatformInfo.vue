@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="HotelPlatformInfo">
-    <db-breadcrumb></db-breadcrumb>
+    
     <HotelTopMenu path="platform">
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </HotelTopMenu>

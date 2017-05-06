@@ -1,6 +1,5 @@
 <template>
 <div id="hotel-room-list" style="color:gray;">
-  <db-breadcrumb></db-breadcrumb>
   <HotelTopMenu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </HotelTopMenu>

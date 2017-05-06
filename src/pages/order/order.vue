@@ -2,7 +2,7 @@
   <div id="Order">
 
     <!-- breadcrumb start  -->
-    <db-breadcrumb></db-breadcrumb>
+    
     <!-- breadcrumb end  -->
 
     <div class="db-content-inner">

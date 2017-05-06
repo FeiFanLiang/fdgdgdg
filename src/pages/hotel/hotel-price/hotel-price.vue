@@ -1,6 +1,6 @@
 <template lang="html">
   <div >
-    <db-breadcrumb></db-breadcrumb>
+    
     <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker

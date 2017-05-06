@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="hotelPollicyList">
-  <db-breadcrumb></db-breadcrumb>
+  
   <HotelTopMenu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
   </HotelTopMenu>

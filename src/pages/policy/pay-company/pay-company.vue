@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="pay-company-page">
 
-    <db-breadcrumb></db-breadcrumb>
+    
     <el-row :gutter="20">
       <el-col :span="3">
         <el-select v-model="filters.labelVal"  placeholder="请选择">
