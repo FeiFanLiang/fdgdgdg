@@ -74,17 +74,17 @@ let routes = [
               },
               {
                 path: 'policy',
-                component: Pages.HotelPolicyList,
+                component: Pages.HotelPolicy,
                 name: '酒店政策信息编辑'
               },
               {
                 path: 'room',
-                component: Pages.HotelRoomList,
+                component: Pages.HotelRoom,
                 name: '酒店房间信息编辑'
               },
               {
                 path: 'platform',
-                component: Pages.HotelPlatformInfo,
+                component: Pages.HotelPlatform,
                 name: '酒店平台信息编辑'
               },
               {

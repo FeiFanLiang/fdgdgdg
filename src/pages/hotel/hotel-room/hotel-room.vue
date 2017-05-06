@@ -191,11 +191,26 @@ export default {
   data() {
     return {
       breakfastTypes: [{
-        name: '有早',
+        name: '未定',
         value: 0
       }, {
         name: '无早',
         value: 1
+      }, {
+        name: '一餐',
+        value: 2
+      }, {
+        name: '两餐',
+        value: 3
+      }, {
+        name: '三餐',
+        value: 4
+      }, {
+        name: '四餐',
+        value: 5
+      }, {
+        name: '更多',
+        value: 6
       }],
       form: {
         id: '',

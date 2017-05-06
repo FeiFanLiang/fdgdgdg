@@ -7,10 +7,10 @@ import Register from './account/register';
 import HotelBase from './hotel/hotel-base/hotel-base';
 import HotelBaseAdd from './hotel/hotel-base/hotel-base-add';
 import HotelBaseEdit from './hotel/hotel-base/hotel-base-edit';
-import HotelPlatformInfo from './hotel/hotel-platform/HotelPlatformInfo';
-import HotelPolicyList from './hotel/hotel-policy/HotelPolicyList';
+import HotelPlatform from './hotel/hotel-platform/hotel-platform';
+import HotelPolicy from './hotel/hotel-policy/hotel-policy';
 import HotelPrice from './hotel/hotel-price/hotel-price';
-import HotelRoomList from './hotel/hotel-room/HotelRoomList';
+import HotelRoom from './hotel/hotel-room/hotel-room';
 
 // policy
 import PayCompany from './policy/pay-company/pay-company';
@@ -40,11 +40,11 @@ export default {
   HotelPayMode,
   HotelBaseAdd,
   HotelBaseEdit,
-  HotelPlatformInfo,
+  HotelPlatform,
   Order,
-  HotelPolicyList,
+  HotelPolicy,
   HotelPrice,
-  HotelRoomList,
+  HotelRoom,
   ImagesInfo,
   ImagesInfoAdd,
   ImagesInfoEdit,
