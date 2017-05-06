@@ -5,7 +5,7 @@
       <el-col :span="3">
         <el-select v-model="searchType"  placeholder="请选择">
           <el-option
-              v-for="(item,idnex) in selectedOptions"
+              v-for="(item,index) in selectedOptions"
               :label="item.label"
               :value="item.value"
               :key="index"

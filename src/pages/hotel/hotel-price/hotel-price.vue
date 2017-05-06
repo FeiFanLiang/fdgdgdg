@@ -67,7 +67,7 @@
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-    <el-checkbox v-for="(type,idnex) in homeType" :key="index" :label="type" >{{type}}</el-checkbox>
+    <el-checkbox v-for="(type,index) in homeType" :key="index" :label="type" >{{type}}</el-checkbox>
   </el-checkbox-group></el-col>
   </el-row>
   <el-table

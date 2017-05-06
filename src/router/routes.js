@@ -1,6 +1,10 @@
 import Vue from 'vue';
 import Pages from '../pages';
-
+import hotelRoute from './hotel';
+import orderRoute from './order';
+import policyRoute from './policy';
+import roleRoute from './role';
+import userRoute from './user';
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
@@ -41,129 +45,14 @@ let routes = [
     },
     children: [
       // hotel
-      {
-        path: 'hotel',
-        component: Pages.Abstract,
-        name: '酒店',
-        redirect: '/hotel/HotelBase',
-        iconClass: 'el-icon-setting',
-        children: [
-          {
-            path: 'HotelBase',
-            component: Pages.HotelBase,
-            name: '酒店基础信息',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'HotelBaseAdd',
-            component: Pages.HotelBaseAdd,
-            name: '添加酒店',
-            meta: {
-              hidden: true
-            }
-          },
-          {
-            path: 'HotelBaseEdit/:ID',
-            redirect: { name: '酒店基础信息编辑' },
-            component: Pages.Abstract,
-            name: '酒店信息编辑',
-            children: [
-              {
-                path: 'base',
-                component: Pages.HotelBaseEdit,
-                name: '酒店基础信息编辑'
-              },
-              {
-                path: 'policy',
-                component: Pages.HotelPolicy,
-                name: '酒店政策信息编辑'
-              },
-              {
-                path: 'room',
-                component: Pages.HotelRoom,
-                name: '酒店房间信息编辑'
-              },
-              {
-                path: 'platform',
-                component: Pages.HotelPlatform,
-                name: '酒店平台信息编辑'
-              },
-              {
-                path: 'price',
-                component: Pages.HotelPrice,
-                name: '酒店价格信息编辑'
-              }
-            ],
-            meta: {
-              hidden: true
-            }
-          }
-        ]
-      },
+      hotelRoute,
       // policy
-      {
-        path: 'policy',
-        component: Pages.Abstract,
-        name: '政策',
-        iconClass: 'el-icon-setting',
-        children: [
-          {
-            path: 'pay-company',
-            name: '公司支付账号',
-            component: Pages.PayCompany,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          },
-          {
-            path: 'hotel-paymode',
-            name: '支付方式',
-            component: Pages.HotelPayMode,
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
+      policyRoute,
       // order
-      {
-        path: 'order',
-        component: Pages.Abstract,
-        name: '订单',
-        iconClass: 'el-icon-setting',
-        children: [
-          {
-            path: 'Order',
-            component: Pages.Order,
-            name: '订单',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
-      {
-        path: 'user',
-        component: Pages.Abstract,
-        name: '用户管理',
-        iconClass: 'el-icon-setting',
-        children: [
-          {
-            path: 'user',
-            component: Pages.User,
-            name: '用户管理',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
-      {
-        path: 'role',
-        component: Pages.Abstract,
-        name: '角色管理',
-        iconClass: 'el-icon-setting',
-        children: [
-          {
-            path: 'role',
-            component: Pages.Role,
-            name: '角色管理',
-            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-          }
-        ]
-      },
+      orderRoute,
+      roleRoute,
+      userRoute,
+
       // images
       {
         path: 'images',

@@ -87,7 +87,7 @@
               <div class="grid-content bg-purple">
                 <el-form-item label="酒店预订方式">
                   <el-select v-model="forms.ReserveModeID" clearable placeholder="请选择预订方式">
-                    <el-option v-for="(item,index) in reserveModeOptions" :key="idnex" :label="item.ModeName" :value="item.ID"></el-option>
+                    <el-option v-for="(item,index) in reserveModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -96,7 +96,7 @@
               <div class="grid-content bg-purple">
                 <el-form-item label="支付账户">
                   <el-select v-model="forms.PayCompanyID" clearable placeholder="请选择支付账户">
-                    <el-option v-for="(item,index) in payCompanyOptions" :key="idnex" :label="item.AccountName" :value="item.ID"></el-option>
+                    <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
                   </el-select>
                 </el-form-item>
               </div>
@@ -297,7 +297,7 @@
           <div class="grid-content bg-purple">
             <el-form-item label="酒店预订方式">
               <el-select v-model="form.ReserveModeID" clearable placeholder="请选择预订方式">
-                <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="idnex" :value="item.ID"></el-option>
+                <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
           </div>
