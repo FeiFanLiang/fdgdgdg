@@ -3,9 +3,10 @@
     <el-row :gutter="20">
       <el-col :span="3"><el-select v-model="filters.labelVal"  placeholder="请选择">
         <el-option
-            v-for="item in selectedOptions"
+            v-for="(item,index) in selectedOptions"
             :label="item.label"
-            :value="item.value">
+            :value="item.value"
+            :key="index">
         </el-option>
       </el-select></el-col>
       <el-col :span="3"><el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>

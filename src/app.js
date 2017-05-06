@@ -23,7 +23,7 @@ Vue.use(VueAxiosProgressBarInterceptor);
 // Mock.bootstrap();
 
 import App from './app.vue';
-import routes from './router/routes';
+import routes from './router';
 import './style.scss';
 
 // import 'plugins/'

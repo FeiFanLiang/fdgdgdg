@@ -43,7 +43,7 @@
       <el-col :span="6">
           <el-form-item label="区域" prop="Area">
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
-              <el-option v-for="item in areaOptions" :label="item.AreaName" :value="item.ID"></el-option>
+              <el-option v-for="(item,index) in areaOptions" :key="index" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
       </el-col>
@@ -57,7 +57,7 @@
       <el-col :span="6">
           <el-form-item label="星级">
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
-              <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
+              <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
       </el-col>
@@ -69,7 +69,7 @@
       <!--<el-col :span="5">
           <el-form-item label="结款">
             <el-select v-model="form.PayMode" clearable  placeholder="请选择结款账户" >
-              <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
+              <el-option v-for="(item,index) in payModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
       </el-col>-->
