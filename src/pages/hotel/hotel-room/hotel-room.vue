@@ -141,7 +141,7 @@
         <el-col :span="11" :offset="1">
           <el-form-item label="早餐类型">
             <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型">
-              <el-option v-for="item in breakfastTypes " :label="item.name" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in breakfastTypes " :label="item.name" :value="item.value" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -161,8 +161,8 @@
       <el-row>
         <el-col :span="11">
           <div class="grid-content bg-purple">
-            <el-form-item label="是否开启">
-              <el-switch on-text="是" off-text="否" v-model="sonForm.isStop"></el-switch>
+            <el-form-item label="启用状态">
+              <el-switch on-text="开启" off-text="关闭" :on-value="false" :off-value="true" v-model="sonForm.isStop"></el-switch>
             </el-form-item>
           </div>
         </el-col>
@@ -229,7 +229,7 @@ export default {
         remark: '',
         remark2: '',
         breakfastType: 0,
-        isStop: false,
+        isStop: true,
       },
       rules: {
         roomName: [{
@@ -279,7 +279,7 @@ export default {
       }
       for (let item in this.sonForm) {
         if (item === 'isStop') {
-          this.sonForm[item] = false;
+          this.sonForm[item] = true;
         } else {
           this.sonForm[item] = '';
         }

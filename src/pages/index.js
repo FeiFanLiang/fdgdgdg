@@ -11,22 +11,18 @@ import HotelPlatform from './hotel/hotel-platform/hotel-platform';
 import HotelPolicy from './hotel/hotel-policy/hotel-policy';
 import HotelPrice from './hotel/hotel-price/hotel-price';
 import HotelRoom from './hotel/hotel-room/hotel-room';
-
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 // order
 import Order from './order/order';
-
 // images
 import ImagesInfo from './images/imagesInfo';
 import ImagesInfoAdd from './images/imagesInfoAdd';
 import ImagesInfoEdit from './images/imagesInfoEdit';
 import ImagesInfoList from './images/imagesInfoList';
-
 // user
 import User from './user/user';
-
 // role
 import Role from './role/role';
 

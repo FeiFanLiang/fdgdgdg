@@ -1,6 +1,6 @@
 <template lang="html">
   <div >
-    
+
     <el-dialog title="修改售卖价" v-model="priceChangeForOne" >
       <el-row>
           <el-col :span="23" :offset="1">生效时间  <el-date-picker
@@ -14,7 +14,7 @@
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-      <el-checkbox v-for="city in cities" :label="city">{{city}}</el-checkbox>
+      <el-checkbox v-for="(city,index) in cities" :key="index" :label="city">{{city}}</el-checkbox>
     </el-checkbox-group></el-col>
   </el-row>
     <el-row>
@@ -54,7 +54,7 @@
     <el-row>
     <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
     <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-      <el-checkbox v-for="(city,index) in cities" :label="city">{{city}}</el-checkbox>
+      <el-checkbox v-for="(city,index) in cities" :key="index" :label="city">{{city}}</el-checkbox>
     </el-checkbox-group></el-col>
     </el-row>
     <i class="el-icon-delete" style="    position: absolute;
@@ -67,7 +67,7 @@
   <el-row>
   <el-col :span="2" :offset="1"><el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox></el-col>
   <el-col :span="21"><el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-    <el-checkbox v-for="type in homeType" :label="type">{{type}}</el-checkbox>
+    <el-checkbox v-for="(type,idnex) in homeType" :key="index" :label="type" >{{type}}</el-checkbox>
   </el-checkbox-group></el-col>
   </el-row>
   <el-table
@@ -128,11 +128,11 @@
   <el-col :span="3" >
     <el-select v-model="value7" placeholder="请选择">
     <el-option-group
-      v-for="group in options3"
+      v-for="(group,gIndex) in options3"
       :key="group.label"
       :label="group.label">
       <el-option
-        v-for="item in group.options"
+        v-for="(item,index) in group.options"
         :key="item.value"
         :label="item.label"
         :value="item.value">

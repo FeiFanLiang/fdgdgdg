@@ -64,9 +64,10 @@
           </el-form-item>
           <el-form-item label="平台名称" prop="platformId">
             <el-select class="w193" v-model="form.platformId" placeholder="请选择">
-              <el-option v-for="item in platInfoList"
+              <el-option v-for="(item,index) in platInfoList"
                 :label="item.PlatName"
-                :value="item.ID">
+                :value="item.ID"
+                :key="index">
               </el-option>
             </el-select>
           </el-form-item>
