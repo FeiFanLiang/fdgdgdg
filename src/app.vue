@@ -7,9 +7,9 @@
       <header class="db-header-right">
 
         <db-breadcrumb></db-breadcrumb>
-        <div class="db-title">
+        <!-- <div class="db-title">
           {{hotelName}}
-        </div>
+        </div> -->
         <div class="user-info" v-if="user.id">
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
