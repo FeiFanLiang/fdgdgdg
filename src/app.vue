@@ -5,11 +5,7 @@
         <router-link class="logo" :to="{path: '/'}">美票</router-link>
       </header>
       <header class="db-header-right">
-
         <db-breadcrumb></db-breadcrumb>
-        <!-- <div class="db-title">
-          {{hotelName}}
-        </div> -->
         <div class="user-info" v-if="user.id">
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
@@ -37,9 +33,9 @@
               <template v-if="!route.children && route.name">
                 <el-menu-item :index="route.name" :route="route"><i :class="route.iconClass"></i>{{route.name}}</el-menu-item>
               </template>
-  </template>
-  </el-menu>
-  </aside>
+            </template>
+          </el-menu>
+        </aside>
   <div class="db-content-wrapper">
     <section class="db-content">
       <router-view></router-view>
@@ -143,14 +139,6 @@ export default {
         top: 0;
         box-shadow: 0 0 3px rgba(0,0,0,0.35);
         border-bottom: 1px solid #eee;
-
-        .db-title {
-          width: 100px;
-            float: left;
-            height: 60px;
-            line-height: 60px;
-            font-size: 18px;
-        }
         .user-info {
             float: right;
             height: 60px;

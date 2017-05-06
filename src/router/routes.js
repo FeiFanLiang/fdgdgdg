@@ -35,6 +35,7 @@ let routes = [
   {
     path: '/',
     component: root,
+    name: '主页',
     meta: {
       requiresAuth: true
     },

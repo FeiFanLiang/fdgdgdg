@@ -6,7 +6,7 @@
         {{ item.name }}
       </el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="" style="position: absolute;right: -321px;top: -5px;">
+    <div class="" style="position: absolute;right: -321px;top: -5px;font-size: 18px;">
       {{hotelName}}
     </div>
   </div>
