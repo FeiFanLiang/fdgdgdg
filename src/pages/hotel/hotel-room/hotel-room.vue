@@ -3,8 +3,8 @@
   <HotelTopMenu path="room">
     <el-button type="primary" @click="hotelroomAdd">创建</el-button>
   </HotelTopMenu>
-  <el-table :data="hotelroomlist" style="width: 100%;text-align:center;">
-    <el-table-column prop="RoomName" label="产品名称">
+  <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border >
+    <el-table-column prop="RoomName" width="95" label="产品名称">
       <template scope="scope">
         <el-popover trigger="hover" placement="top" >
           <p>产品名称: {{ scope.row.RoomName }}</p>
@@ -17,28 +17,28 @@
         </el-popover>
       </template>
     </el-table-column>
-    <el-table-column label="子房型名称" show-overflow-tooltip>
+    <el-table-column label="子房型名称" width="110" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td >{{ item.SonRoomName }}</td>
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="房间编号" class="child-table" show-overflow-tooltip>
+    <el-table-column label="房间编号" class="child-table" show-overflow-tooltip width="93">
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
             <td >{{ item.SonRoomCode }}</td>
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="早餐类型" show-overflow-tooltip>
+    <el-table-column label="早餐类型" show-overflow-tooltip width="101">
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
-            <td >{{ item.BreakfastType }}</td>
+            <td >{{transBreakfastTypes(item.BreakfastType)  }}</td>
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="房间状态" show-overflow-tooltip>
+    <el-table-column label="状态" width="70" show-overflow-tooltip>
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
               <td >
@@ -62,7 +62,7 @@
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="子房型操作">
+    <el-table-column label="子房型操作" width="139">
       <template scope="scope">
           <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
@@ -73,7 +73,7 @@
         </template>
     </el-table-column>
 
-    <el-table-column width="240" label="房型操作">
+    <el-table-column width="196" label="房型操作" >
       <template scope="scope">
           <tr class="child-table">
             <td>
@@ -273,6 +273,11 @@ export default {
     //this.show();
   },
   methods: {
+    transBreakfastTypes(value) {
+      const type = this.breakfastTypes.find(item => item.value === value);
+      if (type) return type.name
+      return ''
+    },
     dialogClose() {
       for (let item in this.form) {
         this.form[item] = '';
@@ -426,6 +431,7 @@ export default {
     }
     .child-table > td {
         border-bottom: 0;
+        border-right: 0;
     }
 
 }
