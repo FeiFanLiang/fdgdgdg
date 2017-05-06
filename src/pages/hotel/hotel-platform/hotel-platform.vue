@@ -1,16 +1,13 @@
 <template lang="html">
-  <div id="HotelPlatformInfo">
-    
+  <div id="hotel-platform-info-page">
     <HotelTopMenu path="platform">
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </HotelTopMenu>
-    <!-- table start -->
     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
-      <el-table-column prop="id" label="ID" width="80"></el-table-column>
-      <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
+        <el-table-column prop="platName" label="平台名称"></el-table-column>
       <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="platName" label="平台名称"></el-table-column>
       <el-table-column prop="platHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
       <el-table-column prop="platHotelNameEn" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
       <el-table-column label="平台访问路径" show-overflow-tooltip>
         <template scope="scope">
@@ -19,22 +16,18 @@
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
         <template scope="scope">
-<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
-<i class="el-icon-circle-close" v-else></i>
-</template>
+            <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+            <i class="el-icon-circle-close" v-else></i>
+          </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  label="操作" width="120" fixed="right">
         <template scope="scope">
-<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
-    编辑</el-button>
-<el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-</template>
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
-    <!-- table end -->
-
-    <!-- pagination start  -->
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
         @size-change="handleSizeChange"
@@ -46,9 +39,6 @@
         :total="total">
     </el-pagination>
     </div>
-    <!-- pagination end  -->
-
-    <!-- dialog start -->
     <el-dialog :title="dialogTitle" v-model="showDialog" size="small" :modal-append-to-body="false" @close="resetForm('form')">
       <el-form :rules="rules" class="around" ref="form" :model="form">
         <div>
@@ -74,9 +64,10 @@
           </el-form-item>
           <el-form-item label="平台名称" prop="platformId">
             <el-select class="w193" v-model="form.platformId" placeholder="请选择">
-              <el-option v-for="item in platInfoList"
+              <el-option v-for="(item,index) in platInfoList"
                 :label="item.PlatName"
-                :value="item.ID">
+                :value="item.ID"
+                :key="index">
               </el-option>
             </el-select>
           </el-form-item>
@@ -93,7 +84,6 @@
         <el-button type="primary" @click="submitForm('form')">确 定</el-button>
       </span>
     </el-dialog>
-    <!-- dialog end -->
   </div>
 </template>
 
@@ -301,7 +291,7 @@ export default {
 }
 </script>
 <style lang="scss">
-#HotelPlatformInfo {
+#hotel-platform-info-page {
     .pagination-wrapper {
         text-align: center;
         padding: 30px;

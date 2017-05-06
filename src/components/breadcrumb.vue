@@ -2,11 +2,11 @@
   <div  class="bread-crumbs-wapper">
     <el-breadcrumb separator="/">
       <span class="db-breadcrumb-loc">位置：</span>
-      <el-breadcrumb-item v-for="item in breadcrumbs" :to="item" v-if="item.name!=='酒店信息编辑'">
+      <el-breadcrumb-item v-for="(item,index) in breadcrumbs" :to="item" :key="index" v-if="item.name!=='酒店信息编辑'">
         {{ item.name }}
       </el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="" style="position: absolute;right: -321px;top: -5px;">
+    <div class="" style="position: absolute;right: -321px;top: -5px;font-size: 18px;">
       {{hotelName}}
     </div>
   </div>
