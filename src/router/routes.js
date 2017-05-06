@@ -63,11 +63,12 @@ let routes = [
           },
           {
             path: 'HotelBaseEdit/:ID',
+            redirect: { name: '酒店信息编辑' },
             component: Pages.Abstract,
             name: 'HotelBaseEdit',
             children: [
               {
-                path: '',
+                path: 'base',
                 component: Pages.HotelBaseEdit,
                 name: '酒店信息编辑'
               },
