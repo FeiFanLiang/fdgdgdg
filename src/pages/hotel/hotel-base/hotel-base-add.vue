@@ -4,86 +4,66 @@
 
     <el-row :gutter="20">
       <el-col :span="8">
-        <div >
           <el-form-item label="酒店编号" prop="HotelNum" >
             <el-input v-model="form.HotelNum"></el-input>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="酒店名称" prop="HotelName" >
             <el-input v-model="form.HotelName"></el-input>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="酒店英文名称" prop="HotelName_En" >
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
-        </div>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="8">
-        <div >
           <el-form-item label="星级" prop="Star" >
             <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
               <el-option v-for="item in starOptions" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="区域" prop="Area" >
             <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
               <el-option v-for="item in areaOptions" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="地址" prop="Address" >
             <el-input v-model="form.Address"></el-input>
           </el-form-item>
-        </div>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="8">
-        <div >
           <el-form-item label="结款" prop="PayMode" >
             <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户" >
               <el-option v-for="item in payModeOptions" :label="item.ModeName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="前台电话" prop="FrontPhone">
             <el-input v-model="form.FrontPhone"></el-input>
           </el-form-item>
-        </div>
       </el-col>
       <el-col :span="8">
-        <div >
           <el-form-item label="传真号" prop="FaxNum">
             <el-input v-model="form.FaxNum"></el-input>
           </el-form-item>
-        </div>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="20">
-        <div >
           <el-form-item label="备注" prop="Remark">
             <el-input type="textarea" v-model="form.Remark"></el-input>
           </el-form-item>
-        </div>
       </el-col>
     </el-row>
     <el-row :gutter="18">

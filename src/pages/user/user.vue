@@ -1,9 +1,9 @@
 <template lang="html">
-  <div id="hotel-paymode-page">
+  <div id="user-page">
     
     <el-row :gutter="20">
       <el-col :span="3">
-        <el-select v-model="filters.labelVal"  placeholder="请选择">
+        <el-select v-model="searchType"  placeholder="请选择">
           <el-option
               v-for="item in selectedOptions"
               :label="item.label"
@@ -12,32 +12,52 @@
         </el-select>
     </el-col>
       <el-col :span="3">
-        <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入Remark" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
+        <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="searchType == 'userName'"></el-input>
+        <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="searchType == 'realName'"></el-input>
     </el-col>
     <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+    <el-button type="primary" @click="showDialog = true">创建</el-button>
     </el-row>
+
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-      v-loading="loading" border row-key="ID">
-      <el-table-column sortable prop="id" label="ID"  width="180" show-overflow-tooltip></el-table-column>
-      <el-table-column sortable prop="modeName" label="账户名称"  show-overflow-tooltip></el-table-column>
-      <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+      v-loading="loading" border >
+      <el-table-column sortable prop="RealName" label="姓名"  show-overflow-tooltip></el-table-column>
+      <el-table-column prop="Department" label="部门" show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="UserName" label="用户名"   show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="Password" label="密码"   show-overflow-tooltip></el-table-column>
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
-          <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+          <el-button size="small" @click="edit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="del(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="form.id?'编辑支付方式':'添加支付方式'" v-model="showDialog" size="tiny" @close="resetForm('form')">
+    <el-dialog :title="form.id?'编辑用户':'添加用户'" v-model="showDialog"  @close="resetForm('form')">
       <el-form :rules="rules" ref="form" :model="form">
-        <el-form-item label="账户名称" prop="modeName">
-          <el-input placeholder="请输入账户名称" v-model="form.modeName"></el-input>
-        </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark"></el-input>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="realName">
+              <el-input placeholder="请输入账户名称" v-model="form.realName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门" prop="department">
+              <el-input v-model="form.department"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="用户名" prop="userName">
+              <el-input placeholder="请输入账户名称" v-model="form.userName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="form.password"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
@@ -49,7 +69,7 @@
 
 <script>
 import {
-  hotelPayModeApi
+  userApi
 } from 'api';
 
 export default {
@@ -58,30 +78,42 @@ export default {
       list: [],
       loading: true,
       showDialog: false,
+      searchType:'userName',
       filters: {
-        sortWay: '',
         modeName: '',
-        labelVal: '1',
         remark: ''
       },
       form: {
-        id: '',
-        modeName: '',
-        remark: ''
+        userName: '',
+        password: '',
+        realName: '',
+        department:''
       },
       selectedOptions: [{
-          value: '1',
-          label: '账户名称'
+          value: 'userName',
+          label: '用户名'
         },
         {
-          value: '2',
-          label: 'remark'
+          value: 'realName',
+          label: '姓名'
         }
       ],
       rules: {
-        modeName: [{
+        userName: [{
           required: true,
-          message: '请输入账户名称'
+          message: '请输入用户名'
+        }],
+        password: [{
+          required: true,
+          message: '请输入密码'
+        }],
+        realName: [{
+          required: true,
+          message: '请输入姓名'
+        }],
+        department: [{
+          required: true,
+          message: '请输入所在部门'
         }]
       }
     };
@@ -96,26 +128,19 @@ export default {
       _self.loading = true;
       _self.list = [];
       try {
-        const res = await hotelPayModeApi.getList();
-        for (let [index, elem] of res.data.entries()) {
-          _self.list.push({});
-          _self.list[index].id = elem.ID;
-          _self.list[index].modeName = elem.ModeName;
-          _self.list[index].remark = elem.Remark;
+        const res = await userApi.list();
+        if(res&&res.data){
+            _self.list=res.data
         }
         _self.loading = false;
       } catch (e) {
         console.error(e);
       }
     },
-    clickAddBtn() {
-      const _self = this;
-      _self.showDialog = true;
-    },
-    async clickEditBtn($index, row) {
+    async edit($index, row) {
       const _self = this;
       try {
-        const res = await hotelPayModeApi.getDetail(row.id);
+        const res = await userApi.getDetail(row.id);
         _self.showDialog = true;
         _self.form.id = res.data.ID;
         _self.form.modeName = res.data.ModeName;
@@ -137,9 +162,7 @@ export default {
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            const form={..._self.form}
-            delete form.id
-            await hotelPayModeApi.addInfo(form);
+            await userApi.add(_self.form);
             _self.fetchData();
             _self.$refs['form'].resetFields();
             _self.showDialog = false;
@@ -160,7 +183,7 @@ export default {
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            await hotelPayModeApi.editInfo(_self.form);
+            await userApi.editInfo(_self.form);
             _self.fetchData();
             _self.$refs['form'].resetFields();
             _self.showDialog = false;
@@ -176,7 +199,7 @@ export default {
         }
       });
     },
-    async clickDelBtn($index, row) {
+    async del($index, row) {
       const _self = this;
       try {
         await _self.$confirm(`是否删除${row.modeName}?`, '提示', {
@@ -184,7 +207,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         });
-        await hotelPayModeApi.delInfo(row.id);
+        await userApi.delInfo(row.id);
         _self.fetchData();
         _self.$message({
           message: '删除成功',
@@ -202,11 +225,5 @@ export default {
 </script>
 
 <style lang="scss">
-#hotel-paymode-page {
-    .el-table .cell {
-        white-space: nowrap;
-        word-break: break-all;
-        line-height: 24px;
-    }
-}
+
 </style>

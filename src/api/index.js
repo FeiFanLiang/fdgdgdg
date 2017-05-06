@@ -19,6 +19,8 @@ import secretTypeApi from './secret-type';
 import sonRoomApi from './son-room';
 import sonRoomPlatformControllApi from './son-room-platform-controll';
 import sonRoomSalePriceApi from './son-room-sale-price';
+import userApi from './user';
+import roleApi from './role';
 export {
   accountApi,
   airlineApi,
@@ -40,5 +42,7 @@ export {
   secretTypeApi,
   sonRoomApi,
   sonRoomPlatformControllApi,
-  sonRoomSalePriceApi
+  sonRoomSalePriceApi,
+  userApi,
+  roleApi
 };

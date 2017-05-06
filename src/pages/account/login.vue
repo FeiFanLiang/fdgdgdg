@@ -53,9 +53,9 @@ export default {
   },
   data() {
     return {
-      userID: 'hhaa',
-      username: 'hhaa',
-      password: 'hhaa',
+      userID: '',
+      username: '',
+      password: '',
       rememberMe: false,
       isBtnLoading: false
     };

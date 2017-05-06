@@ -5,9 +5,11 @@
         <router-link class="logo" :to="{path: '/'}">美票</router-link>
       </header>
       <header class="db-header-right">
-        <div class="db-title">
+
+        <db-breadcrumb></db-breadcrumb>
+        <!-- <div class="db-title">
           {{hotelName}}
-        </div>
+        </div> -->
         <div class="user-info" v-if="user.id">
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
@@ -144,6 +146,7 @@ export default {
         border-bottom: 1px solid #eee;
 
         .db-title {
+          width: 100px;
             float: left;
             height: 60px;
             line-height: 60px;

@@ -2,7 +2,7 @@
 <div id="imagesInfo">
 
     <!-- breadcrumb start  -->
-    <db-breadcrumb></db-breadcrumb>
+    
     <!-- breadcrumb end  -->
 
     <!-- filters start -->

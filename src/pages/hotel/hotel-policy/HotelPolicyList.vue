@@ -1,5 +1,6 @@
 <template lang="html">
 <div id="hotelPollicyList">
+  
   <HotelTopMenu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
   </HotelTopMenu>
@@ -198,7 +199,7 @@
     </el-table-column>
   </el-table>
   <!-- table end -->
-  <el-dialog title="添加政策信息" v-model="createDialog" size="small">
+  <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-row :gutter="24">
         <el-col :span="10">
@@ -546,27 +547,5 @@ export default {
 </script>
 
 <style lang="scss">
-#hotelPollicyList {
-    .filters {
-        margin: 0 0 20px;
-        border: 1px #efefef solid;
-        padding: 10px;
-        background: #f9f9f9;
-
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
-}
+#hotelPollicyList {}
 </style>

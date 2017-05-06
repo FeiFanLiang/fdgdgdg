@@ -44,6 +44,7 @@ let routes = [
         path: 'hotel',
         component: Pages.Abstract,
         name: '酒店',
+        redirect: '/hotel/HotelBase',
         iconClass: 'el-icon-setting',
         children: [
           {
@@ -62,33 +63,34 @@ let routes = [
           },
           {
             path: 'HotelBaseEdit/:ID',
+            redirect: { name: '酒店基础信息编辑' },
             component: Pages.Abstract,
-            name: 'HotelBaseEdit',
+            name: '酒店信息编辑',
             children: [
               {
-                path: '',
+                path: 'base',
                 component: Pages.HotelBaseEdit,
-                name: 'HotelBaseEditBase'
+                name: '酒店基础信息编辑'
               },
               {
                 path: 'policy',
                 component: Pages.HotelPolicyList,
-                name: 'HotelBaseEdit.PolicyList'
+                name: '酒店政策信息编辑'
               },
               {
                 path: 'room',
                 component: Pages.HotelRoomList,
-                name: 'HotelBaseEdit.RoomList'
+                name: '酒店房间信息编辑'
               },
               {
                 path: 'platform',
                 component: Pages.HotelPlatformInfo,
-                name: 'HotelBaseEdit.Platform'
+                name: '酒店平台信息编辑'
               },
               {
                 path: 'price',
                 component: Pages.HotelPrice,
-                name: 'HotelBaseEdit.Price'
+                name: '酒店价格信息编辑'
               }
             ],
             meta: {
@@ -129,6 +131,34 @@ let routes = [
             path: 'Order',
             component: Pages.Order,
             name: '订单',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          }
+        ]
+      },
+      {
+        path: 'user',
+        component: Pages.Abstract,
+        name: '用户管理',
+        iconClass: 'el-icon-setting',
+        children: [
+          {
+            path: 'user',
+            component: Pages.User,
+            name: '用户管理',
+            imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+          }
+        ]
+      },
+      {
+        path: 'role',
+        component: Pages.Abstract,
+        name: '角色管理',
+        iconClass: 'el-icon-setting',
+        children: [
+          {
+            path: 'role',
+            component: Pages.Role,
+            name: '角色管理',
             imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
           }
         ]

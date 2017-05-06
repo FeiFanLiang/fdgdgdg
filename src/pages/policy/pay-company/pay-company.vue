@@ -1,22 +1,24 @@
 <template lang="html">
-  <div id="PayCompany">
+  <div id="pay-company-page">
 
-    <db-breadcrumb></db-breadcrumb>
-      <div class="filters">
-        <div class="filter">
-          <el-select v-model="filters.labelVal"  placeholder="请选择">
-            <el-option
-                v-for="item in selectedOptions"
-                :label="item.label"
-                :value="item.value">
-            </el-option>
-          </el-select>
-          <el-input placeholder="请输入账户名称" v-model="filters.accountName" v-show="filters.labelVal == '1'"></el-input>
-          <el-input placeholder="请输入银行账户" v-model="filters.accountNum" v-show="filters.labelVal == '2'"></el-input>
-        </div>
-        <el-button type="primary" @click="handleSearch()">搜索</el-button>
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-      </div>
+    
+    <el-row :gutter="20">
+      <el-col :span="3">
+        <el-select v-model="filters.labelVal"  placeholder="请选择">
+          <el-option
+              v-for="item in selectedOptions"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+    </el-col>
+      <el-col :span="3">
+        <el-input placeholder="请输入账户名称" v-model="filters.accountName" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入银行账户" v-model="filters.accountNum" v-show="filters.labelVal == '2'"></el-input>
+    </el-col>
+    <el-button type="primary" @click="handleSearch()">搜索</el-button>
+    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+    </el-row>
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         v-loading="loading"
         border
@@ -33,8 +35,8 @@
            </template>
         </el-table-column>
       </el-table>
-      <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny">
-        <el-form :rules="rules" ref="form" :model="form" >
+      <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
+        <el-form :rules="rules" ref="form" :model="form"  >
           <el-form-item label="账户名称" prop="accountName">
             <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
           </el-form-item>
@@ -46,8 +48,8 @@
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="closeDialog('form')">取 消</el-button>
-          <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm()">确 定</el-button>
         </span>
       </el-dialog>
   </div>
@@ -55,199 +57,169 @@
 
 <script>
 import {
-    payCompanyApi
+  payCompanyApi
 } from 'api';
 
 
 export default {
-    data() {
-        return {
-            list: [],
-            loading: true,
-            showDialog: false,
-            dialogTitle: '',
-            dialogTag: '',
-            filters: {
-                sortWay: '',
-                accountName: '',
-                labelVal: '1',
-                accountNum: ''
-            },
-            form: {
-                id: '',
-                accountName: '',
-                accountNum: '',
-                remark: ''
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: '银行账户'
-                }
-            ],
-            rules: {
-                accountName: [{
-                    required: true,
-                    message: '请输入账户名称'
-                }],
-                accountNum: [{
-                    required: true,
-                    message: '请输入银行账户'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        handleCurrentChange(val) {
-            this.currentPage = val;
+  data() {
+    return {
+      list: [],
+      loading: true,
+      showDialog: false,
+      filters: {
+        sortWay: '',
+        accountName: '',
+        labelVal: '1',
+        accountNum: ''
+      },
+      form: {
+        id: '',
+        accountName: '',
+        accountNum: '',
+        remark: ''
+      },
+      selectedOptions: [{
+          value: '1',
+          label: '账户名称'
         },
-        handleSearch() {
-            this.fetchData();
-        },
-        async fetchData() {
-            const _self = this;
-            _self.loading = true;
-            _self.list = [];
-            try {
-                const res = await payCompanyApi.getList();
-                for (let [index, elem] of res.data.entries()) {
-                    _self.list.push({});
-                    _self.list[index].id = elem.ID;
-                    _self.list[index].accountName = elem.AccountName;
-                    _self.list[index].accountNum = elem.AccountNum;
-                    _self.list[index].remark = elem.Remark;
-                }
-                _self.loading = false;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        clickAddBtn() {
-            const _self = this;
-            _self.showDialog = true;
-            _self.dialogTag = 1;
-            _self.dialogTitle = "添加支付账户";
-            _self.form = {
-                id: 0,
-                accountName: '',
-                accountNum: '',
-                remark: ''
-            }
-        },
-        async clickEditBtn($index, row) {
-            const _self = this;
-            try {
-                const res = await payCompanyApi.getDetail(row.id);
-                _self.showDialog = true;
-                _self.dialogTag = 2;
-                _self.dialogTitle = "编辑账户信息";
-                _self.form.id = res.data.ID;
-                _self.form.accountName = res.data.AccountName;
-                _self.form.accountNum = res.data.AccountNum;
-                _self.form.remark = res.data.Remark;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        closeDialog(a) {
-            const _self = this;
-            _self.showDialog = false;
-            _self.$refs[a].resetFields();
-        },
-        submitForm(a) {
-            const _self = this;
-            if (_self.dialogTag === 1) _self.addSave(a);
-            if (_self.dialogTag === 2) _self.editSave(a);
-        },
-        async addSave(a) {
-            const _self = this;
-            _self.$refs[a].validate(async valid => {
-                if (valid) {
-                    try {
-                        await payCompanyApi.addInfo(_self.form);
-                        _self.fetchData();
-                        _self.$refs[a].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async editSave(a) {
-            const _self = this;
-            _self.$refs[a].validate(async valid => {
-                if (valid) {
-                    try {
-                        await payCompanyApi.editInfo(_self.form);
-                        _self.fetchData();
-                        _self.$refs[a].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async clickDelBtn($index, row) {
-            const _self = this;
-            try {
-                await _self.$confirm( `是否删除${row.accountName}?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await payCompanyApi.delInfo(row.id);
-                _self.fetchData();
-                _self.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
+        {
+          value: '2',
+          label: '银行账户'
         }
+      ],
+      rules: {
+        accountName: [{
+          required: true,
+          message: '请输入账户名称'
+        }],
+        accountNum: [{
+          required: true,
+          message: '请输入银行账户'
+        }]
+      }
+    };
+  },
+
+  methods: {
+    handleCurrentChange(val) {
+      this.currentPage = val;
     },
-    mounted() {
-        this.fetchData();
+    handleSearch() {
+      this.fetchData();
+    },
+    async fetchData() {
+      const _self = this;
+      _self.loading = true;
+      _self.list = [];
+      try {
+        const res = await payCompanyApi.getList();
+        for (let [index, elem] of res.data.entries()) {
+          _self.list.push({});
+          _self.list[index].id = elem.ID;
+          _self.list[index].accountName = elem.AccountName;
+          _self.list[index].accountNum = elem.AccountNum;
+          _self.list[index].remark = elem.Remark;
+        }
+        _self.loading = false;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    clickAddBtn() {
+      const _self = this;
+      _self.showDialog = true;
+    },
+    async clickEditBtn($index, row) {
+      const _self = this;
+      try {
+        const res = await payCompanyApi.getDetail(row.id);
+        _self.showDialog = true;
+        _self.form.id = res.data.ID;
+        _self.form.accountName = res.data.AccountName;
+        _self.form.accountNum = res.data.AccountNum;
+        _self.form.remark = res.data.Remark;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    submitForm() {
+      const _self = this;
+      if(_self.form.id){
+        _self.editSave();
+      }else{
+        _self.addSave();
+      }
+    },
+    async addSave() {
+      const _self = this;
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            const form={..._self.form}
+            delete form.id
+            await payCompanyApi.addInfo(form);
+            _self.fetchData();
+            _self.$refs['form'].resetFields();
+            _self.showDialog = false;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async editSave() {
+      const _self = this;
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await payCompanyApi.editInfo(_self.form);
+            _self.fetchData();
+            _self.$refs['form'].resetFields();
+            _self.showDialog = false;
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async clickDelBtn($index, row) {
+      const _self = this;
+      try {
+        await _self.$confirm(`是否删除${row.accountName}?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await payCompanyApi.delInfo(row.id);
+        _self.fetchData();
+        _self.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 
 <style lang="scss">
-#PayCompany {
-    .filters {
-
-        .filter {
-            display: inline-block;
-            width: auto;
-            padding: 10px;
-            border-radius: 5px;
-            .el-select {
-                display: inline-block;
-            }
-        }
-
-        .el-input {
-            width: 150px;
-            display: inline-block;
-        }
-    }
-}
+#pay-company-page {}
 </style>

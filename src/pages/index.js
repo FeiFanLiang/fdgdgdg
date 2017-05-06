@@ -24,6 +24,12 @@ import ImagesInfoAdd from './images/imagesInfoAdd';
 import ImagesInfoEdit from './images/imagesInfoEdit';
 import ImagesInfoList from './images/imagesInfoList';
 
+// user
+import User from './user/user';
+
+// role
+import Role from './role/role';
+
 export default {
   Abstract,
   NotFound,
@@ -42,5 +48,7 @@ export default {
   ImagesInfo,
   ImagesInfoAdd,
   ImagesInfoEdit,
-  ImagesInfoList
+  ImagesInfoList,
+  User,
+  Role
 };
