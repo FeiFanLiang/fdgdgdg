@@ -1,5 +1,5 @@
 <template lang="html">
-  <div  style="display: inline-block;margin-top: 30px;">
+  <div  style="display: inline-block;margin-top: 24px;">
     <el-breadcrumb separator="/">
       <span class="db-breadcrumb-loc">位置：</span>
       <el-breadcrumb-item v-for="item in breadcrumbs" :to="item" v-if="item.name!=='酒店信息编辑'">
