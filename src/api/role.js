@@ -1,52 +1,30 @@
 import axios from 'axios';
 import path from './api';
-// GET /System/Role
-// GET /System/Role/{rolsName}
-// GET /System/Role/ForUser/{userName}
-// GET /System/Role/LockUser/{userName}
-// GET /System/Role/UnLockUser/{userName}
-// GET /System/Role/RestUserPassword/{userName}
-// GET /System/Role/Init
-// POST /System/Role/{rolsName}/{userName}
-// POST /System/Role/ForUser/{userName}/{rolsName}
-// POST /System/Role/CraateUser
-// DELETE /System/Role/{rolsName}/{userName}
-// DELETE /System/Role/ForUser/{userName}/{rolsName}
+
 export default {
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
+  list() {
+    return axios.get(path.apiBaseUrl + 'System/Role');
   },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
+  RoleListByRolsName(rolsName) {
+    return axios.get(path.apiBaseUrl + `System/Role/${rolsName}`);
   },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
+  RoleListByUserName(userName) {
+    return axios.get(path.apiBaseUrl + `System/Role/ForUser/${userName}`);
   },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
+  add(rolsName, userName, params) {
+    return axios.post(
+      path.apiBaseUrl + `System/Role/${rolsName}/${userName}`,
+      params
+    );
   },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
+  deleteByUserName(rolsName, userName) {
+    return axios.delete(
+      path.apiBaseUrl + `System/Role/${rolsName}/${userName}`
+    );
   },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
-  },
-  getDetail(id) {
-    return axios.get(path.apiBaseUrl + `System/Role/${id}`);
-  },
-  editInfo(id, params) {
-    return axios.post(path.apiBaseUrl + `System/Role/${id}`, params);
-  },
-  editInfo(id, params) {
-    return axios.post(path.apiBaseUrl + `System/Role/${id}`, params);
-  },
-  editInfo(id, params) {
-    return axios.post(path.apiBaseUrl + `System/Role/${id}`, params);
-  },
-  editInfo(id, params) {
-    return axios.delete(path.apiBaseUrl + `System/Role/${id}`, params);
-  },
-  editInfo(id, params) {
-    return axios.delete(path.apiBaseUrl + `System/Role/${id}`, params);
+  deleteByRolsName(rolsName, userName) {
+    return axios.delete(
+      path.apiBaseUrl + `System/Role/ForUser/${userName}/${rolsName}`
+    );
   }
 };
