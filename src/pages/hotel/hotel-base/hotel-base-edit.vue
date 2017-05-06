@@ -75,15 +75,15 @@
       </el-col>-->
     </el-row>
     <el-row :gutter="18">
-      <el-col :span="3" :offset="18">
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">保存</el-button>
-          </el-form-item>
+      <el-col :span="2" :offset="19">
+        <el-form-item>
+          <el-button @click="Cancel">取消</el-button>
+        </el-form-item>
       </el-col>
       <el-col :span="3">
-          <el-form-item>
-            <el-button @click="Cancel">取消</el-button>
-          </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+        </el-form-item>
       </el-col>
     </el-row>
   </el-form>
