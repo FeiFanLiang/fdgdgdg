@@ -18,16 +18,17 @@
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
         <template scope="scope">
-          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
-          <i class="el-icon-circle-close" v-else></i>
-        </template>
+<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+<i class="el-icon-circle-close" v-else></i>
+</template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  label="操作" width="120" fixed="right">
         <template scope="scope">
-          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-        </template>
+<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+    编辑</el-button>
+<el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+</template>
       </el-table-column>
     </el-table>
     <!-- table end -->
@@ -53,20 +54,23 @@
           <el-form-item label="ID" v-if="dialogTag === 2">
             <el-input v-model="form.id" :disabled="true"></el-input>
           </el-form-item>
-          <el-form-item label="酒店ID" v-if="dialogTag === 2">
-            <el-input v-model="form.hotelId" :disabled="true"></el-input>
-          </el-form-item>
-          <el-form-item label="平台访问路径">
-            <el-input v-model="form.platUrl"></el-input>
+          <el-form-item label="平台酒店ID" prop="platHotelId">
+            <el-input v-model.number="form.platHotelId"></el-input>
           </el-form-item>
           <el-form-item label="平台酒店名称">
             <el-input v-model="form.platHotelName"></el-input>
+          </el-form-item>
+          <el-form-item label="平台访问路径">
+            <el-input v-model="form.platUrl"></el-input>
           </el-form-item>
           <el-form-item label="备注">
             <el-input class="w193" type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
         </div>
         <div>
+          <el-form-item label="酒店ID" v-if="dialogTag === 2">
+            <el-input v-model="form.hotelId" :disabled="true"></el-input>
+          </el-form-item>
           <el-form-item label="平台名称" prop="platformId">
             <el-select class="w193" v-model="form.platformId" placeholder="请选择">
               <el-option v-for="item in platInfoList"
@@ -74,9 +78,6 @@
                 :value="item.ID">
               </el-option>
             </el-select>
-          </el-form-item>
-          <el-form-item label="平台酒店ID" prop="platHotelId">
-            <el-input v-model.number="form.platHotelId"></el-input>
           </el-form-item>
            <el-form-item label="平台酒店英文名">
             <el-input v-model="form.platHotelNameEn"></el-input>
@@ -157,8 +158,7 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val;
         },
-        handleSizeChange(val) {
-        },
+        handleSizeChange(val) {},
         async fetchData() {
             const _self = this;
             _self.loading = true;
