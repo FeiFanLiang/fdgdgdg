@@ -25,7 +25,7 @@
           <template scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="用户列表">
-                <el-tag type="success" class="mytag" v-for="a in props.row.UserName" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
+                <el-tag type="success" class="mytag" v-for="a in props.row.UserName" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
                 <el-input class="input-new-tag myinput" v-if="inputVisible" v-model="userName" ref="saveTagInput" @keyup.enter.native="addUserName(props.row.RoleName,userName)" @blur="addUserName(props.row.RoleName,userName)"></el-input>
                 <el-button v-else class="button-new-tag h-36" size="small" @click="showInput">添加用户</el-button>
               </el-form-item>
