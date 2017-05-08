@@ -32,59 +32,28 @@
       <el-table-column type="expand" >
           <template scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="用户列表">
+              <el-form-item id="userlabel" v-loading.body="loading2">
                 <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
-                <!-- <el-input
-                    class="input-new-tag"
-                    v-if="inputVisible"
-                    v-model="userName"
+                <div>
+                  <el-autocomplete
+                    class="myinput"
+                    :icon="userName?'check':'close'"
                     ref="saveTagInput"
-                    size="mini"
-                    @keyup.enter.native="addUserName(props.row.RoleName,userName)"
-                    @blur="addUserName(props.row.RoleName,userName)">
-                  </el-input> -->
-                  <!-- :on-icon-click="addUserName(props.row.RoleName,userName)" -->
-                    <el-autocomplete
-                      ref="saveTagInput"
-                      v-if="inputVisible"
-                      placeholder="请输入用户名称"
-                      v-model="userName"
-                      :fetch-suggestions="querySearch"
-                      @keyup.enter.native="addUserName(props.row.RoleName,userName)"
-                      @blur="addUserName(props.row.RoleName,userName)"
-                      ></el-autocomplete>
-                  <el-button v-else class="button-new-tag" size="small" @click="showInput">添加用户</el-button>
+                    v-if="inputVisible"
+                    placeholder="请输入用户名称"
+                    v-model="userName"
+                    :fetch-suggestions="querySearch"
+                    :on-icon-click="addUserName"
+                    ></el-autocomplete>
+                <el-button v-else class="button-new-tag mybtn" size="small" @click="showInput">添加用户</el-button>
+                </div>
               </el-form-item>
             </el-form>
           </template>
       </el-table-column>
       <el-table-column sortable prop="RealName" label="RealName" show-overflow-tooltip></el-table-column>
       <el-table-column  prop="RoleName" label="RoleName" show-overflow-tooltip></el-table-column>
-      <!-- <el-table-column  label="操作" width="100" fixed="right">
-        <template scope="scope">
-<el-button size="mini" @click="openDialog(scope.row)">
-    添加用户</el-button>
-</template>
-      </el-table-column> -->
     </el-table>
-
-    <!-- <el-dialog title="添加用户" v-model="showDialog" size="tiny" @close="resetForm('form')">
-      <el-form :rules="rules" ref="form" :model="form">
-        <el-form-item label="realName">
-          <el-input v-model="form.realName" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="rolsName">
-          <el-input v-model="form.rolsName" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="用户名称" prop="userName">
-
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="addUserName()">确 定</el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 
@@ -102,7 +71,7 @@ export default {
             expandRowKeys: [],
             userNameList: [],
             loading: true,
-            // showDialog: false,
+            loading2: false,
             inputVisible: false,
             userName: '',
             rolsName: '',
@@ -111,11 +80,6 @@ export default {
                 modeName: '',
                 remark: ''
             },
-            // form: {
-            //     realName: '',
-            //     rolsName: '',
-            //     userName: ''
-            // },
             rules: {
                 userName: [{
                     required: true,
@@ -135,9 +99,6 @@ export default {
     },
 
     methods: {
-        test() {
-            alert("1")
-        },
         querySearch(queryString, cb) {
             var userList = this.userList;
             var results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
@@ -149,29 +110,26 @@ export default {
                 return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
             };
         },
-        // openDialog(row) {
-        //     const _self = this;
-        //     _self.getUserList();
-        //     _self.showDialog = true;
-        //     _self.form.realName = row.RealName;
-        //     _self.form.rolsName = row.RoleName;
-        // },
         showInput() {
             this.inputVisible = true;
+            this.userName = '';
             // this.$nextTick(_ => {
             //     this.$refs.saveTagInput.$refs.input.focus();
             // });
         },
         async delUserName(a, b) {
             const _self = this;
+
             try {
                 await _self.$confirm(`是否删除${b}?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
+                _self.loading2 = true;
                 await roleApi.deleteByUserName(a, b);
                 _self.getUserNameByRole();
+                _self.loading2 = false;
                 _self.$message({
                     message: '删除成功',
                     type: 'success'
@@ -180,18 +138,19 @@ export default {
                 console.error(e);
             }
         },
-        async addUserName(a, b) {
-            console.log(a, b)
+        async addUserName() {
             const _self = this;
-            if (b !== "") {
+            if (_self.userName !== "") {
+                _self.loading2 = true;
                 try {
-                    await roleApi.addUserNameByRolsName(a, b);
+                    await roleApi.addUserNameByRolsName(_self.rolsName, _self.userName);
                     _self.getUserNameByRole();
                     _self.$message({
                         message: '添加成功',
                         type: 'success'
                     });
                     _self.inputVisible = false;
+                    _self.loading2 = false;
                 } catch (e) {
                     console.error(e);
                 }
@@ -216,11 +175,15 @@ export default {
         async getUserList() {
             const _self = this;
             _self.userList = [];
+            let _index = 0;
             try {
                 const res = await userApi.list();
                 for (let [index, elem] of res.data.entries()) {
-                    _self.userList.push({});
-                    _self.userList[index].value = elem.UserName;
+                    if (!_self.userNameList.includes(elem.UserName)) {
+                        _self.userList.push({});
+                        _self.userList[_index].value = elem.UserName;
+                        _index++;
+                    }
                 }
             } catch (e) {
                 console.error(e);
@@ -228,9 +191,9 @@ export default {
         },
         async getUserNameByRole(row, expanded) {
             const _self = this;
-            _self.getUserList();
             if (expanded) {
-                _self.loading = true;
+                _self.loading2 = true;
+                _self.inputVisible = false;
                 _self.expandRowKeys.length = 0;
                 _self.expandRowKeys.push(row.RoleName);
                 _self.rolsName = row.RoleName;
@@ -238,10 +201,11 @@ export default {
             try {
                 const res = await roleApi.getUserNameByRole(_self.rolsName);
                 _self.userNameList = res.data.UserName;
-                _self.loading = false;
+                _self.loading2 = false;
             } catch (e) {
                 console.error(e);
             }
+            _self.getUserList();
         }
     },
     mounted() {
@@ -263,13 +227,49 @@ export default {
     margin-bottom: 0;
     width: 50%;
 }
-.mytag {
-    margin: 0 10px;
+#userlabel {
+    width: 100%;
+}
+#userlabel .el-form--inline .el-form-item__content {
+    border: 1px solid;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+}
+#userlabel .el-input__icon {
+    position: absolute;
+    width: 35px;
+    height: 36px;
+    margin-top: 15px;
+    left: 143px;
+    top: 0;
+    text-align: center;
+    color: #bfcbd9;
+    transition: all 0.3s;
+}
+#userlabel .mytag {
+    margin-top: 10px;
+    margin-right: 10px;
     height: 36px;
     line-height: 36px;
+    box-sizing: border-box;
+    flex: 0 0 25%;
 }
+#userlabel .mybtn {
+    height: 36px;
+    margin-top: 15px;
+}
+.myinput {
+    width: 180px;
+    margin-top: 15px;
+}
+
 .el-table__expanded-cell {
-    padding: 20px 100px 20px 65px !important;
+    padding: 20px 15px 20px 66px !important;
+}
+.demo-table-expand {
+    padding: 0 0 10px 16px !important;
+    font-size: 0;
 }
 .el-autocomplete,
 .el-dropdown {
