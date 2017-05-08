@@ -1,6 +1,5 @@
 <template lang="html">
   <div id="role-page">
-
     <el-row :gutter="20">
       <el-col :span="3">
         <el-select v-model="searchType"  placeholder="请选择">
@@ -11,220 +10,154 @@
               :key="index">
           </el-option>
         </el-select>
-    </el-col>
+      </el-col>
       <el-col :span="3">
         <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="searchType == 'userName'"></el-input>
         <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="searchType == 'realName'"></el-input>
-    </el-col>
+      </el-col>
     <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <el-button type="primary" @click="showDialog = true">创建</el-button>
+    <!-- <el-button type="primary" @click="showDialog = true">创建</el-button> -->
     </el-row>
 
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
       v-loading="loading" border >
-      <el-table-column sortable prop="RealName" label="姓名"  show-overflow-tooltip></el-table-column>
-      <el-table-column prop="Department" label="部门" show-overflow-tooltip></el-table-column>
-      <el-table-column sortable prop="UserName" label="用户名"   show-overflow-tooltip></el-table-column>
-      <el-table-column  prop="Password" label="密码"   show-overflow-tooltip></el-table-column>
-      <el-table-column  width="150"  label="操作" fixed="right">
-        <template scope="scope">
-          <el-button size="small" @click="edit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="del(scope.$index, scope.row)">删除</el-button>
-        </template>
+      <el-table-column type="expand">
+          <template scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="用户列表">
+                <el-tag type="success" class="mytag" v-for="a in props.row.UserName" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
+                <el-input class="input-new-tag myinput" v-if="inputVisible" v-model="userName" ref="saveTagInput" @keyup.enter.native="addUserName(props.row.RoleName,userName)" @blur="addUserName(props.row.RoleName,userName)"></el-input>
+                <el-button v-else class="button-new-tag h-36" size="small" @click="showInput">添加用户</el-button>
+              </el-form-item>
+            </el-form>
+          </template>
       </el-table-column>
+      <el-table-column sortable prop="RealName" label="RealName" show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="RoleName" label="RoleName"   show-overflow-tooltip></el-table-column>
     </el-table>
-    <el-dialog :title="form.id?'编辑用户':'添加用户'" v-model="showDialog"  @close="resetForm('form')">
-      <el-form :rules="rules" ref="form" :model="form">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="姓名" prop="realName">
-              <el-input placeholder="请输入账户名称" v-model="form.realName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="部门" prop="department">
-              <el-input v-model="form.department"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <el-form-item label="用户名" prop="userName">
-              <el-input placeholder="请输入账户名称" v-model="form.userName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import {
-  userApi
+    roleApi
 } from 'api';
 
 export default {
-  data() {
-    return {
-      list: [],
-      loading: true,
-      showDialog: false,
-      searchType:'userName',
-      filters: {
-        modeName: '',
-        remark: ''
-      },
-      form: {
-        userName: '',
-        password: '',
-        realName: '',
-        department:''
-      },
-      selectedOptions: [{
-          value: 'userName',
-          label: '用户名'
-        },
-        {
-          value: 'realName',
-          label: '姓名'
-        }
-      ],
-      rules: {
-        userName: [{
-          required: true,
-          message: '请输入用户名'
-        }],
-        password: [{
-          required: true,
-          message: '请输入密码'
-        }],
-        realName: [{
-          required: true,
-          message: '请输入姓名'
-        }],
-        department: [{
-          required: true,
-          message: '请输入所在部门'
-        }]
-      }
-    };
-  },
+    data() {
+        return {
+            inputVisible: false,
+            userName: '',
+            list: [],
+            loading: true,
+            // showDialog: false,
+            searchType: 'userName',
+            filters: {
+                modeName: '',
+                remark: ''
+            },
+            selectedOptions: [{
+                    value: 'userName',
+                    label: '用户名'
+                },
+                {
+                    value: 'realName',
+                    label: '姓名'
+                }
+            ]
+        };
+    },
 
-  methods: {
-    handleSearch() {
-      this.fetchData();
-    },
-    async fetchData() {
-      const _self = this;
-      _self.loading = true;
-      _self.list = [];
-      try {
-        const res = await userApi.list();
-        if(res&&res.data){
-            _self.list=res.data
+    methods: {
+        async delUserName(a, b) {
+          console.log(a,b)
+            const _self = this;
+            try {
+                await _self.$confirm(`是否删除${b}?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                });
+                await roleApi.deleteByUserName(a, b);
+                _self.fetchData();
+                _self.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        showInput() {
+            this.inputVisible = true;
+            // this.$nextTick(_ => {
+            //     this.$refs.saveTagInput.$refs.input.focus();
+            // });
+        },
+        async addUserName(a, b) {
+            // let userName = this.userName;
+            try {
+                console.log(a, b)
+                await roleApi.addUserNameByRolsName(a, b);
+                this.inputVisible = false;
+                this.userName = '';
+                _self.$message({
+                    message: '保存成功',
+                    type: 'success'
+                });
+                _self.fetchData();
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        handleSearch() {
+            this.fetchData();
+        },
+        async fetchData() {
+            const _self = this;
+            _self.loading = true;
+            try {
+                const res = await roleApi.list();
+                console.log(res)
+                if (res && res.data) {
+                    _self.list = res.data
+                }
+                _self.loading = false;
+            } catch (e) {
+                console.error(e);
+            }
         }
-        _self.loading = false;
-      } catch (e) {
-        console.error(e);
-      }
     },
-    async edit($index, row) {
-      const _self = this;
-      try {
-        const res = await userApi.getDetail(row.id);
-        _self.showDialog = true;
-        _self.form.id = res.data.ID;
-        _self.form.modeName = res.data.ModeName;
-        _self.form.remark = res.data.Remark;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    submitForm() {
-      const _self = this;
-      if(_self.form.id){
-        _self.editSave();
-      }else{
-        _self.addSave();
-      }
-    },
-    async addSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await userApi.add(_self.form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
-        }
-      });
-    },
-    async editSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await userApi.editInfo(_self.form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
-        }
-      });
-    },
-    async del($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm(`是否删除${row.modeName}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await userApi.delInfo(row.id);
-        _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
+    mounted() {
+        this.fetchData();
     }
-  },
-  mounted() {
-    this.fetchData();
-  }
 };
 </script>
 
 <style lang="scss">
-
+.demo-table-expand {
+    font-size: 0;
+}
+.demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+}
+.mytag {
+    margin: 0 10px;
+    height: 36px;
+    line-height: 36px;
+}
+.h-36 {
+    height: 36px;
+}
+.myinput {
+    height: 36px !important;
+    margin-top: 10px;
+    width: 156px;
+}
 </style>

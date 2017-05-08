@@ -42,7 +42,7 @@
       <template scope="scope">
           <tr v-for="item in scope.row.SonRooms" class="child-table">
               <td >
-              <i class="el-icon-circle-check" style="color:#13CE66" v-if="item.IsStop"></i>
+              <i class="el-icon-circle-check" style="color:#13CE66" v-if="!item.IsStop"></i>
               <i class="el-icon-circle-close" v-else></i>
               </td>
           </tr>
