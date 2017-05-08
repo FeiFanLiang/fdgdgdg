@@ -25,7 +25,7 @@
       style="width: 100%"
       element-loading-text="拼命加载中"
       v-loading="loading"
-      @expand="getUsername"
+      @expand="getUserNameByRole"
       row-key="RoleName"
       :expand-row-keys="expandRowKeys"
       >
@@ -62,7 +62,6 @@
             v-model="form.userName"
             :fetch-suggestions="querySearch"
             placeholder="请输入用户名称"
-            @select="handleSelect"
           ></el-autocomplete>
           <!-- <el-input placeholder="请输入用户名称" v-model="form.userName"></el-input> -->
         </el-form-item>
@@ -77,7 +76,8 @@
 
 <script>
 import {
-    roleApi
+    roleApi,
+    userApi
 } from 'api';
 
 export default {
@@ -119,7 +119,6 @@ export default {
 
     methods: {
         querySearch(queryString, cb) {
-            console.log(queryString, cb);
             var userList = this.userList;
             var results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
             // 调用 callback 返回建议列表的数据
@@ -130,9 +129,6 @@ export default {
                 return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
             };
         },
-        handleSelect(item) {
-            console.log(item);
-        },
         openDialog(row) {
             const _self = this;
             _self.getUserList();
@@ -141,7 +137,6 @@ export default {
             _self.form.rolsName = row.RoleName;
         },
         async delUserName(a, b) {
-            console.log(a, b)
             const _self = this;
             try {
                 await _self.$confirm(`是否删除${b}?`, '提示', {
@@ -198,24 +193,23 @@ export default {
             const _self = this;
             _self.userList = [];
             try {
-                const res = await roleApi.getUserList();
+                const res = await userApi.list();
                 for (let [index, elem] of res.data.entries()) {
                     _self.userList.push({});
                     _self.userList[index].value = elem.UserName;
                 }
-                console.log(_self.userList)
             } catch (e) {
                 console.error(e);
             }
         },
-        async getUsername(row, expanded) {
+        async getUserNameByRole(row, expanded) {
             const _self = this;
             if (expanded) {
                 _self.loading = true;
                 _self.expandRowKeys.length = 0;
                 _self.expandRowKeys.push(row.RoleName);
                 try {
-                    const res = await roleApi.getUsernameByRole(row.RoleName);
+                    const res = await roleApi.getUserNameByRole(row.RoleName);
                     _self.userNameList = res.data.UserName;
                     _self.loading = false;
                 } catch (e) {
@@ -230,7 +224,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .demo-table-expand {
     font-size: 0;
 }
@@ -251,7 +245,8 @@ export default {
 .el-table__expanded-cell {
     padding: 20px 100px 20px 65px !important;
 }
-.el-autocomplete, .el-dropdown {
+.el-autocomplete,
+.el-dropdown {
     display: block !important;
 }
 </style>
