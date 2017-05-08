@@ -34,7 +34,7 @@
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item id="userlabel" v-loading.body="loading2">
                 <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
-                <div class="">
+                <div>
                   <el-autocomplete
                     class="myinput"
                     :icon="userName?'check':'close'"
@@ -257,7 +257,7 @@ export default {
 }
 #userlabel .mybtn {
     height: 36px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 .myinput {
     width: 180px;
