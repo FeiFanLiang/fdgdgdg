@@ -1,8 +1,9 @@
 <template lang="html">
   <el-dialog title="平台信息" v-model="hotelRoomPlatVisible"  @close="Cancel" @open="dialogOpen">
   <el-table :data="list" ref="table" style="width: 100%;height:100%"  border row-key="ID">
-    <el-table-column sortable prop="id" label="ID"  width="180" show-overflow-tooltip></el-table-column>
-    <el-table-column sortable prop="modeName" label="账户名称"  show-overflow-tooltip></el-table-column>
+    <el-table-column sortable prop="PlatRoomName" label="平台名称"  width="180" show-overflow-tooltip></el-table-column>
+    <el-table-column sortable prop="PlatRoomCode" label="平台编码"  show-overflow-tooltip></el-table-column>
+    <el-table-column sortable prop="PlatRoomName_En" label="平台英文名称"  show-overflow-tooltip></el-table-column>
     <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
     <el-table-column  width="150"  label="操作" fixed="right">
       <template scope="scope">
@@ -11,34 +12,23 @@
       </template>
     </el-table-column>
   </el-table>
-  <div class="line">
-
-  </div>
-  <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+  <div class="line"></div>
+  <el-form ref="form"  :rules="rules" label-width="100px">
     <el-row>
-      <el-col :span="11">
-        <el-form-item label="房间名称" prop="roomName">
-          <el-input v-model="form.roomName"></el-input>
-        </el-form-item>
-      </el-col>
-      <el-form-item label="平台名称" prop="platformId">
-        <el-select class="w193" v-model="form.platformId" placeholder="请选择">
+      <el-col :span="11" :offset="2">
+        <el-select  v-model="chosenPlatInfo" placeholder="请选择">
           <el-option v-for="(item,index) in platInfoList"
             :label="item.PlatHotelName"
-            :value="item.ID"
+            :value="item"
             :key="index">
           </el-option>
         </el-select>
-      </el-form-item>
-    </el-row>
-    <el-row>
-      <el-col :span="11" :offset="11">
-        <el-button type="primary" @click="handleSaveAndEdit()">保存</el-button>
       </el-col>
+        <el-col :span="11">
+            <el-button type="primary" @click="handleSaveAndEdit()">保存</el-button>
+        </el-col>
     </el-row>
-
   </el-form>
-
   </el-dialog>
 </template>
 
@@ -73,13 +63,8 @@ export default {
   data() {
     return {
       list: [],
-      platInfoList:[],
-      form: {
-        platformId: '',
-        sonRoomId: 2092,
-        roomId: 831,
-        platHotelId: 0,
-      },
+      platInfoList: [],
+      chosenPlatInfo: {},
       rules: {},
     }
   },
@@ -87,7 +72,7 @@ export default {
     Cancel() {
       this.$emit('hide')
     },
-    dialogOpen(){
+    dialogOpen() {
       this.getList();
       this.getPlatformList();
     },
@@ -96,17 +81,27 @@ export default {
       if (res && res.data && Array.isArray(res.data)) {
         this.list = res.data;
       }
-      console.log(res.data)
+      console.log(JSON.stringify(res.data))
     },
     async getPlatformList() {
       const res = await hotelPlatformApi.listByHotel(this.hotelId);
       if (res && res.data && Array.isArray(res.data)) {
-        this.platInfoList=res.data;
-        console.log(JSON.stringify(this.platInfoList))
+        this.platInfoList = res.data;
       }
 
     },
-    async handleSaveAndEdit(){
+    async handleSaveAndEdit() {
+      const form = {
+        roomId: this.roomId,
+        sonRoomId: this.sonRoomId,
+        platformId: this.chosenPlatInfo.PlatformID,
+        platHotelId: this.chosenPlatInfo.PlatHotelID
+      }
+      console.log(form)
+      if (!this.roomId || !this.sonRoomId || !this.chosenPlatInfo.PlatformID||!this.chosenPlatInfo.PlatHotelID) {
+        return
+      }
+
       try {
         await sonRoomPlatformApi.add(form);
         _self.$message({

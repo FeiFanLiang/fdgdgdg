@@ -62,7 +62,7 @@
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="子房型操作" width="169">
+    <el-table-column label="子房型操作" width="139">
       <template scope="scope">
           <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
@@ -373,7 +373,7 @@ export default {
       const _self = this;
       _self.sonFormDialogVisible = true;
       _self.sonForm.id = sonRooms.ID;
-      _self.sonForm.roomID = sonRooms.roomID;
+      _self.sonForm.roomID = sonRooms.RoomID;
       _self.sonForm.sonRoomName = sonRooms.SonRoomName;
       _self.sonForm.sonRoomCode = sonRooms.SonRoomCode;
       _self.sonForm.remark = sonRooms.Remark;
@@ -384,8 +384,7 @@ export default {
     hotelSonRoomPlatEdit(index, row){
       if (!row || !row.SonRooms) retrun;
       const sonRooms = row.SonRooms[index];
-      console.log(sonRooms)
-      this.roomId=sonRooms.roomID;
+      this.roomId=sonRooms.RoomID;
       this.sonRoomId=sonRooms.ID;
       this.hotelRoomPlatVisible=true;
     },
