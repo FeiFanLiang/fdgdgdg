@@ -30,13 +30,8 @@
       <el-table-column  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="addRole(scope.$index, scope.row)">添加角色</el-button>
-          <el-button size="small" :class="{'lock':lock,'unLock':!lock}" @click="toggle(scope.$index, scope.row)">
-            <template>
-              <i v-if="lock">解锁</i>
-              <i v-else style="color:red">锁定</i>
-            </template>
-          </el-button>
-          <!--<el-button size="small" type="danger" @click="unLock(scope.$index, scope.row)">解锁</el-button>-->
+          <el-button size="small" @click="lock(scope.$index, scope.row)">锁定</el-button>
+          <el-button size="small" @click="unLock(scope.$index, scope.row)">解锁</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -103,7 +98,6 @@ import {
 export default {
   data() {
     return {
-      lock: false,
       list: [],
       depOptions: [],
       loading: true,
@@ -173,16 +167,7 @@ export default {
         console.error(e);
       }
     },
-    toggle($index, row) {
-      if(this.lock){
-        this.unLock(row);
-        this.lock = !this.lock;
-      }else{
-        this.Lock(row);
-        this.lock = !this.lock;
-      }
-    },
-    async Lock(row) {
+    async lock($index, row) {
       const _self = this;
       await userApi.lockUser(row.UserName);
       _self.$message({
@@ -190,7 +175,7 @@ export default {
         type: 'success'
       });
     },
-    async unLock(row) {
+    async unLock($index, row) {
       const _self = this;
       await userApi.unLockUser(row.UserName);
       _self.$message({
