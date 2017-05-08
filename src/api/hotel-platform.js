@@ -1,21 +1,23 @@
 import axios from 'axios';
 import path from './api';
 export default {
-  getHotelList(hotelid) {
+  listByHotel(hotelid) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/hotel/${hotelid}`);
   },
-  getDetail(id) {
+  detail(id) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/${id}`);
   },
-  addInfo(params) {
-    return axios.post(path.apiBaseUrl + `Hotel/HotelPlatform`, params);
+  add(params) {
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelPlatform', params);
   },
-  delInfo(id) {
+  del(id) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelPlatform/${id}`);
   },
-  editInfo(params) {
+  edit(params) {
     return axios.put(
-      path.apiBaseUrl + `Hotel/HotelPlatform/${params.id}`,  params);
+      path.apiBaseUrl + `Hotel/HotelPlatform/${params.id}`,
+      params
+    );
   },
   getPlatformList(platid) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/plat/${platid}`);

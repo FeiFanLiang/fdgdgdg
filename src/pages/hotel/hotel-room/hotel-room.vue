@@ -62,10 +62,11 @@
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="子房型操作" width="139">
+    <el-table-column label="子房型操作" width="169">
       <template scope="scope">
           <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
+              <el-button size="mini" @click="hotelSonRoomPlatEdit(index,scope.row)">平台</el-button>
               <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="hotelSonRoomDelete(index,scope.row)">删除</el-button>
             </td>
@@ -167,33 +168,13 @@
           </div>
         </el-col>
       </el-row>
-      <div class="line">
-
-      </div>
-      <el-table
-     :data="tableData"
-     style="width: 100%">
-     <el-table-column
-       prop="date"
-       label="日期"
-       width="180">
-     </el-table-column>
-     <el-table-column
-       prop="name"
-       label="姓名"
-       width="180">
-     </el-table-column>
-     <el-table-column
-       prop="address"
-       label="地址">
-     </el-table-column>
-   </el-table>
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="sonFormDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleSonRoomSaveAndEdit()">确 定</el-button>
       </span>
   </el-dialog>
+  <HotelRoomPlat :hotel-id="form.hotelId" :room-id="roomId" :son-room-id="sonRoomId" :hotel-room-plat-visible="hotelRoomPlatVisible" @hide="hotelRoomPlatVisible=false"></HotelRoomPlat>
 </div>
 </template>
 
@@ -205,29 +186,16 @@ import {
 import {
   HotelTopMenu
 } from 'components'
+import HotelRoomPlat from './hotel-room-plat';
 export default {
   components: {
     HotelTopMenu,
+    HotelRoomPlat
   },
   data() {
     return {
-      tableData: [{
-           date: '2016-05-02',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1518 弄'
-         }, {
-           date: '2016-05-04',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1517 弄'
-         }, {
-           date: '2016-05-01',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1519 弄'
-         }, {
-           date: '2016-05-03',
-           name: '王小虎',
-           address: '上海市普陀区金沙江路 1516 弄'
-         }],
+      roomId:'',
+      sonRoomId:'',
       breakfastTypes: [{
         name: '未定',
         value: 0
@@ -302,7 +270,7 @@ export default {
       sonFormDialogVisible: false,
       bedsOptions: [],
       hotelroomlist: [],
-      SonRooms: [],
+      hotelRoomPlatVisible:false
     }
   },
   mounted() {
@@ -399,9 +367,9 @@ export default {
       _self.form.remark = row.Remark;
       _self.dialogVisible = true;
     },
-    async hotelSonRoomEdit(index, row) {
+    hotelSonRoomEdit(index, row) {
       if (!row || !row.SonRooms) retrun;
-      const sonRooms = row.SonRooms[index]
+      const sonRooms = row.SonRooms[index];
       const _self = this;
       _self.sonFormDialogVisible = true;
       _self.sonForm.id = sonRooms.ID;
@@ -412,6 +380,14 @@ export default {
       _self.sonForm.remark2 = sonRooms.Remark2;
       _self.sonForm.breakfastType = sonRooms.BreakfastType;
       _self.sonForm.isStop = sonRooms.IsStop;
+    },
+    hotelSonRoomPlatEdit(index, row){
+      if (!row || !row.SonRooms) retrun;
+      const sonRooms = row.SonRooms[index];
+      console.log(sonRooms)
+      this.roomId=sonRooms.roomID;
+      this.sonRoomId=sonRooms.ID;
+      this.hotelRoomPlatVisible=true;
     },
     async hotelroomDelete(row) {
       const _self = this;

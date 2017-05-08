@@ -17,7 +17,7 @@ import roomStateApi from './room-state';
 import rserveModeApi from './rserve-mode';
 import secretTypeApi from './secret-type';
 import sonRoomApi from './son-room';
-import sonRoomPlatformControllApi from './son-room-platform-controll';
+import sonRoomPlatformApi from './son-room-platform';
 import sonRoomSalePriceApi from './son-room-sale-price';
 import userApi from './user';
 import roleApi from './role';
@@ -41,7 +41,7 @@ export {
   rserveModeApi,
   secretTypeApi,
   sonRoomApi,
-  sonRoomPlatformControllApi,
+  sonRoomPlatformApi,
   sonRoomSalePriceApi,
   userApi,
   roleApi

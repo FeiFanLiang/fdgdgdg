@@ -154,7 +154,7 @@ export default {
             const _self = this;
             _self.loading = true;
             _self.list = [];
-            const res = await hotelPlatformApi.getHotelList(this.$route.params.ID);
+            const res = await hotelPlatformApi.listByHotel(this.$route.params.ID);
             for (let [index, elem] of res.data.entries()) {
                 _self.list.push({});
                 _self.list[index].platformId = elem.PlatformID;
@@ -198,7 +198,7 @@ export default {
         async clickEditBtn($index, row) {
             const _self = this;
             try {
-                const res = await hotelPlatformApi.getDetail(row.id);
+                const res = await hotelPlatformApi.detail(row.id);
                 _self.showDialog = true;
                 _self.dialogTag = 2;
                 _self.dialogTitle = "编辑平台映射信息";
@@ -231,7 +231,7 @@ export default {
                 if (valid) {
                     try {
                         _self.form.platHotelName_En = _self.form.platHotelNameEn;
-                        await hotelPlatformApi.addInfo(_self.form);
+                        await hotelPlatformApi.add(_self.form);
                         _self.fetchData();
                         _self.$refs[a].resetFields();
                         _self.showDialog = false;
@@ -253,7 +253,7 @@ export default {
                 if (valid) {
                     try {
                         _self.form.platHotelName_En = _self.form.platHotelNameEn;
-                        await hotelPlatformApi.editInfo(_self.form);
+                        await hotelPlatformApi.edit(_self.form);
                         _self.fetchData();
                         _self.$refs[a].resetFields();
                         _self.showDialog = false;
@@ -277,7 +277,7 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
-                await hotelPlatformApi.delInfo(row.id);
+                await hotelPlatformApi.del(row.id);
                 _self.fetchData();
                 _self.$message({
                     message: '删除成功',
