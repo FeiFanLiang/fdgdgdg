@@ -33,23 +33,42 @@
           <template scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="用户列表">
-                <span v-if="userNameList.length === 0">暂无用户</span>
                 <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
+                <!-- <el-input
+                    class="input-new-tag"
+                    v-if="inputVisible"
+                    v-model="userName"
+                    ref="saveTagInput"
+                    size="mini"
+                    @keyup.enter.native="addUserName(props.row.RoleName,userName)"
+                    @blur="addUserName(props.row.RoleName,userName)">
+                  </el-input> -->
+                  <!-- :on-icon-click="addUserName(props.row.RoleName,userName)" -->
+                    <el-autocomplete
+                      ref="saveTagInput"
+                      v-if="inputVisible"
+                      placeholder="请输入用户名称"
+                      v-model="userName"
+                      :fetch-suggestions="querySearch"
+                      @keyup.enter.native="addUserName(props.row.RoleName,userName)"
+                      @blur="addUserName(props.row.RoleName,userName)"
+                      ></el-autocomplete>
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput">添加用户</el-button>
               </el-form-item>
             </el-form>
           </template>
       </el-table-column>
       <el-table-column sortable prop="RealName" label="RealName" show-overflow-tooltip></el-table-column>
       <el-table-column  prop="RoleName" label="RoleName" show-overflow-tooltip></el-table-column>
-      <el-table-column  label="操作" width="100" fixed="right">
+      <!-- <el-table-column  label="操作" width="100" fixed="right">
         <template scope="scope">
 <el-button size="mini" @click="openDialog(scope.row)">
     添加用户</el-button>
 </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
-    <el-dialog title="添加用户" v-model="showDialog" size="tiny" @close="resetForm('form')">
+    <!-- <el-dialog title="添加用户" v-model="showDialog" size="tiny" @close="resetForm('form')">
       <el-form :rules="rules" ref="form" :model="form">
         <el-form-item label="realName">
           <el-input v-model="form.realName" disabled></el-input>
@@ -58,19 +77,14 @@
           <el-input v-model="form.rolsName" disabled></el-input>
         </el-form-item>
         <el-form-item label="用户名称" prop="userName">
-          <el-autocomplete
-            v-model="form.userName"
-            :fetch-suggestions="querySearch"
-            placeholder="请输入用户名称"
-          ></el-autocomplete>
-          <!-- <el-input placeholder="请输入用户名称" v-model="form.userName"></el-input> -->
+
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
         <el-button type="primary" @click="addUserName()">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -88,17 +102,20 @@ export default {
             expandRowKeys: [],
             userNameList: [],
             loading: true,
-            showDialog: false,
+            // showDialog: false,
+            inputVisible: false,
+            userName: '',
+            rolsName: '',
             searchType: 'userName',
             filters: {
                 modeName: '',
                 remark: ''
             },
-            form: {
-                realName: '',
-                rolsName: '',
-                userName: ''
-            },
+            // form: {
+            //     realName: '',
+            //     rolsName: '',
+            //     userName: ''
+            // },
             rules: {
                 userName: [{
                     required: true,
@@ -118,6 +135,9 @@ export default {
     },
 
     methods: {
+        test() {
+            alert("1")
+        },
         querySearch(queryString, cb) {
             var userList = this.userList;
             var results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
@@ -129,12 +149,18 @@ export default {
                 return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
             };
         },
-        openDialog(row) {
-            const _self = this;
-            _self.getUserList();
-            _self.showDialog = true;
-            _self.form.realName = row.RealName;
-            _self.form.rolsName = row.RoleName;
+        // openDialog(row) {
+        //     const _self = this;
+        //     _self.getUserList();
+        //     _self.showDialog = true;
+        //     _self.form.realName = row.RealName;
+        //     _self.form.rolsName = row.RoleName;
+        // },
+        showInput() {
+            this.inputVisible = true;
+            // this.$nextTick(_ => {
+            //     this.$refs.saveTagInput.$refs.input.focus();
+            // });
         },
         async delUserName(a, b) {
             const _self = this;
@@ -145,7 +171,7 @@ export default {
                     type: 'warning'
                 });
                 await roleApi.deleteByUserName(a, b);
-                _self.fetchData();
+                _self.getUserNameByRole();
                 _self.$message({
                     message: '删除成功',
                     type: 'success'
@@ -154,26 +180,24 @@ export default {
                 console.error(e);
             }
         },
-        async addUserName() {
+        async addUserName(a, b) {
+            console.log(a, b)
             const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await roleApi.addUserNameByRolsName(_self.form.rolsName, _self.form.userName);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '添加成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                    }
-                } else {
-                    return false;
+            if (b !== "") {
+                try {
+                    await roleApi.addUserNameByRolsName(a, b);
+                    _self.getUserNameByRole();
+                    _self.$message({
+                        message: '添加成功',
+                        type: 'success'
+                    });
+                    _self.inputVisible = false;
+                } catch (e) {
+                    console.error(e);
                 }
-            });
+            } else {
+                _self.inputVisible = false;
+            }
         },
         handleSearch() {
             this.fetchData();
@@ -204,17 +228,19 @@ export default {
         },
         async getUserNameByRole(row, expanded) {
             const _self = this;
+            _self.getUserList();
             if (expanded) {
                 _self.loading = true;
                 _self.expandRowKeys.length = 0;
                 _self.expandRowKeys.push(row.RoleName);
-                try {
-                    const res = await roleApi.getUserNameByRole(row.RoleName);
-                    _self.userNameList = res.data.UserName;
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                }
+                _self.rolsName = row.RoleName;
+            }
+            try {
+                const res = await roleApi.getUserNameByRole(_self.rolsName);
+                _self.userNameList = res.data.UserName;
+                _self.loading = false;
+            } catch (e) {
+                console.error(e);
             }
         }
     },
