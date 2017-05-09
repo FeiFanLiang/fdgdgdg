@@ -130,7 +130,7 @@ export default {
     },
     async getPayModeOptions() {
       try {
-        const res = await hotelPayModeApi.getList();
+        const res = await hotelPayModeApi.list();
         this.payModeOptions = res.data;
       } catch (e) {
         console.error(e);

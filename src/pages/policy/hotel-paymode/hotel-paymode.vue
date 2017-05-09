@@ -50,155 +50,157 @@
 
 <script>
 import {
-  hotelPayModeApi
+    hotelPayModeApi
 } from 'api';
 
 export default {
-  data() {
-    return {
-      list: [],
-      loading: true,
-      showDialog: false,
-      filters: {
-        sortWay: '',
-        modeName: '',
-        labelVal: '1',
-        remark: ''
-      },
-      form: {
-        id: '',
-        modeName: '',
-        remark: ''
-      },
-      selectedOptions: [{
-          value: '1',
-          label: '账户名称'
-        },
-        {
-          value: '2',
-          label: 'remark'
-        }
-      ],
-      rules: {
-        modeName: [{
-          required: true,
-          message: '请输入账户名称'
-        }]
-      }
-    };
-  },
+    data() {
+        return {
+            list: [],
+            loading: true,
+            showDialog: false,
+            filters: {
+                sortWay: '',
+                modeName: '',
+                labelVal: '1',
+                remark: ''
+            },
+            form: {
+                id: '',
+                modeName: '',
+                remark: ''
+            },
+            selectedOptions: [{
+                    value: '1',
+                    label: '账户名称'
+                },
+                {
+                    value: '2',
+                    label: 'remark'
+                }
+            ],
+            rules: {
+                modeName: [{
+                    required: true,
+                    message: '请输入账户名称'
+                }]
+            }
+        };
+    },
 
-  methods: {
-    handleSearch() {
-      this.fetchData();
-    },
-    async fetchData() {
-      const _self = this;
-      _self.loading = true;
-      _self.list = [];
-      try {
-        const res = await hotelPayModeApi.getList();
-        for (let [index, elem] of res.data.entries()) {
-          _self.list.push({});
-          _self.list[index].id = elem.ID;
-          _self.list[index].modeName = elem.ModeName;
-          _self.list[index].remark = elem.Remark;
-        }
-        _self.loading = false;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    clickAddBtn() {
-      const _self = this;
-      _self.showDialog = true;
-    },
-    async clickEditBtn($index, row) {
-      const _self = this;
-      try {
-        const res = await hotelPayModeApi.getDetail(row.id);
-        _self.showDialog = true;
-        _self.form.id = res.data.ID;
-        _self.form.modeName = res.data.ModeName;
-        _self.form.remark = res.data.Remark;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    submitForm() {
-      const _self = this;
-      if(_self.form.id){
-        _self.editSave();
-      }else{
-        _self.addSave();
-      }
-    },
-    async addSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            const form={..._self.form}
-            delete form.id
-            await hotelPayModeApi.addInfo(form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
+    methods: {
+        handleSearch() {
+            this.fetchData();
+        },
+        async fetchData() {
+            const _self = this;
+            _self.loading = true;
+            _self.list = [];
+            try {
+                const res = await hotelPayModeApi.list();
+                for (let [index, elem] of res.data.entries()) {
+                    _self.list.push({});
+                    _self.list[index].id = elem.ID;
+                    _self.list[index].modeName = elem.ModeName;
+                    _self.list[index].remark = elem.Remark;
+                }
+                _self.loading = false;
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        clickAddBtn() {
+            const _self = this;
+            _self.showDialog = true;
+            _self.form = {};
+        },
+        async clickEditBtn($index, row) {
+            const _self = this;
+            try {
+                const res = await hotelPayModeApi.detail(row.id);
+                _self.showDialog = true;
+                _self.form.id = res.data.ID;
+                _self.form.modeName = res.data.ModeName;
+                _self.form.remark = res.data.Remark;
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        submitForm() {
+            const _self = this;
+            if (_self.form.id) {
+                _self.editSave();
+            } else {
+                _self.addSave();
+            }
+        },
+        async addSave() {
+            const _self = this;
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        const form = { ..._self.form
+                        }
+                        delete form.id
+                        await hotelPayModeApi.add(form);
+                        _self.fetchData();
+                        _self.$refs['form'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
             });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
-        }
-      });
-    },
-    async editSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await hotelPayModeApi.editInfo(_self.form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
+        },
+        async editSave() {
+            const _self = this;
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        await hotelPayModeApi.edit(_self.form);
+                        _self.fetchData();
+                        _self.$refs['form'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
             });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
+        },
+        async clickDelBtn($index, row) {
+            const _self = this;
+            try {
+                await _self.$confirm(`是否删除${row.modeName}?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                });
+                await hotelPayModeApi.del(row.id);
+                _self.fetchData();
+                _self.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
         }
-      });
     },
-    async clickDelBtn($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm(`是否删除${row.modeName}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await hotelPayModeApi.delInfo(row.id);
-        _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
+    mounted() {
+        this.fetchData();
     }
-  },
-  mounted() {
-    this.fetchData();
-  }
 };
 </script>
 

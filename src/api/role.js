@@ -2,10 +2,10 @@ import axios from 'axios';
 import path from './api';
 
 export default {
-    getRoleList() {
+    list() {
         return axios.get(path.apiBaseUrl + 'System/Role');
     },
-    getUserNameByRole(rolsName) {
+    userNameListByRolesName(rolsName) {
         return axios.get(path.apiBaseUrl + `System/Role/${rolsName}`);
     },
     roleListByUserName(userName) {
@@ -17,7 +17,7 @@ export default {
             params
         );
     },
-    deleteByUserName(rolsName, userName) {
+    deleteUserNameByRolesName(rolsName, userName) {
         return axios.delete(
             path.apiBaseUrl + `System/Role/${rolsName}/${userName}`
         );

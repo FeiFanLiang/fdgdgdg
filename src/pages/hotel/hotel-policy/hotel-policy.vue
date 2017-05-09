@@ -414,7 +414,7 @@ export default {
 
   methods: {
     async getPayCompany() {
-      const res = await payCompanyApi.getList();
+      const res = await payCompanyApi.list();
       this.payCompanyOptions = res.data;
     },
     async getReserveMode() {

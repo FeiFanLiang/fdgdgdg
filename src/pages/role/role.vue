@@ -33,7 +33,7 @@
           <template scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item id="userlabel" v-loading.body="loading2">
-                <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a)">{{a}}</el-tag>
+                <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a,props.row.RealName)">{{a}}</el-tag>
                 <div>
                   <el-autocomplete
                     class="myinput"
@@ -117,17 +117,17 @@ export default {
             //     this.$refs.saveTagInput.$refs.input.focus();
             // });
         },
-        async delUserName(a, b) {
+        async delUserName(a, b, c) {
             const _self = this;
 
             try {
-                await _self.$confirm(`是否删除${b}?`, '提示', {
+                await _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 });
                 _self.loading2 = true;
-                await roleApi.deleteByUserName(a, b);
+                await roleApi.deleteUserNameByRolesName(a, b);
                 _self.getUserNameByRole();
                 _self.loading2 = false;
                 _self.$message({
@@ -165,7 +165,7 @@ export default {
             const _self = this;
             _self.loading = true;
             try {
-                const res = await roleApi.getRoleList();
+                const res = await roleApi.list();
                 _self.list = res.data;
                 _self.loading = false;
             } catch (e) {
@@ -199,7 +199,7 @@ export default {
                 _self.rolsName = row.RoleName;
             }
             try {
-                const res = await roleApi.getUserNameByRole(_self.rolsName);
+                const res = await roleApi.userNameListByRolesName(_self.rolsName);
                 _self.userNameList = res.data.UserName;
                 _self.loading2 = false;
             } catch (e) {
