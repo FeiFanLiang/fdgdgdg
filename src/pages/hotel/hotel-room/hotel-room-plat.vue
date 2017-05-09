@@ -19,20 +19,54 @@
     <el-dialog title="添加平台信息"  v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen">
       <el-form ref="form"  :rules="rules" label-width="100px">
         <el-row>
-          <el-col :span="11" :offset="2">
-            <el-select  v-model="chosenPlatInfo" placeholder="请选择">
-              <el-option v-for="(item,index) in platInfoList"
-                :label="item.PlatHotelName"
-                :value="item"
-                :key="index">
-              </el-option>
-            </el-select>
+          <el-col :span="11">
+            <el-form-item label="平台酒店名称" prop="roomName">
+              <el-input v-model="form.platRoomName"></el-input>
+            </el-form-item>
           </el-col>
-            <el-col :span="11">
-                <el-button type="primary" @click="handleSaveAndEdit()">保存</el-button>
-            </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="平台酒店编号" prop="roomCode">
+              <el-input v-model="form.platRoomCode"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="平台酒店英文名称">
+              <el-input v-model="form.platRoomName_En"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="请选择平台">
+              <el-select  v-model="chosenPlatInfo" placeholder="请选择平台">
+                <el-option v-for="(item,index) in platInfoList"
+                  :label="item.PlatHotelName"
+                  :value="item"
+                  :key="index">
+                </el-option>
+              </el-select>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11" >
+              <el-form-item label="备注一">
+                <el-input v-model="form.remark" type="textarea"></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
+            <div class="grid-content bg-purple">
+              <el-form-item label="启用状态">
+                <el-switch on-text="开启" off-text="关闭" :on-value="false" :off-value="true" v-model="form.isValid"></el-switch>
+              </el-form-item>
+            </div>
+          </el-col>
         </el-row>
       </el-form>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="platVisible = false">取 消</el-button>
+          <el-button type="primary" @click="handleSaveAndEdit()">保 存</el-button>
+        </span>
     </el-dialog>
   </div>
 </template>
@@ -71,7 +105,18 @@ export default {
       platInfoList: [],
       chosenPlatInfo: {},
       rules: {},
-      platVisible:false
+      platVisible: false,
+      form: {
+        roomId: '',
+        sonRoomId: '',
+        platformId: '',
+        platHotelId: '',
+        platRoomName: '',
+        platRoomCode: '',
+        platRoomName_En: '',
+        remark: '',
+        isValid: true
+      }
     }
   },
   methods: {
@@ -82,14 +127,30 @@ export default {
       this.getList();
       this.getPlatformList();
     },
-    add(){
-      this.platVisible=true;
+    add() {
+      this.platVisible = true;
     },
-    edit(index,row){
-      this.platVisible=true;
+    edit(index, row) {
+      this.platVisible = true;
     },
-    del(index,row){
-
+    async del(index, row) {
+      console.log(JSON.stringify(row))
+      const _self = this;
+      try {
+        await _self.$confirm(`是否删除${row.PlatRoomName}?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        await sonRoomPlatformApi.remove(row.ID);
+        _self.fetchData();
+        _self.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
     async getList() {
       const res = await sonRoomPlatformApi.listBySonRoom(this.sonRoomId);
@@ -104,18 +165,17 @@ export default {
       }
     },
     async handleSaveAndEdit() {
-      const _self=this;
-      if (!_self.roomId || !_self.sonRoomId || !_self.chosenPlatInfo.PlatformID||!_self.chosenPlatInfo.PlatHotelID) {
+      const _self = this;
+      if (!_self.roomId || !_self.sonRoomId || !_self.chosenPlatInfo.PlatformID || !_self.chosenPlatInfo.PlatHotelID) {
         return
       }
-      const form = {
-        roomId: _self.roomId,
-        sonRoomId: _self.sonRoomId,
-        platformId: _self.chosenPlatInfo.PlatformID,
-        platHotelId: _self.chosenPlatInfo.PlatHotelID
-      }
+      _self.form.roomId = _self.roomId;
+      _self.form.sonRoomId = _self.sonRoomId;
+      _self.form.platformId = _self.chosenPlatInfo.PlatformID;
+      _self.form.platHotelId = _self.chosenPlatInfo.PlatHotelID;
       try {
-        await sonRoomPlatformApi.add(form);
+        await sonRoomPlatformApi.add(_self.form);
+        _self.getList()
         _self.$message({
           message: '保存成功',
           type: 'success'
