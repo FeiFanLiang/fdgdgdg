@@ -20,7 +20,6 @@ export default {
     );
   },
 
-  
   getPlatformList(platid) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPlatform/plat/${platid}`);
   }
