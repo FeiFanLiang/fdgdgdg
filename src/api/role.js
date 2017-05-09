@@ -11,6 +11,12 @@ export default {
   roleListByUserName(userName) {
     return axios.get(path.apiBaseUrl + `System/Role/ForUser/${userName}`);
   },
+  add(params) {
+    return axios.post(path.apiBaseUrl + `System/Role`, params);
+  },
+  edit(params) {
+    return axios.put(path.apiBaseUrl + `System/Role`, params);
+  },
   addUserNameByRolsName(rolsName, userName, params) {
     return axios.post(
       path.apiBaseUrl + `System/Role/${rolsName}/${userName}`,
