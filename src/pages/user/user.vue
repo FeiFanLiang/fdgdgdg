@@ -26,11 +26,12 @@
       <el-table-column type="expand">
           <template scope="props">
             <el-form label-position="left" inline>
-              <el-form-item v-loading.body="loading2">               
+              <el-form-item v-loading.body="loading2">
                 <el-tag :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)" style="margin:5px">
                 {{tag}}
                 </el-tag>
                 <div style="margin:10px 0"></div>
+                {{roles}}
                 <el-autocomplete
                   popper-class="my-autocomplete"
                   v-model="roles"
@@ -44,7 +45,7 @@
                 </el-autocomplete>
                 <el-button v-else class="button-new-tag" size="small" @click="showInput">添加角色</el-button>
               </el-form-item>
-            </el-form>           
+            </el-form>
           </template>
       </el-table-column>
       <el-table-column sortable prop="RealName" label="姓名"  show-overflow-tooltip></el-table-column>
@@ -163,7 +164,7 @@ export default {
             type: 'warning'
           });
           _self.loading2 = true;
-          await roleApi.deleteByUserName(tag, userName);
+          await roleApi.deleteUserNameByRolesName(tag, userName);
           _self.getRoleList();
           _self.loading2 = false;
           _self.$message({
@@ -194,7 +195,7 @@ export default {
       _self.roleList = [];
       let _index = 0;
       try {
-        const res = await roleApi.getRoleList();
+        const res = await roleApi.list();
         for (let [index, item] of res.data.entries()) {
           if (!_self.roleTags.includes(item.RoleName)) {
             _self.roleList.push({});
@@ -309,7 +310,7 @@ export default {
           _index++;
           _self.loading2 = false;
         }
-        
+
       } catch (e) {
           console.error(e);
       }
