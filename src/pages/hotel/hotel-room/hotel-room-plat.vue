@@ -1,35 +1,38 @@
 <template lang="html">
-  <el-dialog title="平台信息" v-model="hotelRoomPlatVisible"  @close="Cancel" @open="dialogOpen">
-  <el-table :data="list" ref="table" style="width: 100%;height:100%"  border row-key="ID">
-    <el-table-column sortable prop="PlatRoomName" label="平台名称"  width="180" show-overflow-tooltip></el-table-column>
-    <el-table-column sortable prop="PlatRoomCode" label="平台编码"  show-overflow-tooltip></el-table-column>
-    <el-table-column sortable prop="PlatRoomName_En" label="平台英文名称"  show-overflow-tooltip></el-table-column>
-    <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-    <el-table-column  width="150"  label="操作" fixed="right">
-      <template scope="scope">
-        <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-        <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <div class="line"></div>
-  <el-form ref="form"  :rules="rules" label-width="100px">
-    <el-row>
-      <el-col :span="11" :offset="2">
-        <el-select  v-model="chosenPlatInfo" placeholder="请选择">
-          <el-option v-for="(item,index) in platInfoList"
-            :label="item.PlatHotelName"
-            :value="item"
-            :key="index">
-          </el-option>
-        </el-select>
-      </el-col>
-        <el-col :span="11">
-            <el-button type="primary" @click="handleSaveAndEdit()">保存</el-button>
-        </el-col>
-    </el-row>
-  </el-form>
-  </el-dialog>
+  <div class="">
+    <el-dialog title="平台信息"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
+      <el-button  @click="add">添加</el-button>
+    <el-table :data="list" ref="table" style="width: 100%;height:100%"  border row-key="ID">
+      <el-table-column sortable prop="PlatRoomName" label="平台名称"  width="180" show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="PlatRoomCode" label="平台编码"  show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="PlatRoomName_En" label="平台英文名称"  show-overflow-tooltip></el-table-column>
+      <el-table-column  width="150"  label="操作" fixed="right">
+        <template scope="scope">
+          <el-button size="small" @click="edit(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="small" type="danger" @click="del(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    </el-dialog>
+    <el-dialog title="添加平台信息"  v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen">
+      <el-form ref="form"  :rules="rules" label-width="100px">
+        <el-row>
+          <el-col :span="11" :offset="2">
+            <el-select  v-model="chosenPlatInfo" placeholder="请选择">
+              <el-option v-for="(item,index) in platInfoList"
+                :label="item.PlatHotelName"
+                :value="item"
+                :key="index">
+              </el-option>
+            </el-select>
+          </el-col>
+            <el-col :span="11">
+                <el-button type="primary" @click="handleSaveAndEdit()">保存</el-button>
+            </el-col>
+        </el-row>
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -66,6 +69,7 @@ export default {
       platInfoList: [],
       chosenPlatInfo: {},
       rules: {},
+      platVisible:false
     }
   },
   methods: {
@@ -75,6 +79,15 @@ export default {
     dialogOpen() {
       this.getList();
       this.getPlatformList();
+    },
+    add(){
+      this.platVisible=true;
+    },
+    edit(index,row){
+      this.platVisible=true;
+    },
+    del(index,row){
+
     },
     async getList() {
       const res = await sonRoomPlatformApi.listBySonRoom(this.sonRoomId);
