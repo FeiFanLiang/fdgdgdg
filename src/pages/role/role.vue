@@ -127,7 +127,7 @@ export default {
                     type: 'warning'
                 });
                 _self.loading2 = true;
-                await roleApi.deleteByUserName(a, b);
+                await roleApi.deleteUserNameByRolesName(a, b);
                 _self.getUserNameByRole();
                 _self.loading2 = false;
                 _self.$message({
@@ -165,7 +165,7 @@ export default {
             const _self = this;
             _self.loading = true;
             try {
-                const res = await roleApi.getRoleList();
+                const res = await roleApi.list();
                 _self.list = res.data;
                 _self.loading = false;
             } catch (e) {
@@ -199,7 +199,7 @@ export default {
                 _self.rolsName = row.RoleName;
             }
             try {
-                const res = await roleApi.getUserNameByRole(_self.rolsName);
+                const res = await roleApi.userNameListByRolesName(_self.rolsName);
                 _self.userNameList = res.data.UserName;
                 _self.loading2 = false;
             } catch (e) {
