@@ -62,7 +62,7 @@
           </tr>
         </template>
     </el-table-column>
-    <el-table-column label="子房型操作" width="139">
+    <el-table-column label="子房型操作" width="169">
       <template scope="scope">
           <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
             <td>
