@@ -127,7 +127,7 @@ export default {
       //this.areaOptions = res.data;
     },
     async getPayModeOptions() {
-      const res = await hotelPayModeApi.getList();
+      const res = await hotelPayModeApi.list();
       this.payModeOptions = res.data;
     },
     async getStarOptions() {
