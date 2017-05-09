@@ -1,7 +1,9 @@
 <template lang="html">
   <div class="">
     <el-dialog title="平台信息"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
-      <el-button  @click="add">添加</el-button>
+      <el-row>
+        <el-button  @click="add">添加</el-button>
+      </el-row>
     <el-table :data="list" ref="table" style="width: 100%;height:100%"  border row-key="ID">
       <el-table-column sortable prop="PlatRoomName" label="平台名称"  width="180" show-overflow-tooltip></el-table-column>
       <el-table-column sortable prop="PlatRoomCode" label="平台编码"  show-overflow-tooltip></el-table-column>
@@ -94,27 +96,24 @@ export default {
       if (res && res.data && Array.isArray(res.data)) {
         this.list = res.data;
       }
-      console.log(JSON.stringify(res.data))
     },
     async getPlatformList() {
       const res = await hotelPlatformApi.listByHotel(this.hotelId);
       if (res && res.data && Array.isArray(res.data)) {
         this.platInfoList = res.data;
       }
-
     },
     async handleSaveAndEdit() {
-      const form = {
-        roomId: this.roomId,
-        sonRoomId: this.sonRoomId,
-        platformId: this.chosenPlatInfo.PlatformID,
-        platHotelId: this.chosenPlatInfo.PlatHotelID
-      }
-      console.log(form)
-      if (!this.roomId || !this.sonRoomId || !this.chosenPlatInfo.PlatformID||!this.chosenPlatInfo.PlatHotelID) {
+      const _self=this;
+      if (!_self.roomId || !_self.sonRoomId || !_self.chosenPlatInfo.PlatformID||!_self.chosenPlatInfo.PlatHotelID) {
         return
       }
-
+      const form = {
+        roomId: _self.roomId,
+        sonRoomId: _self.sonRoomId,
+        platformId: _self.chosenPlatInfo.PlatformID,
+        platHotelId: _self.chosenPlatInfo.PlatHotelID
+      }
       try {
         await sonRoomPlatformApi.add(form);
         _self.$message({
