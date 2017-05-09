@@ -16,7 +16,7 @@
       </el-table-column>
     </el-table>
     </el-dialog>
-    <el-dialog title="添加平台信息"  v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen">
+    <el-dialog title="添加酒店平台信息"  v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen">
       <el-form ref="form"  :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="11">
