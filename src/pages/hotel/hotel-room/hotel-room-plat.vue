@@ -16,16 +16,16 @@
       </el-table-column>
     </el-table>
     </el-dialog>
-    <el-dialog title="添加酒店平台信息"  v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen">
-      <el-form ref="form"  :rules="rules" label-width="100px">
+    <el-dialog :title="form.id?'编辑酒店平台信息':'添加酒店平台信息'" v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen" @close="resetForm('form')">
+      <el-form :model="form" ref="form"  :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="11">
-            <el-form-item label="平台酒店名称" prop="roomName">
+            <el-form-item label="平台酒店名称" prop="platRoomName">
               <el-input v-model="form.platRoomName"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="平台酒店编号" prop="roomCode">
+            <el-form-item label="平台酒店编号" >
               <el-input v-model="form.platRoomCode"></el-input>
             </el-form-item>
           </el-col>
@@ -37,7 +37,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <el-form-item label="请选择平台">
+            <el-form-item label="请选择平台"  >
               <el-select  v-model="chosenPlatInfo" placeholder="请选择平台">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.PlatHotelName"
@@ -104,9 +104,16 @@ export default {
       list: [],
       platInfoList: [],
       chosenPlatInfo: {},
-      rules: {},
+      rules: {
+        platRoomName: [{
+          required: true,
+          message: '请输入平台酒店名称',
+          trigger: 'blur'
+        }]
+      },
       platVisible: false,
       form: {
+        id: '',
         roomId: '',
         sonRoomId: '',
         platformId: '',
@@ -131,10 +138,21 @@ export default {
       this.platVisible = true;
     },
     edit(index, row) {
-      this.platVisible = true;
+      const _self = this;
+      _self.form.id = row.ID;
+      _self.form.roomId = row.RoomID;
+      _self.form.sonRoomId = row.SonRoomID;
+      _self.form.platformId = row.PlatformID;
+      _self.form.platHotelId = row.PlatHotelID;
+      _self.form.platRoomName = row.PlatRoomName;
+      _self.form.platRoomCode = row.PlatRoomCode;
+      _self.form.platRoomName_En = row.PlatRoomName_En;
+      _self.form.remark = row.Remark;
+      _self.form.isValid = row.IsValid;
+      _self.platVisible = true;
     },
     async del(index, row) {
-      console.log(JSON.stringify(row))
+
       const _self = this;
       try {
         await _self.$confirm(`是否删除${row.PlatRoomName}?`, '提示', {
@@ -143,7 +161,7 @@ export default {
           type: 'warning'
         });
         await sonRoomPlatformApi.remove(row.ID);
-        _self.fetchData();
+        _self.getList();
         _self.$message({
           message: '删除成功',
           type: 'success'
@@ -174,7 +192,16 @@ export default {
       _self.form.platformId = _self.chosenPlatInfo.PlatformID;
       _self.form.platHotelId = _self.chosenPlatInfo.PlatHotelID;
       try {
-        await sonRoomPlatformApi.add(_self.form);
+        if (_self.form.id) {
+          await sonRoomPlatformApi.edit(form);
+        } else {
+          const form = { ..._self.form
+          };
+          delete form.id
+          await sonRoomPlatformApi.add(_self.form);
+        }
+
+        this.platVisible = false;
         _self.getList()
         _self.$message({
           message: '保存成功',
