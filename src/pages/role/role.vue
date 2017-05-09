@@ -16,7 +16,7 @@
         <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="searchType == 'realName'"></el-input>
       </el-col>
     <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <!-- <el-button type="primary" @click="showDialog = true">创建</el-button> -->
+    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
 
     <el-table
@@ -28,6 +28,7 @@
       @expand="getUserNameByRole"
       row-key="RoleName"
       :expand-row-keys="expandRowKeys"
+      border
       >
       <el-table-column type="expand" >
           <template scope="props">
@@ -37,11 +38,11 @@
                 <div>
                   <el-autocomplete
                     class="myinput"
-                    :icon="userName?'check':'close'"
+                    :icon="userForm.userName?'check':'close'"
                     ref="saveTagInput"
                     v-if="inputVisible"
                     placeholder="请输入用户名称"
-                    v-model="userName"
+                    v-model="userForm.userName"
                     :fetch-suggestions="querySearch"
                     :on-icon-click="addUserName"
                     ></el-autocomplete>
@@ -51,9 +52,30 @@
             </el-form>
           </template>
       </el-table-column>
-      <el-table-column sortable prop="RealName" label="RealName" show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="RealName" label="角色名称" show-overflow-tooltip></el-table-column>
       <el-table-column  prop="RoleName" label="RoleName" show-overflow-tooltip></el-table-column>
+      <el-table-column  width="100"  label="操作" fixed="right">
+        <template scope="scope">
+<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+    编辑</el-button>
+</template>
+      </el-table-column>
     </el-table>
+
+    <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny" @close="resetForm('roleForm')">
+      <el-form :rules="rules" ref="roleForm" :model="roleForm">
+        <el-form-item label="角色名称" prop="realName">
+          <el-input placeholder="请输入角色名称" v-model="roleForm.realName"></el-input>
+        </el-form-item>
+        <el-form-item label="RoleName" prop="roleName">
+          <el-input placeholder="请输入RoleName" v-model="roleForm.roleName" :disabled="dialogTitle==='编辑角色信息'"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDialog = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,17 +95,29 @@ export default {
             loading: true,
             loading2: false,
             inputVisible: false,
-            userName: '',
-            rolsName: '',
+            showDialog: false,
+            dialogTitle: '添加角色信息',
+            userForm:{
+              userName: '',
+              rolsName: ''
+            },
+            roleForm: {
+                realName: '',
+                roleName: ''
+            },
             searchType: 'userName',
             filters: {
                 modeName: '',
                 remark: ''
             },
             rules: {
-                userName: [{
+                realName: [{
                     required: true,
-                    message: '请输入用户名称'
+                    message: '请输入角色名称'
+                }],
+                roleName: [{
+                    required: true,
+                    message: '请输入角色字母'
                 }]
             },
             selectedOptions: [{
@@ -112,51 +146,10 @@ export default {
         },
         showInput() {
             this.inputVisible = true;
-            this.userName = '';
+            this.userForm.userName = '';
             // this.$nextTick(_ => {
             //     this.$refs.saveTagInput.$refs.input.focus();
             // });
-        },
-        async delUserName(a, b, c) {
-            const _self = this;
-
-            try {
-                await _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                _self.loading2 = true;
-                await roleApi.deleteUserNameByRolesName(a, b);
-                _self.getUserNameByRole();
-                _self.loading2 = false;
-                _self.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async addUserName() {
-            const _self = this;
-            if (_self.userName !== "") {
-                _self.loading2 = true;
-                try {
-                    await roleApi.addUserNameByRolsName(_self.rolsName, _self.userName);
-                    _self.getUserNameByRole();
-                    _self.$message({
-                        message: '添加成功',
-                        type: 'success'
-                    });
-                    _self.inputVisible = false;
-                    _self.loading2 = false;
-                } catch (e) {
-                    console.error(e);
-                }
-            } else {
-                _self.inputVisible = false;
-            }
         },
         handleSearch() {
             this.fetchData();
@@ -196,16 +189,122 @@ export default {
                 _self.inputVisible = false;
                 _self.expandRowKeys.length = 0;
                 _self.expandRowKeys.push(row.RoleName);
-                _self.rolsName = row.RoleName;
+                _self.userForm.rolsName = row.RoleName;
             }
             try {
-                const res = await roleApi.userNameListByRolesName(_self.rolsName);
+                const res = await roleApi.userNameListByRolesName(_self.userForm.rolsName);
                 _self.userNameList = res.data.UserName;
                 _self.loading2 = false;
             } catch (e) {
                 console.error(e);
             }
             _self.getUserList();
+        },
+        clickAddBtn() {
+            const _self = this;
+            _self.dialogTitle = '添加角色信息';
+            _self.showDialog = true;
+            _self.roleForm = {};
+        },
+        clickEditBtn($index, row) {
+            const _self = this;
+            _self.dialogTitle = '编辑角色信息';
+            _self.showDialog = true;
+            _self.roleForm.realName = row.RealName;
+            _self.roleForm.roleName = row.RoleName;
+        },
+        submitForm() {
+            const _self = this;
+            if (_self.dialogTitle === '编辑角色信息') {
+                _self.editSave();
+            } else if (_self.dialogTitle === '添加角色信息') {
+                _self.addSave();
+            }
+        },
+        async addSave() {
+            const _self = this;
+            _self.$refs['roleForm'].validate(async valid => {
+                if (valid) {
+                    try {
+                        console.log(_self.roleForm)
+                        await roleApi.add(_self.roleForm);
+                        _self.fetchData();
+                        _self.$refs['roleForm'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        async editSave() {
+            const _self = this;
+            _self.$refs['roleForm'].validate(async valid => {
+                if (valid) {
+                    try {
+                        console.log(_self.roleForm)
+                        await roleApi.edit(_self.roleForm);
+                        _self.fetchData();
+                        _self.$refs['roleForm'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        async addUserName() {
+            const _self = this;
+            if (_self.userForm.userName !== "") {
+                _self.loading2 = true;
+                try {
+                    await roleApi.addUserNameByRolsName(_self.userForm.rolsName, _self.userForm.userName);
+                    _self.getUserNameByRole();
+                    _self.$message({
+                        message: '添加成功',
+                        type: 'success'
+                    });
+                    _self.inputVisible = false;
+                    _self.loading2 = false;
+                } catch (e) {
+                    console.error(e);
+                }
+            } else {
+                _self.inputVisible = false;
+            }
+        },
+        async delUserName(a, b, c) {
+            const _self = this;
+
+            try {
+                await _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                });
+                _self.loading2 = true;
+                await roleApi.deleteUserNameByRolesName(a, b);
+                _self.getUserNameByRole();
+                _self.loading2 = false;
+                _self.$message({
+                    message: '删除成功',
+                    type: 'success'
+                });
+            } catch (e) {
+                console.error(e);
+            }
         }
     },
     mounted() {
@@ -270,6 +369,7 @@ export default {
 .demo-table-expand {
     padding: 0 0 10px 16px !important;
     font-size: 0;
+    margin-right: 65px;
 }
 .el-autocomplete,
 .el-dropdown {
