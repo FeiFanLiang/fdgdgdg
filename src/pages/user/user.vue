@@ -28,12 +28,12 @@
             <el-form label-position="left" inline>
               <el-form-item v-loading.body="loading2">
                 <el-tag :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)" style="margin:5px">
-                {{tag}}
+                {{tag.RealName}}
                 </el-tag>
                 <div style="margin:10px 0"></div>
-                {{roles}}
                 <el-autocomplete
                   popper-class="my-autocomplete"
+                  custom-item="my-item-zh"
                   v-model="roles"
                   :fetch-suggestions="querySearch"
                   ref="saveTagInput"
@@ -50,14 +50,17 @@
       </el-table-column>
       <el-table-column sortable prop="RealName" label="姓名"  show-overflow-tooltip></el-table-column>
       <el-table-column sortable prop="UserName" label="用户名"   show-overflow-tooltip></el-table-column>
-      <el-table-column  label="锁定状态">
+      <el-table-column  label="用户状态">
         <template scope="scope">
           <el-switch
             v-model="scope.row.IsLocked"
-            on-text=""
-            off-text=""
-            on-color="lightgray"
-            off-color="dodgerblue">
+            on-text="使用"
+            off-text="锁定"
+            :on-value="false"
+            :off-value="true"
+            @change="lockStatusChange(scope.row,$event)"
+            on-color="dodgerblue"
+            off-color="lightgray">
           </el-switch>
         </template>
       </el-table-column>
@@ -96,9 +99,34 @@
 
 <script>
 import {
-  userApi, roleApi
+  userApi,
+  roleApi
 } from 'api';
-
+import Vue from 'vue';
+Vue.component('my-item-zh', {
+  functional: true,
+  render: function(h, ctx) {
+    var item = ctx.props.item;
+    return h('li', ctx.data, [
+      h('div', {
+        attrs: {
+          class: 'name'
+        }
+      }, [item.RealName]),
+      h('span', {
+        attrs: {
+          class: 'addr'
+        }
+      }, [item.value])
+    ]);
+  },
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  }
+});
 export default {
   data() {
     return {
@@ -112,7 +140,7 @@ export default {
       loading: true,
       loading2: false,
       showDialog: false,
-      searchType:'userName',
+      searchType: 'userName',
       filters: {
         modeName: '',
         remark: ''
@@ -121,7 +149,7 @@ export default {
         userName: '',
         password: '',
         realName: '',
-        department:'',
+        department: '',
         IsLocked: ''
       },
       selectedOptions: [{
@@ -154,26 +182,25 @@ export default {
     };
   },
   methods: {
-    async handleClose(tag,userName) {
-      this.roleTags.splice(this.roleTags.indexOf(tag), 1);
+    async handleClose(tag, userName) {
       const _self = this;
-        try {
-          await _self.$confirm(`是否删除${tag}?`, '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          });
-          _self.loading2 = true;
-          await roleApi.deleteUserNameByRolesName(tag, userName);
-          _self.getRoleList();
-          _self.loading2 = false;
-          _self.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-        } catch (e) {
-          console.error(e);
-        }
+      try {
+        await _self.$confirm(`是否删除${tag.RealName}?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        });
+        _self.loading2 = true;
+        await roleApi.deleteUserNameByRolesName(tag.RoleName, userName);
+        _self.getRoleList();
+        _self.loading2 = false;
+        _self.$message({
+          message: '删除成功',
+          type: 'success'
+        });
+      } catch (e) {
+        console.error(e);
+      }
     },
     showInput() {
       this.inputVisible = true;
@@ -182,51 +209,50 @@ export default {
     querySearch(queryString, cb) {
       var roleList = this.roleList;
       var results = queryString ? roleList.filter(this.createFilter(queryString)) : roleList;
-      // 调用 callback 返回建议列表的数据
       cb(results);
     },
     createFilter(queryString) {
       return (restaurant) => {
-        return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
+        return (restaurant.RealName.indexOf(queryString.toLowerCase()) === 0);
       };
     },
     async loadAll() {
       const _self = this;
       _self.roleList = [];
-      let _index = 0;
       try {
         const res = await roleApi.list();
-        for (let [index, item] of res.data.entries()) {
-          if (!_self.roleTags.includes(item.RoleName)) {
-            _self.roleList.push({});
-            _self.roleList[_index].value = item.RoleName;
-            _index++;
+        const data = res.data.map(item => {
+          return {
+            RealName: item.RealName,
+            value: item.RoleName
           }
-        }
+        })
+        _self.roleList = data.filter(item => _self.roleTags.findIndex(tag => {
+          return tag.RealName === item.RealName
+        }) === -1)
       } catch (e) {
         console.error(e);
       }
     },
     async handleIconClick(ev) {
-      console.log('添加角色');
       const _self = this;
-        if (_self.UserName !== "") {
-            _self.loading2 = true;
-            try {
-              await roleApi.addUserNameByRolsName(_self.roles, _self.UserName);
-              _self.getRoleList();
-              _self.$message({
-                  message: '添加成功',
-                  type: 'success'
-              });
-              _self.inputVisible = false;
-            } catch (e) {
-              console.error(e);
-            }
-        }else {
-            _self.inputVisible = false;
-            _self.loading2 = false;
+      if (_self.UserName !== "") {
+        _self.loading2 = true;
+        try {
+          await roleApi.addUserNameByRolsName(_self.roles, _self.UserName);
+          _self.getRoleList();
+          _self.$message({
+            message: '添加成功',
+            type: 'success'
+          });
+          _self.inputVisible = false;
+        } catch (e) {
+          console.error(e);
         }
+      } else {
+        _self.inputVisible = false;
+        _self.loading2 = false;
+      }
     },
     handleSearch() {
       this.fetchData();
@@ -237,15 +263,22 @@ export default {
       _self.list = [];
       try {
         const res = await userApi.list();
-        if(res&&res.data){
-            _self.list=res.data;
+        if (res && res.data) {
+          _self.list = res.data;
         }
         _self.loading = false;
       } catch (e) {
         console.error(e);
       }
     },
-    async lock($index, row) {
+    lockStatusChange(row, value) {
+      if (value) {
+        this.unLock(row)
+      } else {
+        this.lock(row)
+      }
+    },
+    async lock(row) {
       const _self = this;
       await userApi.lockUser(row.UserName);
       _self.$message({
@@ -253,7 +286,7 @@ export default {
         type: 'success'
       });
     },
-    async unLock($index, row) {
+    async unLock(row) {
       const _self = this;
       await userApi.unLockUser(row.UserName);
       _self.$message({
@@ -263,9 +296,9 @@ export default {
     },
     submitForm() {
       const _self = this;
-      if(_self.form.id){
+      if (_self.form.id) {
         _self.editSave();
-      }else{
+      } else {
         _self.addSave();
       }
     },
@@ -275,7 +308,6 @@ export default {
         if (valid) {
           try {
             await userApi.add(_self.form);
-            console.log(_self.form.password)
             _self.fetchData();
             _self.$refs['form'].resetFields();
             _self.showDialog = false;
@@ -291,10 +323,8 @@ export default {
         }
       });
     },
-    async getRoleList(row,expanded) {
+    async getRoleList(row, expanded) {
       const _self = this;
-      _self.roleTags = [];
-      let _index = 0;
       if (expanded) {
         _self.loading2 = true;
         _self.inputVisible = false;
@@ -304,15 +334,11 @@ export default {
       }
       try {
         const res = await roleApi.roleListByUserName(_self.UserName);
-        for (let [index, item] of res.data.entries()) {
-          _self.roleTags.push({});
-          _self.roleTags[_index] = item.RoleName;
-          _index++;
-          _self.loading2 = false;
-        }
+        _self.roleTags = res.data;
+        _self.loading2 = false;
 
       } catch (e) {
-          console.error(e);
+        console.error(e);
       }
       _self.loadAll();
     }
