@@ -27,7 +27,7 @@
           <template scope="props">
             <el-form label-position="left" inline>
               <el-form-item v-loading.body="loading2">
-                <el-tag :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)" style="margin:5px">
+                <el-tag type="success" :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)" style="margin:5px">
                 {{tag.RealName}}
                 </el-tag>
                 <div style="margin:10px 0"></div>
