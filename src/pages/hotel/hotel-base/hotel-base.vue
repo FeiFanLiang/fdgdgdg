@@ -12,10 +12,18 @@
       <el-col :span="3"><el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
       <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
       <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input></el-col>
-      <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
-      <el-button type="primary" @click="dialogTableVisible=true">
-          创建
-      </el-button>
+      <el-col :span="5">
+        <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
+        <el-button type="primary" @click="dialogTableVisible=true">
+            创建
+        </el-button>
+      </el-col >
+      <el-col :span="7">
+        <el-radio-group v-model="isForeign" @change="areaTypeChange">
+      <el-radio-button :label="false">国内</el-radio-button>
+      <el-radio-button :label="true">国外</el-radio-button>
+    </el-radio-group>
+      </el-col >
     </el-row>
     <div class="eltable">
       <el-table
@@ -23,14 +31,10 @@
       border
       :default-sort = "{prop: 'ID', order: 'descending'}"
       style="width: 100%">
-        <!-- <el-table-column width="120" prop="HotelNum" label="酒店编号" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="HotelName_En" label="英文名称" show-overflow-tooltip></el-table-column>
-          <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
-        <!-- <el-table-column prop="Area.AreaName" label="区域" show-overflow-tooltip></el-table-column> -->
+        <el-table-column prop="FrontPhone" label="前台电话" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-        <!-- <el-table-column prop="ID" label="酒店ID" sortable></el-table-column>  -->
-        <!-- <el-table-column prop="FaxNum" label="传真号"></el-table-column> -->
         <el-table-column prop="Star.StarName" label="星级"></el-table-column>
         <el-table-column prop="Policys.PersonName" label="采购人"></el-table-column>
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
@@ -71,6 +75,7 @@ export default {
   },
   data() {
     return {
+      isForeign:false,
       dialogTableVisible: false,
       hotelbase: [],
       currentPage: 1,
@@ -101,6 +106,9 @@ export default {
     this.getHotelbaseList();
   },
   methods: {
+    areaTypeChange(isForeign){
+      this.getHotelbaseList();
+    },
     hotelbaseSearch() {
       this.getHotelbaseList();
     },
@@ -116,7 +124,8 @@ export default {
           ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
           HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
           HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
-        }
+        },
+        IsForeign:_self.isForeign
       };
       const res = await hotelBaseApi.listAll(options);
       if (res && res.data && res.data.Data) {
