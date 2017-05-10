@@ -196,7 +196,7 @@ export default {
                 } catch (e) {
                     console.error(e);
                     _self.loading2 = false;
-                    this.$message.error('删除失败!!!');
+                    _self.$message.error('删除失败!!!');
                 }
             }).catch(() => {});
         },
@@ -247,7 +247,7 @@ export default {
                 } catch (e) {
                     console.error(e);
                     _self.loading2 = false;
-                    this.$message.error('添加失败!!!');
+                    _self.$message.error('添加失败!!!');
                 }
             } else {
                 _self.inputVisible = false;
@@ -317,7 +317,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
-                        this.$message.error('添加失败!!!');
+                        _self.$message.error('添加失败!!!');
                     }
                 } else {
                     return false;
@@ -394,7 +394,6 @@ export default {
     position: absolute;
     width: 35px;
     height: 36px;
-    margin-top: 15px;
     left: 143px;
     top: 0;
     text-align: center;
