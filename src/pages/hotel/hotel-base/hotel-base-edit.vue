@@ -42,9 +42,6 @@
       </el-col>
       <el-col :span="6">
           <el-form-item label="区域" prop="Area">
-            <!--<el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
-              <el-option v-for="(item,index) in areaOptions" :key="index" :label="item.AreaName" :value="item.ID"></el-option>
-            </el-select>-->
             <el-select
               v-model="form.Area"
               clearable
@@ -146,11 +143,13 @@ export default {
           this.list = res.data;
           setTimeout(() => {
             this.loading = false;
-            for(let i=0;i<20;i++){
+            if(this.list.length > 20){
+              for(let i=0;i<20;i++){
                 this.areaOptions[i] = this.list[i];
-                //console.log(this.areaOptions[i]);
+              }
+            }else{
+              this.areaOptions = this.list;
             }
-            //this.areaOptions = this.list;
           }, 200);
         } else {
           this.areaOptions = [];
