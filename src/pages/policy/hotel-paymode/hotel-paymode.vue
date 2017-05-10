@@ -107,6 +107,7 @@ export default {
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
+                _self.loading = false;
             }
         },
         clickAddBtn() {
@@ -152,6 +153,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        _self.$message.error('添加失败!!!');
                     }
                 } else {
                     return false;
@@ -173,6 +175,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        _self.$message.error('编辑失败!!!');
                     }
                 } else {
                     return false;
@@ -181,21 +184,23 @@ export default {
         },
         async clickDelBtn($index, row) {
             const _self = this;
-            try {
-                await _self.$confirm(`是否删除${row.modeName}?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await hotelPayModeApi.del(row.id);
-                _self.fetchData();
-                _self.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
+            _self.$confirm(`是否删除${row.modeName}?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    await hotelPayModeApi.del(row.id);
+                    _self.fetchData();
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                    _self.$message.error('删除失败!!!');
+                }
+            }).catch(() => {});
         }
     },
     mounted() {

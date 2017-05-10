@@ -42,8 +42,23 @@
       </el-col>
       <el-col :span="6">
           <el-form-item label="区域" prop="Area">
-            <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
+            <!--<el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
               <el-option v-for="(item,index) in areaOptions" :key="index" :label="item.AreaName" :value="item.ID"></el-option>
+            </el-select>-->
+            <el-select
+              v-model="form.Area"
+              clearable
+              filterable
+              remote
+              placeholder="请选择酒店所在区域"
+              :remote-method="remoteMethod"
+              :loading="loading">
+              <el-option
+                v-for="(item,index) in areaOptions"
+                :key="index"
+                :label="item.AreaName"
+                :value="item.ID">
+              </el-option>
             </el-select>
           </el-form-item>
       </el-col>
@@ -108,6 +123,8 @@ export default {
         Star: '',
         PayMode: ''
       },
+      loading: false,
+      list: [],     
       areaOptions: [],
       starOptions: [],
       payModeOptions: [],
@@ -119,16 +136,29 @@ export default {
     this.getHotelbaseList(this.ID);
     this.getPayModeOptions();
     this.getStarOptions();
-    // this.getAreaOptions();
   },
   methods: {
-    async getAreaOptions(query) {
-      const res = await hotelAreaApi.listByQuery(query);
-      //this.areaOptions = res.data;
+
+    async remoteMethod(query) {
+      if (query !== '') {
+          this.loading = true;
+          const res = await hotelAreaApi.listByQue(query);
+          this.list = res.data;
+          setTimeout(() => {
+            this.loading = false;
+            for(let i=0;i<20;i++){
+                this.areaOptions[i] = this.list[i];
+                //console.log(this.areaOptions[i]);
+            }              
+            //this.areaOptions = this.list;
+          }, 200);
+        } else {
+          this.areaOptions = [];
+        }
     },
     async getPayModeOptions() {
       const res = await hotelPayModeApi.list();
-      this.payModeOptions = res.data;
+      //this.payModeOptions = res.data;
     },
     async getStarOptions() {
       const res = await hotelStarApi.list();
