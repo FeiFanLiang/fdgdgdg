@@ -16,16 +16,17 @@
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
         <template scope="scope">
-            <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
-            <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-          </template>
+<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+</template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  label="操作" width="120" fixed="right">
         <template scope="scope">
-          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-        </template>
+<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+    编辑</el-button>
+<el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="pagination-wrapper" v-show="!loading&&list.length">
@@ -271,21 +272,22 @@ export default {
         },
         async clickDelBtn($index, row) {
             const _self = this;
-            try {
-                await _self.$confirm(`是否删除${row.platName}?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                await hotelPlatformApi.del(row.id);
-                _self.fetchData();
-                _self.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
+            _self.$confirm(`是否删除${row.platName}?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    await hotelPlatformApi.del(row.id);
+                    _self.fetchData();
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }).catch(() => {});
         }
     }
 }
