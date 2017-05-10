@@ -56,8 +56,8 @@
               <el-option
                 v-for="(item,index) in areaOptions"
                 :key="index"
-                :label="item.AreaName"
-                :value="item.ID">
+                :label="item&&item.AreaName"
+                :value="item&&item.ID">
               </el-option>
             </el-select>
           </el-form-item>
@@ -124,7 +124,7 @@ export default {
         PayMode: ''
       },
       loading: false,
-      list: [],     
+      list: [],
       areaOptions: [],
       starOptions: [],
       payModeOptions: [],
@@ -149,7 +149,7 @@ export default {
             for(let i=0;i<20;i++){
                 this.areaOptions[i] = this.list[i];
                 //console.log(this.areaOptions[i]);
-            }              
+            }
             //this.areaOptions = this.list;
           }, 200);
         } else {
