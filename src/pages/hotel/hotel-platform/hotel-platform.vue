@@ -242,6 +242,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        _self.$message.error('添加失败!!!');
                     }
                 } else {
                     return false;
@@ -264,6 +265,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        _self.$message.error('编辑失败!!!');
                     }
                 } else {
                     return false;
@@ -286,6 +288,7 @@ export default {
                     });
                 } catch (e) {
                     console.error(e);
+                    _self.$message.error('删除失败!!!');
                 }
             }).catch(() => {});
         }
