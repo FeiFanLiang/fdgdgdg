@@ -69,10 +69,10 @@
         <el-row>
           <el-col :span="11">
             <el-form-item label="请选择平台"  >
-              <el-select  v-model="chosenPlatInfo" placeholder="请选择平台">
+              <el-select  v-model="form.platformId" placeholder="请选择平台">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.Platform.PlatName"
-                  :value="item"
+                  :value="item.Platform.ID"
                   :key="index">
                 </el-option>
               </el-select>
@@ -97,7 +97,6 @@
           </el-col>
         </el-row>
       </el-form>
-
       <span slot="footer" class="dialog-footer">
           <el-button @click="platVisible = false">取 消</el-button>
           <el-button type="primary" @click="handleSaveAndEdit()">保 存</el-button>
@@ -138,7 +137,6 @@ export default {
     return {
       list: [],
       platInfoList: [],
-      chosenPlatInfo: {},
       rules: {
         platRoomName: [{
           required: true,
@@ -162,6 +160,20 @@ export default {
         platSaleRoomId:'',
         platUrl:''
       }
+    }
+  },
+  computed:{
+    platHotelId(){
+      const _self=this;
+      let platformId='';
+      if(_self.form.platformId&&_self.platInfoList&&Array.isArray(_self.platInfoList)) {
+        _self.platInfoList.forEach(item=>{
+          if(item&&item.Platform&&item.Platform.ID===_self.form.platformId){
+            platformId= item.PlatHotelID
+          }
+        })
+      }
+      return platformId
     }
   },
   methods: {
@@ -225,13 +237,12 @@ export default {
     },
     async handleSaveAndEdit() {
       const _self = this;
-      if (!_self.roomId || !_self.sonRoomId || !_self.chosenPlatInfo.PlatformID || !_self.chosenPlatInfo.PlatHotelID) {
+      if (!_self.roomId || !_self.sonRoomId || !_self.form.platformId || !_self.platHotelId) {
         return
       }
       _self.form.roomId = _self.roomId;
       _self.form.sonRoomId = _self.sonRoomId;
-      _self.form.platformId = _self.chosenPlatInfo.PlatformID;
-      _self.form.platHotelId = _self.chosenPlatInfo.PlatHotelID;
+      _self.form.platHotelId = _self.platHotelId;
       try {
         if (_self.form.id) {
           await sonRoomPlatformApi.edit(_self.form.id,_self.form);
