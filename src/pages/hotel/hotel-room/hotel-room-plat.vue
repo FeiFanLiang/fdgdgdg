@@ -1,13 +1,25 @@
 <template lang="html">
   <div class="">
-    <el-dialog title="平台信息"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
+    <el-dialog title="平台酒店信息编辑" size="large"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
       <el-row>
         <el-button  @click="add">添加</el-button>
       </el-row>
-    <el-table :data="list" ref="table" style="width: 100%;height:100%"  border row-key="ID">
-      <el-table-column sortable prop="PlatRoomName" label="平台名称"  width="180" show-overflow-tooltip></el-table-column>
-      <el-table-column sortable prop="PlatRoomCode" label="平台编码"  show-overflow-tooltip></el-table-column>
-      <el-table-column sortable prop="PlatRoomName_En" label="平台英文名称"  show-overflow-tooltip></el-table-column>
+    <el-table :data="list" ref="table"  style="width: 100%;height:100%"  border row-key="ID">
+      <el-table-column  prop="PlatformID" label="平台ID"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="Platform.PlatName" label="平台名称"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatHotelID" label="平台酒店ID"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatRoomName" label="平台酒店名称"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatRoomCode" label="平台酒店编码"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatRoomName_En" label="平台酒店英文名称"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatRealRoomID" label="平台真实房型ID"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatSaleRoomID" label="平台政策房型ID"  show-overflow-tooltip></el-table-column>
+      <el-table-column  prop="PlatURL" label="访问政策房型URL"  show-overflow-tooltip></el-table-column>
+      <el-table-column label="启用状态" width="70" align="center">
+        <template scope="scope">
+            <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
+            <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+          </template>
+      </el-table-column>
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="edit(scope.$index, scope.row)">编辑</el-button>
@@ -20,8 +32,8 @@
       <el-form :model="form" ref="form"  :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="11">
-            <el-form-item label="平台酒店名称" prop="platRoomName">
-              <el-input v-model="form.platRoomName"></el-input>
+            <el-form-item label="平台酒店ID" >
+              <el-input v-model="form.platRoomId"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
@@ -32,37 +44,60 @@
         </el-row>
         <el-row>
           <el-col :span="11">
+            <el-form-item label="平台酒店名称" prop="platRoomName">
+              <el-input v-model="form.platRoomName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="11" :offset="1">
             <el-form-item label="平台酒店英文名称">
               <el-input v-model="form.platRoomName_En"></el-input>
             </el-form-item>
           </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
+            <el-form-item label="平台政策房型ID" >
+              <el-input v-model="form.platSaleRoomId"></el-input>
+            </el-form-item>
+          </el-col>
           <el-col :span="11" :offset="1">
+            <el-form-item label="访问政策房型URL">
+              <el-input v-model="form.platUrl"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="11">
             <el-form-item label="请选择平台"  >
               <el-select  v-model="chosenPlatInfo" placeholder="请选择平台">
                 <el-option v-for="(item,index) in platInfoList"
-                  :label="item.PlatHotelName"
+                  :label="item.Platform.PlatName"
                   :value="item"
                   :key="index">
                 </el-option>
               </el-select>
               </el-form-item>
           </el-col>
+          <el-col :span="11" :offset="1">
+            <el-form-item label="平台真实房型ID">
+              <el-input v-model="form.platRealRoomId" ></el-input>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="11" >
-              <el-form-item label="备注一">
-                <el-input v-model="form.remark" type="textarea"></el-input>
-              </el-form-item>
+            <el-form-item label="备注一">
+              <el-input v-model="form.remark" type="textarea"></el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
-            <div class="grid-content bg-purple">
-              <el-form-item label="启用状态">
-                <el-switch on-text="开启" off-text="关闭" :on-value="false" :off-value="true" v-model="form.isValid"></el-switch>
-              </el-form-item>
-            </div>
+            <el-form-item label="启用状态">
+              <el-switch on-text="开启" off-text="关闭"  v-model="form.isValid"></el-switch>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
+
       <span slot="footer" class="dialog-footer">
           <el-button @click="platVisible = false">取 消</el-button>
           <el-button type="primary" @click="handleSaveAndEdit()">保 存</el-button>
@@ -122,7 +157,10 @@ export default {
         platRoomCode: '',
         platRoomName_En: '',
         remark: '',
-        isValid: true
+        isValid: true,
+        platRealRoomId:'',
+        platSaleRoomId:'',
+        platUrl:''
       }
     }
   },
@@ -149,6 +187,9 @@ export default {
       _self.form.platRoomName_En = row.PlatRoomName_En;
       _self.form.remark = row.Remark;
       _self.form.isValid = row.IsValid;
+      _self.form.platRealRoomId= row.PlatRealRoomID;
+      _self.form.platSaleRoomId= row.PlatSaleRoomID;
+      _self.form.platUrl= row.PlatURL;
       _self.platVisible = true;
     },
     async del(index, row) {
@@ -193,12 +234,12 @@ export default {
       _self.form.platHotelId = _self.chosenPlatInfo.PlatHotelID;
       try {
         if (_self.form.id) {
-          await sonRoomPlatformApi.edit(form);
+          await sonRoomPlatformApi.edit(_self.form.id,_self.form);
         } else {
           const form = { ..._self.form
           };
           delete form.id
-          await sonRoomPlatformApi.add(_self.form);
+          await sonRoomPlatformApi.add(form);
         }
 
         this.platVisible = false;
