@@ -226,7 +226,6 @@ export default {
             _self.$refs['roleForm'].validate(async valid => {
                 if (valid) {
                     try {
-                        console.log(_self.roleForm)
                         await roleApi.add(_self.roleForm);
                         _self.fetchData();
                         _self.$refs['roleForm'].resetFields();
@@ -248,7 +247,6 @@ export default {
             _self.$refs['roleForm'].validate(async valid => {
                 if (valid) {
                     try {
-                        console.log(_self.roleForm)
                         await roleApi.edit(_self.roleForm);
                         _self.fetchData();
                         _self.$refs['roleForm'].resetFields();
