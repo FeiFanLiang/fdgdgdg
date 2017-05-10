@@ -26,24 +26,26 @@
       <el-table-column type="expand">
           <template scope="props">
             <el-form label-position="left" inline>
-              <el-form-item v-loading.body="loading2">
-                <el-tag type="success" :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)" style="margin:5px">
+              <el-form-item id="roleLabel" v-loading.body="loading2">
+                <el-tag type="success" class="mytag" :key="tag" v-for="tag in roleTags" :closable="true" :close-transition="false" @close="handleClose(tag,props.row.UserName)">
                 {{tag.RealName}}
                 </el-tag>
-                <div style="margin:10px 0"></div>
-                <el-autocomplete
-                  popper-class="my-autocomplete"
-                  custom-item="my-item-zh"
-                  v-model="roles"
-                  :fetch-suggestions="querySearch"
-                  ref="saveTagInput"
-                  v-if="inputVisible"
-                  placeholder="请选择角色"
-                  icon="check "
-                  :on-icon-click="handleIconClick"
-                >
-                </el-autocomplete>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">添加角色</el-button>
+                <div>
+                  <el-autocomplete
+                    class="myinput"
+                    :icon="roles?'check':'close'"
+                    popper-class="my-autocomplete"
+                    custom-item="my-item-zh"
+                    v-model="roles"
+                    :fetch-suggestions="querySearch"
+                    ref="saveTagInput"
+                    v-if="inputVisible"
+                    placeholder="请选择角色"
+                    :on-icon-click="handleIconClick"
+                  >
+                  </el-autocomplete>
+                  <el-button v-else class="button-new-tag mybtn" size="small" @click="showInput">添加角色</el-button>
+                </div>
               </el-form-item>
             </el-form>
           </template>
@@ -52,17 +54,9 @@
       <el-table-column sortable prop="UserName" label="用户名"   show-overflow-tooltip></el-table-column>
       <el-table-column  label="用户状态">
         <template scope="scope">
-          <el-switch
-            v-model="scope.row.IsLocked"
-            on-text="使用"
-            off-text="锁定"
-            :on-value="false"
-            :off-value="true"
-            @change="lockStatusChange(scope.row,$event)"
-            on-color="dodgerblue"
-            off-color="lightgray">
-          </el-switch>
-        </template>
+<el-switch v-model="scope.row.IsLocked" on-text="使用" off-text="锁定" :on-value="false" :off-value="true" @change="lockStatusChange(scope.row,$event)" on-color="dodgerblue" off-color="lightgray">
+</el-switch>
+</template>
       </el-table-column>
     </el-table>
 
@@ -99,274 +93,341 @@
 
 <script>
 import {
-  userApi,
-  roleApi
+    userApi,
+    roleApi
 } from 'api';
 import Vue from 'vue';
 Vue.component('my-item-zh', {
-  functional: true,
-  render: function(h, ctx) {
-    var item = ctx.props.item;
-    return h('li', ctx.data, [
-      h('div', {
-        attrs: {
-          class: 'name'
+    functional: true,
+    render: function(h, ctx) {
+        var item = ctx.props.item;
+        return h('li', ctx.data, [
+            h('div', {
+                attrs: {
+                    class: 'name'
+                }
+            }, [item.RealName]),
+            h('span', {
+                attrs: {
+                    class: 'addr'
+                }
+            }, [item.value])
+        ]);
+    },
+    props: {
+        item: {
+            type: Object,
+            required: true
         }
-      }, [item.RealName]),
-      h('span', {
-        attrs: {
-          class: 'addr'
-        }
-      }, [item.value])
-    ]);
-  },
-  props: {
-    item: {
-      type: Object,
-      required: true
     }
-  }
 });
 export default {
-  data() {
-    return {
-      roleList: [],
-      roles: '',
-      roleTags: [],
-      inputVisible: false,
-      expandRowKeys: [],
-      UserName: [],
-      list: [],
-      loading: true,
-      loading2: false,
-      showDialog: false,
-      searchType: 'userName',
-      filters: {
-        modeName: '',
-        remark: ''
-      },
-      form: {
-        userName: '',
-        password: '',
-        realName: '',
-        department: '',
-        IsLocked: ''
-      },
-      selectedOptions: [{
-          value: 'userName',
-          label: '用户名'
+    data() {
+        return {
+            roleList: [],
+            roles: '',
+            roleTags: [],
+            inputVisible: false,
+            expandRowKeys: [],
+            UserName: [],
+            list: [],
+            loading: true,
+            loading2: false,
+            showDialog: false,
+            searchType: 'userName',
+            filters: {
+                modeName: '',
+                remark: ''
+            },
+            form: {
+                userName: '',
+                password: '',
+                realName: '',
+                department: '',
+                IsLocked: ''
+            },
+            selectedOptions: [{
+                    value: 'userName',
+                    label: '用户名'
+                },
+                {
+                    value: 'realName',
+                    label: '姓名'
+                }
+            ],
+            rules: {
+                userName: [{
+                    required: true,
+                    message: '请输入用户名'
+                }],
+                password: [{
+                    required: true,
+                    message: '请输入密码'
+                }],
+                realName: [{
+                    required: true,
+                    message: '请输入姓名'
+                }],
+                department: [{
+                    required: true,
+                    message: '请输入所在部门'
+                }]
+            }
+        };
+    },
+    methods: {
+        async handleClose(tag, userName) {
+            const _self = this;
+            _self.$confirm(`是否移除${userName}下的${tag.RealName}?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    _self.loading2 = true;
+                    await roleApi.deleteUserNameByRolesName(tag.RoleName, userName);
+                    _self.getRoleList();
+                    _self.inputVisible = false;
+                    _self.loading2 = false;
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                    _self.loading2 = false;
+                    this.$message.error('删除失败!!!');
+                }
+            }).catch(() => {});
         },
-        {
-          value: 'realName',
-          label: '姓名'
-        }
-      ],
-      rules: {
-        userName: [{
-          required: true,
-          message: '请输入用户名'
-        }],
-        password: [{
-          required: true,
-          message: '请输入密码'
-        }],
-        realName: [{
-          required: true,
-          message: '请输入姓名'
-        }],
-        department: [{
-          required: true,
-          message: '请输入所在部门'
-        }]
-      }
-    };
-  },
-  methods: {
-    async handleClose(tag, userName) {
-      const _self = this;
-      try {
-        await _self.$confirm(`是否删除${tag.RealName}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        _self.loading2 = true;
-        await roleApi.deleteUserNameByRolesName(tag.RoleName, userName);
-        _self.getRoleList();
-        _self.loading2 = false;
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    showInput() {
-      this.inputVisible = true;
-      this.roles = '';
-    },
-    querySearch(queryString, cb) {
-      var roleList = this.roleList;
-      var results = queryString ? roleList.filter(this.createFilter(queryString)) : roleList;
-      cb(results);
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (restaurant.RealName.indexOf(queryString.toLowerCase()) === 0);
-      };
-    },
-    async loadAll() {
-      const _self = this;
-      _self.roleList = [];
-      try {
-        const res = await roleApi.list();
-        const data = res.data.map(item => {
-          return {
-            RealName: item.RealName,
-            value: item.RoleName
-          }
-        })
-        _self.roleList = data.filter(item => _self.roleTags.findIndex(tag => {
-          return tag.RealName === item.RealName
-        }) === -1)
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async handleIconClick(ev) {
-      const _self = this;
-      if (_self.UserName !== "") {
-        _self.loading2 = true;
-        try {
-          await roleApi.addUserNameByRolsName(_self.roles, _self.UserName);
-          _self.getRoleList();
-          _self.$message({
-            message: '添加成功',
-            type: 'success'
-          });
-          _self.inputVisible = false;
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        _self.inputVisible = false;
-        _self.loading2 = false;
-      }
-    },
-    handleSearch() {
-      this.fetchData();
-    },
-    async fetchData() {
-      const _self = this;
-      _self.loading = true;
-      _self.list = [];
-      try {
-        const res = await userApi.list();
-        if (res && res.data) {
-          _self.list = res.data;
-        }
-        _self.loading = false;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    lockStatusChange(row, value) {
-      if (value) {
-        this.unLock(row)
-      } else {
-        this.lock(row)
-      }
-    },
-    async lock(row) {
-      const _self = this;
-      await userApi.lockUser(row.UserName);
-      _self.$message({
-        message: '锁定成功',
-        type: 'success'
-      });
-    },
-    async unLock(row) {
-      const _self = this;
-      await userApi.unLockUser(row.UserName);
-      _self.$message({
-        message: '解锁成功',
-        type: 'success'
-      });
-    },
-    submitForm() {
-      const _self = this;
-      if (_self.form.id) {
-        _self.editSave();
-      } else {
-        _self.addSave();
-      }
-    },
-    async addSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await userApi.add(_self.form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
+        showInput() {
+            this.inputVisible = true;
+            this.roles = '';
+        },
+        querySearch(queryString, cb) {
+            var roleList = this.roleList;
+            var results = queryString ? roleList.filter(this.createFilter(queryString)) : roleList;
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (restaurant) => {
+                return (restaurant.RealName.indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        async loadAll() {
+            const _self = this;
+            _self.roleList = [];
+            try {
+                const res = await roleApi.list();
+                const data = res.data.map(item => {
+                    return {
+                        RealName: item.RealName,
+                        value: item.RoleName
+                    }
+                })
+                _self.roleList = data.filter(item => _self.roleTags.findIndex(tag => {
+                    return tag.RealName === item.RealName
+                }) === -1)
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        async handleIconClick(ev) {
+            const _self = this;
+            if (_self.roles !== "") {
+                _self.loading2 = true;
+                try {
+                    await roleApi.addUserNameByRolsName(_self.roles, _self.UserName);
+                    _self.getRoleList();
+                    _self.$message({
+                        message: '添加成功',
+                        type: 'success'
+                    });
+                    _self.inputVisible = false;
+                } catch (e) {
+                    console.error(e);
+                    _self.loading2 = false;
+                    this.$message.error('添加失败!!!');
+                }
+            } else {
+                _self.inputVisible = false;
+            }
+        },
+        handleSearch() {
+            this.fetchData();
+        },
+        async fetchData() {
+            const _self = this;
+            _self.loading = true;
+            _self.list = [];
+            try {
+                const res = await userApi.list();
+                if (res && res.data) {
+                    _self.list = res.data;
+                }
+                _self.loading = false;
+            } catch (e) {
+                console.error(e);
+                _self.loading = false;
+            }
+        },
+        lockStatusChange(row, value) {
+            if (value) {
+                this.unLock(row)
+            } else {
+                this.lock(row)
+            }
+        },
+        async lock(row) {
+            const _self = this;
+            await userApi.lockUser(row.UserName);
             _self.$message({
-              message: '保存成功',
-              type: 'success'
+                message: '锁定成功',
+                type: 'success'
             });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          return false;
+        },
+        async unLock(row) {
+            const _self = this;
+            await userApi.unLockUser(row.UserName);
+            _self.$message({
+                message: '解锁成功',
+                type: 'success'
+            });
+        },
+        submitForm() {
+            const _self = this;
+            if (_self.form.id) {
+                _self.editSave();
+            } else {
+                _self.addSave();
+            }
+        },
+        async addSave() {
+            const _self = this;
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        await userApi.add(_self.form);
+                        _self.fetchData();
+                        _self.$refs['form'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        this.$message.error('添加失败!!!');
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        async getRoleList(row, expanded) {
+            const _self = this;
+            if (expanded) {
+                _self.loading2 = true;
+                _self.inputVisible = false;
+                _self.expandRowKeys.length = 0;
+                _self.expandRowKeys.push(row.UserName);
+                _self.UserName = row.UserName;
+            }
+            try {
+                const res = await roleApi.roleListByUserName(_self.UserName);
+                _self.roleTags = res.data;
+                _self.loading2 = false;
+            } catch (e) {
+                console.error(e);
+            }
+            _self.loadAll();
         }
-      });
     },
-    async getRoleList(row, expanded) {
-      const _self = this;
-      if (expanded) {
-        _self.loading2 = true;
-        _self.inputVisible = false;
-        _self.expandRowKeys.length = 0;
-        _self.expandRowKeys.push(row.UserName);
-        _self.UserName = row.UserName;
-      }
-      try {
-        const res = await roleApi.roleListByUserName(_self.UserName);
-        _self.roleTags = res.data;
-        _self.loading2 = false;
-
-      } catch (e) {
-        console.error(e);
-      }
-      _self.loadAll();
+    mounted() {
+        this.fetchData();
     }
-  },
-  mounted() {
-    this.fetchData();
-  }
 }
 </script>
 
 <style lang="scss">
 .my-autocomplete {
-  li {
-    line-height: normal;
-    padding: 7px;
+    li {
+        line-height: normal;
+        padding: 7px;
 
-    .name {
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-    .addr {
-      font-size: 12px;
-      color: #b4b4b4;
-    }
+        .name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+        .addr {
+            font-size: 12px;
+            color: #b4b4b4;
+        }
 
-    .highlighted .addr {
-      color: #ddd;
+        .highlighted .addr {
+            color: #ddd;
+        }
     }
-  }
+}
+.demo-table-expand {
+    font-size: 0;
+}
+.demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+}
+#roleLabel {
+    width: 100%;
+}
+#roleLabel .el-form--inline .el-form-item__content {
+    border: 1px solid;
+    display: flex;
+    flex-flow: row wrap;
+    align-content: flex-start;
+}
+#roleLabel .el-input__icon {
+    position: absolute;
+    width: 35px;
+    height: 36px;
+    margin-top: 15px;
+    left: 143px;
+    top: 0;
+    text-align: center;
+    color: #bfcbd9;
+    transition: all 0.3s;
+}
+#roleLabel .mytag {
+    margin-top: 10px;
+    margin-right: 10px;
+    height: 36px;
+    line-height: 36px;
+    box-sizing: border-box;
+    flex: 0 0 25%;
+}
+#roleLabel .mybtn {
+    height: 36px;
+    margin-top: 15px;
+}
+#roleLabel .myinput {
+    width: 180px;
+    margin-top: 15px;
+}
+
+.el-table__expanded-cell {
+    padding: 20px 15px 20px 66px !important;
+}
+.demo-table-expand {
+    padding: 0 0 10px 16px !important;
+    font-size: 0;
+    margin-right: 65px;
+}
+.el-autocomplete,
+.el-dropdown {
+    display: block !important;
 }
 </style>
