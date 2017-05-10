@@ -97,9 +97,9 @@ export default {
             inputVisible: false,
             showDialog: false,
             dialogTitle: '添加角色信息',
-            userForm:{
-              userName: '',
-              rolsName: ''
+            userForm: {
+                userName: '',
+                rolsName: ''
             },
             roleForm: {
                 realName: '',
@@ -163,6 +163,7 @@ export default {
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
+                _self.loading = false;
             }
         },
         async getUserList() {
@@ -171,6 +172,7 @@ export default {
             let _index = 0;
             try {
                 const res = await userApi.list();
+                console.log(res)
                 for (let [index, elem] of res.data.entries()) {
                     if (!_self.userNameList.includes(elem.UserName)) {
                         _self.userList.push({});
@@ -236,6 +238,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        this.$message.error('添加失败!!!');
                     }
                 } else {
                     return false;
@@ -257,6 +260,7 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                        this.$message.error('编辑失败!!!');
                     }
                 } else {
                     return false;
@@ -278,6 +282,8 @@ export default {
                     _self.loading2 = false;
                 } catch (e) {
                     console.error(e);
+                    _self.loading2 = false;
+                    this.$message.error('添加失败!!!');
                 }
             } else {
                 _self.inputVisible = false;
@@ -285,24 +291,28 @@ export default {
         },
         async delUserName(a, b, c) {
             const _self = this;
+            _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    _self.loading2 = true;
+                    await roleApi.deleteUserNameByRolesName(a, b);
+                    _self.getUserNameByRole();
+                    _self.inputVisible = false;
+                    _self.loading2 = false;
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                    _self.loading2 = false;
+                    this.$message.error('删除失败!!!');
+                }
+            }).catch(() => {});
 
-            try {
-                await _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                });
-                _self.loading2 = true;
-                await roleApi.deleteUserNameByRolesName(a, b);
-                _self.getUserNameByRole();
-                _self.loading2 = false;
-                _self.$message({
-                    message: '删除成功',
-                    type: 'success'
-                });
-            } catch (e) {
-                console.error(e);
-            }
         }
     },
     mounted() {
@@ -356,7 +366,7 @@ export default {
     height: 36px;
     margin-top: 15px;
 }
-.myinput {
+#userlabel .myinput {
     width: 180px;
     margin-top: 15px;
 }
