@@ -2,19 +2,19 @@ import axios from 'axios';
 import path from './api';
 
 export default {
-  list(params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelPayMode/All');
+  detailByRoomshowID(RoomshowID) {
+    return axios.get(path.apiBaseUrl + `Hotel/RoomShow/${RoomshowID}`);
   },
-  detail(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelPayMode/${id}`);
+  detailByRoomID(roomID) {
+    return axios.get(path.apiBaseUrl + `Hotel/RoomShow/Room/${roomID}`);
   },
   add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelPayMode', params);
+    return axios.post(path.apiBaseUrl + 'Hotel/RoomShow', params);
   },
   edit(params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPayMode/${params.id}`, params);
+    return axios.put(path.apiBaseUrl + 'Hotel/RoomShow', params);
   },
-  del(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelPayMode/${id}`);
+  del(roomID) {
+    return axios.delete(path.apiBaseUrl + `Hotel/RoomShow/${roomID}`);
   }
 };
