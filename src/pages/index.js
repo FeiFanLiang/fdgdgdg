@@ -27,8 +27,8 @@ import User from './user/user';
 import Role from './role/role';
 // show
 import HotelShow from './show/hotel-show/hotel-show';
-import HotelShowAdd from './show/hotel-show/hotel-show-add';
-// import RoomShow from './show/room-show/room-show'
+import HotelShowAddAndEdit from './show/hotel-show/hotel-show-add-and-edit';
+import HotelShowDetails from './show/hotel-show/hotel-show-details';
 export default {
   Abstract,
   NotFound,
@@ -51,5 +51,6 @@ export default {
   User,
   Role,
   HotelShow,
-  HotelShowAdd
+  HotelShowAddAndEdit,
+  HotelShowDetails
 };

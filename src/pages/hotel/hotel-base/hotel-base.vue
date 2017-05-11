@@ -111,7 +111,7 @@ export default {
       this.$router.push({
         name: '添加酒店展示',
         params: {
-          ID: row.ID
+          hotelID: row.ID
         },
         query: {
           hotelName: row.HotelName

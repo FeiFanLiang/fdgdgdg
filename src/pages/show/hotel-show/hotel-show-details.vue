@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    sdad
+    详情
   </div>
 </template>
 

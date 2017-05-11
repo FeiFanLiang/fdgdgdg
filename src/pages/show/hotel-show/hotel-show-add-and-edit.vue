@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    列表
+    添加
   </div>
 </template>
 

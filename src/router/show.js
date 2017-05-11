@@ -12,9 +12,27 @@ module.exports = {
       imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
     },
     {
-      path: 'hotel/:ID',
-      component: Pages.HotelShowAdd,
+      path: 'hotel/:hotelShowID',
+      component: Pages.HotelShowDetails,
+      name: '酒店展示详情',
+      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg',
+      meta: {
+        hidden: true
+      }
+    },
+    {
+      path: 'hotel/add/:hotelID',
+      component: Pages.HotelShowAddAndEdit,
       name: '添加酒店展示',
+      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg',
+      meta: {
+        hidden: true
+      }
+    },
+    {
+      path: 'hotel/edit/:hotelID/:hotelShowID',
+      component: Pages.HotelShowAddAndEdit,
+      name: '编辑酒店展示',
       imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg',
       meta: {
         hidden: true
