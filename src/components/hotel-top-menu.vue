@@ -37,6 +37,10 @@ export default {
         {
           path: 'platform',
           text: '平台映射'
+        },
+        {
+          path: 'platform',
+          text: '展示信息'
         }
       ]
     }

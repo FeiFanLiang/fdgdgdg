@@ -1,8 +1,11 @@
 <template>
 <div id="hotel-room-list" style="color:gray;">
-    <HotelTopMenu path="room">
+    <!-- <HotelTopMenu path="room">
         <el-button type="primary" @click="hotelroomAdd">创建</el-button>
-    </HotelTopMenu>
+    </HotelTopMenu> -->
+    <el-row>
+      <el-button type="primary" @click="hotelroomAdd">创建</el-button>
+    </el-row>
     <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border>
         <el-table-column prop="RoomName" width="95" label="产品名称">
             <template scope="scope">

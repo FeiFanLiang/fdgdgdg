@@ -1,9 +1,11 @@
 <template lang="html">
 <div id="hotelPollicyList">
-
-  <HotelTopMenu path="policy">
+  <!-- <HotelTopMenu path="policy">
     <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
-  </HotelTopMenu>
+  </HotelTopMenu> -->
+  <el-row>
+    <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
+  </el-row>
   <el-table
     :data="hotelpolicy"
     @expand="handleExpand"

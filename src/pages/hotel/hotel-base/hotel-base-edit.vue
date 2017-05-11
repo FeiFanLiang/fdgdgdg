@@ -1,12 +1,13 @@
 <template lang="html">
 <div id="hotelbaseEdit">
-  <HotelTopMenu path="">
-  </HotelTopMenu>
+
+  <!-- <HotelTopMenu path="">
+  </HotelTopMenu> -->
   <el-form ref="form" :model="form" label-position="top" style="margin-top:25px">
     <el-row :gutter="20">
       <el-col :span="6">
           <el-form-item label="酒店ID" >
-            <el-input v-model="form.id" :disabled='true'></el-input>
+            <el-input v-model="form.id" :disabled="true"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
@@ -69,13 +70,20 @@
             </el-select>
           </el-form-item>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="6">
           <el-form-item label="备注" >
             <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
       </el-col>
+      <el-col :span="6" :offset="6">
+          <el-form-item  >
+            <el-button @click="Cancel">取消</el-button>
+              <el-button type="primary" @click="submit">保存</el-button>
+          </el-form-item>
+
+      </el-col>
     </el-row>
-    <el-row :gutter="18">
+    <!-- <el-row :gutter="18">
       <el-col :span="2" :offset="19">
         <el-form-item>
           <el-button @click="Cancel">取消</el-button>
@@ -86,11 +94,28 @@
           <el-button type="primary" @click="submit">保存</el-button>
         </el-form-item>
       </el-col>
-    </el-row>
+    </el-row> -->
   </el-form>
-  <div class="line">
+  <!-- <div class="line">
 
-  </div>
+  </div> -->
+  <el-collapse v-model="activeNames" @change="handleChange" accordion>
+  <el-collapse-item title="房型信息" name="room">
+    <HotelRoomPage></HotelRoomPage>
+  </el-collapse-item>
+  <el-collapse-item title="政策信息" name="policy">
+    <HotelPolicyPage></HotelPolicyPage>
+  </el-collapse-item>
+  <el-collapse-item title="价格信息" name="price">
+    <HotelPricePage></HotelPricePage>
+  </el-collapse-item>
+  <el-collapse-item title="平台映射" name="platform">
+    <HotelPlatformPage></HotelPlatformPage>
+  </el-collapse-item>
+  <el-collapse-item title="展示信息" name="show">
+asdasd
+  </el-collapse-item>
+</el-collapse>
 </div>
 </template>
 
@@ -104,12 +129,22 @@ import {
 import {
   HotelTopMenu
 } from 'components'
+import HotelRoomPage from '../hotel-room/hotel-room'
+import HotelPlatformPage from '../hotel-platform/hotel-platform'
+import HotelPolicyPage from '../hotel-policy/hotel-policy'
+import HotelPricePage from '../hotel-price/hotel-price'
+
 export default {
   components: {
-    HotelTopMenu
+    HotelTopMenu,
+    HotelRoomPage,
+    HotelPlatformPage,
+    HotelPolicyPage,
+    HotelPricePage
   },
   data() {
     return {
+       activeNames: ['room'],
       id: '',
       hotelName: '',
       form: {
@@ -194,6 +229,9 @@ export default {
 </script>
 
 <style lang="scss">
+#hotelbaseEdit > .el-collapse{
+  border:0;
+}
 .el-row {
     margin-bottom: 20px;
     &:last-child {
