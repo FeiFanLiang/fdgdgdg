@@ -1,12 +1,13 @@
 <template lang="html">
 <div id="hotelbaseEdit">
-  <HotelTopMenu path="">
-  </HotelTopMenu>
+
+  <!-- <HotelTopMenu path="">
+  </HotelTopMenu> -->
   <el-form ref="form" :model="form" label-position="top" style="margin-top:25px">
     <el-row :gutter="20">
       <el-col :span="6">
           <el-form-item label="酒店ID" >
-            <el-input v-model="form.id" :disabled='true'></el-input>
+            <el-input v-model="form.id" :disabled="true"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
@@ -37,11 +38,7 @@
           </el-form-item>
       </el-col>
       <el-col :span="6">
-<<<<<<< HEAD
-          <el-form-item label="区域" prop="Area">
-=======
           <el-form-item label="区域" >
->>>>>>> e32345ee02c0b697da83b9a7181c56f3163b0384
             <el-select
               v-model="form.areaId"
               clearable
@@ -73,13 +70,20 @@
             </el-select>
           </el-form-item>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="6">
           <el-form-item label="备注" >
             <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
       </el-col>
+      <el-col :span="6" :offset="6">
+          <el-form-item  >
+            <el-button @click="Cancel">取消</el-button>
+              <el-button type="primary" @click="submit">保存</el-button>
+          </el-form-item>
+
+      </el-col>
     </el-row>
-    <el-row :gutter="18">
+    <!-- <el-row :gutter="18">
       <el-col :span="2" :offset="19">
         <el-form-item>
           <el-button @click="Cancel">取消</el-button>
@@ -90,170 +94,144 @@
           <el-button type="primary" @click="submit">保存</el-button>
         </el-form-item>
       </el-col>
-    </el-row>
+    </el-row> -->
   </el-form>
-  <div class="line">
+  <!-- <div class="line">
 
-  </div>
+  </div> -->
+  <el-collapse v-model="activeNames" @change="handleChange" accordion>
+  <el-collapse-item title="房型信息" name="room">
+    <HotelRoomPage></HotelRoomPage>
+  </el-collapse-item>
+  <el-collapse-item title="政策信息" name="policy">
+    <HotelPolicyPage></HotelPolicyPage>
+  </el-collapse-item>
+  <el-collapse-item title="价格信息" name="price">
+    <HotelPricePage></HotelPricePage>
+  </el-collapse-item>
+  <el-collapse-item title="平台映射" name="platform">
+    <HotelPlatformPage></HotelPlatformPage>
+  </el-collapse-item>
+  <el-collapse-item title="展示信息" name="show">
+asdasd
+  </el-collapse-item>
+</el-collapse>
 </div>
 </template>
 
 <script>
 import {
-    hotelPayModeApi,
-    hotelBaseApi,
-    hotelStarApi,
-    hotelAreaApi
+  hotelPayModeApi,
+  hotelBaseApi,
+  hotelStarApi,
+  hotelAreaApi
 } from 'api';
 import {
-    HotelTopMenu
+  HotelTopMenu
 } from 'components'
+import HotelRoomPage from '../hotel-room/hotel-room'
+import HotelPlatformPage from '../hotel-platform/hotel-platform'
+import HotelPolicyPage from '../hotel-policy/hotel-policy'
+import HotelPricePage from '../hotel-price/hotel-price'
+
 export default {
-<<<<<<< HEAD
   components: {
-      HotelTopMenu
+    HotelTopMenu,
+    HotelRoomPage,
+    HotelPlatformPage,
+    HotelPolicyPage,
+    HotelPricePage
   },
   data() {
     return {
-      hotelName:'',
-      labelPosition: 'top',
+      activeNames: ['room'],
+      id: '',
+      hotelName: '',
       form: {
-        Star: '',
-        PayMode: ''
+        id: '',
+        hotelNum: '',
+        hotelName: '',
+        hotelName_En: '',
+        frontPhone: '',
+        faxNum: '',
+        areaId: '',
+        address: '',
+        star: '',
+        remark: ''
       },
       loading: false,
       list: [],
       areaOptions: [],
       starOptions: [],
-      payModeOptions: [],
     };
   },
   mounted() {
-    this.ID = this.$route.params.ID;
-    this.hotelName=this.$route.query.name;
-    this.getHotelbaseList(this.ID);
-    this.getPayModeOptions();
-    this.getStarOptions();
+    const _self = this;
+    _self.id = _self.$route.params.ID;
+    if (_self.id) {
+      _self.getHotelbaseList();
+      _self.getStarOptions();
+    }
+    _self.hotelName = _self.$route.query.name;
   },
   methods: {
-
     async remoteMethod(query) {
+      const _self = this;
       if (query !== '') {
-          this.loading = true;
-          const res = await hotelAreaApi.listByQue(query);
-          this.list = res.data;
-          setTimeout(() => {
-            this.loading = false;
-            if(this.list.length > 20){
-              for(let i=0;i<20;i++){
-                this.areaOptions[i] = this.list[i];
-              }
-            }else{
-              this.areaOptions = this.list;
-            }
-          }, 200);
-        } else {
-          this.areaOptions = [];
-        }
-    },
-    async getPayModeOptions() {
-      const res = await hotelPayModeApi.list();
-      //this.payModeOptions = res.data;
+        _self.loading = true;
+        const res = await hotelAreaApi.listByQue(query);
+        _self.list = res.data;
+        setTimeout(() => {
+          _self.loading = false;
+          _self.areaOptions = _self.list.splice(0, 20);
+        }, 200);
+      } else {
+        _self.areaOptions = [];
+      }
     },
     async getStarOptions() {
       const res = await hotelStarApi.list();
-      this.starOptions = res.data;
-=======
-    components: {
-        HotelTopMenu
->>>>>>> e32345ee02c0b697da83b9a7181c56f3163b0384
+      if (res && res.data && Array.isArray(res.data)) {
+        this.starOptions = res.data;
+      }
     },
-    data() {
-        return {
-            id: '',
-            hotelName: '',
-            form: {
-                id: '',
-                hotelNum: '',
-                hotelName: '',
-                hotelName_En: '',
-                frontPhone: '',
-                faxNum: '',
-                areaId: '',
-                address: '',
-                star: '',
-                remark: ''
-            },
-            loading: false,
-            list: [],
-            areaOptions: [],
-            starOptions: [],
-        };
+    async getHotelbaseList() {
+      const _self = this;
+      const res = await hotelBaseApi.detailsById(_self.id);
+      if (res && res.data) {
+        const data = res.data;
+        _self.form.id = data.ID
+        _self.form.hotelNum = data.HotelNum
+        _self.form.hotelName = data.HotelName
+        _self.form.hotelName_En = data.HotelName_En
+        _self.form.frontPhone = data.FrontPhone
+        _self.form.faxNum = data.FaxNum
+        _self.form.areaId = data.AreaID
+        _self.form.address = data.Address
+        _self.form.star = data.Star
+        _self.form.remark = data.Remark
+      }
     },
-    mounted() {
-        const _self = this;
-        _self.id = _self.$route.params.ID;
-        if (_self.id) {
-            _self.getHotelbaseList();
-            _self.getStarOptions();
-        }
-        _self.hotelName = _self.$route.query.name;
+    async submit() {
+      try {
+        await hotelBaseApi.edit(this.form.id, this.form);
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        });
+      } catch (e) {}
     },
-    methods: {
-        async remoteMethod(query) {
-            const _self = this;
-            if (query !== '') {
-                _self.loading = true;
-                const res = await hotelAreaApi.listByQue(query);
-                _self.list = res.data;
-                setTimeout(() => {
-                    _self.loading = false;
-                    _self.areaOptions = _self.list.splice(0, 20);
-                }, 200);
-            } else {
-                _self.areaOptions = [];
-            }
-        },
-        async getStarOptions() {
-            const res = await hotelStarApi.list();
-            if (res && res.data && Array.isArray(res.data)) {
-                this.starOptions = res.data;
-            }
-        },
-        async getHotelbaseList() {
-            const _self = this;
-            const res = await hotelBaseApi.detailsById(_self.id);
-            if (res && res.data) {
-                const data = res.data;
-                _self.form.id = data.ID
-                _self.form.hotelNum = data.HotelNum
-                _self.form.hotelName = data.HotelName
-                _self.form.hotelName_En = data.HotelName_En
-                _self.form.frontPhone = data.FrontPhone
-                _self.form.faxNum = data.FaxNum
-                _self.form.areaId = data.AreaID
-                _self.form.address = data.Address
-                _self.form.star = data.Star
-                _self.form.remark = data.Remark
-            }
-        },
-        async submit() {
-            try {
-                await hotelBaseApi.edit(this.form.id, this.form);
-                this.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
-            } catch (e) {}
-        },
-        Cancel() {
-            this.$router.go(-1);
-        }
+    Cancel() {
+      this.$router.go(-1);
     }
+  }
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
+#hotelbaseEdit > .el-collapse {
+    border: 0;
+}
 .el-row {
     margin-bottom: 20px;
     &:last-child {
@@ -262,5 +240,8 @@ export default {
 }
 .el-col {
     border-radius: 4px;
+}
+.row-bg {
+    padding: 10px 0;
 }
 </style>
