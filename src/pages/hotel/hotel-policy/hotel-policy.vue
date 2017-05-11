@@ -156,7 +156,7 @@
               :on-error="handleError">
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog v-model="dialogVisible" >
+            <el-dialog v-model="dialogVisible" :modal-append-to-body="false">
               <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
           </el-row>
@@ -192,7 +192,7 @@
     <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>-->
 
-    <el-table-column   label="操作" fixed="right">
+    <el-table-column width="100" label="操作" fixed="right">
         <template scope="scope">
 <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">
     删除</el-button>
@@ -548,5 +548,27 @@ export default {
 };
 </script>
 
-<style lang="scss">
-#hotelPollicyList {}</style>
+<style lang="scss" scoped>
+#hotelPollicyList {
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
+    .el-table__expanded-cell {
+        padding: 20px 15px 20px 66px !important;
+    }
+    .demo-table-expand {
+        padding: 0 0 10px 16px !important;
+        font-size: 0;
+        margin-right: 50px;
+    }
+}
+</style>

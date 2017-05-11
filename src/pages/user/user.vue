@@ -349,7 +349,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .my-autocomplete {
     li {
         line-height: normal;
@@ -369,36 +369,8 @@ export default {
         }
     }
 }
-.demo-table-expand {
-    font-size: 0;
-}
-.demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-}
 #roleLabel {
     width: 100%;
-}
-#roleLabel .el-form--inline .el-form-item__content {
-    border: 1px solid;
-    display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
-}
-#roleLabel .el-input__icon {
-    position: absolute;
-    width: 35px;
-    height: 36px;
-    left: 143px;
-    top: 0;
-    text-align: center;
-    color: #bfcbd9;
-    transition: all 0.3s;
 }
 #roleLabel .mytag {
     margin-top: 10px;
@@ -416,14 +388,10 @@ export default {
     width: 180px;
     margin-top: 15px;
 }
-
-.el-table__expanded-cell {
-    padding: 20px 15px 20px 66px !important;
-}
-.demo-table-expand {
-    padding: 0 0 10px 16px !important;
-    font-size: 0;
-    margin-right: 65px;
+.el-form--inline .el-form-item {
+    display: inline-block;
+    vertical-align: top;
+    padding: 0px 0px 10px 16px !important;
 }
 .el-autocomplete,
 .el-dropdown {

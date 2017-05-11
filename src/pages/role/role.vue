@@ -321,36 +321,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.demo-table-expand {
-    font-size: 0;
-}
-.demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-}
 #userlabel {
     width: 100%;
-}
-#userlabel .el-form--inline .el-form-item__content {
-    border: 1px solid;
-    display: flex;
-    flex-flow: row wrap;
-    align-content: flex-start;
-}
-#userlabel .el-input__icon {
-    position: absolute;
-    width: 35px;
-    height: 36px;
-    left: 143px;
-    top: 0;
-    text-align: center;
-    color: #bfcbd9;
-    transition: all 0.3s;
 }
 #userlabel .mytag {
     margin-top: 10px;
@@ -374,8 +346,7 @@ export default {
 }
 .demo-table-expand {
     padding: 0 0 10px 16px !important;
-    font-size: 0;
-    margin-right: 65px;
+    margin-right: 50px !important;
 }
 .el-autocomplete,
 .el-dropdown {
