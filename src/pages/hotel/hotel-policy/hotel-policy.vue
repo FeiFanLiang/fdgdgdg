@@ -185,17 +185,18 @@
     <el-table-column prop="ReserveMode.ModeName" label="酒店预订方式"></el-table-column>
     <el-table-column label="默认政策" align="center">
       <template scope="scope">
-          <i v-if="scope.row.IsDefault">是</i>
-          <i v-else>否</i>
-        </template>
+<i v-if="scope.row.IsDefault">是</i>
+<i v-else>否</i>
+</template>
     </el-table-column>
     <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>-->
 
     <el-table-column   label="操作" fixed="right">
         <template scope="scope">
-          <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">删除</el-button>
-        </template>
+<el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">
+    删除</el-button>
+</template>
     </el-table-column>
   </el-table>
   <!-- table end -->
@@ -342,210 +343,210 @@
 
 <script>
 import {
-  hotelPolicyApi,
-  secretTypeApi,
-  rserveModeApi,
-  payCompanyApi,
-  hotelPolicyImageApi
+    hotelPolicyApi,
+    secretTypeApi,
+    rserveModeApi,
+    payCompanyApi,
+    hotelPolicyImageApi
 } from 'api';
 import {
-  HotelTopMenu
+    HotelTopMenu
 } from 'components'
 
 export default {
-  components: {
-    HotelTopMenu
-  },
-  data() {
-    return {
-      dialogImageUrl: '',
-      dialogVisible: false,
-      fileList: [],
-      expandRowKeys: [],
-      forms: {
-        IsDefault: true,
-        ID: ''
-      },
-      form: {
-        hotelId: '',
-        PayCompanyID: '',
-        SecretTypeID: '',
-        ReserveModeID: '',
-        IsDefault: true
-      },
-      payCompanyOptions: [],
-      reserveModeOptions: [],
-      secretTypeOptions: [],
-      hotelpolicy: [],
-      createDialog: false,
-      rules: {
-        LinkMan: [{
-          required: true,
-          message: '请填写酒店联系人姓名',
-          trigger: 'blur'
-        }],
-        PhoneNum: [{
-          required: true,
-          message: '请填写酒店联系电话',
-          trigger: 'blur'
-        }],
-        PurchasingName: [{
-          required: true,
-          message: '请填写政策采购人姓名',
-          trigger: 'blur'
-        }],
-        /*IsDefault: [{
-          required: true,
-          message: '请填写默认政策',
-          trigger: 'blur'
-        }]*/
-      }
-    };
-  },
-  mounted() {
+    components: {
+        HotelTopMenu
+    },
+    data() {
+        return {
+            dialogImageUrl: '',
+            dialogVisible: false,
+            fileList: [],
+            expandRowKeys: [],
+            forms: {
+                IsDefault: true,
+                ID: ''
+            },
+            form: {
+                hotelId: '',
+                PayCompanyID: '',
+                SecretTypeID: '',
+                ReserveModeID: '',
+                IsDefault: true
+            },
+            payCompanyOptions: [],
+            reserveModeOptions: [],
+            secretTypeOptions: [],
+            hotelpolicy: [],
+            createDialog: false,
+            rules: {
+                LinkMan: [{
+                    required: true,
+                    message: '请填写酒店联系人姓名',
+                    trigger: 'blur'
+                }],
+                PhoneNum: [{
+                    required: true,
+                    message: '请填写酒店联系电话',
+                    trigger: 'blur'
+                }],
+                PurchasingName: [{
+                    required: true,
+                    message: '请填写政策采购人姓名',
+                    trigger: 'blur'
+                }],
+                /*IsDefault: [{
+                  required: true,
+                  message: '请填写默认政策',
+                  trigger: 'blur'
+                }]*/
+            }
+        };
+    },
+    mounted() {
 
-    const _self = this;
-    _self.form.hotelId = _self.$route.params.ID
-    _self.fetchData();
-    _self.getSecretType();
-    _self.getReserveMode();
-    _self.getPayCompany();
-  },
-
-  methods: {
-    async getPayCompany() {
-      const res = await payCompanyApi.list();
-      this.payCompanyOptions = res.data;
-    },
-    async getReserveMode() {
-      const res = await rserveModeApi.list();
-      this.reserveModeOptions = res.data;
-    },
-    async getSecretType() {
-      const res = await secretTypeApi.list();
-      this.secretTypeOptions = res.data;
-    },
-
-
-    async handleSave() {
-      const _self = this;
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await hotelPolicyApi.add(_self.form);
-            _self.fetchData();
-            _self.createDialog = false;
-            _self.$message({
-              message: '添加成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          alert('请填写必填信息')
-          return false;
-        }
-      });
-    },
-
-    hotelpolicyAdd() {
-      this.createDialog = true;
-    },
-    async show(row) {
-      const res = await hotelPolicyApi.listByID(row.ID);
-      this.forms = res.data;
-    },
-    async hotelpolicyEdit() {
-      const _self = this;
-      _self.$refs['forms'].validate(async valid => {
-        if (valid) {
-          try {
-            await hotelPolicyApi.edit(_self.forms);
-            _self.fetchData();
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        } else {
-          alert('请填写必填信息')
-          return false;
-        }
-      });
-      /*const res = await hotelPolicyApi.edit( _self.forms);
-      console.log(res)
-      _self.fetchData();
-      _self.$message({
-        message: '保存成功',
-        type: 'success'
-      });*/
-    },
-
-    async hotelpolicyDelete($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm(`是否删除ID${row.ID}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await hotelPolicyApi.remove(row.ID);
+        const _self = this;
+        _self.form.hotelId = _self.$route.params.ID
         _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
+        _self.getSecretType();
+        _self.getReserveMode();
+        _self.getPayCompany();
     },
-    async fetchData() {
-      if (!this.$route.params.ID) return;
-      const hotelID = this.$route.params.ID;
-      const res = await hotelPolicyApi.listByHotelID(hotelID);
-      this.hotelpolicy = res.data;
-      this.expandRowKeys.push(this.hotelpolicy[0].ID)
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
-      }
-      return isJPG;
-    },
-    handleExpand(row, expanded) {
-      if (expanded) {
-        this.expandRowKeys.length = 0;
-        this.expandRowKeys.push(row.ID)
-      }
-    },
-    handleRemove(file, fileList) {
-      console.log(file)
-      console.log(fileList)
-    },
-    handlePictureCardPreview(file) {
-      console.log(file)
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
-    },
-    handleSuccess(response, file, fileList) {
-      this.$message({
-        message: '上传成功',
-        type: 'success'
-      });
-      console.log(response)
 
-    },
-    handleError(err, file, fileList) {
-      this.$message.error(err);
+    methods: {
+        async getPayCompany() {
+            const res = await payCompanyApi.list();
+            this.payCompanyOptions = res.data;
+        },
+        async getReserveMode() {
+            const res = await rserveModeApi.list();
+            this.reserveModeOptions = res.data;
+        },
+        async getSecretType() {
+            const res = await secretTypeApi.list();
+            this.secretTypeOptions = res.data;
+        },
+
+
+        async handleSave() {
+            const _self = this;
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        await hotelPolicyApi.add(_self.form);
+                        _self.fetchData();
+                        _self.createDialog = false;
+                        _self.$message({
+                            message: '添加成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    alert('请填写必填信息')
+                    return false;
+                }
+            });
+        },
+
+        hotelpolicyAdd() {
+            this.createDialog = true;
+        },
+        async show(row) {
+            const res = await hotelPolicyApi.listByID(row.ID);
+            this.forms = res.data;
+        },
+        async hotelpolicyEdit() {
+            const _self = this;
+            _self.$refs['forms'].validate(async valid => {
+                if (valid) {
+                    try {
+                        await hotelPolicyApi.edit(_self.forms);
+                        _self.fetchData();
+                        _self.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                    }
+                } else {
+                    alert('请填写必填信息')
+                    return false;
+                }
+            });
+            /*const res = await hotelPolicyApi.edit( _self.forms);
+            console.log(res)
+            _self.fetchData();
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });*/
+        },
+
+        async hotelpolicyDelete($index, row) {
+            const _self = this;
+            _self.$confirm(`是否删除ID${row.ID}?`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    await hotelPolicyApi.remove(row.ID);
+                    _self.fetchData();
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }).catch(() => {});
+        },
+        async fetchData() {
+            if (!this.$route.params.ID) return;
+            const hotelID = this.$route.params.ID;
+            const res = await hotelPolicyApi.listByHotelID(hotelID);
+            this.hotelpolicy = res.data;
+            this.expandRowKeys.push(this.hotelpolicy[0].ID)
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+            }
+            return isJPG;
+        },
+        handleExpand(row, expanded) {
+            if (expanded) {
+                this.expandRowKeys.length = 0;
+                this.expandRowKeys.push(row.ID)
+            }
+        },
+        handleRemove(file, fileList) {
+            console.log(file)
+            console.log(fileList)
+        },
+        handlePictureCardPreview(file) {
+            console.log(file)
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+        handleSuccess(response, file, fileList) {
+            this.$message({
+                message: '上传成功',
+                type: 'success'
+            });
+            console.log(response)
+
+        },
+        handleError(err, file, fileList) {
+            this.$message.error(err);
+        }
     }
-  }
 };
 </script>
 
 <style lang="scss">
-#hotelPollicyList {}
-</style>
+#hotelPollicyList {}</style>

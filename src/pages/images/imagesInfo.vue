@@ -2,7 +2,7 @@
 <div id="imagesInfo">
 
     <!-- breadcrumb start  -->
-    
+
     <!-- breadcrumb end  -->
 
     <!-- filters start -->
@@ -48,9 +48,10 @@
         <el-table-column prop="upPersonName" label="上传人"></el-table-column>
         <el-table-column  label="操作">
             <template scope="scope">
-              <el-button size="mini" type="primary" @click="imagesInfoEdit(scope.$index, scope.row)">修改</el-button>
-              <el-button size="mini" type="danger" @click="imagesInfoDelete(scope.$index, scope.row)">删除</el-button>
-              </template>
+<el-button size="mini" type="primary" @click="imagesInfoEdit(scope.$index, scope.row)">
+    修改</el-button>
+<el-button size="mini" type="danger" @click="imagesInfoDelete(scope.$index, scope.row)">删除</el-button>
+</template>
         </el-table-column>
       </el-table>
       <!-- table end -->
@@ -69,79 +70,85 @@
 </template>
 
 <script>
-import { imagesInfoApi } from 'api';
+import {
+    imagesInfoApi
+} from 'api';
 export default {
-  data() {
-    return {
-      id: 1,
-      page: 0,
-      imagesInfo: [
-        {
-          id: 1,
-          hotelName: 'aaa',
-          uploadDate: '11.21',
-          upPersonName: 'cdd'
+    data() {
+        return {
+            id: 1,
+            page: 0,
+            imagesInfo: [{
+                id: 1,
+                hotelName: 'aaa',
+                uploadDate: '11.21',
+                upPersonName: 'cdd'
+            }],
+            hotelName: '',
+            date1: '',
+            date2: ''
+        };
+    },
+    mounted() {
+        this.fetchData();
+    },
+    methods: {
+        async fetchData(page) {
+            const _self = this;
+            _self.page = page || _self.page;
+            const options = {
+                id: _self.id,
+                page: _self.page,
+                hotelName: _self.hotelName,
+                date1: _self.date1,
+                date2: _self.date2
+            };
+            await imagesInfoApi.fetchImages(options).then(data => {
+                const {
+                    code,
+                    imagesInfo_list
+                } = data;
+                if (code === 200) {
+                    _self.imagesInfo = imagesInfo_list;
+                }
+            });
+        },
+        handleCurrentChange(val) {
+            this.fetchData(val);
+        },
+        imagesSearch() {
+            this.fetchData();
+        },
+        async imagesInfoDelete($index, row) {
+            const _self = this;
+            _self.$confirm('是否删除此条信息?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    await imagesInfoApi.removeImages({
+                        id: row.id
+                    });
+                    _self.fetchData();
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }).catch(() => {});
+        },
+        imagesInfoEdit($index, row) {
+            this.$router.push({
+                name: 'imagesInfoEdit',
+                params: {
+                    id: row.id
+                }
+            });
         }
-      ],
-      hotelName: '',
-      date1: '',
-      date2: ''
-    };
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData(page) {
-      const _self = this;
-      _self.page = page || _self.page;
-      const options = {
-        id: _self.id,
-        page: _self.page,
-        hotelName: _self.hotelName,
-        date1: _self.date1,
-        date2: _self.date2
-      };
-      await imagesInfoApi.fetchImages(options).then(data => {
-        const { code, imagesInfo_list } = data;
-        if (code === 200) {
-          _self.imagesInfo = imagesInfo_list;
-        }
-      });
-    },
-    handleCurrentChange(val) {
-      this.fetchData(val);
-    },
-    imagesSearch() {
-      this.fetchData();
-    },
-    async imagesInfoDelete($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await imagesInfoApi.removeImages({
-          id: row.id
-        });
-        _self.fetchData();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    imagesInfoEdit($index, row) {
-      this.$router.push({
-        name: 'imagesInfoEdit',
-        params: { id: row.id }
-      });
     }
-  }
 };
 </script>
 
@@ -149,7 +156,7 @@ export default {
 #imagesInfo {
 
     .filters {
-        margin: 20px 0 0 0;
+        margin: 20px 0 0;
         border: 1px #efefef solid;
         padding: 10px;
         background: #f9f9f9;
@@ -177,11 +184,11 @@ export default {
     }
 
     #look {
-      color: dodgerblue;
-      &:hover {
-        color: orange;
-        text-decoration: underline;
-      }
+        color: dodgerblue;
+        &:hover {
+            color: orange;
+            text-decoration: underline;
+        }
     }
 
 }

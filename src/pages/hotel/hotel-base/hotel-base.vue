@@ -66,122 +66,123 @@
 
 <script>
 import {
-  hotelBaseApi
+    hotelBaseApi
 } from 'api';
 import HotelBaseAdd from './hotel-base-add.vue'
 export default {
-  components: {
-    HotelBaseAdd
-  },
-  data() {
-    return {
-      isForeign:false,
-      dialogTableVisible: false,
-      hotelbase: [],
-      currentPage: 1,
-      pageSize: 10,
-      count: 0,
-      filters: {
-        ID: '',
-        HotelName: '',
-        HotelName_En: '',
-        labelVal: '1'
-      },
-      selectedOptions: [{
-          value: '1',
-          label: '酒店ID'
-        },
-        {
-          value: '2',
-          label: '酒店名称'
-        },
-        {
-          value: '3',
-          label: '酒店英文名称'
-        }
-      ]
-    };
-  },
-  mounted() {
-    this.getHotelbaseList();
-  },
-  methods: {
-    areaTypeChange(isForeign){
-      this.getHotelbaseList();
+    components: {
+        HotelBaseAdd
     },
-    hotelbaseSearch() {
-      this.getHotelbaseList();
+    data() {
+        return {
+            isForeign: false,
+            dialogTableVisible: false,
+            hotelbase: [],
+            currentPage: 1,
+            pageSize: 10,
+            count: 0,
+            filters: {
+                ID: '',
+                HotelName: '',
+                HotelName_En: '',
+                labelVal: '1'
+            },
+            selectedOptions: [{
+                    value: '1',
+                    label: '酒店ID'
+                },
+                {
+                    value: '2',
+                    label: '酒店名称'
+                },
+                {
+                    value: '3',
+                    label: '酒店英文名称'
+                }
+            ]
+        };
     },
-    async getHotelbaseList(currentPage, pageSize) {
-      const _self = this;
-      _self.currentPage = currentPage || _self.currentPage;
-      _self.pageSize = pageSize || _self.pageSize
-      const options = {
-        pageIndex: _self.currentPage,
-        pageSize: _self.pageSize,
-        order: 'ID',
-        query: {
-          ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-          HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-          HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+    mounted() {
+        this.getHotelbaseList();
+    },
+    methods: {
+        areaTypeChange(isForeign) {
+            this.getHotelbaseList();
         },
-        IsForeign:_self.isForeign
-      };
-      const res = await hotelBaseApi.listAll(options);
-      if (res && res.data && res.data.Data) {
-        let data = res.data.Data
-        for (let item of data) {
-          if (item.Policys && Array.isArray(item.Policys) && item.Policys.length > 0) {
-            for (let n of item.Policys) {
-              if (n.IsDefault) {
-                item.Policys = n
-              }
+        hotelbaseSearch() {
+            this.getHotelbaseList();
+        },
+        async getHotelbaseList(currentPage, pageSize) {
+            const _self = this;
+            _self.currentPage = currentPage || _self.currentPage;
+            _self.pageSize = pageSize || _self.pageSize
+            const options = {
+                pageIndex: _self.currentPage,
+                pageSize: _self.pageSize,
+                order: 'ID',
+                query: {
+                    ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
+                    HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+                    HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+                },
+                IsForeign: _self.isForeign
+            };
+            const res = await hotelBaseApi.listAll(options);
+            if (res && res.data && res.data.Data) {
+                let data = res.data.Data
+                for (let item of data) {
+                    if (item.Policys && Array.isArray(item.Policys) && item.Policys.length > 0) {
+                        for (let n of item.Policys) {
+                            if (n.IsDefault) {
+                                item.Policys = n
+                            }
+                        }
+                    }
+                }
+                _self.hotelbase = data;
+                _self.count = res.data.Count;
             }
-          }
-        }
-        _self.hotelbase = data;
-        _self.count = res.data.Count;
-      }
 
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getHotelbaseList(this.pageSize);
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val;
-      this.getHotelbaseList(this.currentPage);
-    },
-    hotelbaseEdit($index, row) {
-      this.$router.push({
-        name: '酒店信息编辑',
-        params: {
-          ID: row.ID
         },
-        query: {
-          hotelName: row.HotelName
+        handleSizeChange(val) {
+            this.pageSize = val
+            this.getHotelbaseList(this.pageSize);
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val;
+            this.getHotelbaseList(this.currentPage);
+        },
+        hotelbaseEdit($index, row) {
+            this.$router.push({
+                name: '酒店信息编辑',
+                params: {
+                    ID: row.ID
+                },
+                query: {
+                    hotelName: row.HotelName
+                }
+            });
+        },
+        async hotelbaseDelete($index, row) {
+            const _self = this;
+            _self.$confirm('是否删除此条信息?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async() => {
+                try {
+                    await hotelBaseApi.remove(row.ID);
+                    _self.getHotelbaseList();
+                    _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
+            }).catch(() => {});
         }
-      });
-    },
-    async hotelbaseDelete($index, row) {
-      const _self = this;
-      try {
-        await _self.$confirm('是否删除此条信息?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        });
-        await hotelBaseApi.remove(row.ID);
-        _self.getHotelbaseList();
-        _self.$message({
-          message: '删除成功',
-          type: 'success'
-        });
-      } catch (e) {
-        console.error(e);
-      }
     }
-  }
 };
 </script>
 
