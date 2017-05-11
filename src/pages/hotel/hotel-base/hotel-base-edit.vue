@@ -144,7 +144,7 @@ export default {
   },
   data() {
     return {
-       activeNames: ['room'],
+      activeNames: ['room'],
       id: '',
       hotelName: '',
       form: {
@@ -229,8 +229,8 @@ export default {
 </script>
 
 <style lang="scss">
-#hotelbaseEdit > .el-collapse{
-  border:0;
+#hotelbaseEdit > .el-collapse {
+    border: 0;
 }
 .el-row {
     margin-bottom: 20px;
