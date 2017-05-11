@@ -118,7 +118,7 @@ export default {
         padding: 13px 20px;
         box-sizing: border-box;
         color: #ffffff;
-        z-index: 98;
+        z-index: 99;
         position: fixed;
         left: 0;
         top: 0;
@@ -135,7 +135,7 @@ export default {
         background: #fff;
         padding: 0 20px;
         box-sizing: border-box;
-        z-index: 0;
+        z-index: 99;
         position: fixed;
         left: 200px;
         top: 0;
@@ -178,7 +178,7 @@ export default {
         // content
         .db-content-wrapper {
             width: 100%;
-            z-index: 98;
+            z-index: 97;
             box-sizing: border-box;
             padding: 60px 0 0 200px;
 
