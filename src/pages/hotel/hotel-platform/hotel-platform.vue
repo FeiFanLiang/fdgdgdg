@@ -1,8 +1,11 @@
 <template lang="html">
   <div id="hotel-platform-info-page">
-    <HotelTopMenu path="platform">
+    <!-- <HotelTopMenu path="platform">
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-    </HotelTopMenu>
+    </HotelTopMenu> -->
+    <el-row>
+      <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+    </el-row>
     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column prop="platName" label="平台名称"></el-table-column>
       <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
