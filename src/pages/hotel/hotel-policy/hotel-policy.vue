@@ -14,134 +14,102 @@
     style="width: 100%">
     <el-table-column type="expand">
       <template scope="props" >
-        <el-form label-position="left" inline class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
+        <el-form  id="expand" label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
           <el-row :gutter="24">
-            <el-col :span="5">
-              <div class="grid-content bg-purple">
+            <!-- <el-col :span="6">
                 <el-form-item label="ID">
                   <el-input v-model="props.row.ID" :disabled="true"></el-input>
                 </el-form-item>
-              </div>
-            </el-col>
+            </el-col> -->
             <el-col :span="6">
-              <div class="grid-content bg-purple">
                 <el-form-item label="政策负责人">
                   <el-input v-model="forms.PersonName"></el-input>
                 </el-form-item>
-              </div>
             </el-col>
             <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店开户行">
-                  <el-input v-model="forms.BankName"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店联系人" prop="LinkMan">
-                  <el-input v-model="forms.LinkMan"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="5">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店联系电话" prop="PhoneNum">
-                  <el-input v-model="forms.PhoneNum"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店账户">
-                  <el-input v-model="forms.AccountName"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店账号">
-                  <el-input v-model="forms.AccountNum"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="酒店财务负责人">
-                  <el-input v-model="forms.FinanceLinkMan"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row :gutter="24">
-            <el-col :span="5">
-              <div class="grid-content bg-purple">
                 <el-form-item label="政策采购人" prop="PurchasingName">
                   <el-input v-model="forms.PurchasingName"></el-input>
                 </el-form-item>
-              </div>
             </el-col>
             <el-col :span="6">
-              <div class="grid-content bg-purple">
+                <el-form-item label="酒店联系人" prop="LinkMan">
+                  <el-input v-model="forms.LinkMan"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店联系电话" prop="PhoneNum">
+                  <el-input v-model="forms.PhoneNum"></el-input>
+                </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="6">
                 <el-form-item label="酒店预订方式">
                   <el-select v-model="forms.ReserveModeID" clearable placeholder="请选择预订方式">
                     <el-option v-for="(item,index) in reserveModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
                   </el-select>
                 </el-form-item>
-              </div>
             </el-col>
             <el-col :span="6">
-              <div class="grid-content bg-purple">
-                <el-form-item label="支付账户">
-                  <el-select v-model="forms.PayCompanyID" clearable placeholder="请选择支付账户">
-                    <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
-                  </el-select>
-                </el-form-item>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="grid-content bg-purple">
                 <el-form-item label="保密类型">
                   <el-select v-model="forms.SecretTypeID" clearable placeholder="请选择保密类型">
                     <el-option v-for="(item,index) in secretTypeOptions" :key="index" :label="item.SecretName" :value="item.ID"></el-option>
                   </el-select>
                 </el-form-item>
-              </div>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="支付账户">
+                  <el-select v-model="forms.PayCompanyID" clearable placeholder="请选择支付账户">
+                    <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
+                  </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店财务负责人">
+                  <el-input v-model="forms.FinanceLinkMan"></el-input>
+                </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="24">
-            <el-col :span="5">
-              <div class="grid-content bg-purple">
+            <el-col :span="6">
                 <el-form-item label="酒店财务电话">
                   <el-input v-model="forms.FinancePhoneNum"></el-input>
                 </el-form-item>
-              </div>
             </el-col>
             <el-col :span="6">
-              <div class="grid-content bg-purple">
+                <el-form-item label="酒店开户行">
+                  <el-input v-model="forms.BankName"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店账户">
+                  <el-input v-model="forms.AccountName"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店账号">
+                  <el-input v-model="forms.AccountNum"></el-input>
+                </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="24">
+            <el-col :span="6">
                 <el-form-item label="财务备注">
                   <el-input type="textarea" v-model="forms.FinanceRemark"></el-input>
                 </el-form-item>
-              </div>
             </el-col>
-            <el-col :span="5">
-              <div class="grid-content bg-purple">
+            <el-col :span="6">
                 <el-form-item label="备注">
                   <el-input type="textarea" v-model="forms.Remark1"></el-input>
                 </el-form-item>
-              </div>
             </el-col>
-            <el-col :span="3" :offset="1">
-                <div class="grid-content bg-purple">
+            <el-col :span="3">
                   <!--<el-form-item label="默认政策" prop="IsDefault">
                     <el-input v-model="forms.IsDefault"></el-input>
                   </el-form-item>-->
                   <el-form-item label="默认政策" prop="IsDefault">
                     <el-switch on-text="是" off-text="否" v-model="forms.IsDefault"></el-switch>
                   </el-form-item>
-                </div>
             </el-col>
           </el-row>
           <el-row>
@@ -156,15 +124,11 @@
               :on-error="handleError">
               <i class="el-icon-plus"></i>
             </el-upload>
-            <el-dialog v-model="dialogVisible" :modal-append-to-body="false">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+
           </el-row>
           <el-row :gutter="24">
             <el-col :span="5">
-              <div class="grid-content bg-purple">
                 <el-button type="primary" @click="hotelpolicyEdit()">编辑保存</el-button>
-              </div>
             </el-col>
           </el-row>
      </el-form>
@@ -191,7 +155,6 @@
     </el-table-column>
     <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
     <el-table-column prop="Remark1" label="备注"></el-table-column>-->
-
     <el-table-column width="100" label="操作" fixed="right">
         <template scope="scope">
 <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">
@@ -199,139 +162,111 @@
 </template>
     </el-table-column>
   </el-table>
+  <el-dialog v-model="dialogVisible">
+    <img width="100%" :src="dialogImageUrl" alt="">
+  </el-dialog>
   <!-- table end -->
   <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
-    <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="政策负责人">
-              <el-input v-model="form.PersonName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店开户行">
-              <el-input v-model="form.BankName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店联系人" prop="LinkMan">
-              <el-input v-model="form.LinkMan"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店联系电话" prop="PhoneNum">
-              <el-input v-model="form.PhoneNum"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店账户">
-              <el-input v-model="form.AccountName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店账号">
-             <el-input v-model="form.AccountNum"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店财务负责人">
-              <el-input v-model="form.FinanceLinkMan"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店财务电话">
-              <el-input v-model="form.FinancePhoneNum"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="政策采购人" prop="PurchasingName">
-              <el-input v-model="form.PurchasingName"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="支付账户">
-              <el-select v-model="form.PayCompanyID" clearable placeholder="请选择支付账户">
-                <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="保密类型">
-              <el-select v-model="form.SecretTypeID" clearable placeholder="请选择保密类型">
-                <el-option v-for="(item,index) in secretTypeOptions" :key="index" :label="item.SecretName" :value="item.ID"></el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <el-form-item label="酒店预订方式">
-              <el-select v-model="form.ReserveModeID" clearable placeholder="请选择预订方式">
-                <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
-              </el-select>
-            </el-form-item>
-          </div>
-        </el-col>
-        <el-col :span="10">
-          <div class="grid-content bg-purple">
-            <!--<el-form-item label="默认政策" prop="IsDefault">
-              <el-input v-model="form.IsDefault"></el-input>
-            </el-form-item>-->
-            <el-form-item label="默认政策" prop="IsDefault">
-              <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="20">
-          <div class="grid-content bg-purple">
-            <el-form-item label="财务备注">
-              <el-input type="textarea" v-model="form.FinanceRemark"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="20">
-          <div class="grid-content bg-purple">
-            <el-form-item label="备注">
-              <el-input type="textarea" v-model="form.Remark1"></el-input>
-            </el-form-item>
-          </div>
-        </el-col>
-      </el-row>
+    <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="政策负责人">
+                <el-input v-model="form.PersonName"></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="政策采购人" prop="PurchasingName">
+                <el-input v-model="form.PurchasingName"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="酒店联系人" prop="LinkMan">
+                <el-input v-model="form.LinkMan"></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="酒店联系电话" prop="PhoneNum">
+                <el-input v-model="form.PhoneNum"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="保密类型">
+                <el-select v-model="form.SecretTypeID" clearable placeholder="请选择保密类型">
+                  <el-option v-for="(item,index) in secretTypeOptions" :key="index" :label="item.SecretName" :value="item.ID"></el-option>
+                </el-select>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="酒店预订方式">
+                <el-select v-model="form.ReserveModeID" clearable placeholder="请选择预订方式">
+                  <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
+                </el-select>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="支付账户">
+                <el-select v-model="form.PayCompanyID" clearable placeholder="请选择支付账户">
+                  <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
+                </el-select>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="酒店财务负责人">
+                <el-input v-model="form.FinanceLinkMan"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="酒店财务电话">
+                <el-input v-model="form.FinancePhoneNum"></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="酒店开户行">
+                <el-input v-model="form.BankName"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="酒店账户">
+                <el-input v-model="form.AccountName"></el-input>
+              </el-form-item>
+          </el-col>
+          <el-col :span="12">
+              <el-form-item label="酒店账号">
+               <el-input v-model="form.AccountNum"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="24">
+              <el-form-item label="财务备注">
+                <el-input type="textarea" v-model="form.FinanceRemark"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="24">
+              <el-form-item label="备注">
+                <el-input type="textarea" v-model="form.Remark1"></el-input>
+              </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="12">
+              <el-form-item label="默认政策" prop="IsDefault">
+                <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
+              </el-form-item>
+          </el-col>
+        </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="createDialog = false">取 消</el-button>
@@ -550,25 +485,31 @@ export default {
 
 <style lang="scss" scoped>
 #hotelPollicyList {
-    .demo-table-expand {
-        font-size: 0;
-    }
-    .demo-table-expand label {
-        width: 90px;
-        color: #99a9bf;
-    }
-    .demo-table-expand .el-form-item {
-        margin-right: 0;
-        margin-bottom: 0;
-        width: 50%;
-    }
     .el-table__expanded-cell {
         padding: 20px 15px 20px 66px !important;
     }
     .demo-table-expand {
         padding: 0 0 10px 16px !important;
         font-size: 0;
-        margin-right: 50px;
+        margin-right: 60px;
     }
+    // #expand {
+    .el-row {
+        margin-bottom: 5px !important;
+    }
+    .el-select {
+        width: 100% !important;
+        display: inline-block !important;
+        position: relative !important;
+    }
+    .el-form-item {
+        margin-bottom: 0;
+    }
+    .absolute {
+        border: 1px solid !important;
+        position: absolute !important;
+    }
+    // }
+
 }
 </style>
