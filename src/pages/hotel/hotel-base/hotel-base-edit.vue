@@ -193,7 +193,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .el-row {
     margin-bottom: 20px;
     &:last-child {
@@ -202,8 +202,5 @@ export default {
 }
 .el-col {
     border-radius: 4px;
-}
-.row-bg {
-    padding: 10px 0;
 }
 </style>

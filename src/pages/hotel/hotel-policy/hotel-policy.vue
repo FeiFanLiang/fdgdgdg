@@ -14,7 +14,7 @@
     style="width: 100%">
     <el-table-column type="expand">
       <template scope="props" >
-        <el-form  id="expand" label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
+        <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
           <el-row :gutter="24">
             <!-- <el-col :span="6">
                 <el-form-item label="ID">
@@ -493,7 +493,6 @@ export default {
         font-size: 0;
         margin-right: 60px;
     }
-    // #expand {
     .el-row {
         margin-bottom: 5px !important;
     }
@@ -509,7 +508,6 @@ export default {
         border: 1px solid !important;
         position: absolute !important;
     }
-    // }
 
 }
 </style>
