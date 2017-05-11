@@ -2,42 +2,38 @@
 <div id="hotelbaseEdit">
   <HotelTopMenu path="">
   </HotelTopMenu>
-  <!-- form start -->
-  <el-form ref="form" :model="form" :label-position="labelPosition" style="margin-top:25px">
-
+  <el-form ref="form" :model="form" label-position="top" style="margin-top:25px">
     <el-row :gutter="20">
       <el-col :span="6">
           <el-form-item label="酒店ID" prop="ID">
-            <el-input v-model="form.ID" :disabled='true'></el-input>
+            <el-input v-model="form.id" :disabled='true'></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
           <el-form-item label="酒店编号" prop="HotelNum">
-            <el-input v-model="form.HotelNum"></el-input>
+            <el-input v-model="form.hotelNum"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
           <el-form-item label="酒店名称" prop="HotelName">
-            <el-input v-model="form.HotelName"></el-input>
+            <el-input v-model="form.hotelName"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
           <el-form-item label="酒店英文名称" prop="HotelName_En">
-            <el-input v-model="form.HotelName_En"></el-input>
+            <el-input v-model="form.hotelName_En"></el-input>
           </el-form-item>
       </el-col>
     </el-row>
-
     <el-row :gutter="20">
-
       <el-col :span="6">
           <el-form-item label="前台电话" prop="FrontPhone">
-            <el-input v-model="form.FrontPhone"></el-input>
+            <el-input v-model="form.frontPhone"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
           <el-form-item label="传真号" prop="FaxNum">
-            <el-input v-model="form.FaxNum"></el-input>
+            <el-input v-model="form.faxNum"></el-input>
           </el-form-item>
       </el-col>
       <el-col :span="6">
@@ -46,7 +42,7 @@
               <el-option v-for="(item,index) in areaOptions" :key="index" :label="item.AreaName" :value="item.ID"></el-option>
             </el-select>-->
             <el-select
-              v-model="form.Area"
+              v-model="form.area"
               clearable
               filterable
               remote
@@ -64,30 +60,23 @@
       </el-col>
       <el-col :span="6">
           <el-form-item label="地址" prop="Address">
-            <el-input v-model="form.Address"></el-input>
+            <el-input v-model="form.address"></el-input>
           </el-form-item>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="6">
           <el-form-item label="星级">
-            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
+            <el-select v-model="form.star" clearable placeholder="请选择酒店星级">
               <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
       </el-col>
       <el-col :span="18">
           <el-form-item label="备注" prop="Remark">
-            <el-input type="textarea" v-model="form.Remark"></el-input>
+            <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
       </el-col>
-      <!--<el-col :span="5">
-          <el-form-item label="结款">
-            <el-select v-model="form.PayMode" clearable  placeholder="请选择结款账户" >
-              <el-option v-for="(item,index) in payModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
-            </el-select>
-          </el-form-item>
-      </el-col>-->
     </el-row>
     <el-row :gutter="18">
       <el-col :span="2" :offset="19">
@@ -97,81 +86,102 @@
       </el-col>
       <el-col :span="3">
         <el-form-item>
-          <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+          <el-button type="primary" @click="submit">保存</el-button>
         </el-form-item>
       </el-col>
     </el-row>
   </el-form>
-  <!-- form end -->
 </div>
 </template>
 
 <script>
-import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api';
 import {
-    HotelTopMenu
+  hotelPayModeApi,
+  hotelBaseApi,
+  hotelStarApi,
+  hotelAreaApi
+} from 'api';
+import {
+  HotelTopMenu
 } from 'components'
 export default {
   components: {
-      HotelTopMenu
+    HotelTopMenu
   },
   data() {
     return {
-      hotelName:'',
-      labelPosition: 'top',
+      id:'',
+      hotelName: '',
       form: {
-        Star: '',
-        PayMode: ''
+        id: '',
+        hotelNum: '',
+        hotelName: '',
+        hotelName_En: '',
+        frontPhone: '',
+        faxNum: '',
+        area: '',
+        address: '',
+        star: '',
+        remark: ''
       },
       loading: false,
       list: [],
       areaOptions: [],
       starOptions: [],
-      payModeOptions: [],
     };
   },
   mounted() {
-    this.ID = this.$route.params.ID;
-    this.hotelName=this.$route.query.name;
-    this.getHotelbaseList(this.ID);
-    this.getPayModeOptions();
-    this.getStarOptions();
+    this.id = this.$route.params.ID;
+    if(this.id){
+      this.getHotelbaseList();
+      this.getStarOptions();
+    }
+    this.hotelName = this.$route.query.name;
+
   },
   methods: {
 
     async remoteMethod(query) {
       if (query !== '') {
-          this.loading = true;
-          const res = await hotelAreaApi.listByQue(query);
-          this.list = res.data;
-          setTimeout(() => {
-            this.loading = false;
-            for(let i=0;i<20;i++){
-                this.areaOptions[i] = this.list[i];
-                //console.log(this.areaOptions[i]);
-            }
-            //this.areaOptions = this.list;
-          }, 200);
-        } else {
-          this.areaOptions = [];
-        }
-    },
-    async getPayModeOptions() {
-      const res = await hotelPayModeApi.list();
-      //this.payModeOptions = res.data;
+        this.loading = true;
+        const res = await hotelAreaApi.listByQue(query);
+        this.list = res.data;
+        setTimeout(() => {
+          this.loading = false;
+          for (let i = 0; i < 20; i++) {
+            this.areaOptions[i] = this.list[i];
+          }
+          //this.areaOptions = this.list;
+        }, 200);
+      } else {
+        this.areaOptions = [];
+      }
     },
     async getStarOptions() {
       const res = await hotelStarApi.list();
-      this.starOptions = res.data;
+      if(res&&res.data&&Array.isArray(res.data)){
+        this.starOptions = res.data;
+      }
     },
-    async getHotelbaseList(ID) {
-      ID = this.ID;
-      const res = await hotelBaseApi.detailsById(ID);
-      this.form = res.data;
+    async getHotelbaseList() {
+      const res = await hotelBaseApi.detailsById(this.id);
+      if(res&&res.data){
+        const data = res.data;
+        this.form.id = data.ID
+        this.form.hotelNum = data.HotelNum
+        this.form.hotelName = data.HotelName
+        this.form.hotelName_En = data.HotelName_En
+        this.form.frontPhone = data.FrontPhone
+        this.form.faxNum = data.FaxNum
+        this.form.area = data.Area
+        this.form.address = data.Address
+        this.form.star = data.Star
+        this.form.remark = data.Remark
+      }
     },
-    onSubmit() {
+    async submit() {
       try {
-        hotelBaseApi.edit(this.form.ID, this.form);
+        await hotelBaseApi.edit(this.form.id, this.form);
         this.$message({
           message: '保存成功',
           type: 'success'
@@ -186,17 +196,16 @@ export default {
 </script>
 
 <style lang="scss">
-
-  .el-row {
+.el-row {
     margin-bottom: 20px;
     &:last-child {
-      margin-bottom: 0;
+        margin-bottom: 0;
     }
-  }
-  .el-col {
+}
+.el-col {
     border-radius: 4px;
-  }
-  .row-bg {
+}
+.row-bg {
     padding: 10px 0;
-  }
+}
 </style>
