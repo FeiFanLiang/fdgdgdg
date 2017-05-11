@@ -5,6 +5,15 @@ import orderRoute from './order';
 import policyRoute from './policy';
 import roleRoute from './role';
 import userRoute from './user';
+import showRoute from './show';
+const children = [
+  hotelRoute,
+  policyRoute,
+  orderRoute,
+  roleRoute,
+  userRoute,
+  showRoute
+];
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });
@@ -43,7 +52,7 @@ let routes = [
     meta: {
       requiresAuth: true
     },
-    children: [hotelRoute, policyRoute, orderRoute, roleRoute, userRoute]
+    children: children
   },
 
   {
