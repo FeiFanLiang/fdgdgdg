@@ -27,6 +27,7 @@ import User from './user/user';
 import Role from './role/role';
 // show
 import HotelShow from './show/hotel-show/hotel-show';
+import HotelShowAdd from './show/hotel-show/hotel-show-add';
 // import RoomShow from './show/room-show/room-show'
 export default {
   Abstract,
@@ -49,5 +50,6 @@ export default {
   ImagesInfoList,
   User,
   Role,
-  HotelShow
+  HotelShow,
+  HotelShowAdd
 };
