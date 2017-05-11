@@ -21,6 +21,7 @@ import sonRoomPlatformApi from './son-room-platform';
 import sonRoomSalePriceApi from './son-room-sale-price';
 import userApi from './user';
 import roleApi from './role';
+import hotelShowApi from './hotel-show';
 export {
   accountApi,
   airlineApi,
@@ -44,5 +45,6 @@ export {
   sonRoomPlatformApi,
   sonRoomSalePriceApi,
   userApi,
-  roleApi
+  roleApi,
+  hotelShowApi
 };
