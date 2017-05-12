@@ -80,12 +80,12 @@ export default {
                     message: '请填写房间楼层',
                     trigger: 'blur',
                 }],
-                CheakInNum: [{
+                /*CheakInNum: [{
                     required: true,
-                    message: '请填写房间楼层',
+                    message: '请填写入住人数',
                     trigger: 'blur',
                     type: 'number'
-                }]
+                }]*/
             },
       }
   },
