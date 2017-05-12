@@ -1,140 +1,11 @@
 <template lang="html">
-  <div >
-    <!-- 搜索框 start -->
-    <el-row :gutter="20">
-      <el-col :span="3">
-        <el-select v-model="filters.labelVal"  placeholder="请选择">
-          <el-option
-              v-for="(item,index) in selectedOptions"
-              :label="item.label"
-              :value="item.value"
-              :key="index">
-          </el-option>
-        </el-select>
-        </el-col>
-        <el-col :span="5">
-            <el-input placeholder="请输入列表ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
-        </el-col>
-        <el-button type="primary" @click="handleSearch(filters)">搜索</el-button>
+  <div>
+    <el-row>
+        <el-button type="primary" @click="hotelShowAdd">创建</el-button>
     </el-row>
-    <!-- 搜索框 end -->
     <!-- table start -->
     <el-table :data="hotelShowList" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-      v-loading="loading" border @expand="hotelShowExpand" row-key="ID" :expand-row-keys="expandRowKeys">
-        <!--<el-table-column type="expand">
-            <template scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                        <el-form-item label="列表ID：">
-                            <span>{{ props.row.ID }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="酒店ID：">
-                            <span>{{ props.row.HotelID }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                         <el-form-item label="酒店名称：">
-                            <span>{{ props.row.Hotel }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="入住政策：">
-                            <span>{{ props.row.CheckInPolicy }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="离店：">
-                            <span>{{ props.row.CheckOutPolicy }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                        <el-form-item label="服务设施：">
-                            <span>{{ props.row.ServiceFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                         <el-form-item label="餐饮设施：">
-                            <span>{{ props.row.DiningFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="娱乐设施：">
-                            <span>{{ props.row.RecreationFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="会议设施：">
-                            <span>{{ props.row.ConferenceFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="客房设施：">
-                            <span>{{ props.row.RoomFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                         <el-form-item label="楼层数：">
-                            <span>{{ props.row.FloorLevelsNum }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="交通状况：">
-                            <span>{{ props.row.Traffic }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="特色标签：">
-                            <span>{{ props.row.Lable }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="商圈：">
-                            <span>{{ props.row.HotArea }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="经纬度：">
-                            <span>{{ props.row.coordinate }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                         <el-form-item label="房间数量：">
-                            <span>{{ props.row.Rooms }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="装修时间：">
-                            <span>{{ props.row.FilmentTime }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="经营时间：">
-                            <span>{{ props.row.BusinessTime }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="酒店图片：">
-                            <span>{{ props.row.HotelImages }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                      </el-col>
-                  </el-row>
-              </el-form>
-            </template>
-        </el-table-column>-->
+      v-loading="loading" border>
         <el-table-column label="酒店ID" prop="HotelID"></el-table-column>
         <el-table-column label="房间数量" prop="Rooms"></el-table-column>
         <el-table-column label="楼层数" prop="FloorLevelsNum"></el-table-column>
@@ -144,13 +15,109 @@
         <el-table-column label="特色标签" prop="Lable"></el-table-column>
         <el-table-column  width="150"  label="操作" fixed="right">
           <template scope="scope">
-            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
            </template>
         </el-table-column>
     </el-table>
     <!-- table end -->
 
+    <!-- edit hotelshow start -->
+    <el-dialog :title="form.ID?'编辑酒店展示信息':'添加酒店展示信息'" v-model="showDialog" size="big" @close="resetForm('form')">
+        <el-form ref="form" :model="form" :rules="rules">
+            <el-row :gutter="20">
+            <el-col :span="5">
+                <el-form-item label="入住政策" prop="CheckInPolicy">
+                <el-input v-model="form.CheckInPolicy"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="离店" prop="CheckOutPolicy">
+                <el-input v-model="form.CheckOutPolicy"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="服务设施" prop="ServiceFacility">
+                <el-input v-model="form.ServiceFacility"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="餐饮设施" prop="DiningFacility">
+                <el-input v-model="form.DiningFacility"></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+            <el-col :span="5">
+                <el-form-item label="娱乐设施" prop="RecreationFacility">
+                <el-input v-model="form.RecreationFacility"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="会议设施" prop="ConferenceFacility">
+                <el-input v-model="form.ConferenceFacility"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="客房设施" prop="RoomFacility">
+                <el-input v-model="form.RoomFacility"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="楼层数" prop="FloorLevelsNum">
+                <el-input v-model="form.FloorLevelsNum"></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+            <el-col :span="5">
+                <el-form-item label="交通状况" prop="Traffic">
+                <el-input v-model="form.Traffic"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="特色标签" prop="Lable">
+                <el-input v-model="form.Lable"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="商圈" prop="HotArea">
+                <el-input v-model="form.HotArea"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="经纬度" prop="coordinate">
+                <el-input v-model="form.coordinate"></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+
+            <el-row :gutter="20">
+            <el-col :span="5">
+                <el-form-item label="房间数量" prop="Rooms">
+                <el-input v-model="form.Rooms"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="装修时间" prop="FilmentTime">
+                <el-input v-model="form.FilmentTime"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="5">
+                <el-form-item label="经营时间" prop="BusinessTime">
+                <el-input v-model="form.BusinessTime"></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitEditForm('form')">确 定</el-button>
+        </span>
+    </el-dialog>
+    <!-- edit hotelshow end -->
 
   </div>
 </template>
@@ -160,18 +127,45 @@ import { hotelShowApi } from 'api';
 export default {
   data () {
       return {
-          filters: {
-            ID: '',
-            labelVal: '1',
-          },
-          selectedOptions: [{
-                value: '1',
-                label: '列表ID'
-            },
-          ],
           hotelShowList: [],
-          expandRowKeys: [],
           loading: true,
+          showDialog: false,
+          form: {
+                ID:'',
+                hotelId:'',
+                Rooms:'',
+                FloorLevelsNum: 1,
+                CheckInPolicy:'',
+                CheckOutPolicy:'',
+                ServiceFacility:'',
+                DiningFacility:'',
+                RecreationFacility:'',
+                ConferenceFacility:'',
+                RoomFacility:'',
+                Traffic:'',
+                Lable:'',
+                HotArea:'',
+                coordinate:'',
+                FilmentTime:'',
+                BusinessTime:'',
+          },
+          rules: {
+                CheckInPolicy: [{
+                    required: true,
+                    message: '请填写入住政策',
+                    trigger: 'blur'
+                }],
+                Rooms: [{
+                    required: true,
+                    message: '请填写房间数量',
+                    trigger: 'blur'
+                }],
+                BusinessTime: [{
+                    required: true,
+                    message: '请填写经营时间',
+                    trigger: 'blur'
+                }]
+            },
       }
   },
   methods: {
@@ -189,16 +183,6 @@ export default {
                 console.error(e);
                 _self.loading = false;
             }
-        },
-        hotelShowExpand(row, expanded) {
-            const _self = this;
-            if (expanded) {
-                _self.expandRowKeys.length = 0;
-                _self.expandRowKeys.push(row.ID);
-            }
-        },
-        handleSearch() {
-            this.fetchData();
         },
         async clickDelBtn($index, row) {
             const _self = this;
@@ -219,17 +203,72 @@ export default {
                 }
             }).catch(() => {});
         },
-        clickEditBtn($index, row) {
-            this.$router.push({
-                name: '编辑酒店展示',
-                params: {
-                    hotelID: row.HotelID,
-                    hotelShowID: row.ID
+        async clickEditBtn(row) {
+            const _self = this;
+            //_self.form = {}
+            try {
+                const res = await hotelShowApi.detail(row.ID);
+                _self.form = res.data;
+                //_self.form.FloorLevelsNum = row.FloorLevelsNum;
+                
+                //_self.form.ID = row.ID;
+                //_self.form.hotelId = this.$route.params.ID;
+                /*_self.form.Rooms = row.Rooms;
+                _self.form.CheckInPolicy = row.CheckInPolicy;
+                _self.form.CheckOutPolicy = row.CheckOutPolicy;
+                _self.form.ServiceFacility = row.ServiceFacility;
+                _self.form.DiningFacility = row.DiningFacility;
+                _self.form.RecreationFacility = row.RecreationFacility;
+                _self.form.ConferenceFacility = row.ConferenceFacility;
+                _self.form.RoomFacility = row.RoomFacility;
+                _self.form.Traffic = row.Traffic;
+                _self.form.Lable = row.Lable;
+                _self.form.HotArea = row.HotArea;
+                _self.form.coordinate = row.coordinate;
+                _self.form.FilmentTime = row.FilmentTime;
+                _self.form.BusinessTime = row.BusinessTime;*/
+                _self.showDialog = true;
+                console.log(_self.form)
+            } catch (e) {
+                console.error(e);
+            }
+        },
+        hotelShowAdd() {
+            const _self = this;
+            _self.showDialog = true;
+        },
+        async submitEditForm() {
+            const _self = this;
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        if (_self.form.ID) {
+                            await hotelShowApi.edit(_self.form);
+                        } else {
+                            let form = { ..._self.form
+                            }
+                            delete form.ID
+                            await hotelShowApi.add(form);
+                        }
+                        _self.fetchData();
+                        _self.$refs['form'].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        _self.$message.error('保存失败!!!');
+                    }
+                } else {
+                    return false;
                 }
             });
         }
   },
    mounted() {
+       this.form.hotelId = this.$route.params.ID
         this.fetchData();
     }
 }

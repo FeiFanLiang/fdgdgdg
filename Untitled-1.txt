@@ -1,0 +1,225 @@
+public class THotelShow
+    {
+        public int ID { get; set; }
+        public int HotelID { get; set; }
+        public THotel Hotel { get; set; }
+
+        /// 入住政策
+        
+        public string CheckInPolicy { get; set; }
+
+        
+        /// 离店
+        
+        public string CheckOutPolicy { get; set; }
+        
+        /// 服务设施,多个以英文分号分割
+        
+        public string ServiceFacility { get; set; }
+
+        
+        /// 餐饮设施,多个以英文分号分割
+        
+        public string DiningFacility { get; set; }
+        
+        /// 娱乐设施,多个以英文分号分割
+        
+        public string RecreationFacility { get; set; }
+
+        
+        /// 会议设施,多个以英文分号分割
+        
+        public string ConferenceFacility { get; set; }
+        
+        /// 客房设施,多个以英文分号分割
+        
+        public string RoomFacility { get; set; }
+        
+        /// 楼层数
+        
+        public int FloorLevelsNum { get; set; }
+
+        
+        /// 交通状况
+        
+        public string Traffic { get; set; }
+
+        
+        /// 特色标签,多个以英文分号分割
+        
+        public string Lable { get; set; }
+        
+        /// 商圈,多个以英文分号分割
+        
+        public string HotArea { get; set; }
+        
+        /// 经纬度:经度,纬度
+        
+        public string coordinate { get; set; }
+        
+        /// 房间数量
+        
+        public string Rooms { get; set; }
+        
+        /// 装修时间
+        
+        public string FilmentTime { get; set; }
+        
+        /// 经营时间
+        
+        public string BusinessTime { get; set; }
+
+        public List<THotelImage> HotelImages { get; set; }
+    }
+
+
+
+
+/// 经营时间
+        
+        public string BusinessTime { get; set; }
+/// 房间数量
+        
+        public string Rooms { get; set; }
+/// 特色标签,多个以英文分号分割
+
+public string Lable { get; set; }
+/// 入住政策
+        
+        public string CheckInPolicy { get; set; }
+/// 离店
+        
+        public string CheckOutPolicy { get; set; }
+
+/// 楼层数
+        
+        public int FloorLevelsNum { get; set; }
+////酒店名称
+public THotel Hotel { get; set; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<el-table-column type="expand">
+            <template scope="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                  <el-row :gutter="20">
+                      <el-col :span="4">
+                        <el-form-item label="列表ID：">
+                            <span>{{ props.row.ID }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="酒店ID：">
+                            <span>{{ props.row.HotelID }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                         <el-form-item label="酒店名称：">
+                            <span>{{ props.row.Hotel }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="入住政策：">
+                            <span>{{ props.row.CheckInPolicy }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="离店：">
+                            <span>{{ props.row.CheckOutPolicy }}</span>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+
+                  <el-row :gutter="20">
+                      <el-col :span="4">
+                        <el-form-item label="服务设施：">
+                            <span>{{ props.row.ServiceFacility }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                         <el-form-item label="餐饮设施：">
+                            <span>{{ props.row.DiningFacility }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="娱乐设施：">
+                            <span>{{ props.row.RecreationFacility }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="会议设施：">
+                            <span>{{ props.row.ConferenceFacility }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="客房设施：">
+                            <span>{{ props.row.RoomFacility }}</span>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+
+                  <el-row :gutter="20">
+                      <el-col :span="4">
+                         <el-form-item label="楼层数：">
+                            <span>{{ props.row.FloorLevelsNum }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="交通状况：">
+                            <span>{{ props.row.Traffic }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="特色标签：">
+                            <span>{{ props.row.Lable }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="商圈：">
+                            <span>{{ props.row.HotArea }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="经纬度：">
+                            <span>{{ props.row.coordinate }}</span>
+                        </el-form-item>
+                      </el-col>
+                  </el-row>
+
+                  <el-row :gutter="20">
+                      <el-col :span="4">
+                         <el-form-item label="房间数量：">
+                            <span>{{ props.row.Rooms }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="装修时间：">
+                            <span>{{ props.row.FilmentTime }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="经营时间：">
+                            <span>{{ props.row.BusinessTime }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="酒店图片：">
+                            <span>{{ props.row.HotelImages }}</span>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                      </el-col>
+                  </el-row>
+              </el-form>
+            </template>
+        </el-table-column>-->

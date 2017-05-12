@@ -13,7 +13,6 @@ import HotelPrice from './hotel/hotel-price/hotel-price';
 import HotelRoom from './hotel/hotel-room/hotel-room';
 import HotelShow from './hotel/hotel-show/hotel-show';
 import HotelShowAddAndEdit from './hotel/hotel-show/hotel-show-add-and-edit';
-import HotelShowDetails from './hotel/hotel-show/hotel-show-details';
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
@@ -42,7 +41,6 @@ export default {
   HotelPlatform,
   HotelShow,
   HotelShowAddAndEdit,
-  HotelShowDetails,
   Order,
   HotelPolicy,
   HotelPrice,
