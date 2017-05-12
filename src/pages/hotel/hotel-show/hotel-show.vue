@@ -169,7 +169,7 @@ export default {
       }
   },
   methods: {
-      async fetchData() {
+        async fetchData() {
             const _self = this;
             _self.loading = true;
             _self.hotelShowList = [];
@@ -205,28 +205,9 @@ export default {
         },
         async clickEditBtn(row) {
             const _self = this;
-            //_self.form = {}
             try {
                 const res = await hotelShowApi.detail(row.ID);
                 _self.form = res.data;
-                //_self.form.FloorLevelsNum = row.FloorLevelsNum;
-                
-                //_self.form.ID = row.ID;
-                //_self.form.hotelId = this.$route.params.ID;
-                /*_self.form.Rooms = row.Rooms;
-                _self.form.CheckInPolicy = row.CheckInPolicy;
-                _self.form.CheckOutPolicy = row.CheckOutPolicy;
-                _self.form.ServiceFacility = row.ServiceFacility;
-                _self.form.DiningFacility = row.DiningFacility;
-                _self.form.RecreationFacility = row.RecreationFacility;
-                _self.form.ConferenceFacility = row.ConferenceFacility;
-                _self.form.RoomFacility = row.RoomFacility;
-                _self.form.Traffic = row.Traffic;
-                _self.form.Lable = row.Lable;
-                _self.form.HotArea = row.HotArea;
-                _self.form.coordinate = row.coordinate;
-                _self.form.FilmentTime = row.FilmentTime;
-                _self.form.BusinessTime = row.BusinessTime;*/
                 _self.showDialog = true;
                 console.log(_self.form)
             } catch (e) {
