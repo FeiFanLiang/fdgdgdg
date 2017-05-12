@@ -42,6 +42,14 @@ module.exports = {
           name: '酒店房间信息编辑'
         },
         {
+          path: 'room-show',
+          component: Pages.RoomShow,
+          name: '房型展示信息',
+          meta: {
+            hidden: true
+          }
+        },
+        {
           path: 'platform',
           component: Pages.HotelPlatform,
           name: '酒店平台信息编辑'

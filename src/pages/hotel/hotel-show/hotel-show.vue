@@ -23,7 +23,7 @@
     <!-- table end -->
 
     <!-- edit hotelshow start -->
-    <el-dialog :title="form.ID?'编辑酒店展示信息':'添加酒店展示信息'" v-model="showDialog" size="big" @close="resetForm('form')">
+    <el-dialog :title="form.ID?'编辑酒店展示信息':'添加酒店展示信息'" v-model="showDialog" size="" @close="resetForm('form')">
         <el-form ref="form" :model="form" :rules="rules">
             <el-row :gutter="20">
             <el-col :span="5">
@@ -216,6 +216,9 @@ export default {
         },
         hotelShowAdd() {
             const _self = this;
+             _self.form = {
+              hotelId : this.$route.params.ID
+            }
             _self.showDialog = true;
         },
         async submitEditForm() {

@@ -28,6 +28,8 @@ import User from './user/user';
 // role
 import Role from './role/role';
 
+import RoomShow from './hotel/room-show/room-show';
+
 export default {
   Abstract,
   NotFound,
@@ -50,5 +52,6 @@ export default {
   ImagesInfoEdit,
   ImagesInfoList,
   User,
-  Role
+  Role,
+  RoomShow
 };

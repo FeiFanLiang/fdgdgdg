@@ -10,6 +10,7 @@
         <el-table-column prop="RoomName" width="95" label="产品名称">
             <template scope="scope">
         <el-popover trigger="hover" placement="top" >
+          <p>房间ID: {{ scope.row.ID }}</p>
           <p>产品名称: {{ scope.row.RoomName }}</p>
           <p>房间编号: {{ scope.row.RoomCode }}</p>
           <p>数量: {{ scope.row.RoomCount }}</p>
@@ -77,16 +78,21 @@
 </template>
     </el-table-column>
 
-    <el-table-column width="196" label="房型操作" >
+    <el-table-column width="180" label="房型操作" >
       <template scope="scope">
-<tr class="child-table">
-    <td>
-        <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
-        <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
-        <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
-    </td>
-</tr>
-</template>
+        <tr class="child-table">
+            <td>
+                <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
+            </td>
+        </tr>
+        <tr class="child-table">
+            <td>
+                <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
+                <el-button size="mini" @click="hotelroomDetail( scope.row)">详情</el-button>
+                <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
+            </td>
+        </tr>
+      </template>
     </el-table-column>
   </el-table>
 
@@ -435,6 +441,15 @@ export default {
             const res = await hotelRoomApi.list(this.$route.params.ID);
             this.hotelroomlist = res.data;
         },
+        hotelroomDetail(row) {
+            this.$router.push({
+                name: '房型展示信息',
+                params: {
+                  RoomID: row.ID,
+                  hotelId: this.$route.params.ID
+                }
+            });
+        }
     }
 
 };
