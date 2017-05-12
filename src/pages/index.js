@@ -11,6 +11,9 @@ import HotelPlatform from './hotel/hotel-platform/hotel-platform';
 import HotelPolicy from './hotel/hotel-policy/hotel-policy';
 import HotelPrice from './hotel/hotel-price/hotel-price';
 import HotelRoom from './hotel/hotel-room/hotel-room';
+import HotelShow from './hotel/hotel-show/hotel-show';
+import HotelShowAddAndEdit from './hotel/hotel-show/hotel-show-add-and-edit';
+import HotelShowDetails from './hotel/hotel-show/hotel-show-details';
 // policy
 import PayCompany from './policy/pay-company/pay-company';
 import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
@@ -25,10 +28,7 @@ import ImagesInfoList from './images/imagesInfoList';
 import User from './user/user';
 // role
 import Role from './role/role';
-// show
-import HotelShow from './show/hotel-show/hotel-show';
-import HotelShowAddAndEdit from './show/hotel-show/hotel-show-add-and-edit';
-import HotelShowDetails from './show/hotel-show/hotel-show-details';
+
 export default {
   Abstract,
   NotFound,
@@ -40,6 +40,9 @@ export default {
   HotelBaseAdd,
   HotelBaseEdit,
   HotelPlatform,
+  HotelShow,
+  HotelShowAddAndEdit,
+  HotelShowDetails,
   Order,
   HotelPolicy,
   HotelPrice,
@@ -49,8 +52,5 @@ export default {
   ImagesInfoEdit,
   ImagesInfoList,
   User,
-  Role,
-  HotelShow,
-  HotelShowAddAndEdit,
-  HotelShowDetails
+  Role
 };

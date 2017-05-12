@@ -50,6 +50,11 @@ module.exports = {
           path: 'price',
           component: Pages.HotelPrice,
           name: '酒店价格信息编辑'
+        },
+        {
+          path: 'hotelShow',
+          component: Pages.HotelShow,
+          name: '酒店展示信息'
         }
       ],
       meta: {

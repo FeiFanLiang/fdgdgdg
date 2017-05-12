@@ -113,7 +113,7 @@
     <HotelPlatformPage></HotelPlatformPage>
   </el-collapse-item>
   <el-collapse-item title="展示信息" name="show">
-asdasd
+    <HotelShowPage></HotelShowPage>
   </el-collapse-item>
 </el-collapse>
 </div>
@@ -129,10 +129,11 @@ import {
 import {
   HotelTopMenu
 } from 'components'
-import HotelRoomPage from '../hotel-room/hotel-room'
-import HotelPlatformPage from '../hotel-platform/hotel-platform'
-import HotelPolicyPage from '../hotel-policy/hotel-policy'
-import HotelPricePage from '../hotel-price/hotel-price'
+import HotelRoomPage from '../hotel-room/hotel-room';
+import HotelPlatformPage from '../hotel-platform/hotel-platform';
+import HotelPolicyPage from '../hotel-policy/hotel-policy';
+import HotelPricePage from '../hotel-price/hotel-price';
+import HotelShowPage from '../hotel-show/hotel-show';
 
 export default {
   components: {
@@ -140,7 +141,8 @@ export default {
     HotelRoomPage,
     HotelPlatformPage,
     HotelPolicyPage,
-    HotelPricePage
+    HotelPricePage,
+    HotelShowPage
   },
   data() {
     return {
