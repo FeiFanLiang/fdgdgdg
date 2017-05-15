@@ -9,20 +9,15 @@
   <el-table
     :data="hotelpolicy"
     @expand="handleExpand"
-    @row-click="show"
     row-key="ID"
     :expand-row-keys="expandRowKeys"
     border
+    @row-click="show"
     style="width: 100%">
     <el-table-column type="expand">
-      <template scope="props" >
+      <template scope="props">
         <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
           <el-row :gutter="24">
-            <!-- <el-col :span="6">
-                <el-form-item label="ID">
-                  <el-input v-model="props.row.ID" :disabled="true"></el-input>
-                </el-form-item>
-            </el-col> -->
             <el-col :span="6">
                 <el-form-item label="政策负责人">
                   <el-input v-model="forms.PersonName"></el-input>
@@ -106,9 +101,6 @@
                 </el-form-item>
             </el-col>
             <el-col :span="3">
-                  <!--<el-form-item label="默认政策" prop="IsDefault">
-                    <el-input v-model="forms.IsDefault"></el-input>
-                  </el-form-item>-->
                   <el-form-item label="默认政策" prop="IsDefault">
                     <el-switch on-text="是" off-text="否" v-model="forms.IsDefault"></el-switch>
                   </el-form-item>
@@ -141,12 +133,6 @@
     <el-table-column prop="PurchasingName" label="政策采购人"></el-table-column>
     <el-table-column prop="LinkMan" label="酒店联系人"></el-table-column>
     <el-table-column prop="PhoneNum" label="酒店联系电话"></el-table-column>
-    <!--<el-table-column prop="BankName" label="酒店开户行"></el-table-column>
-    <el-table-column prop="AccountName" label="酒店账户"></el-table-column>
-    <el-table-column prop="AccountNum" label="酒店账号"></el-table-column>
-    <el-table-column prop="FinanceLinkMan" label="酒店财务负责人"></el-table-column>
-    <el-table-column prop="FinancePhoneNum" label="酒店财务电话"></el-table-column>-->
-    <!--<el-table-column prop="PayCompany.AccountName" label="支付账户"></el-table-column>-->
     <el-table-column prop="SecretType.SecretName" label="保密类型"></el-table-column>
     <el-table-column prop="ReserveMode.ModeName" label="酒店预订方式"></el-table-column>
     <el-table-column label="默认政策" align="center">
@@ -155,8 +141,6 @@
 <i v-else>否</i>
 </template>
     </el-table-column>
-    <!--<el-table-column prop="FinanceRemark" label="财务备注"></el-table-column>
-    <el-table-column prop="Remark1" label="备注"></el-table-column>-->
     <el-table-column width="100" label="操作" fixed="right">
         <template scope="scope">
 <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">
@@ -332,13 +316,15 @@ export default {
                     message: '请填写政策采购人姓名',
                     trigger: 'blur'
                 }],
-                /*IsDefault: [{
-                  required: true,
-                  message: '请填写默认政策',
-                  trigger: 'blur'
-                }]*/
             }
         };
+    },
+    watch:{
+    async  expandRowKeys(){
+      console.log('this.expandRowKeys[0].ID',this.expandRowKeys)
+        const res = await hotelPolicyApi.listByID(this.expandRowKeys[0]);
+        this.forms = res.data;
+      }
     },
     mounted() {
 
@@ -413,13 +399,6 @@ export default {
                     return false;
                 }
             });
-            /*const res = await hotelPolicyApi.edit( _self.forms);
-            console.log(res)
-            _self.fetchData();
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            });*/
         },
 
         async hotelpolicyDelete($index, row) {
@@ -446,7 +425,12 @@ export default {
             const hotelID = this.$route.params.ID;
             const res = await hotelPolicyApi.listByHotelID(hotelID);
             this.hotelpolicy = res.data;
+<<<<<<< HEAD
+            this.expandRowKeys.push(this.hotelpolicy[0].ID);
+=======
+            this.expandRowKeys.length=0;
             this.expandRowKeys.push(this.hotelpolicy[0].ID)
+>>>>>>> 1d1d9cea4f14acfc6b1461376f51118b3ef33911
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -455,10 +439,14 @@ export default {
             }
             return isJPG;
         },
-        handleExpand(row, expanded) {
+<<<<<<< HEAD
+        async handleExpand(row, expanded) {
+=======
+      async  handleExpand(row, expanded) {
+>>>>>>> 1d1d9cea4f14acfc6b1461376f51118b3ef33911
             if (expanded) {
                 this.expandRowKeys.length = 0;
-                this.expandRowKeys.push(row.ID)
+                this.expandRowKeys.push(row.ID);
             }
         },
         handleRemove(file, fileList) {

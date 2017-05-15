@@ -33,7 +33,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                    <el-form-item label="入住人数" prop="CheakInNum"> 
+                    <el-form-item label="入住人数" prop="CheakInNum">
                         <el-input v-model="form.CheakInNum" type="number"></el-input>
                     </el-form-item>
                 </el-col>
@@ -63,7 +63,7 @@
                         <el-input v-model="form.Lable"></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>        
+            </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>

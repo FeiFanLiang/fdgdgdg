@@ -34,7 +34,7 @@
         <el-row>
           <el-col :span="11">
             <el-form-item label="平台酒店ID" >
-              <el-input v-model="form.platRoomId"></el-input>
+              <el-input v-model="form.platHotelId"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="1">
@@ -186,6 +186,10 @@ export default {
             this.getPlatformList();
         },
         add() {
+            this.form = {
+              roomId : this.$route.params.roomId,
+              sonRoomId : this.$route.params.sonRoomId
+            }
             this.platVisible = true;
         },
         edit(index, row) {
@@ -238,33 +242,37 @@ export default {
         },
         async handleSaveAndEdit() {
             const _self = this;
-            if (!_self.roomId || !_self.sonRoomId || !_self.form.platformId || !_self.platHotelId) {
+            /*if (!_self.roomId || !_self.sonRoomId || !_self.form.platformId || !_self.platHotelId) {
                 return
-            }
+            }*/
             _self.form.roomId = _self.roomId;
             _self.form.sonRoomId = _self.sonRoomId;
-            _self.form.platHotelId = _self.platHotelId;
-            try {
-                if (_self.form.id) {
-                    await sonRoomPlatformApi.edit(_self.form.id, _self.form);
-                } else {
-                    const form = { ..._self.form
-                    };
-                    delete form.id
-                    await sonRoomPlatformApi.add(form);
+            //_self.form.platHotelId = _self.platHotelId;
+            _self.$refs['form'].validate(async valid => {
+              if (valid) {
+                try {
+                    if (_self.form.id) {
+                        await sonRoomPlatformApi.edit(_self.form.id, _self.form);
+                    } else {
+                        const form = { ..._self.form
+                        };
+                        delete form.id
+                        await sonRoomPlatformApi.add(form);
+                    }
+
+                    this.platVisible = false;
+                    _self.getList()
+                    _self.$message({
+                        message: '保存成功',
+                        type: 'success'
+                    });
+                } catch (e) {
+
                 }
-
-                this.platVisible = false;
-                _self.getList()
-                _self.$message({
-                    message: '保存成功',
-                    type: 'success'
-                });
-            } catch (e) {
-
             }
-        }
+        });
     },
+  }
 }
 </script>
 
