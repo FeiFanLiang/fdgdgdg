@@ -24,26 +24,46 @@
     <!-- table end -->
 
     <!-- edit hotelshow start -->
-    <el-dialog :title="form.ID?'编辑房间展示信息':'添加房间展示信息'" v-model="showDialog" size="small" @close="resetForm('form')">
+    <el-dialog :title="form.ID?'编辑房间展示信息':'添加房间展示信息'" v-model="showDialog" size="" @close="resetForm('form')">
         <el-form ref="form" :model="form" :rules="rules">
-            <el-form-item label="房间面积" prop="Acreage">
-                <el-input v-model="form.Acreage"></el-input>
-            </el-form-item>
-            <el-form-item label="入住人数" prop="CheakInNum"> 
-                <el-input v-model="form.CheakInNum" type="number"></el-input>
-            </el-form-item>
-            <el-form-item label="楼层" prop="Floor">
-                <el-input v-model="form.Floor"></el-input>
-            </el-form-item>
-            <el-form-item label="网络状况" prop="NetWork">
-                <el-input v-model="form.NetWork"></el-input>
-            </el-form-item>
-            <el-form-item label="无烟状况" prop="Smoke">
-                <el-input v-model="form.Smoke"></el-input>
-            </el-form-item>
-            <el-form-item label="特色标签" prop="Lable">
-                <el-input v-model="form.Lable"></el-input>
-            </el-form-item>
+            <el-row :gutter="24">
+                <el-col :span="12">
+                    <el-form-item label="房间面积" prop="Acreage">
+                        <el-input v-model="form.Acreage"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="入住人数" prop="CheakInNum"> 
+                        <el-input v-model="form.CheakInNum" type="number"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+                <el-col :span="12">
+                    <el-form-item label="楼层" prop="Floor">
+                        <el-input v-model="form.Floor"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="网络状况" prop="NetWork">
+                        <el-input v-model="form.NetWork"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row :gutter="24">
+                <el-col :span="12">
+                    <el-form-item label="无烟状况" prop="Smoke">
+                        <el-input v-model="form.Smoke"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="特色标签" prop="Lable">
+                        <el-input v-model="form.Lable"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>        
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>

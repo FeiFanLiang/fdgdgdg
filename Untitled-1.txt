@@ -223,3 +223,24 @@ public THotel Hotel { get; set; }
               </el-form>
             </template>
         </el-table-column>-->
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+"ID": 8,
+    "HotelID": 1,
+    "Hotel": null,
+    "RoomID": 5,
+    "Room": null,
+    
+    "Acreage": 0,
+    "CheakInNum": 0,
+    "Floor": null,
+    "NetWork": null,
+    "Smoke": null,
+    "Lable": null,
+    "HotelImages": null
+
