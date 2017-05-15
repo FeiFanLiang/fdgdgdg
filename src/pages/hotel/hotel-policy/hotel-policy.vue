@@ -359,6 +359,7 @@ export default {
                         await hotelPolicyApi.add(_self.form);
                         _self.fetchData();
                         _self.createDialog = false;
+                        _self.form = {};
                         _self.$message({
                             message: '添加成功',
                             type: 'success'
@@ -425,12 +426,8 @@ export default {
             const hotelID = this.$route.params.ID;
             const res = await hotelPolicyApi.listByHotelID(hotelID);
             this.hotelpolicy = res.data;
-<<<<<<< HEAD
-            this.expandRowKeys.push(this.hotelpolicy[0].ID);
-=======
             this.expandRowKeys.length=0;
             this.expandRowKeys.push(this.hotelpolicy[0].ID)
->>>>>>> 1d1d9cea4f14acfc6b1461376f51118b3ef33911
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -439,11 +436,7 @@ export default {
             }
             return isJPG;
         },
-<<<<<<< HEAD
-        async handleExpand(row, expanded) {
-=======
       async  handleExpand(row, expanded) {
->>>>>>> 1d1d9cea4f14acfc6b1461376f51118b3ef33911
             if (expanded) {
                 this.expandRowKeys.length = 0;
                 this.expandRowKeys.push(row.ID);
