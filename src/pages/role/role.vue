@@ -157,6 +157,15 @@ export default {
         async fetchData() {
             const _self = this;
             _self.loading = true;
+            // const options = {
+            //     order: 'ID',
+            //     query: {
+            //     ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
+            //     HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+            //     HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+            //     },
+            //     IsForeign: _self.isForeign
+            // };
             try {
                 const res = await roleApi.list();
                 _self.list = res.data;
