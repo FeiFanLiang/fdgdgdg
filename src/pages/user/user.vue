@@ -60,27 +60,23 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="form.id?'编辑用户':'添加用户'" v-model="showDialog"  @close="resetForm('form')">
+    <el-dialog :title="form.id?'编辑用户':'添加用户'" v-model="showDialog"  @close="resetForm('form')" size="tiny">
       <el-form :rules="rules" ref="form" :model="form">
-        <el-row :gutter="20">
-          <el-col :span="12">
             <el-form-item label="用户名" prop="userName">
-              <el-input placeholder="请输入账户名称" v-model="form.userName"></el-input>
+              <el-input placeholder="请输入用户名" v-model="form.userName"></el-input>
             </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password"></el-input>
+              <el-input placeholder="请输入密码" v-model="form.password"></el-input>
             </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="12">
             <el-form-item label="姓名" prop="realName">
-              <el-input placeholder="请输入账户名称" v-model="form.realName"></el-input>
+              <el-input placeholder="请输入姓名" v-model="form.realName"></el-input>
             </el-form-item>
-          </el-col>
-        </el-row>
+            <el-form-item label="部门" prop="department">
+              <el-input placeholder="请输入所在部门" v-model="form.department"></el-input>
+            </el-form-item>
+          <el-form-item label="是否启用">
+              <el-switch v-model="form.IsLocked" on-text="使用" off-text="锁定" :on-value="false" :off-value="true"  on-color="dodgerblue" off-color="lightgray" style="width:58px;"></el-switch>
+         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
@@ -144,7 +140,7 @@ export default {
                 password: '',
                 realName: '',
                 department: '',
-                IsLocked: ''
+                IsLocked: false
             },
             selectedOptions: [{
                     value: 'userName',
@@ -397,4 +393,8 @@ export default {
 .el-dropdown {
     display: block !important;
 }
+.el-form-item {
+    margin-bottom: 10px;
+}
+
 </style>

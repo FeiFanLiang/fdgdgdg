@@ -28,9 +28,21 @@
           </el-form-item>
       </el-col>
       <el-col :span="8">
-          <el-form-item label="区域" prop="Area" >
-            <el-select v-model="form.Area" clearable filterable placeholder="请选择酒店所在区域">
-              <el-option v-for="(item,index) in areaOptions" :key="index" :label="item.AreaName" :value="item.ID"></el-option>
+          <el-form-item label="区域" prop="Area">
+            <el-select
+              v-model="form.Area"
+              clearable
+              filterable
+              remote
+              placeholder="请选择酒店所在区域"
+              :remote-method="remoteMethod"
+              :loading="loading">
+              <el-option
+                v-for="(item,index) in areaOptions"
+                :key="index"
+                :label="item&&item.AreaName"
+                :value="item&&item.ID">
+              </el-option>
             </el-select>
           </el-form-item>
       </el-col>
@@ -96,10 +108,12 @@ export default {
         PayMode: '',
         Remark: ''
       },
+      loading: false,
+      list: [],
       rules: {
-        HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }],
+        HotelName: [{ required: true, message: '请输入酒店名称' }],
         HotelName_En: [
-          { required: true, message: '请输入酒店英文名称', trigger: 'blur' }
+          { required: true, message: '请输入酒店英文名称' }
         ]
       },
       areaOptions: [],
@@ -114,18 +128,20 @@ export default {
 
     _self.getStarOptions();
 
-    _self.getAreaOptions();
   },
   methods: {
-    async getAreaOptions(query) {
-      try {
-        const res = await hotelAreaApi.listByQuery(query);
-
-        // 这个接口返回的数据量过大,会造成页面卡顿和假死
-
-        //this.areaOptions = res.data;
-      } catch (e) {
-        console.error(e);
+     async remoteMethod(query) {
+      const _self = this;
+      if (query !== '') {
+        _self.loading = true;
+        const res = await hotelAreaApi.listByQue(query);
+        _self.list = res.data;
+        setTimeout(() => {
+          _self.loading = false;
+          _self.areaOptions = _self.list.splice(0, 20);
+        }, 200);
+      } else {
+        _self.areaOptions = [];
       }
     },
     async getPayModeOptions() {
@@ -151,6 +167,7 @@ export default {
           try {
             const data = await hotelBaseApi.add(_self.form);
             _self.$route.params.form;
+            this.$emit('hide');
             _self.$message({
               message: '保存成功',
               type: 'success'
