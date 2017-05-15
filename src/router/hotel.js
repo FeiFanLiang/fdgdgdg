@@ -42,7 +42,7 @@ module.exports = {
           name: '酒店房间信息编辑'
         },
         {
-          path: 'room-show',
+          path: 'room-show/:hotelId/:RoomID',
           component: Pages.RoomShow,
           name: '房型展示信息',
           meta: {
