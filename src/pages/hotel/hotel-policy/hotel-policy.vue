@@ -426,10 +426,6 @@ export default {
             const hotelID = this.$route.params.ID;
             const res = await hotelPolicyApi.listByHotelID(hotelID);
             this.hotelpolicy = res.data;
-<<<<<<< HEAD
-=======
-
->>>>>>> be553545279fd977183651d60021757195ec56c5
             this.expandRowKeys.length=0;
             this.expandRowKeys.push(this.hotelpolicy[0].ID)
         },
@@ -440,10 +436,6 @@ export default {
             }
             return isJPG;
         },
-<<<<<<< HEAD
-=======
-
->>>>>>> be553545279fd977183651d60021757195ec56c5
       async  handleExpand(row, expanded) {
             if (expanded) {
                 this.expandRowKeys.length = 0;

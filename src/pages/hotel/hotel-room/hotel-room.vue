@@ -243,7 +243,7 @@ export default {
                 sonRoomCode: '',
                 remark: '',
                 remark2: '',
-                breakfastType: 0,
+                breakfastType: '',
                 isStop: true,
             },
             rules: {
