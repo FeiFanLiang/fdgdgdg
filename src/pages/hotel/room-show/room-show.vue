@@ -29,7 +29,7 @@
             <el-form-item label="房间面积" prop="Acreage">
                 <el-input v-model="form.Acreage"></el-input>
             </el-form-item>
-            <el-form-item label="入住人数" prop="CheakInNum"> 
+            <el-form-item label="入住人数" prop="CheakInNum">
                 <el-input v-model="form.CheakInNum" type="number"></el-input>
             </el-form-item>
             <el-form-item label="楼层" prop="Floor">
