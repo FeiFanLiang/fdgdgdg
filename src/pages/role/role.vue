@@ -1,8 +1,8 @@
 <template lang="html">
   <div id="role-page">
     <el-row :gutter="20">
-      <el-col :span="3">
-        <el-select v-model="searchType"  placeholder="请选择">
+      <el-col :span="4">
+        <el-select v-model="filters.labelVal"  placeholder="请选择">
           <el-option
               v-for="(item,index) in selectedOptions"
               :label="item.label"
@@ -11,12 +11,14 @@
           </el-option>
         </el-select>
       </el-col>
-      <el-col :span="3">
-        <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="searchType == 'userName'"></el-input>
-        <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="searchType == 'realName'"></el-input>
+      <el-col :span="4">
+        <el-input placeholder="请输入角色名称" v-model="filters.RealName" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入RoleName" v-model="filters.RoleName" v-show="filters.labelVal == '2'"></el-input>
       </el-col>
-    <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+      <el-col :span="4">
+        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+       </el-col>
     </el-row>
 
     <el-table
@@ -105,11 +107,20 @@ export default {
                 realName: '',
                 roleName: ''
             },
-            searchType: 'userName',
             filters: {
-                modeName: '',
-                remark: ''
+                RealName: '',
+                RoleName: '',
+                labelVal:'1'
             },
+            selectedOptions: [{
+                    value: '1',
+                    label: '角色名称'
+                },
+                {
+                    value: '2',
+                    label: 'RoleName'
+                }
+            ],
             rules: {
                 realName: [{
                     required: true,
@@ -117,18 +128,9 @@ export default {
                 }],
                 roleName: [{
                     required: true,
-                    message: '请输入角色字母'
+                    message: '请输入RoleName'
                 }]
-            },
-            selectedOptions: [{
-                    value: 'userName',
-                    label: '用户名'
-                },
-                {
-                    value: 'realName',
-                    label: '姓名'
-                }
-            ]
+            }
         };
     },
 
@@ -157,16 +159,14 @@ export default {
         async fetchData() {
             const _self = this;
             _self.loading = true;
-            // const options = {
-            //     order: 'ID',
-            //     query: {
-            //     ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-            //     HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-            //     HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
-            //     },
-            //     IsForeign: _self.isForeign
-            // };
+            const options = {
+                query: {
+                RealName: _self.filters.labelVal === '1' ? _self.filters.RealName : '',
+                RoleName: _self.filters.labelVal === '2' ? _self.filters.RoleName : '',
+                },
+            };
             try {
+                console.log(options)
                 const res = await roleApi.list();
                 _self.list = res.data;
                 _self.loading = false;

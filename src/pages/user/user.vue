@@ -131,16 +131,16 @@ export default {
             loading2: false,
             showDialog: false,
             searchType: 'userName',
-            filters: {
-                modeName: '',
-                remark: ''
-            },
             form: {
                 userName: '',
                 password: '',
                 realName: '',
                 department: '',
                 IsLocked: false
+            },
+             filters: {
+                modeName: '',
+                remark: ''
             },
             selectedOptions: [{
                     value: 'userName',

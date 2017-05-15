@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="pay-company-page">
     <el-row :gutter="20">
-      <el-col :span="3">
+      <el-col :span="4">
         <el-select v-model="filters.labelVal"  placeholder="请选择">
           <el-option
               v-for="(item,index) in selectedOptions"
@@ -10,23 +10,25 @@
               :key="index">
           </el-option>
         </el-select>
-    </el-col>
-      <el-col :span="3">
+      </el-col>
+      <el-col :span="4">
         <el-input placeholder="请输入账户名称" v-model="filters.accountName" v-show="filters.labelVal == '1'"></el-input>
         <el-input placeholder="请输入银行账户" v-model="filters.accountNum" v-show="filters.labelVal == '2'"></el-input>
-    </el-col>
-    <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+      </el-col>
+      <el-col :span="4">
+        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+      </el-col>
     </el-row>
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         v-loading="loading"
         border
         row-key="ID"
         >
-        <el-table-column sortable prop="id" label="ID" width="180" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="accountName"  label="账户名称" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="accountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+        <el-table-column sortable prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
+        <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column  width="150"  label="操作" fixed="right">
           <template scope="scope">
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -66,19 +68,19 @@ export default {
             list: [],
             loading: true,
             showDialog: false,
-            filters: {
-                sortWay: '',
-                accountName: '',
-                labelVal: '1',
-                accountNum: ''
-            },
             form: {
                 id: '',
                 accountName: '',
                 accountNum: '',
                 remark: ''
             },
-            selectedOptions: [{
+            filters: {
+                accountName: '',
+                accountNum: '',
+                labelVal: '1'
+            },
+            selectedOptions: [
+                {
                     value: '1',
                     label: '账户名称'
                 },
@@ -110,16 +112,16 @@ export default {
         async fetchData() {
             const _self = this;
             _self.loading = true;
-            _self.list = [];
+             const options = {
+                query: {
+                accountName: _self.filters.labelVal === '1' ? _self.filters.accountName : '',
+                accountNum: _self.filters.labelVal === '2' ? _self.filters.accountNum : '',
+                },
+            };
             try {
+                console.log(options)
                 const res = await payCompanyApi.list();
-                for (let [index, elem] of res.data.entries()) {
-                    _self.list.push({});
-                    _self.list[index].id = elem.ID;
-                    _self.list[index].accountName = elem.AccountName;
-                    _self.list[index].accountNum = elem.AccountNum;
-                    _self.list[index].remark = elem.Remark;
-                }
+                _self.list = res.data;
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -134,7 +136,7 @@ export default {
         async clickEditBtn($index, row) {
             const _self = this;
             try {
-                const res = await payCompanyApi.detail(row.id);
+                const res = await payCompanyApi.detail(row.ID);
                 _self.showDialog = true;
                 _self.form.id = res.data.ID;
                 _self.form.accountName = res.data.AccountName;
@@ -207,7 +209,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await payCompanyApi.del(row.id);
+                    await payCompanyApi.del(row.ID);
                     _self.fetchData();
                     _self.$message({
                         message: '删除成功',
