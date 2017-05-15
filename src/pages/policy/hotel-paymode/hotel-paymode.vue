@@ -2,7 +2,7 @@
   <div id="hotel-paymode-page">
 
     <el-row :gutter="20">
-      <el-col :span="3">
+      <el-col :span="4">
         <el-select v-model="filters.labelVal"  placeholder="请选择">
           <el-option
               v-for="(item,index) in selectedOptions"
@@ -11,19 +11,21 @@
               :key="index">
           </el-option>
         </el-select>
-    </el-col>
-      <el-col :span="3">
-        <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入Remark" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
-    </el-col>
-    <el-button type="primary" @click="handleSearch()">搜索</el-button>
-    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-    </el-row>
+       </el-col>
+        <el-col :span="4">
+            <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
+            <el-input placeholder="请输入备注" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
+        </el-col>
+        <el-col :span="4">
+            <el-button type="primary" @click="handleSearch()">搜索</el-button>
+            <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+        </el-col>
+      </el-row>
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
       v-loading="loading" border row-key="ID">
-      <el-table-column sortable prop="id" label="ID"  width="180" show-overflow-tooltip></el-table-column>
-      <el-table-column sortable prop="modeName" label="账户名称"  show-overflow-tooltip></el-table-column>
-      <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="ID" label="ID"  width="180" show-overflow-tooltip></el-table-column>
+      <el-table-column sortable prop="ModeName" label="账户名称"  show-overflow-tooltip></el-table-column>
+      <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -59,16 +61,15 @@ export default {
             list: [],
             loading: true,
             showDialog: false,
-            filters: {
-                sortWay: '',
-                modeName: '',
-                labelVal: '1',
-                remark: ''
-            },
             form: {
                 id: '',
                 modeName: '',
                 remark: ''
+            },
+            filters: {
+                modeName: '',
+                remark: '',
+                labelVal: '1'
             },
             selectedOptions: [{
                     value: '1',
@@ -95,15 +96,16 @@ export default {
         async fetchData() {
             const _self = this;
             _self.loading = true;
-            _self.list = [];
+            const options = {
+                query: {
+                modeName: _self.filters.labelVal === '1' ? _self.filters.modeName : '',
+                remark: _self.filters.labelVal === '2' ? _self.filters.remark : '',
+                },
+            };
             try {
+                console.log(options)
                 const res = await hotelPayModeApi.list();
-                for (let [index, elem] of res.data.entries()) {
-                    _self.list.push({});
-                    _self.list[index].id = elem.ID;
-                    _self.list[index].modeName = elem.ModeName;
-                    _self.list[index].remark = elem.Remark;
-                }
+                _self.list = res.data;
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -118,7 +120,7 @@ export default {
         async clickEditBtn($index, row) {
             const _self = this;
             try {
-                const res = await hotelPayModeApi.detail(row.id);
+                const res = await hotelPayModeApi.detail(row.ID);
                 _self.showDialog = true;
                 _self.form.id = res.data.ID;
                 _self.form.modeName = res.data.ModeName;
@@ -190,7 +192,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await hotelPayModeApi.del(row.id);
+                    await hotelPayModeApi.del(row.ID);
                     _self.fetchData();
                     _self.$message({
                         message: '删除成功',
