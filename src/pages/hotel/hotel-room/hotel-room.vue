@@ -367,7 +367,11 @@ export default {
             }
         },
         hotelSonRoomAdd(row) {
-            this.sonForm.roomID = row.ID;
+            this.sonForm = {
+                roomID : row.ID,
+                breakfastType : this.breakfastTypes.name,
+                isStop: true,
+            }
             this.sonFormDialogVisible = true;
         },
         hotelroomEdit(row) {
