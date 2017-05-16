@@ -1,23 +1,8 @@
 <template lang="html">
   <div id="hotel-paymode-page">
 
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <el-select v-model="filters.labelVal"  placeholder="请选择">
-          <el-option
-              v-for="(item,index) in selectedOptions"
-              :label="item.label"
-              :value="item.value"
-              :key="index">
-          </el-option>
-        </el-select>
-       </el-col>
-        <el-col :span="4">
-            <el-input placeholder="请输入账户名称" v-model="filters.modeName" v-show="filters.labelVal == '1'"></el-input>
-            <el-input placeholder="请输入备注" v-model="filters.remark" v-show="filters.labelVal == '2'"></el-input>
-        </el-col>
-        <el-col :span="4">
-            <el-button type="primary" @click="handleSearch()">搜索</el-button>
+    <el-row>
+        <el-col :span="12">
             <el-button type="primary" @click="clickAddBtn()">创建</el-button>
         </el-col>
       </el-row>
@@ -66,20 +51,6 @@ export default {
                 modeName: '',
                 remark: ''
             },
-            filters: {
-                modeName: '',
-                remark: '',
-                labelVal: '1'
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: 'remark'
-                }
-            ],
             rules: {
                 modeName: [{
                     required: true,
@@ -90,20 +61,10 @@ export default {
     },
 
     methods: {
-        handleSearch() {
-            this.fetchData();
-        },
         async fetchData() {
             const _self = this;
             _self.loading = true;
-            const options = {
-                query: {
-                modeName: _self.filters.labelVal === '1' ? _self.filters.modeName : '',
-                remark: _self.filters.labelVal === '2' ? _self.filters.remark : '',
-                },
-            };
             try {
-                console.log(options)
                 const res = await hotelPayModeApi.list();
                 _self.list = res.data;
                 _self.loading = false;

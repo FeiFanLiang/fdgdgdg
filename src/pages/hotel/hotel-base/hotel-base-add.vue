@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="HotelbaseAdd">
-<el-form ref="form" :model="form" :label-position="labelPosition"  :rules="rules">
+<el-form ref="form" :model="form" :label-position="labelPosition" :rules="rules" @close="resetForm('form')">
 
     <el-row :gutter="20">
       <el-col :span="8">
@@ -21,16 +21,16 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :span="8">
-          <el-form-item label="星级" prop="Star" >
-            <el-select v-model="form.Star" clearable placeholder="请选择酒店星级">
+          <el-form-item label="星级" prop="StarID" >
+            <el-select v-model="form.StarID" clearable placeholder="请选择酒店星级">
               <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
       </el-col>
       <el-col :span="8">
-          <el-form-item label="区域" prop="Area">
+          <el-form-item label="区域" prop="AreaID">
             <el-select
-              v-model="form.Area"
+              v-model="form.AreaID"
               clearable
               filterable
               remote
@@ -102,9 +102,9 @@ export default {
         HotelName: '',
         HotelName_En: '',
         FrontPhone: '',
-        Area: '',
+        AreaID: '',
         Address: '',
-        Star: '',
+        StarID: '',
         PayMode: '',
         Remark: ''
       },
@@ -167,6 +167,7 @@ export default {
           try {
             const data = await hotelBaseApi.add(_self.form);
             _self.$route.params.form;
+            _self.form = {};
             this.$emit('hide');
             _self.$message({
               message: '保存成功',

@@ -65,7 +65,7 @@
     <el-row :gutter="20">
       <el-col :span="6">
           <el-form-item label="星级">
-            <el-select v-model="form.star" clearable placeholder="请选择酒店星级">
+            <el-select v-model="form.starId" clearable placeholder="请选择酒店星级">
               <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
             </el-select>
           </el-form-item>
@@ -158,7 +158,7 @@ export default {
         faxNum: '',
         areaId: '',
         address: '',
-        star: '',
+        starId: '',
         remark: ''
       },
       loading: false,
@@ -210,7 +210,7 @@ export default {
         _self.form.faxNum = data.FaxNum
         _self.form.areaId = data.AreaID
         _self.form.address = data.Address
-        _self.form.star = data.Star
+        _self.form.starId = data.StarID
         _self.form.remark = data.Remark
       }
     },
