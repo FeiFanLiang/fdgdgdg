@@ -12,8 +12,8 @@
         </el-select>
       </el-col>
       <el-col :span="4">
-        <el-input placeholder="请输入角色名称" v-model="filters.RealName" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入RoleName" v-model="filters.RoleName" v-show="filters.labelVal == '2'"></el-input>
+        <el-input placeholder="请输入角色名称" v-model="filters.realName" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入RoleName" v-model="filters.roleName" v-show="filters.labelVal == '2'"></el-input>
       </el-col>
       <el-col :span="4">
         <el-button type="primary" @click="handleSearch()">搜索</el-button>
@@ -108,8 +108,8 @@ export default {
                 roleName: ''
             },
             filters: {
-                RealName: '',
-                RoleName: '',
+                realName: '',
+                roleName: '',
                 labelVal:'1'
             },
             selectedOptions: [{
@@ -161,8 +161,8 @@ export default {
             _self.loading = true;
             const options = {
                 query: {
-                RealName: _self.filters.labelVal === '1' ? _self.filters.RealName : '',
-                RoleName: _self.filters.labelVal === '2' ? _self.filters.RoleName : '',
+                realName: _self.filters.labelVal === '1' ? _self.filters.realName : '',
+                roleName: _self.filters.labelVal === '2' ? _self.filters.roleName : '',
                 },
             };
             try {

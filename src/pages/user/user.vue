@@ -2,8 +2,8 @@
   <div id="user-page">
 
     <el-row :gutter="20">
-      <el-col :span="3">
-        <el-select v-model="searchType"  placeholder="请选择">
+      <el-col :span="4">
+        <el-select v-model="filters.labelVal"  placeholder="请选择">
           <el-option
               v-for="(item,index) in selectedOptions"
               :label="item.label"
@@ -13,12 +13,14 @@
           </el-option>
         </el-select>
       </el-col>
-      <el-col :span="3">
-        <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="searchType == 'userName'"></el-input>
-        <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="searchType == 'realName'"></el-input>
+      <el-col :span="4">
+        <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="filters.labelVal == '2'"></el-input>
       </el-col>
-      <el-button type="primary" @click="handleSearch()">搜索</el-button>
-      <el-button type="primary" @click="showDialog = true">创建</el-button>
+      <el-col :span="4">
+        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <el-button type="primary" @click="showDialog = true">创建</el-button>
+      </el-col>
     </el-row>
 
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
@@ -130,7 +132,6 @@ export default {
             loading: true,
             loading2: false,
             showDialog: false,
-            searchType: 'userName',
             form: {
                 userName: '',
                 password: '',
@@ -139,16 +140,17 @@ export default {
                 IsLocked: false
             },
              filters: {
-                modeName: '',
-                remark: ''
+                realName:'',
+                userName:'',
+                labelVal:'1'
             },
             selectedOptions: [{
-                    value: 'userName',
-                    label: '用户名'
+                    value: '1',
+                    label: '姓名'
                 },
                 {
-                    value: 'realName',
-                    label: '姓名'
+                    value: '2',
+                    label: '用户名'
                 }
             ],
             rules: {
@@ -256,7 +258,14 @@ export default {
             const _self = this;
             _self.loading = true;
             _self.list = [];
+            const options = {
+                query: {
+                realName: _self.filters.labelVal === '1' ? _self.filters.realName : '',
+                userName: _self.filters.labelVal === '2' ? _self.filters.userName : '',
+                },
+            };
             try {
+                console.log(options)
                 const res = await userApi.list();
                 if (res && res.data) {
                     _self.list = res.data;
