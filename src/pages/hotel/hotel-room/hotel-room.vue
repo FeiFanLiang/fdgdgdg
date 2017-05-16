@@ -206,26 +206,26 @@ export default {
             roomId: '',
             sonRoomId: '',
             breakfastTypes: [{
-                name: '未定',
-                value: 0
-            }, {
-                name: '无早',
-                value: 1
-            }, {
-                name: '一餐',
-                value: 2
-            }, {
-                name: '两餐',
-                value: 3
-            }, {
-                name: '三餐',
-                value: 4
-            }, {
-                name: '四餐',
-                value: 5
-            }, {
-                name: '更多',
-                value: 6
+                    name: '未定',
+                    value: 0
+                }, {
+                    name: '无早',
+                    value: 1
+                }, {
+                    name: '一餐',
+                    value: 2
+                }, {
+                    name: '两餐',
+                    value: 3
+                }, {
+                    name: '三餐',
+                    value: 4
+                }, {
+                    name: '四餐',
+                    value: 5
+                }, {
+                    name: '更多',
+                    value: 6
             }],
             form: {
                 id: '',
@@ -361,6 +361,10 @@ export default {
         },
         hotelroomAdd() {
             this.dialogVisible = true;
+            this.form = {
+                roomCount : '',
+                hotelId : this.$route.params.ID
+            }
         },
         hotelSonRoomAdd(row) {
             this.sonForm.roomID = row.ID;
