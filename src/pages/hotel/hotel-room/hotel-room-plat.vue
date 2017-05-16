@@ -188,8 +188,10 @@ export default {
         add() {
             this.form = {
               roomId : this.$route.params.roomId,
-              sonRoomId : this.$route.params.sonRoomId
+              sonRoomId : this.$route.params.sonRoomId,
+              platformId : this.platInfoList.PlatformID
             }
+            console.log(this.form)
             this.platVisible = true;
         },
         edit(index, row) {
@@ -238,6 +240,7 @@ export default {
             const res = await hotelPlatformApi.listByHotel(this.hotelId);
             if (res && res.data && Array.isArray(res.data)) {
                 this.platInfoList = res.data;
+                console.log(this.platInfoList)
             }
         },
         async handleSaveAndEdit() {
