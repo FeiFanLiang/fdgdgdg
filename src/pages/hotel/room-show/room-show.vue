@@ -195,6 +195,7 @@ export default {
    mounted() {
         this.RoomID = this.$route.params.RoomID;
         this.hotelID = this.$route.params.hotelId;
+        console.log(this.RoomID,this.hotelID)
         this.fetchData();
     }
 }
