@@ -34,12 +34,12 @@
       <el-form :model="form" ref="form"  :rules="rules" label-width="130px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="平台酒店ID" >
+            <el-form-item label="平台酒店ID" prop="platHotelId">
               <el-input v-model="form.platHotelId" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="请选择平台"  >
+            <el-form-item label="请选择平台" prop="platformId">
               <el-select  v-model="form.platformId" placeholder="请选择平台" :disabled="isEdit">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.Platform.PlatName"
@@ -52,12 +52,12 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="房型ID" >
+            <el-form-item label="房型ID" prop="roomId">
               <el-input v-model="form.roomId" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="子房型ID" >
+            <el-form-item label="子房型ID" prop="sonRoomId">
               <el-input v-model="form.sonRoomId" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
@@ -152,10 +152,28 @@ export default {
             list: [],
             platInfoList: [],
             rules: {
+                platHotelId: [{
+                    required: true,
+                    message: '请输入平台酒店ID'
+                }],
+                platformId: [{
+                    required: true,
+                    message: '请选择平台',
+                    type: 'number'
+                }],
+               roomId: [{
+                    required: true,
+                    message: '请输入房型ID'
+                }],
+                sonRoomId: [{
+                    required: true,
+                    message: '请输入子房型ID'
+                }],
                 platRoomName: [{
                     required: true,
                     message: '请输入平台酒店名称'
-                }]
+                }],
+
             },
             isEdit :false,
             platVisible: false,

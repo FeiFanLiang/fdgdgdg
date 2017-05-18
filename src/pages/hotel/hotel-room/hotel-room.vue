@@ -32,7 +32,7 @@
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="房间编号" class="child-table" width="93">
+    <el-table-column label="房间编号" class="child-table" width="95">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
         <td>
@@ -43,10 +43,9 @@
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="早餐类型" width="101">
+    <el-table-column label="早餐类型" width="95">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <!--<td>{{transBreakfastTypes(item.BreakfastType) }}</td>-->
         <td>
              <el-tooltip class="item" effect="dark" :content="transBreakfastTypes(item.BreakfastType)" placement="top-start" :visible-arrow="false">
                  <p class="mytoollip">{{transBreakfastTypes(item.BreakfastType)}}</p>   
@@ -55,7 +54,7 @@
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="状态" width="70">
+    <el-table-column label="状态" width="65">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
     <td>
@@ -88,7 +87,7 @@
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="子房型操作" width="169">
+    <el-table-column label="子房型操作" width="160" fixed="right">
       <template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
     <td>
@@ -100,7 +99,7 @@
 </template>
     </el-table-column>
 
-    <el-table-column width="200" label="房型操作" >
+    <el-table-column width="185" label="房型操作" fixed="right">
       <template scope="scope">
         <tr class="child-table">
             <td>

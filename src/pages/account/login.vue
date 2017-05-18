@@ -5,18 +5,18 @@
         <div class="title">美票</div>
         <el-input
           :autofocus="true"
-          placeholder="请输入姓名"
+          placeholder="请输入用户名"
           icon="message"
           v-model="username">
         </el-input>
       </div>
-      <div class="input-group">
+      <!--<div class="input-group">
         <el-input
           placeholder="请输入用户名"
           icon="message"
           v-model="userID">
         </el-input>
-      </div>
+      </div>-->
       <div class="input-group">
         <el-input
           placeholder="请输入密码"
@@ -53,7 +53,7 @@ export default {
   },
   data() {
     return {
-      userID: '',
+      // userID: '',
       username: '',
       password: '',
       rememberMe: false,
@@ -73,17 +73,17 @@ export default {
         _self.$message.error('请填写用户名！！！');
         return;
       }
-      if (!_self.userID) {
-        _self.$message.error('请填写用户名！！！');
-        return;
-      }
+      // if (!_self.userID) {
+      //   _self.$message.error('请填写用户名！！！');
+      //   return;
+      // }
       if (!_self.password) {
         _self.$message.error('请填写密码');
         return;
       }
 
       const loginParams = {
-        userID: _self.userID,
+        // userID: _self.userID,
         username: _self.username,
         password: _self.password
       };
