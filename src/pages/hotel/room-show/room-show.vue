@@ -14,8 +14,9 @@
         <el-table-column label="网络状况" prop="NetWork"></el-table-column>
         <el-table-column label="无烟状况" prop="Smoke"></el-table-column>
         <el-table-column label="特色标签" prop="Lable"></el-table-column>
-        <el-table-column  width="150"  label="操作" fixed="right">
+        <el-table-column  width="230"  label="操作" fixed="right">
           <template scope="scope">
+            <el-button size="small" @click="clickAddBargainsBtn(scope.row)">添加特价房</el-button>
             <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
            </template>
@@ -72,6 +73,89 @@
     </el-dialog>
     <!-- edit hotelshow end -->
 
+    <!-- add bargainsRoom start -->
+    <el-dialog title="添加特价房信息" v-model="showBargainsRoom" @close="resetForm('bargainsForm')">
+        <el-form :model="bargainsForm" ref="bargainsForm"  :rules="bargainsRules" label-width="100px">
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="ID" prop="id">
+                    <el-input v-model="bargainsForm.id"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="子房型ID" prop="sonRoomId">
+                    <el-input v-model="bargainsForm.sonRoomId"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="酒店展示ID" prop="hotelShowId">
+                    <el-input v-model="bargainsForm.hotelShowId"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="房型展示ID" prop="roomShowId">
+                    <el-input v-model="bargainsForm.roomShowId"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="使用日期" prop="useDate">
+                    <el-input v-model="bargainsForm.useDate"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="使用天数">
+                    <el-input v-model="bargainsForm.days"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="webLowestPrice">
+                    <el-input v-model="bargainsForm.webLowestPrice" ></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="价格" >
+                    <el-input v-model="bargainsForm.price"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="标签">
+                    <el-input v-model="bargainsForm.label"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="取消原因" >
+                    <el-input v-model="bargainsForm.cancleReason"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="isSolded">
+                    <el-input v-model="bargainsForm.isSolded"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="buyUserPhone" >
+                    <el-input v-model="bargainsForm.buyUserPhone"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+      </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showBargainsRoom = false">取 消</el-button>
+          <el-button type="primary" @click="saveBargainsRoom('bargainsForm')">确 定</el-button>
+        </span>
+    </el-dialog>
+    <!-- add bargainsRoom end -->
+
   </div>
 </template>
 
@@ -83,6 +167,7 @@ export default {
           roomShowList: [],
           loading: true,
           showDialog: false,
+          showBargainsRoom:false,
           form: {
             ID: '',
             HotelID: '',
@@ -97,8 +182,7 @@ export default {
           rules: {
                 Floor: [{
                     required: true,
-                    message: '请填写房间楼层',
-                    trigger: 'blur',
+                    message: '请填写房间楼层'
                 }],
                 /*CheakInNum: [{
                     required: true,
@@ -107,6 +191,40 @@ export default {
                     type: 'number'
                 }]*/
             },
+          bargainsForm:{
+              id:'0',
+              sonRoomId:'',
+              roomShowId:'',
+              hotelShowId:'',
+              useDate: '',
+              days: '',
+              price: '',
+              createUser: '',
+              webLowestPrice: '',
+              label: '',
+              cancleReason: '',
+              isSolded: true,
+              buyUserPhone: ''
+          },
+          bargainsRules:{
+                 id: [{
+                    required: true,
+                    message: '请填写id'
+                }],
+                 sonRoomId: [{
+                    required: true,
+                    message: '请填写子房型ID'
+                }],
+                 hotelShowId: [{
+                    required: true,
+                    message: '请填写酒店展示ID'
+                }],
+                 roomShowId: [{
+                    required: true,
+                    message: '请填写房型展示ID'
+                }]
+          }
+          
       }
   },
   methods: {
@@ -118,11 +236,95 @@ export default {
                 const res = await roomShowApi.detailByRoomID(_self.RoomID);
                 if (res && res.data) {
                     _self.roomShowList = res.data;
+                    console.info(_self.roomShowList)
                 }
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
                 _self.loading = false;
+            }
+        },
+        roomShowAdd() {
+            const _self = this;
+            _self.form = {
+              RoomID : this.$route.params.RoomID,
+              hotelID : this.$route.params.hotelId
+            }
+            _self.showDialog = true;
+        },
+        async submitEditAndAddForm(formName) {
+            const _self = this;
+            _self.$refs[formName].validate(async valid => {
+                if (valid) {
+                    try {
+                        if (_self.form.ID) {
+                            console.log(_self.form);
+                            await roomShowApi.edit(_self.form);
+                        } else {
+                            let form = { ..._self.form
+                            }
+                            delete form.ID
+                            await roomShowApi.add(form);
+                        }
+                        _self.fetchData();
+                        _self.$refs[formName].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        _self.$message.error('保存失败!!!');
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        clickAddBargainsBtn(row){
+            console.log(row);
+            const _self = this;
+            _self.showBargainsRoom = true;
+            _self.bargainsForm.roomShowId = row.ID;
+        },
+        async saveBargainsRoom(formName){
+            const _self = this;
+            _self.$refs[formName].validate(async valid => {
+                if (valid) {
+                    // try {
+                    //     if (_self.form.ID) {
+                    //         await roomShowApi.edit(_self.form);
+                    //     } else {
+                    //         let form = { ..._self.form
+                    //         }
+                    //         delete form.ID
+                    //         await roomShowApi.add(form);
+                    //     }
+                    //     _self.fetchData();
+                    //     _self.$refs['form'].resetFields();
+                    //     _self.showDialog = false;
+                    //     _self.$message({
+                    //         message: '保存成功',
+                    //         type: 'success'
+                    //     });
+                    // } catch (e) {
+                    //     console.error(e);
+                    //     _self.$message.error('保存失败!!!');
+                    // }
+                } else {
+                    return false;
+                }
+            });
+        },
+        async clickEditBtn(row) {
+            const _self = this;
+            try {
+                const res = await roomShowApi.detailByRoomshowID(row.ID);
+                _self.form = res.data;
+                _self.showDialog = true;
+            } catch (e) {
+                console.error(e);
             }
         },
         async clickDelBtn($index, row) {
@@ -143,53 +345,6 @@ export default {
                     console.error(e);
                 }
             }).catch(() => {});
-        },
-        async clickEditBtn(row) {
-            const _self = this;
-            try {
-                const res = await roomShowApi.detailByRoomshowID(row.ID);
-                _self.form = res.data;
-                _self.showDialog = true;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        roomShowAdd() {
-            const _self = this;
-            _self.form = {
-              RoomID : this.$route.params.RoomID,
-              hotelID : this.$route.params.hotelId
-            }
-            _self.showDialog = true;
-        },
-        async submitEditAndAddForm() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        if (_self.form.ID) {
-                            await roomShowApi.edit(_self.form);
-                        } else {
-                            let form = { ..._self.form
-                            }
-                            delete form.ID
-                            await roomShowApi.add(form);
-                        }
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('保存失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
         }
   },
    mounted() {

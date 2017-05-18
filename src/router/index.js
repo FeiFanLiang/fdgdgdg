@@ -5,7 +5,8 @@ import orderRoute from './order';
 import policyRoute from './policy';
 import roleRoute from './role';
 import userRoute from './user';
-const children = [hotelRoute, policyRoute, orderRoute, roleRoute, userRoute];
+import showRoute from './show';
+const children = [hotelRoute, showRoute, policyRoute, orderRoute, roleRoute, userRoute];
 const root = Vue.component('root', {
   template: '<router-view></router-view>'
 });

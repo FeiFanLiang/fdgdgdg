@@ -23,6 +23,7 @@ import userApi from './user';
 import roleApi from './role';
 import hotelShowApi from './hotel-show';
 import roomShowApi from './room-show';
+import bargainsRoomApi from './bargains-room';
 export {
   accountApi,
   airlineApi,
@@ -48,5 +49,6 @@ export {
   userApi,
   roleApi,
   hotelShowApi,
-  roomShowApi
+  roomShowApi,
+  bargainsRoomApi
 };
