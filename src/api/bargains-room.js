@@ -3,7 +3,7 @@ import path from './api';
 
 export default {
   list(params) {
-    return axios.get(path.apiBaseUrl + `ParkSale/BargainsRoom`, params);
+    return axios.get(path.apiBaseUrl + `ParkSale/BargainsRoom`, { params: params });
   },
   detail(id) {
     return axios.get(path.apiBaseUrl + `ParkSale/BargainsRoom/${id}`);

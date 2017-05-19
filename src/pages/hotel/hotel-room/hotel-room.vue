@@ -416,7 +416,6 @@ export default {
             const sonRooms = row.SonRooms[index];
             this.roomId = sonRooms.RoomID;
             this.sonRoomId = sonRooms.ID;
-            console.info(this.form)
             this.hotelRoomPlatVisible = true;
         },
         async hotelroomDelete(row) {
