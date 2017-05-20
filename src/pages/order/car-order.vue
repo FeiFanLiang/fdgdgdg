@@ -1,191 +1,73 @@
 <template lang="html">
-  <div id="pay-company-page">
-    <el-row>
-      <el-col :span="12">
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-      </el-col>
-    </el-row>
-      <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
-        v-loading="loading"
-        border
-        row-key="ID"
-        >
-        <el-table-column sortable prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-        <el-table-column  width="150"  label="操作" fixed="right">
-          <template scope="scope">
-            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
-           </template>
-        </el-table-column>
-      </el-table>
-      <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
-        <el-form :rules="rules" ref="form" :model="form"  >
-          <el-form-item label="账户名称" prop="accountName">
-            <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
-          </el-form-item>
-          <el-form-item label="银行帐户" prop="accountNum">
-            <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
-          </el-form-item>
-          <el-form-item label="Remark">
-            <el-input v-model="form.remark"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm()">确 定</el-button>
-        </span>
-      </el-dialog>
-  </div>
+    <div>
+        <el-row :gutter="20">
+            <el-col :span="4">
+                <el-select v-model="filters.labelVal" placeholder="请选择">
+                    <el-option v-for="(item,index) in selectedOptions" :label="item.label" :value="item.value" :key="index">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-input placeholder="请输入电话" v-model="filters.realName" v-show="filters.labelVal == '1'"></el-input>
+                <el-input placeholder="请输入时间段" v-model="filters.userName" v-show="filters.labelVal == '2'"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-button type="primary" @click="handleSearch()">搜索</el-button>
+            </el-col>
+        </el-row>
+        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
+            <el-table-column sortable prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
+            <el-table-column sortable prop="AccountName" label="账户名称" show-overflow-tooltip></el-table-column>
+            <el-table-column sortable prop="AccountNum" label="银行帐户" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+        </el-table>
+    </div>
 </template>
-
 <script>
 import {
-    payCompanyApi
+    carOrderApi
 } from 'api';
 
 
 export default {
     data() {
-        return {
-            list: [],
-            loading: true,
-            showDialog: false,
-            form: {
-                id: '',
-                accountName: '',
-                accountNum: '',
-                remark: ''
-            },
-            rules: {
-                accountName: [{
-                    required: true,
-                    message: '请输入账户名称'
+            return {
+                loading:false,
+                filters: {
+                    realName: '',
+                    userName: '',
+                    labelVal: '1'
+                },
+                selectedOptions: [{
+                    value: '1',
+                    label: '手机号'
+                }, {
+                    value: '2',
+                    label: '时间段'
                 }],
-                accountNum: [{
-                    required: true,
-                    message: '请输入银行账户'
-                }]
-            }
-        };
-    },
+                list: [],
+            };
+        },
 
-    methods: {
-        handleCurrentChange(val) {
-            this.currentPage = val;
-        },
-        async fetchData() {
-            const _self = this;
-            _self.loading = true;
-            try {
-                const res = await payCompanyApi.list();
-                _self.list = res.data;
-                _self.loading = false;
-            } catch (e) {
-                console.error(e);
-                _self.loading = false;
-            }
-        },
-        clickAddBtn() {
-            const _self = this;
-            _self.showDialog = true;
-            _self.form = {};
-        },
-        async clickEditBtn($index, row) {
-            const _self = this;
-            try {
-                const res = await payCompanyApi.detail(row.ID);
-                _self.showDialog = true;
-                _self.form.id = res.data.ID;
-                _self.form.accountName = res.data.AccountName;
-                _self.form.accountNum = res.data.AccountNum;
-                _self.form.remark = res.data.Remark;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        submitForm() {
-            const _self = this;
-            if (_self.form.id) {
-                _self.editSave();
-            } else {
-                _self.addSave();
-            }
-        },
-        async addSave() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        const form = { ..._self.form
-                        }
-                        delete form.id
-                        await payCompanyApi.add(form);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('添加失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async editSave() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await payCompanyApi.edit(_self.form);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('编辑失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async clickDelBtn($index, row) {
-            const _self = this;
-            _self.$confirm(`是否删除${row.accountName}?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async() => {
+        methods: {
+            handleCurrentChange(val) {
+                this.currentPage = val;
+            },
+            async fetchData() {
+                const _self = this;
+                 _self.loading = true;
                 try {
-                    await payCompanyApi.del(row.ID);
-                    _self.fetchData();
-                    _self.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
+                    const res = await carOrderApi.listByPhone('123123123');
+                    _self.list = res.data;
+                    _self.loading = false;
                 } catch (e) {
                     console.error(e);
+                    _self.loading = false;
                 }
-            }).catch(() => {});
+            },
+        },
+        mounted() {
+            this.fetchData();
         }
-    },
-    mounted() {
-        this.fetchData();
-    }
 };
 </script>
-
-<style lang="scss">
-#pay-company-page {}</style>

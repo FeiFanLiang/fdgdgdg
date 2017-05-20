@@ -36,7 +36,32 @@ Vue.use(ElementUI);
 import NProgress from 'nprogress';
 
 Vue.component('db-breadcrumb', Breadcrumb);
+// axios.interceptors.request.use(function(config) {
+//     return config;
+// }, function(error) {
 
+//   console.log(error)
+//     return Promise.reject(error);
+// });
+
+// axios.interceptors.response.use(function(response) {
+//   console.log(response)
+//     if (response.data ) {
+//         return response.data;
+//     } else {
+//         return Promise.reject(response);
+//     }
+// }, function(error) {
+//    if(error&&error.stack&&typeof error.stack==='string'&&error.stack.indexOf('XMLHttpRequest.handleError')>0){
+//     console.dir(VueRouter)
+//     // VueRouter.push({
+//     //   path:'login'
+//     // })
+//    }else{
+//     return Promise.reject(error);
+//    }
+    
+// });
 export const router = new VueRouter({
   routes,
   mode: 'history',
