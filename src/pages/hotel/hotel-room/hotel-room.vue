@@ -461,6 +461,7 @@ export default {
             if (!this.$route.params.ID) return;
             const res = await hotelRoomApi.list(this.$route.params.ID);
             this.hotelroomlist = res.data;
+            console.log(this.hotelroomlist)
         },
         hotelroomDetail(row) {
             this.$router.push({
