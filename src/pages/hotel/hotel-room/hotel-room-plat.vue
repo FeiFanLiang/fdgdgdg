@@ -290,13 +290,11 @@ export default {
               if (valid) {
                 try {
                     if (_self.form.id) {
-                         console.info( _self.form)
                         await sonRoomPlatformApi.edit(_self.form.id, _self.form);
                     } else {
                         const form = { ..._self.form
                         };
                         delete form.id
-                        console.info(form)
                         await sonRoomPlatformApi.add(form);
                     }
 
@@ -308,7 +306,7 @@ export default {
                         type: 'success'
                     });
                 } catch (e) {
-
+                    console.error(e);
                 }
             }
         });

@@ -19,6 +19,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="fetchData">搜索</el-button>
+                <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-form-item>
       </el-form>
       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
@@ -26,48 +27,113 @@
         border
         row-key="ID"
         >
-        <el-table-column sortable prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
-        <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-        <el-table-column  width="150"  label="操作" fixed="right">
+        <!--Hotel HotelShowID Room RoomShowID SonRoom SonRoomID-->
+        <el-table-column prop="ID" label="ID" width="55"></el-table-column>
+        <el-table-column prop="UseDate" label="入住日期" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Days"  label="入住天数" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="WebLowestPrice" label="网站最低价"></el-table-column>
+        <el-table-column prop="Price" label="售卖价格"></el-table-column>
+        <el-table-column prop="Label" label="卖点标签" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="CancleReason" label="退改规则" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="IsSolded" label="已售出"></el-table-column>
+        <el-table-column prop="BuyUserPhone" label="购买人手机号" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="CreateUser" label="创建人"></el-table-column>
+        <el-table-column  width="80" label="操作" fixed="right">
           <template scope="scope">
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
            </template>
         </el-table-column>
       </el-table>
-      <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
-        <el-form :rules="rules" ref="form" :model="form"  >
-          <el-form-item label="账户名称" prop="accountName">
-            <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
-          </el-form-item>
-          <el-form-item label="银行帐户" prop="accountNum">
-            <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
-          </el-form-item>
-          <el-form-item label="Remark">
-            <el-input v-model="form.remark"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
+
+       <el-dialog :title="bargainsForm.id?'编辑特价房信息':'添加特价房信息'" v-model="showDialog" size="small" @close="resetForm('bargainsForm')">
+        <el-form :model="bargainsForm" ref="bargainsForm"  :rules="bargainsRules"  label-width="105px">
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="ID">
+                    <el-input v-model="bargainsForm.id" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="子房型ID" prop="sonRoomId">
+                    <el-input v-model="bargainsForm.sonRoomId" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="入住时间" prop="useDate">
+                        <el-date-picker
+                            v-model="bargainsForm.useDate"
+                            type="date"
+                            placeholder="入住时间"
+                            :picker-options="pickerOptions0">
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="入住天数" prop="days">
+                    <el-input v-model="bargainsForm.days"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="网站最低价" prop="webLowestPrice">
+                    <el-input v-model="bargainsForm.webLowestPrice" ></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="售卖价格" prop="price">
+                    <el-input v-model="bargainsForm.price"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="购买人手机号" >
+                    <el-input v-model="bargainsForm.buyUserPhone"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="创建人" >
+                    <el-input v-model="bargainsForm.createUser"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="12">
+                    <el-form-item label="卖点标签">
+                    <el-input v-model="bargainsForm.label"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="退改规则" >
+                    <el-input type="textarea" v-model="bargainsForm.cancleReason"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="已售出">
+                    <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="editSave()">确 定</el-button>
-        </span>
-      </el-dialog>
+          <el-button type="primary" @click="handleBargainsRoomSaveAndEdit('bargainsForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {
-    bargainsRoomApi
-} from 'api';
-
+import {bargainsRoomApi} from 'api';
 
 export default {
     data() {
         return {
             list: [],
             loading: true,
-            showDialog: false,
             searchForm:{
                 beginDate:'',
                 endDate:''
@@ -77,22 +143,42 @@ export default {
                 //     return time.getTime() < Date.now() - 8.64e7;
                 // }
              },
-            form: {
-                id: '',
-                accountName: '',
-                accountNum: '',
-                remark: ''
-            },
-            rules: {
-                accountName: [{
+             showDialog:false,
+             bargainsForm:{
+                id:0,
+                sonRoomId:'',
+                useDate: '',
+                days: '',
+                price: '',
+                createUser: '',
+                webLowestPrice: '',
+                label: '',
+                cancleReason: '',
+                isSolded: true,
+                buyUserPhone: ''
+          },
+          bargainsRules:{
+                 sonRoomId: [{
                     required: true,
-                    message: '请输入账户名称'
+                    message: '请填写子房型ID'
                 }],
-                accountNum: [{
+                 useDate: [{
                     required: true,
-                    message: '请输入银行账户'
+                    message: '请填写入住日期'
+                }],
+                 days: [{
+                    required: true,
+                    message: '请填写入住天数'
+                }],
+                 price: [{
+                    required: true,
+                    message: '请填写价格'
+                }],
+                 webLowestPrice: [{
+                    required: true,
+                    message: '请填写网站最低价'
                 }]
-            }
+          }
         };
     },
 
@@ -104,11 +190,15 @@ export default {
             const _self = this;
             _self.loading = true;
             try {
+                _self.searchForm.beginDate = new Date(_self.searchForm.beginDate).Format('yyyy-MM-dd');
+                _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format('yyyy-MM-dd');
                 console.log(_self.searchForm)
-                // _self.searchForm.beginDate = new Date(_self.searchForm.beginDate).Format('yyyy-MM-dd');
-                // _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format('yyyy-MM-dd');
                 const res = await bargainsRoomApi.list(_self.searchForm);
                 _self.list = res.data;
+                for (let [index, elem] of _self.list.entries()) {
+                 _self.list[index].UseDate = new Date(_self.list[index].UseDate).Format('yyyy-MM-dd')
+                }
+                console.log(_self.list)
                 _self.loading = false;
             } catch (e) {
                 console.error(e);
@@ -118,37 +208,68 @@ export default {
         clickAddBtn() {
             const _self = this;
             _self.showDialog = true;
-            _self.form = {};
-        },
-        async clickEditBtn($index, row) {
+            _self.bargainsForm ={
+            id:0,
+            sonRoomId:'',
+            roomShowId:'',
+            hotelShowId:'',
+            useDate: '',
+            days: '',
+            price: '',
+            createUser: '',
+            webLowestPrice: '',
+            label: '',
+            cancleReason: '',
+            isSolded: true,
+            buyUserPhone: ''
+            }
+         },
+         async clickEditBtn($index, row) {
             const _self = this;
             try {
                 const res = await bargainsRoomApi.detail(row.ID);
+                // Hotel
+                // RoomroomShowIdhotelShowId
+                // SonRoom
+                console.log(res.data)
                 _self.showDialog = true;
-                _self.form.id = res.data.ID;
-                _self.form.accountName = res.data.AccountName;
-                _self.form.accountNum = res.data.AccountNum;
-                _self.form.remark = res.data.Remark;
+                _self.bargainsForm.id = res.data.ID;
+                _self.bargainsForm.sonRoomId = res.data.SonRoom.ID;
+                _self.bargainsForm.useDate = res.data.UseDate;
+                _self.bargainsForm.days = res.data.Days;
+                _self.bargainsForm.price = res.data.Price;
+                _self.bargainsForm.createUser = res.data.CreateUser;
+                _self.bargainsForm.webLowestPrice = res.data.WebLowestPrice;
+                _self.bargainsForm.label = res.data.Label;
+                _self.bargainsForm.cancleReason = res.data.CancleReason;
+                _self.bargainsForm.isSolded = res.data.IsSolded;
+                _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
             } catch (e) {
-                console.error(e);
+            console.error(e);
             }
         },
-        async editSave() {
+        async handleBargainsRoomSaveAndEdit(formName) {
             const _self = this;
-            _self.$refs['form'].validate(async valid => {
+            _self.$refs[formName].validate(async valid => {
                 if (valid) {
                     try {
-                        await bargainsRoomApi.edit(_self.form);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
+                        _self.bargainsForm.useDate = new Date(_self.bargainsForm.useDate).Format('yyyy-MM-dd')
+                        console.log(_self.bargainsForm.useDate)
+                        if (_self.bargainsForm.id) {
+                            await bargainsRoomApi.edit(_self.bargainsForm);
+                        } else {
+                            await bargainsRoomApi.add(_self.bargainsForm);
+                        }
+                        _self.$refs[formName].resetFields();
                         _self.showDialog = false;
                         _self.$message({
-                            message: '编辑成功',
+                            message: '保存成功',
                             type: 'success'
                         });
+                        this.$emit('hide');
                     } catch (e) {
                         console.error(e);
-                        _self.$message.error('编辑失败!!!');
+                        _self.$message.error('保存失败!!!');
                     }
                 } else {
                     return false;
@@ -157,8 +278,7 @@ export default {
         }
     },
     mounted() {
-        this.fetchData();
-        
+         
          Date.prototype.Format = function(fmt) {
             let o = {
                 'M+': this.getMonth() + 1, //月份
@@ -184,12 +304,21 @@ export default {
                 );
             return fmt;
        };
-        this.searchForm.beginDate = new Date(new Date().getFullYear() + '-' + (new Date().getMonth()+1)+ '-01').Format('yyyy-MM-dd');
-        this.searchForm.endDate = new Date().Format('yyyy-MM-dd');
+
+       this.searchForm.beginDate = new Date(new Date().getFullYear() + '-' + (new Date().getMonth()+1)+ '-01').Format('yyyy-MM-dd');
+       this.searchForm.endDate = new Date().Format('yyyy-MM-dd');
+       this.fetchData();
     }
 };
 </script>
 
 <style lang="scss">
-    #bargains-room-page {}
+    #bargains-room-page {
+        .el-row {
+            margin-bottom: 0px;
+        }
+        // .el-date-editor.el-input {
+        //     width: 178px;
+        // }
+    }
 </style>
