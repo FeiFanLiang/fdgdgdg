@@ -1,22 +1,7 @@
 <template lang="html">
   <div id="pay-company-page">
-    <el-row :gutter="20">
-      <el-col :span="4">
-        <el-select v-model="filters.labelVal"  placeholder="请选择">
-          <el-option
-              v-for="(item,index) in selectedOptions"
-              :label="item.label"
-              :value="item.value"
-              :key="index">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="4">
-        <el-input placeholder="请输入账户名称" v-model="filters.accountName" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入银行账户" v-model="filters.accountNum" v-show="filters.labelVal == '2'"></el-input>
-      </el-col>
-      <el-col :span="4">
-        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+    <el-row>
+      <el-col :span="12">
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
@@ -74,21 +59,6 @@ export default {
                 accountNum: '',
                 remark: ''
             },
-            filters: {
-                accountName: '',
-                accountNum: '',
-                labelVal: '1'
-            },
-            selectedOptions: [
-                {
-                    value: '1',
-                    label: '账户名称'
-                },
-                {
-                    value: '2',
-                    label: '银行账户'
-                }
-            ],
             rules: {
                 accountName: [{
                     required: true,
@@ -106,20 +76,10 @@ export default {
         handleCurrentChange(val) {
             this.currentPage = val;
         },
-        handleSearch() {
-            this.fetchData();
-        },
         async fetchData() {
             const _self = this;
             _self.loading = true;
-             const options = {
-                query: {
-                accountName: _self.filters.labelVal === '1' ? _self.filters.accountName : '',
-                accountNum: _self.filters.labelVal === '2' ? _self.filters.accountNum : '',
-                },
-            };
             try {
-                console.log(options)
                 const res = await payCompanyApi.list();
                 _self.list = res.data;
                 _self.loading = false;

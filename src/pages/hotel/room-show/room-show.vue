@@ -77,12 +77,15 @@
 
 <script>
 import { roomShowApi } from 'api';
+
+
 export default {
   data () {
       return {
           roomShowList: [],
           loading: true,
           showDialog: false,
+          showBargainsRoom:false,
           form: {
             ID: '',
             HotelID: '',
@@ -97,8 +100,7 @@ export default {
           rules: {
                 Floor: [{
                     required: true,
-                    message: '请填写房间楼层',
-                    trigger: 'blur',
+                    message: '请填写房间楼层'
                 }],
                 /*CheakInNum: [{
                     required: true,
@@ -106,7 +108,7 @@ export default {
                     trigger: 'blur',
                     type: 'number'
                 }]*/
-            },
+            }
       }
   },
   methods: {
@@ -123,6 +125,53 @@ export default {
             } catch (e) {
                 console.error(e);
                 _self.loading = false;
+            }
+        },
+        roomShowAdd() {
+            const _self = this;
+            _self.form = {
+              RoomID : this.$route.params.RoomID,
+              hotelID : this.$route.params.hotelId
+            }
+            _self.showDialog = true;
+        },
+        async submitEditAndAddForm(formName) {
+            const _self = this;
+            _self.$refs[formName].validate(async valid => {
+                if (valid) {
+                    try {
+                        if (_self.form.ID) {
+                            await roomShowApi.edit(_self.form);
+                        } else {
+                            let form = { ..._self.form
+                            }
+                            delete form.ID
+                            await roomShowApi.add(form);
+                        }
+                        _self.fetchData();
+                        _self.$refs[formName].resetFields();
+                        _self.showDialog = false;
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        _self.$message.error('保存失败!!!');
+                    }
+                } else {
+                    return false;
+                }
+            });
+        },
+        async clickEditBtn(row) {
+            const _self = this;
+            try {
+                const res = await roomShowApi.detailByRoomshowID(row.ID);
+                _self.form = res.data;
+                _self.showDialog = true;
+            } catch (e) {
+                console.error(e);
             }
         },
         async clickDelBtn($index, row) {
@@ -143,53 +192,6 @@ export default {
                     console.error(e);
                 }
             }).catch(() => {});
-        },
-        async clickEditBtn(row) {
-            const _self = this;
-            try {
-                const res = await roomShowApi.detailByRoomshowID(row.ID);
-                _self.form = res.data;
-                _self.showDialog = true;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        roomShowAdd() {
-            const _self = this;
-            _self.form = {
-              RoomID : this.$route.params.RoomID,
-              hotelID : this.$route.params.hotelId
-            }
-            _self.showDialog = true;
-        },
-        async submitEditAndAddForm() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        if (_self.form.ID) {
-                            await roomShowApi.edit(_self.form);
-                        } else {
-                            let form = { ..._self.form
-                            }
-                            delete form.ID
-                            await roomShowApi.add(form);
-                        }
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('保存失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
         }
   },
    mounted() {

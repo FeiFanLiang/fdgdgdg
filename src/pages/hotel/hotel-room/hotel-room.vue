@@ -21,28 +21,40 @@
         </el-popover>
 </template>
     </el-table-column>
-    <el-table-column label="子房型名称" width="110" show-overflow-tooltip>
+    <el-table-column label="子房型名称" width="110">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <td>{{ item.SonRoomName }}</td>
+     <td>
+        <el-tooltip class="item" effect="dark" :content="item.SonRoomName" placement="top-start" :visible-arrow="false">
+            <p class="mytoollip">{{ item.SonRoomName }}</p>   
+        </el-tooltip>
+      </td>
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="房间编号" class="child-table" show-overflow-tooltip width="93">
+    <el-table-column label="房间编号" class="child-table" width="95">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <td>{{ item.SonRoomCode }}</td>
+        <td>
+            <el-tooltip class="item" effect="dark" :content="item.SonRoomCode" placement="top-start" :visible-arrow="false">
+                <p class="mytoollip">{{ item.SonRoomCode }}</p>   
+            </el-tooltip>
+        </td>
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="早餐类型" show-overflow-tooltip width="101">
+    <el-table-column label="早餐类型" width="95">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <td>{{transBreakfastTypes(item.BreakfastType) }}</td>
+        <td>
+             <el-tooltip class="item" effect="dark" :content="transBreakfastTypes(item.BreakfastType)" placement="top-start" :visible-arrow="false">
+                 <p class="mytoollip">{{transBreakfastTypes(item.BreakfastType)}}</p>   
+            </el-tooltip>
+        </td>
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="状态" width="70" show-overflow-tooltip>
+    <el-table-column label="状态" width="65">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
     <td>
@@ -52,21 +64,30 @@
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="备注一" show-overflow-tooltip>
+    <el-table-column label="备注一">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <td>{{ item.Remark }}</td>
+   <td>
+       <el-tooltip class="item" effect="dark" :content="item.Remark" placement="top-start" :visible-arrow="false">
+            <p class="mytoollip">{{ item.Remark }}</p>   
+        </el-tooltip>
+   </td>
+    
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="备注二" show-overflow-tooltip>
+    <el-table-column label="备注二">
       <template scope="scope">
 <tr v-for="item in scope.row.SonRooms" class="child-table">
-    <td>{{ item.Remark2 }}</td>
+    <td>
+        <el-tooltip class="item" effect="dark" :content="item.Remark2" placement="top-start" :visible-arrow="false">
+            <p class="mytoollip">{{ item.Remark2 }}</p>   
+        </el-tooltip>
+    </td>
 </tr>
 </template>
     </el-table-column>
-    <el-table-column label="子房型操作" width="169">
+    <el-table-column label="子房型操作" width="160" fixed="right">
       <template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
     <td>
@@ -78,7 +99,7 @@
 </template>
     </el-table-column>
 
-    <el-table-column width="180" label="房型操作" >
+    <el-table-column width="185" label="房型操作" fixed="right">
       <template scope="scope">
         <tr class="child-table">
             <td>
@@ -88,7 +109,7 @@
         <tr class="child-table">
             <td>
                 <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
-                <el-button size="mini" @click="hotelroomDetail( scope.row)">详情</el-button>
+                <el-button size="mini" @click="hotelroomDetail( scope.row)">展示信息</el-button>
                 <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
             </td>
         </tr>
@@ -474,6 +495,10 @@ export default {
         border-bottom: 0;
         border-right: 0;
     }
-
+    .mytoollip{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 </style>

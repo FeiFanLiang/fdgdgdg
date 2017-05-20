@@ -1,5 +1,6 @@
 import accountApi from './account';
 import airlineApi from './airline';
+import carOrderApi from './car-order';
 import hotelAreaApi from './hotel-area';
 import hotelBaseApi from './hotel-base';
 import hotelPayModeApi from './hotel-paymode';
@@ -23,9 +24,11 @@ import userApi from './user';
 import roleApi from './role';
 import hotelShowApi from './hotel-show';
 import roomShowApi from './room-show';
+import bargainsRoomApi from './bargains-room';
 export {
   accountApi,
   airlineApi,
+  carOrderApi,
   hotelAreaApi,
   hotelBaseApi,
   hotelPayModeApi,
@@ -48,5 +51,6 @@ export {
   userApi,
   roleApi,
   hotelShowApi,
-  roomShowApi
+  roomShowApi,
+  bargainsRoomApi
 };

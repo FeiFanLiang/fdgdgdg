@@ -209,7 +209,6 @@ export default {
                 const res = await hotelShowApi.detail(row.ID);
                 _self.form = res.data;
                 _self.showDialog = true;
-                console.log(_self.form)
             } catch (e) {
                 console.error(e);
             }

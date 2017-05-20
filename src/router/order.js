@@ -10,6 +10,12 @@ module.exports = {
       component: Pages.Order,
       name: '订单',
       imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
+    },
+    {
+      path: 'CarOrder',
+      component: Pages.CarOrder,
+      name: '专车订单',
+      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
     }
   ]
 };

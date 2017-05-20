@@ -29,48 +29,18 @@
       </el-table-column>
     </el-table>
     </el-dialog>
-    <el-dialog :title="form.id?'编辑酒店平台信息':'添加酒店平台信息'" v-model="platVisible" :modal-append-to-body="false"   @open="dialogOpen" @close="resetForm('form')">
-      <el-form :model="form" ref="form"  :rules="rules" label-width="100px">
+
+    <el-dialog :title="form.id?'编辑酒店平台信息':'添加酒店平台信息'" v-model="platVisible" :modal-append-to-body="false" size="small"  @open="dialogOpen" @close="resetForm('form')">
+      <el-form :model="form" ref="form"  :rules="rules" label-width="130px">
         <el-row>
-          <el-col :span="11">
-            <el-form-item label="平台酒店ID" >
-              <el-input v-model="form.platHotelId"></el-input>
+          <el-col :span="12">
+            <el-form-item label="平台酒店ID" prop="platHotelId">
+              <el-input v-model="form.platHotelId" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="1">
-            <el-form-item label="平台酒店编号" >
-              <el-input v-model="form.platRoomCode"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="平台酒店名称" prop="platRoomName">
-              <el-input v-model="form.platRoomName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11" :offset="1">
-            <el-form-item label="平台酒店英文名称">
-              <el-input v-model="form.platRoomName_En"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="平台政策房型ID" >
-              <el-input v-model="form.platSaleRoomId"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="11" :offset="1">
-            <el-form-item label="访问政策房型URL">
-              <el-input v-model="form.platUrl"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="11">
-            <el-form-item label="请选择平台"  >
-              <el-select  v-model="form.platformId" placeholder="请选择平台">
+          <el-col :span="12">
+            <el-form-item label="请选择平台" prop="platformId">
+              <el-select  v-model="form.platformId" placeholder="请选择平台" :disabled="isEdit">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.Platform.PlatName"
                   :value="item.Platform.ID"
@@ -79,19 +49,62 @@
               </el-select>
               </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="1">
-            <el-form-item label="平台真实房型ID">
-              <el-input v-model="form.platRealRoomId" ></el-input>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="房型ID" prop="roomId">
+              <el-input v-model="form.roomId" :disabled="isEdit"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="子房型ID" prop="sonRoomId">
+              <el-input v-model="form.sonRoomId" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="11" >
+          <el-col :span="12">
+            <el-form-item label="平台酒店名称" prop="platRoomName">
+              <el-input v-model="form.platRoomName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="平台酒店英文名称">
+              <el-input v-model="form.platRoomName_En"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="平台政策房型ID" >
+              <el-input v-model="form.platSaleRoomId"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="访问政策房型URL">
+              <el-input v-model="form.platUrl"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="平台真实房型ID">
+              <el-input v-model="form.platRealRoomId" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="平台酒店编号" >
+              <el-input v-model="form.platRoomCode"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" >
             <el-form-item label="备注一">
               <el-input v-model="form.remark" type="textarea"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="11" :offset="1">
+          <el-col :span="12">
             <el-form-item label="启用状态">
               <el-switch on-text="开启" off-text="关闭"  v-model="form.isValid"></el-switch>
             </el-form-item>
@@ -139,12 +152,30 @@ export default {
             list: [],
             platInfoList: [],
             rules: {
+                platHotelId: [{
+                    required: true,
+                    message: '请输入平台酒店ID'
+                }],
+                platformId: [{
+                    required: true,
+                    message: '请选择平台',
+                    type: 'number'
+                }],
+               roomId: [{
+                    required: true,
+                    message: '请输入房型ID'
+                }],
+                sonRoomId: [{
+                    required: true,
+                    message: '请输入子房型ID'
+                }],
                 platRoomName: [{
                     required: true,
-                    message: '请输入平台酒店名称',
-                    trigger: 'blur'
-                }]
+                    message: '请输入平台酒店名称'
+                }],
+
             },
+            isEdit :false,
             platVisible: false,
             form: {
                 id: '',
@@ -187,11 +218,22 @@ export default {
         },
         add() {
             this.form = {
-              roomId : this.$route.params.roomId,
-              sonRoomId : this.$route.params.sonRoomId,
-              platformId : this.platInfoList.PlatformID
+                roomId : this.roomId ? this.roomId : '',
+                sonRoomId : this.sonRoomId ? this.sonRoomId : '',
+                platformId : this.PlatformID ? this.PlatformID : '',
+                id: '',
+                platHotelId: '',
+                platRoomName: '',
+                platRoomCode: '',
+                platRoomName_En: '',
+                remark: '',
+                isValid: true,
+                platRealRoomId: '',
+                platSaleRoomId: '',
+                platUrl: ''
             }
             this.platVisible = true;
+            this.isEdit = false;
         },
         edit(index, row) {
             const _self = this;
@@ -209,6 +251,7 @@ export default {
             _self.form.platSaleRoomId = row.PlatSaleRoomID;
             _self.form.platUrl = row.PlatURL;
             _self.platVisible = true;
+            _self.isEdit = true;
         },
         async del(index, row) {
             const _self = this;
@@ -243,12 +286,6 @@ export default {
         },
         async handleSaveAndEdit() {
             const _self = this;
-            /*if (!_self.roomId || !_self.sonRoomId || !_self.form.platformId || !_self.platHotelId) {
-                return
-            }*/
-            _self.form.roomId = _self.roomId;
-            _self.form.sonRoomId = _self.sonRoomId;
-            //_self.form.platHotelId = _self.platHotelId;
             _self.$refs['form'].validate(async valid => {
               if (valid) {
                 try {
@@ -262,13 +299,14 @@ export default {
                     }
 
                     this.platVisible = false;
+                    this.isEdit = false;
                     _self.getList()
                     _self.$message({
                         message: '保存成功',
                         type: 'success'
                     });
                 } catch (e) {
-
+                    console.error(e);
                 }
             }
         });
