@@ -10,9 +10,9 @@ module.exports = {
         this.$refs[formName].resetFields();
       }
     } catch (e) {
-      for (let item in this[formName]) {
-        this[formName][item] = '';
-      }
+      // for (let item in this[formName]) {
+      //   this[formName][item] = '';
+      // }
     }
   }
 };
