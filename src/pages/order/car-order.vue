@@ -48,7 +48,7 @@
             </el-table-column>
             <el-table-column label="详情">
                 <template scope="scope">
-                    <el-button type="primary" @click="showDetail(scope.row)">详情</el-button>
+                    <el-button type="primary" @click="showDetail(scope.$index)">详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -147,7 +147,6 @@ export default {
                 try {
                     const res = await carOrderApi.listByTime();
                     _self.carList = res.data;
-                    console.log(res.data)
                     _self.loading = false;
                 } catch (e) {
                     console.error(e);
@@ -171,10 +170,9 @@ export default {
                     _self.loading = false;
                 }
             },
-            showDetail(row) {
-                console.log(row.ID)
+            showDetail(index) {
                 this.dialogFormVisible = true;
-                this.list = this.carList[0];
+                this.list = this.carList[index];
             },
             reset() {
                 this.list = {};
