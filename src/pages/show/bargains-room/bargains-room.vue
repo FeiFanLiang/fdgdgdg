@@ -357,7 +357,7 @@ export default {
                         } else {
                             await bargainsRoomApi.add(_self.bargainsForm);
                         }
-                        // _self.$refs[formName].resetFields();
+                        _self.$refs[formName].resetFields();
                         _self.showDialog = false;
                         _self.fetchData();
                         _self.$message({
