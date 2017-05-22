@@ -9,7 +9,6 @@
             </el-col>
             <el-col :span="4">
                 <el-input placeholder="请输入电话" v-model="filters.Phone" v-show="filters.labelVal == '1'"></el-input>
-                <el-input placeholder="请输入时间段" v-model="filters.Time" v-show="filters.labelVal == '2'"></el-input>
             </el-col>
             <el-col :span="4">
                 <el-button type="primary" @click="handleSearch(filters)">搜索</el-button>
@@ -131,9 +130,6 @@ export default {
                 selectedOptions: [{
                     value: '1',
                     label: '手机号'
-                }, {
-                    value: '2',
-                    label: '时间段'
                 }],
                 carList: [],
                 list: {},
@@ -149,7 +145,7 @@ export default {
                 const _self = this;
                  _self.loading = true;
                 try {
-                    const res = await carOrderApi.listByPhone('1');
+                    const res = await carOrderApi.listByTime();
                     _self.carList = res.data;
                     console.log(res.data)
                     _self.loading = false;
@@ -161,12 +157,13 @@ export default {
             async handleSearch() {
                 const _self = this;
                 let Phone = _self.filters.labelVal === '1' ? _self.filters.Phone : '';
-                let Time = _self.filters.labelVal === '2' ? _self.filters.Time : '';
                 _self.loading = true;
                 try {
-                    if(_self.filters.labelVal === '1'){
+                    if(_self.filters.Phone !== ''){
                        const res = await carOrderApi.listByPhone(Phone);
                        _self.carList = res.data;
+                    }else{
+                        this.fetchData();
                     }
                     _self.loading = false;
                 } catch (e) {

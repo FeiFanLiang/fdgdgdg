@@ -4,7 +4,7 @@ export default {
   listByPhone(Phone) {
     return axios.get(path.apiBaseUrl + `ParkSale/CarOrder/Phone/${Phone}`);
   },
-  listByTime(time) {
-    return axios.get(path.apiBaseUrl + `ParkSale/CarOrder/Phone/${time}`);
+  listByTime() {
+    return axios.get(path.apiBaseUrl + `ParkSale/CarOrder/now`);
   }
 };
