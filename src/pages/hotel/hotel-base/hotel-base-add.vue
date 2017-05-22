@@ -34,7 +34,7 @@
               clearable
               filterable
               remote
-              placeholder="请选择酒店所在区域"
+              placeholder="请输入酒店所在区域"
               :remote-method="remoteMethod"
               :loading="loading">
               <el-option

@@ -38,19 +38,48 @@
         <el-table-column prop="IsSolded" label="已售出"></el-table-column>
         <el-table-column prop="BuyUserPhone" label="购买人手机号" show-overflow-tooltip></el-table-column>
         <el-table-column prop="CreateUser" label="创建人"></el-table-column>
-        <el-table-column  width="80" label="操作" fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template scope="scope">
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
            </template>
         </el-table-column>
       </el-table>
-
+            <p>{{bargainsForm.hotelId}}</p>
        <el-dialog :title="bargainsForm.id?'编辑特价房信息':'添加特价房信息'" v-model="showDialog" size="small" @close="resetForm('bargainsForm')">
         <el-form :model="bargainsForm" ref="bargainsForm"  :rules="bargainsRules"  label-width="105px">
             <el-row>
                 <el-col :span="12">
                     <el-form-item label="ID">
                     <el-input v-model="bargainsForm.id" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" v-if="!bargainsForm.id">
+                    <el-form-item label="酒店" prop="hotelId">
+                        <el-select
+                        v-model="bargainsForm.hotelId"
+                        clearable
+                        filterable
+                        remote
+                        placeholder="请输入酒店"
+                        :remote-method="remoteHotelList"
+                        :loading="loadingHotel">
+                        <el-option
+                            v-for="(item,index) in hotelList"
+                            :key="index"
+                            :label="item&&item.HotelName"
+                            :value="item&&item.ID">
+                        </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12" v-if="!bargainsForm.id">
+                    <el-form-item label="选择子房型" prop="rooms">
+                        <el-cascader
+                            :options="hotelRoomList"
+                            v-model="bargainsForm.rooms"
+                            @change="handleChange"
+                        >
+                        </el-cascader>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -127,13 +156,16 @@
 </template>
 
 <script>
-import {bargainsRoomApi} from 'api';
+import {bargainsRoomApi, hotelBaseApi, hotelRoomApi} from 'api';
 
 export default {
     data() {
         return {
             list: [],
             loading: true,
+            loadingHotel:false,
+            hotelList:[],
+            hotelRoomList:[],
             searchForm:{
                 beginDate:'',
                 endDate:''
@@ -146,6 +178,8 @@ export default {
              showDialog:false,
              bargainsForm:{
                 id:0,
+                hotelId:'',
+                rooms:[],
                 sonRoomId:'',
                 useDate: '',
                 days: '',
@@ -158,6 +192,14 @@ export default {
                 buyUserPhone: ''
           },
           bargainsRules:{
+                hotelId: [{
+                    required: true,
+                    message: '请输入酒店名称'
+                }],
+                rooms: [{
+                    required: true,
+                    message: '请选择子房型'
+                }],
                  sonRoomId: [{
                     required: true,
                     message: '请填写子房型ID'
@@ -181,11 +223,43 @@ export default {
           }
         };
     },
-
+    watch: {
+        'bargainsForm.hotelId': async function (newQuestion) {
+            const _self = this;
+            console.log('watch---------',newQuestion)
+            _self.hotelRoomList = [];
+            _self.bargainsForm.sonRoomId = '';
+            if(newQuestion !== '') {
+                const res = await hotelRoomApi.list(newQuestion);
+                // _self.hotelRoomList = res.data;
+                for (let [a, elem] of res.data.entries()) {
+                    if(res.data[a].SonRooms.length>0){
+                        _self.hotelRoomList.push({
+                            label:'',
+                            value:'',
+                            children:[]
+                        });
+                        _self.hotelRoomList[a].label = res.data[a].RoomName;
+                        _self.hotelRoomList[a].value = res.data[a].ID;
+                        for (let [b, elem] of res.data[a].SonRooms.entries()) {
+                            _self.hotelRoomList[a].children.push({});
+                            _self.hotelRoomList[a].children[b].label = res.data[a].SonRooms[b].SonRoomName;
+                            _self.hotelRoomList[a].children[b].value = res.data[a].SonRooms[b].ID;
+                        }
+                    }
+                }
+                console.dir(_self.hotelRoomList)
+            }
+        }
+  },
     methods: {
         handleCurrentChange(val) {
             this.currentPage = val;
         },
+        handleChange(value) {
+        console.log(value);
+        this.bargainsForm.sonRoomId = value[1];
+      },
         async fetchData() {
             const _self = this;
             _self.loading = true;
@@ -205,23 +279,46 @@ export default {
                 _self.loading = false;
             }
         },
+        async remoteHotelList(querys) {
+            const _self = this;
+            console.log(querys)
+            if (querys !== '') {
+                _self.loadingHotel = true;
+                const options = {
+                    pageIndex: 1,
+                    pageSize: 20,
+                    order: 'ID',
+                    query: {
+                        HotelName: querys
+                    }
+                };
+                const res = await hotelBaseApi.listAll(options);
+                if (res && res.data && res.data.Data) {
+                    _self.hotelList = res.data.Data;
+                   _self.loadingHotel = false;
+                   console.log(_self.hotelList)
+                }
+            } else {
+                _self.hotelList = [];
+            }
+        },
         clickAddBtn() {
             const _self = this;
             _self.showDialog = true;
             _self.bargainsForm ={
-            id:0,
-            sonRoomId:'',
-            roomShowId:'',
-            hotelShowId:'',
-            useDate: '',
-            days: '',
-            price: '',
-            createUser: '',
-            webLowestPrice: '',
-            label: '',
-            cancleReason: '',
-            isSolded: true,
-            buyUserPhone: ''
+                id:0,
+                hotelId:'',
+                rooms:[],
+                sonRoomId:'',
+                useDate: '',
+                days: '',
+                price: '',
+                createUser: '',
+                webLowestPrice: '',
+                label: '',
+                cancleReason: '',
+                isSolded: true,
+                buyUserPhone: ''
             }
          },
          async clickEditBtn($index, row) {
@@ -231,7 +328,6 @@ export default {
                 // Hotel
                 // RoomroomShowIdhotelShowId
                 // SonRoom
-                console.log(res.data)
                 _self.showDialog = true;
                 _self.bargainsForm.id = res.data.ID;
                 _self.bargainsForm.sonRoomId = res.data.SonRoom.ID;
@@ -244,6 +340,7 @@ export default {
                 _self.bargainsForm.cancleReason = res.data.CancleReason;
                 _self.bargainsForm.isSolded = res.data.IsSolded;
                 _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
+                console.log( _self.bargainsForm.sonRoomId)
             } catch (e) {
             console.error(e);
             }
@@ -253,20 +350,20 @@ export default {
             _self.$refs[formName].validate(async valid => {
                 if (valid) {
                     try {
-                        _self.bargainsForm.useDate = new Date(_self.bargainsForm.useDate).Format('yyyy-MM-dd')
-                        console.log(_self.bargainsForm.useDate)
+                        _self.bargainsForm.useDate = new Date(_self.bargainsForm.useDate).Format('yyyy-MM-dd');
+                        console.log( _self.bargainsForm.sonRoomId)
                         if (_self.bargainsForm.id) {
                             await bargainsRoomApi.edit(_self.bargainsForm);
                         } else {
                             await bargainsRoomApi.add(_self.bargainsForm);
                         }
-                        _self.$refs[formName].resetFields();
+                        // _self.$refs[formName].resetFields();
                         _self.showDialog = false;
+                        _self.fetchData();
                         _self.$message({
                             message: '保存成功',
                             type: 'success'
                         });
-                        this.$emit('hide');
                     } catch (e) {
                         console.error(e);
                         _self.$message.error('保存失败!!!');
