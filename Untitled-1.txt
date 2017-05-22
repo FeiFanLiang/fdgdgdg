@@ -1,246 +1,32 @@
-public class THotelShow
-    {
-        public int ID { get; set; }
-        public int HotelID { get; set; }
-        public THotel Hotel { get; set; }
-
-        /// 入住政策
-        
-        public string CheckInPolicy { get; set; }
-
-        
-        /// 离店
-        
-        public string CheckOutPolicy { get; set; }
-        
-        /// 服务设施,多个以英文分号分割
-        
-        public string ServiceFacility { get; set; }
-
-        
-        /// 餐饮设施,多个以英文分号分割
-        
-        public string DiningFacility { get; set; }
-        
-        /// 娱乐设施,多个以英文分号分割
-        
-        public string RecreationFacility { get; set; }
-
-        
-        /// 会议设施,多个以英文分号分割
-        
-        public string ConferenceFacility { get; set; }
-        
-        /// 客房设施,多个以英文分号分割
-        
-        public string RoomFacility { get; set; }
-        
-        /// 楼层数
-        
-        public int FloorLevelsNum { get; set; }
-
-        
-        /// 交通状况
-        
-        public string Traffic { get; set; }
-
-        
-        /// 特色标签,多个以英文分号分割
-        
-        public string Lable { get; set; }
-        
-        /// 商圈,多个以英文分号分割
-        
-        public string HotArea { get; set; }
-        
-        /// 经纬度:经度,纬度
-        
-        public string coordinate { get; set; }
-        
-        /// 房间数量
-        
-        public string Rooms { get; set; }
-        
-        /// 装修时间
-        
-        public string FilmentTime { get; set; }
-        
-        /// 经营时间
-        
-        public string BusinessTime { get; set; }
-
-        public List<THotelImage> HotelImages { get; set; }
-    }
-
-
-
-
-/// 经营时间
-        
-        public string BusinessTime { get; set; }
-/// 房间数量
-        
-        public string Rooms { get; set; }
-/// 特色标签,多个以英文分号分割
-
-public string Lable { get; set; }
-/// 入住政策
-        
-        public string CheckInPolicy { get; set; }
-/// 离店
-        
-        public string CheckOutPolicy { get; set; }
-
-/// 楼层数
-        
-        public int FloorLevelsNum { get; set; }
-////酒店名称
-public THotel Hotel { get; set; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--<el-table-column type="expand">
-            <template scope="props">
-              <el-form label-position="left" inline class="demo-table-expand">
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                        <el-form-item label="列表ID：">
-                            <span>{{ props.row.ID }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="酒店ID：">
-                            <span>{{ props.row.HotelID }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                         <el-form-item label="酒店名称：">
-                            <span>{{ props.row.Hotel }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="入住政策：">
-                            <span>{{ props.row.CheckInPolicy }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="离店：">
-                            <span>{{ props.row.CheckOutPolicy }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                        <el-form-item label="服务设施：">
-                            <span>{{ props.row.ServiceFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                         <el-form-item label="餐饮设施：">
-                            <span>{{ props.row.DiningFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="娱乐设施：">
-                            <span>{{ props.row.RecreationFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="会议设施：">
-                            <span>{{ props.row.ConferenceFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="客房设施：">
-                            <span>{{ props.row.RoomFacility }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                         <el-form-item label="楼层数：">
-                            <span>{{ props.row.FloorLevelsNum }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="交通状况：">
-                            <span>{{ props.row.Traffic }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="特色标签：">
-                            <span>{{ props.row.Lable }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="商圈：">
-                            <span>{{ props.row.HotArea }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="经纬度：">
-                            <span>{{ props.row.coordinate }}</span>
-                        </el-form-item>
-                      </el-col>
-                  </el-row>
-
-                  <el-row :gutter="20">
-                      <el-col :span="4">
-                         <el-form-item label="房间数量：">
-                            <span>{{ props.row.Rooms }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="装修时间：">
-                            <span>{{ props.row.FilmentTime }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="经营时间：">
-                            <span>{{ props.row.BusinessTime }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                        <el-form-item label="酒店图片：">
-                            <span>{{ props.row.HotelImages }}</span>
-                        </el-form-item>
-                      </el-col>
-                      <el-col :span="4">
-                      </el-col>
-                  </el-row>
-              </el-form>
-            </template>
-        </el-table-column>-->
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-"ID": 8,
-    "HotelID": 1,
-    "Hotel": null,
-    "RoomID": 5,
-    "Room": null,
-    
-    "Acreage": 0,
-    "CheakInNum": 0,
-    "Floor": null,
-    "NetWork": null,
-    "Smoke": null,
-    "Lable": null,
-    "HotelImages": null
-
+    "ID": 0,
+    "OrderKey": "6e2a79f7b760479d90a74a24cc0b7fbf",
+    "PayOrder": null,  //支付订单
+    "PayType": 0,  //支付类型
+    "BookTime": "2017-05-19T16:21:58.9814203", //预定时间
+    "User": null,  //用户信息
+    "UserID": 0,
+    "DealPrice": 130,  //应收费用
+    "RealPrice": 0,    //实收费用
+    "CreateTime": "2017-05-19T16:21:58.9814203",  //创建时间
+    "LinkName": "123123",  //联系人姓名
+    "LinkPhone": "13668846822",  //联系人电话
+    "SpecReq": null,   //客人要求
+    ///////////////////////////"PayStatus": false,  //是否已付款
+    "PayTime": "0001-01-01T00:00:00", //付款时间
+    //////////////////////////////"IsCancel": false, //是否已取消
+    "CancelTime": "0001-01-01T00:00:00",  //取消时间
+    ///////////////////////////"IsCancelPrice": false,  //是否已退款
+    "CancelPrice": 0,   //退款金额
+    "Remark": null,  //备注
+    "CarTransportType": 0,  //汽车类型
+    "Origin": "流亭国际机场",  //起点
+    "OriginCoordinates": null,  //起点坐标（位置）
+    "Destination": null,  //目的地
+    "DestinationCoordinates": null,  //目的地坐标（位置）
+    "UseTime": "2017-05-19T16:21:58.9814203",  //用车日期
+    /////////////////////////////"IsAppointment": false,  //是否已委派车辆
+    "StartingTime": "0001-01-01T00:00:00",  //开始时间
+    "StartingCoordinates": null,  //开始坐标
+    "ArrivalTime": "0001-01-01T00:00:00",  //到达时间
+    "ArrivalCoordinates": null,  //到达坐标
+    "CarriageNo": null  //
