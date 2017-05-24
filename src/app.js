@@ -64,17 +64,13 @@ router.afterEach(transition => {
 });
 
 // axios.interceptors.request.use(function(config) {
-//   console.log(config)
-//   console.log(document.cookie)
 //     return config;
 // }, function(error) {
 
-//   // console.log(error)
 //     return Promise.reject(error);
 // });
 
 axios.interceptors.response.use(function(response) {
-        console.log(response)
         if (response.status === 320) {
             router.replace({
                 name: 'login',
@@ -85,7 +81,6 @@ axios.interceptors.response.use(function(response) {
     },
     // function(error) {
     //    if(error&&error.stack&&typeof error.stack==='string'&&error.stack.indexOf('XMLHttpRequest.handleError')>0){
-    //     // console.dir(VueRouter)
     //     // VueRouter.push({
     //     //   path:'login'
     //     // })

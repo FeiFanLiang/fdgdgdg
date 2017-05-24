@@ -4,7 +4,7 @@ export default {
   detailsById(id) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`);
   },
-  detailsByPid(id) {
+  listByPid(id) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/Pid/${id}`);
   },
   add(params) {
@@ -12,7 +12,7 @@ export default {
   },
   remove(id) {
     return axios.delete(
-      path.apiBaseUrl + `Hotel/HotelPolicyImage/remove/${id}`
+      path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`
     );
   },
   edit(id, params) {
