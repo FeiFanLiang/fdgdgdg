@@ -368,7 +368,6 @@ export default {
                         console.error(e);
                     }
                 } else {
-                    alert('请填写必填信息')
                     return false;
                 }
             });
@@ -396,7 +395,6 @@ export default {
                         console.error(e);
                     }
                 } else {
-                    alert('请填写必填信息')
                     return false;
                 }
             });
@@ -483,9 +481,6 @@ export default {
         width: 100% !important;
         display: inline-block !important;
         position: relative !important;
-    }
-    .el-form-item {
-        margin-bottom: 0;
     }
     .absolute {
         border: 1px solid !important;
