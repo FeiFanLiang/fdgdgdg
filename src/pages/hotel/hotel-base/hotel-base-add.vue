@@ -14,7 +14,7 @@
           </el-form-item>
       </el-col>
       <el-col :span="8">
-          <el-form-item label="酒店英文名称" prop="HotelName_En" >
+          <el-form-item label="酒店英文名称">
             <el-input v-model="form.HotelName_En"></el-input>
           </el-form-item>
       </el-col>
@@ -111,10 +111,7 @@ export default {
       loading: false,
       list: [],
       rules: {
-        HotelName: [{ required: true, message: '请输入酒店名称' }],
-        HotelName_En: [
-          { required: true, message: '请输入酒店英文名称' }
-        ]
+        HotelName: [{ required: true, message: '请输入酒店名称' }]
       },
       areaOptions: [],
       starOptions: [],

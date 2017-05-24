@@ -1,14 +1,14 @@
 <template lang="html">
     <div>
         <el-row :gutter="20">
-            <el-col :span="4">
+            <!--<el-col :span="4">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :label="item.label" :value="item.value" :key="index">
                     </el-option>
                 </el-select>
-            </el-col>
+            </el-col>-->
             <el-col :span="4">
-                <el-input placeholder="请输入电话" v-model="filters.Phone" v-show="filters.labelVal == '1'"></el-input>
+                <el-input placeholder="请输入电话" v-model="filters.Phone"></el-input>
             </el-col>
             <el-col :span="4">
                 <el-button type="primary" @click="handleSearch(filters)">搜索</el-button>
@@ -18,9 +18,9 @@
             <el-table-column prop="OrderKey" label="订单号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="BookTime" label="预定时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="13668846822" label="联系人电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="起点" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
+            <!--<el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>-->
             <el-table-column prop="UseTime" label="用车日期" show-overflow-tooltip></el-table-column>
             <el-table-column label="付款状态" width="65">
                 <template scope="scope">
@@ -123,14 +123,8 @@ export default {
             return {
                 loading:false,
                 filters: {
-                    Time: '',
-                    Phone: '',
-                    labelVal: '1'
+                    Phone: ''
                 },
-                selectedOptions: [{
-                    value: '1',
-                    label: '手机号'
-                }],
                 carList: [],
                 list: {},
                 dialogFormVisible: false
@@ -138,15 +132,19 @@ export default {
         },
 
         methods: {
-            handleCurrentChange(val) {
-                this.currentPage = val;
-            },
             async fetchData() {
                 const _self = this;
                  _self.loading = true;
                 try {
                     const res = await carOrderApi.listByTime();
                     _self.carList = res.data;
+
+                    for(let i=0;i<_self.carList.length;i++){
+                        _self.carList[i].UseTime = _self.carList[i].UseTime.substring(5,10)+"  "+""+
+                        _self.carList[i].UseTime.substring(11,16);
+                        _self.carList[i].BookTime = _self.carList[i].BookTime.substring(5,10)+"  "+_self.carList[i].BookTime.substring(11,16);
+                    }
+
                     _self.loading = false;
                 } catch (e) {
                     console.error(e);
@@ -155,12 +153,19 @@ export default {
             },
             async handleSearch() {
                 const _self = this;
-                let Phone = _self.filters.labelVal === '1' ? _self.filters.Phone : '';
+                let Phone = _self.filters.Phone;
                 _self.loading = true;
                 try {
-                    if(_self.filters.Phone !== ''){
+                    if(Phone !== ''){
                        const res = await carOrderApi.listByPhone(Phone);
                        _self.carList = res.data;
+
+                       for(let i=0;i<_self.carList.length;i++){
+                        //console.log(_self.carList);
+                        _self.carList[i].UseTime = _self.carList[i].UseTime.substring(5,10)+"  "+_self.carList[i].UseTime.substring(11,16);
+                        _self.carList[i].BookTime = _self.carList[i].BookTime.substring(5,10)+"  "+_self.carList[i].BookTime.substring(11,16);
+                       }
+
                     }else{
                         this.fetchData();
                     }
