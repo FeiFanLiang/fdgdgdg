@@ -1,8 +1,7 @@
 <template lang="html">
   <div id="user-page">
-
     <el-row :gutter="20">
-      <el-col :span="4">
+      <!--<el-col :span="4">
         <el-select v-model="filters.labelVal"  placeholder="请选择">
           <el-option
               v-for="(item,index) in selectedOptions"
@@ -16,9 +15,9 @@
       <el-col :span="4">
         <el-input placeholder="请输入姓名" v-model="filters.realName" v-show="filters.labelVal == '1'"></el-input>
         <el-input placeholder="请输入用户名" v-model="filters.userName" v-show="filters.labelVal == '2'"></el-input>
-      </el-col>
+      </el-col>-->
       <el-col :span="4">
-        <el-button type="primary" @click="handleSearch()">搜索</el-button>
+        <!--<el-button type="primary" @click="handleSearch()">搜索</el-button>-->
         <el-button type="primary" @click="showDialog = true">创建</el-button>
       </el-col>
     </el-row>
