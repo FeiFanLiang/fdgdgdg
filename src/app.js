@@ -9,13 +9,13 @@ import { Breadcrumb } from 'components';
 
 axios.defaults.withCredentials = true;
 const VueProgressBarOptions = {
-  color: '#13ce66',
-  failedColor: '#FF4949',
-  height: '4px'
+    color: '#13ce66',
+    failedColor: '#FF4949',
+    height: '4px'
 };
 import VueProgressBar from './libs/vue-progressbar';
 import VueAxiosProgressBarInterceptor
-  from './libs/vue-axios-progressbar-interceptor';
+from './libs/vue-axios-progressbar-interceptor';
 Vue.use(VueProgressBar, VueProgressBarOptions);
 Vue.use(VueAxiosProgressBarInterceptor);
 
@@ -36,59 +36,68 @@ Vue.use(ElementUI);
 import NProgress from 'nprogress';
 
 Vue.component('db-breadcrumb', Breadcrumb);
-// axios.interceptors.request.use(function(config) {
-//     return config;
-// }, function(error) {
 
-//   console.log(error)
-//     return Promise.reject(error);
-// });
-
-// axios.interceptors.response.use(function(response) {
-//   console.log(response)
-//     if (response.data ) {
-//         return response.data;
-//     } else {
-//         return Promise.reject(response);
-//     }
-// }, function(error) {
-//    if(error&&error.stack&&typeof error.stack==='string'&&error.stack.indexOf('XMLHttpRequest.handleError')>0){
-//     console.dir(VueRouter)
-//     // VueRouter.push({
-//     //   path:'login'
-//     // })
-//    }else{
-//     return Promise.reject(error);
-//    }
-    
-// });
 export const router = new VueRouter({
-  routes,
-  mode: 'history',
-  linkActiveClass: 'active'
+    routes,
+    mode: 'history',
+    linkActiveClass: 'active'
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    let user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      next({
-        path: '/login',
-        query: {
-          redirect: to.fullPath
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (!user) {
+            next({
+                path: '/login',
+                query: {
+                    redirect: to.fullPath
+                }
+            });
+        } else {
+            NProgress.start();
         }
-      });
-    } else {
-      NProgress.start();
     }
-  }
-  next();
+    next();
 });
 router.afterEach(transition => {
-  NProgress.done();
+    NProgress.done();
 });
+
+// axios.interceptors.request.use(function(config) {
+//   console.log(config)
+//   console.log(document.cookie)
+//     return config;
+// }, function(error) {
+
+//   // console.log(error)
+//     return Promise.reject(error);
+// });
+
+axios.interceptors.response.use(function(response) {
+        console.log(response)
+        if (response.status === 320) {
+            router.replace({
+                name: 'login',
+                query: { redirect: router.currentRoute.fullPath }
+            })
+        }
+        return response;
+    },
+    // function(error) {
+    //    if(error&&error.stack&&typeof error.stack==='string'&&error.stack.indexOf('XMLHttpRequest.handleError')>0){
+    //     // console.dir(VueRouter)
+    //     // VueRouter.push({
+    //     //   path:'login'
+    //     // })
+    //    }else{
+    //     return Promise.reject(error);
+    //    }
+
+    // }
+);
+
 new Vue({
-  render: h => h(App),
-  router,
-  store
+    render: h => h(App),
+    router,
+    store
 }).$mount('#app');
