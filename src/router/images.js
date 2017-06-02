@@ -3,13 +3,13 @@ module.exports = {
   path: 'images',
   component: Pages.Abstract,
   name: '截图信息',
+  redirect: '/images/imagesInfo',
   iconClass: 'el-icon-picture',
   children: [
     {
       path: 'imagesInfo',
       component: Pages.ImagesInfo,
       name: '截图信息',
-      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
     },
     {
       path: 'imagesInfoAdd',

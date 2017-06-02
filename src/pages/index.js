@@ -21,6 +21,7 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 // order
 import Order from './order/order';
 import CarOrder from './order/car-order';
+import HotelOrder from './order/hotel-order';
 // images
 import ImagesInfo from './images/imagesInfo';
 import ImagesInfoAdd from './images/imagesInfoAdd';
@@ -49,6 +50,7 @@ export default {
   HotelShowAddAndEdit,
   Order,
   CarOrder,
+  HotelOrder,
   HotelPolicy,
   HotelPrice,
   HotelRoom,

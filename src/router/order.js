@@ -1,21 +1,21 @@
 import Pages from '../pages';
 module.exports = {
-  path: 'order',
-  component: Pages.Abstract,
-  name: '订单',
-  iconClass: 'el-icon-setting',
-  children: [
-    {
-      path: 'Order',
-      component: Pages.Order,
-      name: '订单',
-      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-    },
-    {
-      path: 'CarOrder',
-      component: Pages.CarOrder,
-      name: '专车订单',
-      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
-    }
-  ]
+    path: 'order',
+    component: Pages.Abstract,
+    name: '订单',
+    redirect: '/order/CarOrder',
+    iconClass: 'el-icon-setting',
+    children: [{
+        path: 'Order',
+        component: Pages.Order,
+        name: '订单',
+    }, {
+        path: 'CarOrder',
+        component: Pages.CarOrder,
+        name: '专车订单'
+    }, {
+        path: 'HotelOrder',
+        component: Pages.HotelOrder,
+        name: '特价房订单',
+    }]
 };

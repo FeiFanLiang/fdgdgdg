@@ -10,7 +10,6 @@ module.exports = {
       path: 'HotelBase',
       component: Pages.HotelBase,
       name: '酒店基础信息',
-      imgUrl: 'https://o0p2g4ul8.qnssl.com/vsite%2Fbackground.jpg'
     },
     {
       path: 'HotelBaseAdd',
