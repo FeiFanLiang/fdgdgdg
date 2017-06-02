@@ -5,11 +5,7 @@ module.exports = {
     name: '订单',
     redirect: '/order/CarOrder',
     iconClass: 'el-icon-setting',
-    children: [{
-        path: 'Order',
-        component: Pages.Order,
-        name: '订单',
-    }, {
+    children: [ {
         path: 'CarOrder',
         component: Pages.CarOrder,
         name: '专车订单'
