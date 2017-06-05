@@ -2,8 +2,11 @@ import axios from 'axios';
 import path from './api';
 
 export default {
-  detail(HotelID) {
+  listByHotelId(HotelID) {
     return axios.get(path.apiBaseUrl + `Hotel/HotelImage/${HotelID}`);
+  },
+  listByRoomId(RoomID) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/${RoomID}`);
   },
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelImage', params);
@@ -11,7 +14,7 @@ export default {
   edit(params) {
     return axios.put(path.apiBaseUrl + 'Hotel/HotelImage', params);
   },
-  del(imgID) {
+  remove(imgID) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelImage/${imgID}`);
   }
 };

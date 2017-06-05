@@ -23,6 +23,7 @@ import sonRoomSalePriceApi from './son-room-sale-price';
 import userApi from './user';
 import roleApi from './role';
 import hotelShowApi from './hotel-show';
+import hotelImageApi from './hotel-image';
 import roomShowApi from './room-show';
 import bargainsRoomApi from './bargains-room';
 export {
@@ -51,6 +52,7 @@ export {
   userApi,
   roleApi,
   hotelShowApi,
+  hotelImageApi,
   roomShowApi,
   bargainsRoomApi
 };
