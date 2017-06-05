@@ -88,8 +88,8 @@
                 </el-row>
                 <el-row>
                     <el-col :span="12">
-                        <el-form-item label="购买人手机号">
-                            <el-input v-model="bargainsForm.buyUserPhone"></el-input>
+                        <el-form-item label="卖点标签">
+                            <el-input v-model="bargainsForm.label"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -98,22 +98,21 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="卖点标签">
-                            <el-input v-model="bargainsForm.label"></el-input>
+                 <el-row v-if="bargainsForm.id">
+                 <el-col :span="12" >
+                        <el-form-item label="购买人手机号">
+                            <el-input v-model="bargainsForm.buyUserPhone"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="退改规则">
-                            <el-input type="textarea" v-model="bargainsForm.cancleReason"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
                     <el-form-item label="已售出">
                         <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
                     </el-form-item>
+                </el-row>
+                <el-row>
+                    <el-form-item label="退改规则">
+                            <el-input type="textarea" v-model="bargainsForm.cancleReason"></el-input>
+                        </el-form-item>
+                
                 </el-row>
                 <el-row>
                     <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
@@ -175,7 +174,7 @@ export default {
                     webLowestPrice: '',
                     label: '',
                     cancleReason: '',
-                    isSolded: true,
+                    isSolded: false,
                     buyUserPhone: ''
                 },
                 bargainsRules: {
