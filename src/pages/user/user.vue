@@ -277,9 +277,9 @@ export default {
         },
         lockStatusChange(row, value) {
             if (value) {
-                this.unLock(row)
+                this.lock(row);
             } else {
-                this.lock(row)
+                this.unLock(row);
             }
         },
         async lock(row) {

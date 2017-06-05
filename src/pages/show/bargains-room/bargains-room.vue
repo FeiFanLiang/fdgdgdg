@@ -200,10 +200,10 @@ export default {
                     required: true,
                     message: '请选择子房型'
                 }],
-                 sonRoomId: [{
+                 /*sonRoomId: [{
                     required: true,
                     message: '请填写子房型ID'
-                }],
+                }],*/
                  useDate: [{
                     required: true,
                     message: '请填写入住日期'
@@ -231,7 +231,7 @@ export default {
             _self.bargainsForm.sonRoomId = '';
             if(newQuestion !== '') {
                 const res = await hotelRoomApi.list(newQuestion);
-                // _self.hotelRoomList = res.data;
+                //_self.hotelRoomList = res.data;
                 for (let [a, elem] of res.data.entries()) {
                     if(res.data[a].SonRooms.length>0){
                         _self.hotelRoomList.push({

@@ -118,6 +118,11 @@ export default {
         }
       });
     },*/
+    /*addHotelBase(){
+       this.dialogTableVisible=true; 
+       this.getHotelbaseList(); 
+    },*/
+    
     areaTypeChange(isForeign) {
       this.getHotelbaseList();
     },
