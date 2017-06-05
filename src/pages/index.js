@@ -50,7 +50,10 @@ const user = { User }
 import Role from './role/role';
 const role = { Role }
 
-
+// wechat
+import CustomMenu from './weichat/custom-menu';
+import CustomService from './weichat/custom-service'
+const wechat = { CustomMenu,CustomService}
 
 export default {
     ...other,
@@ -60,5 +63,6 @@ export default {
     ...policy,
     ...order,
     ...user,
-    ...role
+    ...role,
+    ...wechat
 };
