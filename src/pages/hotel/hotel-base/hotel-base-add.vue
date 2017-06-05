@@ -80,7 +80,7 @@
     </el-row>
     <el-row :gutter="18">
       <el-col :span="3" :offset="18">
-          <el-button @click="Cancel">取消</el-button>
+          <el-button @click="resetForm('form')">取消</el-button>
       </el-col>
       <el-col :span="3"
       <el-button type="primary" @click="onSubmit('form')">创建</el-button>
@@ -111,7 +111,7 @@ export default {
       loading: false,
       list: [],
       rules: {
-        HotelName: [{ required: true, message: '请输入酒店名称' }]
+        HotelName: [{ required: true, message: '请输入酒店名称', trigger: 'blur' }]
       },
       areaOptions: [],
       starOptions: [],
@@ -163,13 +163,15 @@ export default {
         if (valid) {
           try {
             const data = await hotelBaseApi.add(_self.form);
-            _self.$route.params.form;
-            _self.form = {};
+            _self.$route.params.form;    
+           // _self.form = {};
             this.$emit('hide');
+            _self.$refs[formName].resetFields();
             _self.$message({
               message: '保存成功',
               type: 'success'
             });
+            this.$router.go(0);
           } catch (e) {
             console.error(e);
           }
@@ -178,9 +180,14 @@ export default {
         }
       });
     },
-    Cancel() {
-      this.$emit('hide')
+    /*Cancel() {
+      this.$emit('hide');
+    },*/
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.$emit('hide');
     }
+
   }
 };
 </script>

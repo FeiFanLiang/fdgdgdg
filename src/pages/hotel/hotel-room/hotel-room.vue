@@ -117,7 +117,7 @@
     </el-table-column>
   </el-table>
 
-  <el-dialog :title="form.id?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="dialogClose">
+  <el-dialog :title="form.id?'编辑房间信息':'添加房间信息'" v-model="dialogVisible" size="small" @close="resetForm('form')">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px">
       <el-row>
         <el-col :span="11">
@@ -134,7 +134,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="数量" prop="roomCount">
-            <el-input v-model="form.roomCount"></el-input>
+            <el-input type="number" v-model="form.roomCount"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">

@@ -348,6 +348,7 @@ export default {
                     try {
                         await hotelPolicyApi.add(_self.form);
                         _self.fetchData();
+                        _self.$refs['form'].resetFields();
                         _self.createDialog = false;
                         _self.form = {};
                         _self.$message({
