@@ -3,10 +3,10 @@ import path from './api';
 
 export default {
   listByHotelId(HotelID) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/${HotelID}`);
+    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/Hotel/${HotelID}`);
   },
   listByRoomId(RoomID) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/${RoomID}`);
+    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/Room/${RoomID}`);
   },
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelImage', params);

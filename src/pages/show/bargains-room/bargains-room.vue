@@ -111,17 +111,14 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                 
-                      <el-col :span="12">
-                       <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
+                    <el-form-item label="已售出">
+                        <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
+                    </el-form-item>
+                </el-row>
+                <el-row>
+                    <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
                         <i class="el-icon-plus"></i>
                     </el-upload>
-                    </el-col>
-                     <el-col :span="12">
-                        <el-form-item label="已售出">
-                            <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -165,6 +162,7 @@ export default {
                     // }
                 },
                 showDialog: false,
+                roomId: '',
                 bargainsForm: {
                     id: 0,
                     hotelId: '',
@@ -238,6 +236,12 @@ export default {
                     }
                     console.dir(_self.hotelRoomList)
                 }
+            },
+            'bargainsForm.sonRoomId': async function() {
+                const _self = this;
+                if (_self.roomId || Object.is(_self.roomId, 0)) {
+                    _self.getImageList(_self.roomId)
+                }
             }
         },
         methods: {
@@ -252,6 +256,14 @@ export default {
                 }
             },
             beforeAvatarUpload(file) {
+
+                if (_self.bargainsForm.sonRoomId || Object.is(_self.bargainsForm.sonRoomId, 0)) {
+                    this.$message({
+                        message: '请先选择子房型',
+                        type: 'warning'
+                    });
+                    return false;
+                }
                 const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
                 if (!isJPG) {
                     this.$message.error('上传图片只能是 JPG/PNG 格式!');
@@ -259,6 +271,7 @@ export default {
                 return isJPG;
             },
             async handleRemove(file, fileList) {
+                console.log(file)
                 if (file && file.id) {
                     await hotelImageApi.remove(file.id);
                 }
@@ -278,12 +291,12 @@ export default {
                         return false;
                     }
                     const form = {
-                        hotelId: this.expandRowKeys[0],
-                        roomId:'',
+                        hotelId: this.bargainsForm.sonRoomId,
+                        roomId: this.roomId,
                         path: response
                     };
-                    // await hotelImageApi.add(form);
-                    // this.getImageList(this.expandRowKeys[0]);
+                    await hotelImageApi.add(form);
+                    hotelImageApi.listByRoomId(this.roomId);
                     this.$message({
                         message: '上传成功',
                         type: 'success'
@@ -307,6 +320,7 @@ export default {
             handleChange(value) {
                 console.log(value);
                 this.bargainsForm.sonRoomId = value[1];
+                this.roomId = value[0]
             },
             async fetchData() {
                 const _self = this;
@@ -314,13 +328,11 @@ export default {
                 try {
                     _self.searchForm.beginDate = new Date(_self.searchForm.beginDate).Format('yyyy-MM-dd');
                     _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format('yyyy-MM-dd');
-                    console.log(_self.searchForm)
                     const res = await bargainsRoomApi.list(_self.searchForm);
                     _self.list = res.data;
                     for (let [index, elem] of _self.list.entries()) {
                         _self.list[index].UseDate = new Date(_self.list[index].UseDate).Format('yyyy-MM-dd')
                     }
-                    console.log(_self.list)
                     _self.loading = false;
                 } catch (e) {
                     console.error(e);
@@ -329,7 +341,6 @@ export default {
             },
             async remoteHotelList(querys) {
                 const _self = this;
-                console.log(querys)
                 if (querys !== '') {
                     _self.loadingHotel = true;
                     const options = {
@@ -344,7 +355,6 @@ export default {
                     if (res && res.data && res.data.Data) {
                         _self.hotelList = res.data.Data;
                         _self.loadingHotel = false;
-                        console.log(_self.hotelList)
                     }
                 } else {
                     _self.hotelList = [];
@@ -388,7 +398,6 @@ export default {
                     _self.bargainsForm.cancleReason = res.data.CancleReason;
                     _self.bargainsForm.isSolded = res.data.IsSolded;
                     _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
-                    console.log(_self.bargainsForm.sonRoomId)
                 } catch (e) {
                     console.error(e);
                 }
@@ -399,7 +408,6 @@ export default {
                     if (valid) {
                         try {
                             _self.bargainsForm.useDate = new Date(_self.bargainsForm.useDate).Format('yyyy-MM-dd');
-                            console.log(_self.bargainsForm.sonRoomId)
                             if (_self.bargainsForm.id) {
                                 await bargainsRoomApi.edit(_self.bargainsForm);
                             } else {
