@@ -256,9 +256,9 @@ export default {
                 }
             },
             beforeAvatarUpload(file) {
-
-                if (_self.bargainsForm.sonRoomId || Object.is(_self.bargainsForm.sonRoomId, 0)) {
-                    this.$message({
+                const _self=this;
+                if (!_self.bargainsForm.sonRoomId && !Object.is(_self.bargainsForm.sonRoomId, 0)) {
+                    _self.$message({
                         message: '请先选择子房型',
                         type: 'warning'
                     });
@@ -266,7 +266,7 @@ export default {
                 }
                 const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
                 if (!isJPG) {
-                    this.$message.error('上传图片只能是 JPG/PNG 格式!');
+                    _self.$message.error('上传图片只能是 JPG/PNG 格式!');
                 }
                 return isJPG;
             },
