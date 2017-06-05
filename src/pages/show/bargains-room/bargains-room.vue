@@ -298,7 +298,7 @@ export default {
                         path: response
                     };
                     await hotelImageApi.add(form);
-                    hotelImageApi.listByRoomId(this.roomId);
+                    this.getImageList(this.roomId);
                     this.$message({
                         message: '上传成功',
                         type: 'success'

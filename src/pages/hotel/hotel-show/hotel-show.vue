@@ -245,6 +245,7 @@ export default {
                 this.dialogVisible = true;
             },
             async handleSuccess(response, file, fileList) {
+                debugger
                 try {
                     if (!response) {
                         this.$message.error('上传失败,请重新上传');
@@ -256,7 +257,7 @@ export default {
                         path: response
                     };
                     await hotelImageApi.add(form);
-                    hotelImageApi.listByHotelId(this.form.hotelId);
+                    this.getImageList(this.form.hotelId);
                     this.$message({
                         message: '上传成功',
                         type: 'success'
