@@ -98,8 +98,8 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                 <el-row v-if="bargainsForm.id">
-                 <el-col :span="12" >
+                <el-row v-if="bargainsForm.id">
+                    <el-col :span="12">
                         <el-form-item label="购买人手机号">
                             <el-input v-model="bargainsForm.buyUserPhone"></el-input>
                         </el-form-item>
@@ -110,9 +110,8 @@
                 </el-row>
                 <el-row>
                     <el-form-item label="退改规则">
-                            <el-input type="textarea" v-model="bargainsForm.cancleReason"></el-input>
-                        </el-form-item>
-                
+                        <el-input type="textarea" v-model="bargainsForm.cancleReason"></el-input>
+                    </el-form-item>
                 </el-row>
                 <el-row>
                     <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
@@ -213,7 +212,7 @@ export default {
             'bargainsForm.hotelId': async function(newQuestion) {
                 const _self = this;
                 _self.hotelRoomList = [];
-                _self.bargainsForm.sonRoomId = '';
+                _self.bargainsForm.id ? '' : _self.bargainsForm.sonRoomId = '';
                 if (newQuestion !== '') {
                     const res = await hotelRoomApi.list(newQuestion);
                     // _self.hotelRoomList = res.data;
@@ -255,7 +254,7 @@ export default {
                 }
             },
             beforeAvatarUpload(file) {
-                const _self=this;
+                const _self = this;
                 if (!_self.bargainsForm.sonRoomId && !Object.is(_self.bargainsForm.sonRoomId, 0)) {
                     _self.$message({
                         message: '请先选择子房型',
@@ -270,9 +269,17 @@ export default {
                 return isJPG;
             },
             async handleRemove(file, fileList) {
-                console.log(file)
-                if (file && file.id) {
-                    await hotelImageApi.remove(file.id);
+                try {
+                    if (file && file.id) {
+                        await hotelImageApi.remove(file.id);
+                        // hotelImageApi.listByRoomId(this.roomId);
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                    }
+                } catch (e) {
+                    this.$message.error('删除失败,请重试！');
                 }
             },
             handlePictureCardPreview(file) {
@@ -281,16 +288,12 @@ export default {
             },
             async handleSuccess(response, file, fileList) {
                 try {
-
                     if (!response) {
-                        this.$message({
-                            message: '上传失败,请重新上传',
-                            type: 'success'
-                        });
+                        this.$message.error('上传失败,请重新上传');
                         return false;
                     }
                     const form = {
-                        hotelId: this.bargainsForm.sonRoomId,
+                        hotelId: this.bargainsForm.hotelId,
                         roomId: this.roomId,
                         path: response
                     };
@@ -301,17 +304,11 @@ export default {
                         type: 'success'
                     });
                 } catch (e) {
-                    this.$message({
-                        message: '上传失败,请重新上传',
-                        type: 'success'
-                    });
+                    this.$message.error('上传失败,请重新上传');
                 }
             },
             handleError(err, file, fileList) {
-                this.$message({
-                    message: '上传失败,请重新上传',
-                    type: 'success'
-                });
+                this.$message.error('上传失败,请重新上传');
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
@@ -397,6 +394,8 @@ export default {
                     _self.bargainsForm.cancleReason = res.data.CancleReason;
                     _self.bargainsForm.isSolded = res.data.IsSolded;
                     _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
+                    _self.bargainsForm.hotelId = res.data.Hotel.ID;
+                    _self.roomId = res.data.Room.ID;
                 } catch (e) {
                     console.error(e);
                 }
