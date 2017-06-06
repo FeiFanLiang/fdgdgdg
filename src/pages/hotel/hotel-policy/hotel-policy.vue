@@ -442,10 +442,7 @@ export default {
             try {
 
                 if (!response) {
-                    this.$message({
-                        message: '上传失败,请重新上传',
-                        type: 'success'
-                    });
+                    this.$message.error('上传失败,请重新上传');
                     return false;
                 }
                 const form = {
@@ -459,17 +456,11 @@ export default {
                     type: 'success'
                 });
             } catch (e) {
-                this.$message({
-                    message: '上传失败,请重新上传',
-                    type: 'success'
-                });
+                this.$message.error('上传失败,请重新上传');
             }
         },
         handleError(err, file, fileList) {
-            this.$message({
-                message: '上传失败,请重新上传',
-                type: 'success'
-            });
+            this.$message.error('上传失败,请重新上传');
         }
     }
 };

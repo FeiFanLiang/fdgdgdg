@@ -178,14 +178,6 @@ export default {
                 },
             }
         },
-        watch: {
-            'form.hotelId': async function() {
-                const _self = this;
-                if (_self.form.hotelId || Object.is(_self.form.hotelId, 0)) {
-                    _self.getImageList(_self.form.hotelId);
-                }
-            }
-        },
         methods: {
             async fetchData() {
                 const _self = this;
@@ -207,8 +199,8 @@ export default {
                 if (res.data && Array.isArray(res.data)) {
                     this.imageList = res.data.map(item => ({
                         id: item.ID,
-                        name: item.Path,
-                        url: path.imageUrl + item.Path
+                        name: item.ImageUrl,
+                        url: path.imageUrl + item.ImageUrl
                     }))
                 }
             },
@@ -252,12 +244,15 @@ export default {
                     }
                     const form = {
                         hotelId: this.form.hotelId,
-                        // roomId: this.roomId,
-                        path: response
+                        imageUrl: response,
+                        smallImageUrl: '',
+                        imageType: file.type,
+                        description: '',
+                        imgWidth: 0,
+                        imgHeight: 0,
+                        imgGroup: ''
                     };
                     await hotelImageApi.add(form);
-                    hotelImageApi.listByHotelId(this.form.hotelId);
-                    // this.getImageList(this.form.hotelId);
                     this.$message({
                         message: '上传成功',
                         type: 'success'
@@ -295,6 +290,7 @@ export default {
                     const res = await hotelShowApi.detail(row.ID);
                     _self.form = res.data;
                     _self.form.hotelId = res.data.HotelID;
+                    _self.getImageList(_self.form.hotelId);
                     _self.showDialog = true;
                 } catch (e) {
                     console.error(e);
@@ -305,6 +301,7 @@ export default {
                 _self.form = {
                     hotelId: this.$route.params.ID
                 }
+                _self.imageList = [];
                 _self.showDialog = true;
             },
             async submitEditForm() {

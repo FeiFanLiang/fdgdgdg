@@ -235,12 +235,6 @@ export default {
                     console.dir(_self.hotelRoomList)
                 }
             },
-            'bargainsForm.sonRoomId': async function() {
-                const _self = this;
-                if (_self.roomId || Object.is(_self.roomId, 0)) {
-                    _self.getImageList(_self.roomId)
-                }
-            }
         },
         methods: {
             async getImageList(id) {
@@ -248,8 +242,8 @@ export default {
                 if (res.data && Array.isArray(res.data)) {
                     this.imageList = res.data.map(item => ({
                         id: item.ID,
-                        name: item.Path,
-                        url: path.imageUrl + item.Path
+                        name: item.ImageUrl,
+                        url: path.imageUrl + item.ImageUrl
                     }))
                 }
             },
@@ -272,7 +266,6 @@ export default {
                 try {
                     if (file && file.id) {
                         await hotelImageApi.remove(file.id);
-                        // hotelImageApi.listByRoomId(this.roomId);
                         this.$message({
                             message: '删除成功',
                             type: 'success'
@@ -295,10 +288,15 @@ export default {
                     const form = {
                         hotelId: this.bargainsForm.hotelId,
                         roomId: this.roomId,
-                        path: response
+                        imageUrl: response,
+                        smallImageUrl: '',
+                        imageType: file.type,
+                        description: '',
+                        imgWidth: 0,
+                        imgHeight: 0,
+                        imgGroup: ''
                     };
                     await hotelImageApi.add(form);
-                    hotelImageApi.listByRoomId(this.roomId);
                     this.$message({
                         message: '上传成功',
                         type: 'success'
@@ -358,7 +356,7 @@ export default {
             },
             clickAddBtn() {
                 const _self = this;
-                _self.showDialog = true;
+
                 _self.bargainsForm = {
                     id: 0,
                     hotelId: '',
@@ -374,6 +372,8 @@ export default {
                     isSolded: true,
                     buyUserPhone: ''
                 }
+                _self.imageList = [];
+                _self.showDialog = true;
             },
             async clickEditBtn($index, row) {
                 const _self = this;
@@ -382,7 +382,6 @@ export default {
                     // Hotel
                     // RoomroomShowIdhotelShowId
                     // SonRoom
-                    _self.showDialog = true;
                     _self.bargainsForm.id = res.data.ID;
                     _self.bargainsForm.sonRoomId = res.data.SonRoom.ID;
                     _self.bargainsForm.useDate = res.data.UseDate;
@@ -396,6 +395,8 @@ export default {
                     _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
                     _self.bargainsForm.hotelId = res.data.Hotel.ID;
                     _self.roomId = res.data.Room.ID;
+                    _self.getImageList(_self.roomId);
+                    _self.showDialog = true;
                 } catch (e) {
                     console.error(e);
                 }
