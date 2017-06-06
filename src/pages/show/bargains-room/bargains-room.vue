@@ -92,21 +92,23 @@
                             <el-input v-model="bargainsForm.label"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="创建人">
-                            <el-input v-model="bargainsForm.createUser"></el-input>
+                    <el-col :span="12" v-if="bargainsForm.id">
+                        <el-form-item label="购买人手机号">
+                            <el-input v-model="bargainsForm.buyUserPhone"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row v-if="bargainsForm.id">
                     <el-col :span="12">
-                        <el-form-item label="购买人手机号">
-                            <el-input v-model="bargainsForm.buyUserPhone"></el-input>
+                        <el-form-item label="创建人">
+                            <el-input v-model="bargainsForm.createUser"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-form-item label="已售出">
-                        <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
-                    </el-form-item>
+                    <el-col :span="12">
+                        <el-form-item label="已售出">
+                            <el-switch v-model="bargainsForm.isSolded" on-text="" off-text=""></el-switch>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
                 <el-row>
                     <el-form-item label="退改规则">
