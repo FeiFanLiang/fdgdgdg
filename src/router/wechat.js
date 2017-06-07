@@ -13,6 +13,6 @@ module.exports = {
             path: 'CustomService',
             component: Pages.CustomService,
             name: '客服消息'
-        }
+        },
     ]
 };
