@@ -53,7 +53,15 @@ const role = { Role }
 // wechat
 import CustomMenu from './weichat/custom-menu';
 import CustomService from './weichat/custom-service'
-const wechat = { CustomMenu,CustomService}
+const wechat = { CustomMenu, CustomService }
+
+//fleet
+import CarBase from './fleet/car-base/car-base';
+import DriverBase from './fleet/driver-base/driver-base';
+import CarArrange from './fleet/car-arrange/car-arrange';
+import CarUse from './fleet/car-use/car-use';
+import DriverEvaluate from './fleet/driver-evaluate/driver-evaluate';
+const fleet = { CarBase, DriverBase, CarArrange, CarUse, DriverEvaluate }
 
 export default {
     ...other,
@@ -64,5 +72,6 @@ export default {
     ...order,
     ...user,
     ...role,
-    ...wechat
+    ...wechat,
+    ...fleet
 };
