@@ -14,12 +14,12 @@
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="CarID" label="CarID"></el-table-column>
             <el-table-column prop="DriverID" label="DriverID"></el-table-column>
+            <el-table-column prop="Origin" label="始发地"></el-table-column>
+            <el-table-column prop="Destination" label="目的地"></el-table-column>
             <el-table-column prop="StartTime" label="开始时间"></el-table-column>
             <el-table-column prop="EndTime" label="结束时间"></el-table-column>
             <el-table-column prop="StartMileage" label="起始里程数"></el-table-column>
             <el-table-column prop="EndMileage" label="结束里程数"></el-table-column>
-            <el-table-column prop="Origin" label="始发地"></el-table-column>
-            <el-table-column prop="Destination" label="目的地"></el-table-column>
             <el-table-column prop="Channel" label="渠道" e-table-column></el-table-column>
         </el-table>
     </div>

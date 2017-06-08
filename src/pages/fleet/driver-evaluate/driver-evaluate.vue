@@ -6,7 +6,7 @@
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item>
-                            <p>{{props.row.Remark}}</p>
+                            <p>司机评价：{{props.row.Remark}}</p>
                         </el-form-item>
                     </el-form>
                 </template>
@@ -19,7 +19,7 @@
             <el-table-column prop="field1" label="field1"></el-table-column>
             <el-table-column prop="field2" label="field2"></el-table-column>
             <el-table-column prop="field3" label="field3"></el-table-column>
-            <el-table-column sortable label="Rate" width="185">
+            <el-table-column sortable prop="Rate" label="Rate" width="185">
                 <template scope="scope">
                     <el-rate  v-model="scope.row.Rate" disabled show-text text-color="#ff9900" text-template="{value}">
                     </el-rate>
