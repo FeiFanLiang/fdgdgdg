@@ -33,21 +33,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="车辆分类">
-                            <el-select v-model="value" clearable placeholder="请选择车辆类型">
-                                <el-option v-for="item in CarClassifyList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="运营城市" prop="OperationCity">
-                            <el-input placeholder="请输入运营城市" v-model="form.OperationCity"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
                         <el-form-item label="座位数" prop="SeatNum">
                             <el-input placeholder="请输入座位数" v-model="form.SeatNum"></el-input>
                         </el-form-item>
@@ -69,10 +54,8 @@
 
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="运行状态">
-                            <el-select v-model="value2" clearable placeholder="请选择运行状态">
-                                <el-option v-for="item in RunStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
+                        <el-form-item label="最后纬度" prop="LastStatusLatitude">
+                            <el-input placeholder="请输入最后纬度" v-model="form.LastStatusLatitude"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -84,13 +67,30 @@
 
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="最后纬度" prop="LastStatusLatitude">
-                            <el-input placeholder="请输入最后纬度" v-model="form.LastStatusLatitude"></el-input>
+                        <el-form-item label="运营城市" prop="OperationCity">
+                            <el-input placeholder="请输入运营城市" v-model="form.OperationCity"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="备注" prop="Remark">
-                            <el-input type="textarea" autosize v-model="form.Remark"></el-input>
+                            <el-input type="textarea" v-model="form.Remark"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row :gutter="24">
+                    <el-col :span="10">
+                        <el-form-item label="运行状态">
+                            <el-select v-model="value2" clearable placeholder="请选择运行状态">
+                                <el-option v-for="item in RunStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10" :offset="2">
+                        <el-form-item label="车辆分类">
+                            <el-select v-model="value" clearable placeholder="请选择车辆类型">
+                                <el-option v-for="item in CarClassifyList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
