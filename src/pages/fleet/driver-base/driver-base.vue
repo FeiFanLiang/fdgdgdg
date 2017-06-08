@@ -28,9 +28,9 @@
                     <el-input placeholder="请输入司机电话" v-model="form.Phone"></el-input>
                 </el-form-item>
                 <el-row :gutter="24">
-                    <el-col :span="15">
+                    <el-col :span="24">
                         <el-form-item label="工作状态">
-                            <el-select v-model="value" clearable placeholder="请选择工作状态">
+                            <el-select v-model="value" clearable placeholder="请选择工作状态" style="width:100%">
                                 <el-option v-for="item in JobStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>

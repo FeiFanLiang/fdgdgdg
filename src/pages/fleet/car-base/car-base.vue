@@ -72,25 +72,25 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="备注" prop="Remark">
-                            <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-form-item label="车辆分类">
+                            <el-select v-model="value" clearable placeholder="请选择车辆类型" style="width:100%">
+                                <el-option v-for="item in CarClassifyList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
 
                 <el-row :gutter="24">
-                    <el-col :span="10">
+                    <el-col :span="12">
                         <el-form-item label="运行状态">
-                            <el-select v-model="value2" clearable placeholder="请选择运行状态">
+                            <el-select v-model="value2" clearable placeholder="请选择运行状态" style="width:100%">
                                 <el-option v-for="item in RunStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="10" :offset="2">
-                        <el-form-item label="车辆分类">
-                            <el-select v-model="value" clearable placeholder="请选择车辆类型">
-                                <el-option v-for="item in CarClassifyList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
+                    <el-col :span="12">
+                        <el-form-item label="备注" prop="Remark">
+                            <el-input type="textarea" v-model="form.Remark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
