@@ -30,7 +30,7 @@
             <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
           </el-form-item>
           <el-form-item label="Remark">
-            <el-input v-model="form.remark"></el-input>
+            <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">

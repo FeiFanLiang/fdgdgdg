@@ -24,7 +24,7 @@
           <el-input placeholder="请输入账户名称" v-model="form.modeName"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark"></el-input>
+          <el-input type="textarea" v-model="form.remark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

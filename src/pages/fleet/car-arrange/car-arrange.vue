@@ -12,7 +12,7 @@
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
-            <el-table-column type="expand" >
+            <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item>
@@ -30,9 +30,9 @@
             <el-table-column prop="DriverID" label="DriverID"></el-table-column>
             <el-table-column prop="Origin" label="始发地"></el-table-column>
             <el-table-column prop="Destination" label="目的地"></el-table-column>
-            <el-table-column prop="ArrangeUserID" label="派单人员"></el-table-column>
             <el-table-column prop="PredictTime" label="预计行车时间"></el-table-column>
             <el-table-column prop="PredictMileage" label="预计里程"></el-table-column>
+            <el-table-column prop="ArrangeUserID" label="派单人员"></el-table-column>
             <el-table-column prop="Remark" label="备注"></el-table-column>
             <el-table-column width="150" label="操作" fixed="right">
                 <template scope="scope">
@@ -41,17 +41,85 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :title="form.id?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="tiny" @close="resetForm('form')">
-            <el-form :rules="rules" ref="form" :model="form">
-                <el-form-item label="账户名称" prop="accountName">
-                    <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
-                </el-form-item>
-                <el-form-item label="银行帐户" prop="accountNum">
-                    <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
-                </el-form-item>
-                <el-form-item label="Remark">
-                    <el-input v-model="form.remark"></el-input>
-                </el-form-item>
+        <el-dialog :title="form.id?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
+            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="ID">
+                            <el-input placeholder="请输入ID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="OrderID">
+                            <el-input placeholder="请输入OrderID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="CarID">
+                            <el-input placeholder="请输入CarID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="DriverID">
+                            <el-input placeholder="请输入DriverID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="始发地">
+                            <el-input placeholder="请输入始发地"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="目的地">
+                            <el-input placeholder="请输入目的地"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="预计行车时间">
+                            <el-input placeholder="请输入预计行车时间"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="预计里程">
+                            <el-input placeholder="请输入预计里程"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="派单人员">
+                            <el-input placeholder="请输入派单人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="备注">
+                            <el-input placeholder="请输入备注" type="textarea"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="取消时间">
+                            <el-input placeholder="请输入取消时间"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="取消单人员">
+                            <el-input placeholder="请输入取消单人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="取消说明">
+                            <el-input placeholder="请输入取消说明" type="textarea"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
@@ -244,7 +312,10 @@ export default {
         background: #fff;
     }
     .cancel {
-        background: pink;
+        background: #f1d4d9;
+    }
+    .el-dialog .el-row {
+        margin-bottom: 5px !important;
     }
 }
 </style>
