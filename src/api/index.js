@@ -26,6 +26,9 @@ import hotelShowApi from './hotel-show';
 import hotelImageApi from './hotel-image';
 import roomShowApi from './room-show';
 import bargainsRoomApi from './bargains-room';
+import carBaseApi from './car-base';
+import carUseApi from './car-use';
+import driverBaseApi from './driver-base';
 export {
   accountApi,
   airlineApi,
@@ -54,5 +57,8 @@ export {
   hotelShowApi,
   hotelImageApi,
   roomShowApi,
-  bargainsRoomApi
+  bargainsRoomApi,
+  carBaseApi,
+  carUseApi,
+  driverBaseApi
 };

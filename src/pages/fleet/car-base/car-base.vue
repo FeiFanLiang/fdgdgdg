@@ -1,96 +1,91 @@
 <template lang="html">
-    <div>
+    <div id="car-base">
         <el-row :gutter="20">
-            <el-col>
+            <el-col :span="4">
+                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData">
+                    <el-option label="全部" value="">全部</el-option>
+                    <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-input placeholder="请输入车型" v-model="filters.carMode"></el-input>
+            </el-col>
+            <el-col :span="6">
+                <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row>
-        <el-table :data="carBaseList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
-            <el-table-column prop="CarMode" label="车型" show-overflow-tooltip></el-table-column>            
-            <el-table-column prop="CarClassify" label="车辆分类" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="OperationCity" label="运营城市" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="SeatNum" label="座位数" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="SeatingNum" label="最大载客数" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LuggageNum" label="行李数" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="RunStatus" label="运行状态" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LastStatusLongitude" label="最后经度" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LastStatusLatitude" label="最后纬度" show-overflow-tooltip></el-table-column>
+        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
+            <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="CarClassify" label="车辆分类">
+                <template scope="scope">
+                    <p v-if="scope.row.CarClassify === 0">经济型</p>
+                    <p v-if="scope.row.CarClassify === 1">舒适型</p>
+                    <p v-if="scope.row.CarClassify === 2">商务型</p>
+                    <p v-if="scope.row.CarClassify === 3">豪华型</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="CarMode" label="车型"></el-table-column>
+            <el-table-column prop="OperationCity" label="运营城市"></el-table-column>
+            <el-table-column prop="SeatNum" label="座位数"></el-table-column>
+            <el-table-column prop="SeatingNum" label="最大载客数" width="120"></el-table-column>
+            <el-table-column prop="LuggageNum" label="行李数"></el-table-column>
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="120px">
                 <template scope="scope">
                     <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="mini">删除</el-button>
+                    <el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
-
-        <el-dialog :title="form.id?'编辑车辆基本信息':'添加车辆基本信息'" v-model="showDialog"  @close="resetForm('form')">
-            <el-form :rules="rules" ref="form" :model="form"  >
+        <div class="pagination-wrapper">
+            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
+            </el-pagination>
+        </div>
+        <el-dialog :title="form.id?'编辑车辆基本信息':'添加车辆基本信息'" v-model="showDialog" @close="resetForm('form')">
+            <el-form :rules="rules" ref="form" :model="form">
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车型" prop="CarMode">
-                            <el-input placeholder="请输入车型" v-model="form.CarMode"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="座位数" prop="SeatNum">
-                            <el-input placeholder="请输入座位数" v-model="form.SeatNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="最大载客人数" prop="SeatingNum">
-                            <el-input placeholder="请输入最大载客人数" v-model="form.SeatingNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="行李数" prop="LuggageNum">
-                            <el-input placeholder="请输入行李数" v-model="form.LuggageNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="最后纬度" prop="LastStatusLatitude">
-                            <el-input placeholder="请输入最后纬度" v-model="form.LastStatusLatitude"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="最后经度" prop="LastStatusLongitude">
-                            <el-input placeholder="请输入最后经度" v-model="form.LastStatusLongitude"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="运营城市" prop="OperationCity">
-                            <el-input placeholder="请输入运营城市" v-model="form.OperationCity"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="车辆分类">
-                            <el-select v-model="value" clearable placeholder="请选择车辆类型" style="width:100%">
-                                <el-option v-for="item in CarClassifyList" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="运行状态">
-                            <el-select v-model="value2" clearable placeholder="请选择运行状态" style="width:100%">
-                                <el-option v-for="item in RunStatusList" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        <el-form-item label="车辆分类" prop="carClassify">
+                            <el-select v-model="form.carClassify" clearable placeholder="请选择车辆类型" style="width:100%">
+                                <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="备注" prop="Remark">
-                            <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-form-item label="车型" prop="carMode">
+                            <el-input placeholder="请输入车型" v-model="form.carMode"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="运营城市" prop="operationCity">
+                            <el-input placeholder="请输入运营城市" v-model="form.operationCity"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="座位数" prop="seatNum">
+                            <el-input placeholder="请输入座位数" v-model="form.seatNum"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="最大载客人数" prop="seatingNum">
+                            <el-input placeholder="请输入最大载客人数" v-model="form.seatingNum"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="行李数" prop="luggageNum">
+                            <el-input placeholder="请输入行李数" v-model="form.luggageNum"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="备注" prop="remark">
+                            <el-input type="textarea" v-model="form.remark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -100,82 +95,219 @@
             <el-button type="primary" @click="submitForm()">确 定</el-button>
             </span>
         </el-dialog>
-
     </div>
 </template>
 <script>
+import {
+    carBaseApi
+} from 'api';
 
 export default {
     data() {
             return {
-                loading:false,
-                showDialog:false,
-                form:{
-
+                list: [],
+                currentPage: 1,
+                pageSize: 10,
+                count: 0,
+                loading: false,
+                showDialog: false,
+                form: {
+                    id: '',
+                    carClassify: '',
+                    carMode: '',
+                    operationCity: '',
+                    seatNum: '',
+                    seatingNum: '',
+                    luggageNum: '',
+                    remark: ''
                 },
-                carBaseList: [{
-                    CarMode:'aaa',
-                    CarClassify:'aaa',
-                    OperationCity:'aaa',
-                    SeatNum:'aaa',
-                    SeatingNum:'aaa',
-                    LuggageNum:'aaa',
-                    RunStatus:'aaa',
-                    LastStatusLongitude:'aaa',
-                    LastStatusLatitude:'aaa',
-                    Remark:'aaa',
-                }],
                 rules: {
-                    CarMode: [{
+                    carClassify: [{
                         required: true,
-                        message: '请输入车型',
-                        trigger: 'blur'
+                        message: '请输入车辆分类'
+                    }],
+                    carMode: [{
+                        required: true,
+                        message: '请输入车型'
+                    }],
+                    operationCity: [{
+                        required: true,
+                        message: '请输入运营城市'
+                    }],
+                    seatNum: [{
+                        required: true,
+                        message: '请输入座位数'
+                    }],
+                    seatingNum: [{
+                        required: true,
+                        message: '请输入最大载客人数'
+                    }],
+                    luggageNum: [{
+                        required: true,
+                        message: '请输入行李数'
                     }],
                 },
-                CarClassifyList:[{
-                    value: 'Economy',
+                carClassifyList: [{
+                    value: 0,
                     label: '经济型'
-                },{
-                    value: 'Comfortable',
+                }, {
+                    value: 1,
                     label: '舒适型'
-                },{
-                    value: 'Business',
+                }, {
+                    value: 2,
                     label: '商务型'
-                },{
-                    value: 'Luxurious',
+                }, {
+                    value: 3,
                     label: '豪华型'
                 }],
-                value:'',
-                RunStatusList:[{
-                    value: 'Stopping',
-                    label: '不可用'
-                },{
-                    value: 'Await',
-                    label: '待命'
-                },{
-                    value: 'Serviceing',
-                    label: '运行中'
-                },{
-                    value: 'Backing',
-                    label: '回程中'
-                }],
-                value2:'',
+                filters: {
+                    carMode: '',
+                    carClassify: ''
+                }
 
             };
         },
         methods: {
+            search() {
+                this.fetchData();
+            },
+            async fetchData(currentPage, pageSize) {
+                const _self = this;
+                _self.loading = true;
+                _self.currentPage = currentPage || _self.currentPage;
+                _self.pageSize = pageSize || _self.pageSize
+                const options = {
+                    pageIndex: _self.currentPage,
+                    pageSize: _self.pageSize,
+                    order: 'ID',
+                    query: {
+                        carClassify: _self.filters.carClassify,
+                        carMode: _self.filters.carMode,
+                    },
+                };
+                try {
+                    const res = await carBaseApi.listByQuery(options);
+                    _self.list = res.data.Data;
+                    _self.count = res.data.Count;
+                    _self.loading = false;
+                } catch (e) {
+                    console.error(e);
+                    _self.loading = false;
+                }
+            },
+            handleSizeChange(val) {
+                this.pageSize = val
+                this.fetchData(this.pageSize);
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.fetchData(this.currentPage);
+            },
             clickAddBtn() {
                 const _self = this;
                 _self.showDialog = true;
                 _self.form = {};
-           },
-           clickEditBtn($index, row) {
-                this.showDialog = true;
-                this.form.id = 1;
-           },
-            submitForm(){
-
+            },
+            async clickEditBtn($index, row) {
+                const _self = this;
+                try {
+                    const res = await carBaseApi.detail(row.ID);
+                    _self.showDialog = true;
+                    _self.form.id = res.data.Data.ID;
+                    _self.form.carClassify = res.data.Data.CarClassify;
+                    _self.form.carMode = res.data.Data.CarMode;
+                    _self.form.luggageNum = res.data.Data.LuggageNum;
+                    _self.form.operationCity = res.data.Data.OperationCity;
+                    _self.form.seatNum = res.data.Data.SeatNum;
+                    _self.form.seatingNum = res.data.Data.SeatingNum;
+                    _self.form.remark = res.data.Data.Remark;
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            submitForm() {
+                const _self = this;
+                if (_self.form.id) {
+                    _self.editSave();
+                } else {
+                    _self.addSave();
+                }
+            },
+            async addSave() {
+                const _self = this;
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carBaseApi.add(_self.form);
+                            _self.fetchData();
+                            _self.$refs['form'].resetFields();
+                            _self.showDialog = false;
+                            _self.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            });
+                        } catch (e) {
+                            console.error(e);
+                            _self.$message.error('添加失败!!!');
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            async editSave() {
+                const _self = this;
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carBaseApi.edit(_self.form.id, _self.form);
+                            _self.fetchData();
+                            _self.$refs['form'].resetFields();
+                            _self.showDialog = false;
+                            _self.$message({
+                                message: '编辑成功',
+                                type: 'success'
+                            });
+                        } catch (e) {
+                            console.error(e);
+                            _self.$message.error('编辑失败!!!');
+                        }
+                    } else {
+                        return false;
+                    }
+                });
+            },
+            async clickDelBtn($index, row) {
+                const _self = this;
+                _self.$confirm(`是否删除${row.CarMode}?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async() => {
+                    try {
+                        await carBaseApi.del(row.ID);
+                        _self.fetchData();
+                        _self.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                    } catch (e) {
+                        console.error(e);
+                        _self.$message.error('删除失败!!!');
+                    }
+                }).catch(() => {});
             }
+        },
+        mounted() {
+            this.fetchData();
         }
 };
 </script>
+<style lang="scss">
+#car-base {
+    .pagination-wrapper {
+        text-align: center;
+        padding: 30px;
+    }
+}
+</style>
