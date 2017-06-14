@@ -23,11 +23,11 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="CarID" label="CarID"></el-table-column>
-            <el-table-column prop="DriverID" label="DriverID"></el-table-column>
-            <el-table-column prop="Origin" label="始发地"></el-table-column>
-            <el-table-column prop="Destination" label="目的地"></el-table-column>
+            <el-table-column prop="ID" label="ID" width="55"></el-table-column>
+            <el-table-column prop="Car.CarMode" label="车型"></el-table-column>
+            <el-table-column prop="Driver.Name" label="司机姓名"></el-table-column>
+            <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="StartMileage" label="起始里程数"></el-table-column>
             <el-table-column prop="EndMileage" label="结束里程数"></el-table-column>
             <el-table-column prop="StartTime" label="开始时间" width="150"></el-table-column>
@@ -57,11 +57,7 @@ export default {
                     startTime: '',
                     endTime: ''
                 },
-                pickerOptions: {
-                    // disabledDate(time) {
-                    //     return time.getTime() < Date.now() - 8.64e7;
-                    // }
-                }
+                pickerOptions: {}
                 // runStatusList: [{
                 //     value: 'Stopping',
                 //     label: '不可用'
@@ -77,6 +73,7 @@ export default {
                 // }]
             };
         },
+
         methods: {
             async fetchData(currentPage, pageSize) {
                 const _self = this;

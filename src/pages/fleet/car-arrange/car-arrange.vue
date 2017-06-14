@@ -1,10 +1,21 @@
 <template lang="html">
     <div id="car-arrange-page">
         <el-row>
-            <el-col :span="3">
-                <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+            <el-col :span="4">
+                <el-select v-model="filters.labelVal" placeholder="请选择">
+                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
             </el-col>
-            <el-col :span="9" :offset="12">
+            <el-col :span="4" :offset="1">
+                <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
+                <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
+            </el-col>
+            <el-col :span="4" :offset="1">
+                <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="clickAddBtn">创建</el-button>
+            </el-col>
+            <el-col :span="10">
                 <el-tag class="mytag ready">准备出车</el-tag>
                 <el-tag class="mytag serviceing">运行中</el-tag>
                 <el-tag class="mytag completed">已完成</el-tag>
@@ -41,119 +52,180 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="pagination-wrapper">
+            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
+            </el-pagination>
+        </div>
         <el-dialog :title="form.id?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
-            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="ID">
-                            <el-input placeholder="请输入ID"></el-input>
+                            <el-input placeholder="请输入ID" v-model="form.id"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="OrderID">
-                            <el-input placeholder="请输入OrderID"></el-input>
+                            <el-input placeholder="请输入OrderID" v-model="form.orderId"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="CarID">
-                            <el-input placeholder="请输入CarID"></el-input>
+                        <el-form-item label="WebOrderID">
+                            <el-input placeholder="请输入WebOrderID" v-model="form.webOrderId"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="DriverID">
-                            <el-input placeholder="请输入DriverID"></el-input>
+                        <el-form-item label="车辆类型">
+                            <el-select v-model="form.carId" placeholder="请选择车型">
+                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarMode" :value="item.ID">
+                                    <span style="float: left">{{ item.CarMode }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 0">经济型</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 1">舒适型</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 2">商务型</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 3">豪华型</span>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="派遣司机">
+                            <el-select v-model="form.driverId" placeholder="请选择司机">
+                                <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID">
+                                    <span style="float: left">{{ item.Name }}</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 1">正产在职</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 2">已离职</span>
+                                    <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 3">停职</span>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="派车状态">
+                            <el-input placeholder="请输入派车状态" v-model="form.arrangeStatus"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="始发地">
-                            <el-input placeholder="请输入始发地"></el-input>
+                            <el-input placeholder="请输入始发地" v-model="form.origin"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="目的地">
-                            <el-input placeholder="请输入目的地"></el-input>
+                            <el-input placeholder="请输入目的地" v-model="form.destination"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="预计行车时间">
-                            <el-input placeholder="请输入预计行车时间"></el-input>
-                        </el-form-item>
-                    </el-col>
                     <el-col :span="12">
                         <el-form-item label="预计里程">
-                            <el-input placeholder="请输入预计里程"></el-input>
+                            <el-input placeholder="请输入预计里程" v-model="form.predictMileage"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="预计行车时间">
+                            <el-input placeholder="请输入预计行车时间" v-model="form.predictTime"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="派单时间">
+                            <el-date-picker v-model="form.arrangeTime" type="datetime" placeholder="选择派单时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                         <el-form-item label="派单人员">
-                            <el-input placeholder="请输入派单人员"></el-input>
+                            <el-input placeholder="请输入派单人员" v-model="form.arrangeUserId"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="备注">
-                            <el-input placeholder="请输入备注" type="textarea"></el-input>
+                            <el-input placeholder="请输入备注" type="textarea" v-model="form.remark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="取消时间">
-                            <el-input placeholder="请输入取消时间"></el-input>
+                            <el-input placeholder="请输入取消时间" v-model="form.cancelTime"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="取消单人员">
-                            <el-input placeholder="请输入取消单人员"></el-input>
+                            <el-input placeholder="请输入取消单人员" v-model="form.cancelUserId"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="取消说明">
-                            <el-input placeholder="请输入取消说明" type="textarea"></el-input>
+                            <el-input placeholder="请输入取消说明" type="textarea" v-model="form.cancelRemark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="submitForm()">确 定</el-button>
+          <el-button type="primary" @click="submitForm">确 定</el-button>
         </span>
         </el-dialog>
     </div>
 </template>
 <script>
 import {
-    payCompanyApi
+    carBaseApi,
+    driverBaseApi,
+    carArrangeApi
 } from 'api';
 
 
 export default {
     data() {
             return {
-                list: [{
-                    CancelTime: '11'
-                }, {
-                    CancelTime: ''
-                }, {
-                    CancelTime: ''
-                }, {
-                    CancelTime: '11'
-                }],
+                list: [],
+                carList: [],
+                driverList: [],
+                currentPage: 1,
+                pageSize: 10,
+                count: 0,
                 loading: false,
                 showDialog: false,
                 form: {
-                    id: '',
-                    accountName: '',
-                    accountNum: '',
-                    remark: ''
+                    id: 0,
+                    orderId: '',
+                    webOrderId: '',
+                    carId: '',
+                    driverId: '',
+                    arrangeStatus: '',
+                    origin: '',
+                    destination: '',
+                    predictMileage: '',
+                    predictTime: '',
+                    arrangeTime: '',
+                    arrangeUserId: '',
+                    remark: '',
+                    cancelTime: '',
+                    cancelUserId: '',
+                    cancelRemark: ''
                 },
+                filters: {
+                    name: '',
+                    phone: '',
+                    jobStatus: '',
+                    labelVal: '1'
+                },
+                selectedOptions: [{
+                    value: '1',
+                    label: '姓名'
+                }, {
+                    value: '2',
+                    label: '电话'
+                }],
                 rules: {
                     accountName: [{
                         required: true,
@@ -178,30 +250,100 @@ export default {
                 }
                 return '';
             },
-            handleCurrentChange(val) {
-                this.currentPage = val;
+            search() {
+                this.fetchData();
             },
-            async fetchData() {
+            async fetchCarList() {
+                try {
+                    const options = {
+                        pageIndex: '',
+                        pageSize: '',
+                        order: 'ID',
+                        query: {},
+                    };
+                    const res = await carBaseApi.listByQuery(options);
+                    this.carList = res.data.Data;
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            async fetchDriverList() {
+                try {
+                    const options = {
+                        pageIndex: '',
+                        pageSize: '',
+                        order: 'ID',
+                        query: {
+                            name: '',
+                            phone: '',
+                            jobStatus: 1
+                        },
+                    };
+                    const res = await driverBaseApi.listByQuery(options);
+                    this.driverList = res.data.Data;
+                } catch (e) {
+                    console.error(e);
+                }
+            },
+            async fetchData(currentPage, pageSize) {
                 const _self = this;
                 _self.loading = true;
+                _self.currentPage = currentPage || _self.currentPage;
+                _self.pageSize = pageSize || _self.pageSize;
+                const options = {
+                    pageIndex: _self.currentPage,
+                    pageSize: _self.pageSize,
+                    order: 'ID',
+                    query: {
+                        // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+                        // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+                        // jobStatus: _self.filters.jobStatus
+                    },
+                };
                 try {
-                    const res = await payCompanyApi.list();
-                    _self.list = res.data;
+                    const res = await carArrangeApi.listByQuery(options);
+                    _self.list = res.data.Data;
+                    _self.count = res.data.Count;
                     _self.loading = false;
                 } catch (e) {
                     console.error(e);
                     _self.loading = false;
                 }
             },
+            handleSizeChange(val) {
+                this.pageSize = val
+                this.fetchData(this.pageSize);
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val;
+                this.fetchData(this.currentPage);
+            },
             clickAddBtn() {
                 const _self = this;
                 _self.showDialog = true;
-                _self.form = {};
+                _self.form = {
+                    id: 0,
+                    orderId: '',
+                    webOrderId: '',
+                    carId: '',
+                    driverId: '',
+                    arrangeStatus: '',
+                    origin: '',
+                    destination: '',
+                    predictMileage: '',
+                    predictTime: '',
+                    arrangeTime: '',
+                    arrangeUserId: '',
+                    remark: '',
+                    cancelTime: '',
+                    cancelUserId: '',
+                    cancelRemark: ''
+                };
             },
             async clickEditBtn($index, row) {
                 const _self = this;
                 try {
-                    // const res = await payCompanyApi.detail(row.ID);
+                    // const res = await carArrangeApi.detail(row.ID);
                     _self.showDialog = true;
                     // _self.form.id = res.data.ID;
                     // _self.form.accountName = res.data.AccountName;
@@ -224,10 +366,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
-                            const form = {..._self.form
-                            }
-                            delete form.id
-                            await payCompanyApi.add(form);
+                            await carArrangeApi.add(_self.form);
                             _self.fetchData();
                             _self.$refs['form'].resetFields();
                             _self.showDialog = false;
@@ -249,7 +388,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
-                            await payCompanyApi.edit(_self.form);
+                            await carArrangeApi.edit(_self.form.id, _self.form);
                             _self.fetchData();
                             _self.$refs['form'].resetFields();
                             _self.showDialog = false;
@@ -274,7 +413,7 @@ export default {
                     type: 'warning'
                 }).then(async() => {
                     try {
-                        await payCompanyApi.del(row.ID);
+                        await carArrangeApi.del(row.ID);
                         _self.fetchData();
                         _self.$message({
                             message: '删除成功',
@@ -287,7 +426,10 @@ export default {
             }
         },
         mounted() {
-            // this.fetchData();
+            this.fetchData();
+            this.fetchCarList();
+            this.fetchDriverList();
+
         }
 };
 </script>
@@ -316,6 +458,10 @@ export default {
     }
     .el-dialog .el-row {
         margin-bottom: 5px !important;
+    }
+    .pagination-wrapper {
+        text-align: center;
+        padding: 30px;
     }
 }
 </style>

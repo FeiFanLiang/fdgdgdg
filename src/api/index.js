@@ -28,7 +28,10 @@ import roomShowApi from './room-show';
 import bargainsRoomApi from './bargains-room';
 import carBaseApi from './car-base';
 import carUseApi from './car-use';
+import carArrangeApi from './car-arrange';
 import driverBaseApi from './driver-base';
+import driverEvaluateApi from './driver-evaluate';
+
 export {
   accountApi,
   airlineApi,
@@ -60,5 +63,7 @@ export {
   bargainsRoomApi,
   carBaseApi,
   carUseApi,
-  driverBaseApi
+  carArrangeApi,
+  driverBaseApi,
+  driverEvaluateApi
 };
