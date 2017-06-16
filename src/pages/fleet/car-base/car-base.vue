@@ -26,9 +26,10 @@
                 </template>
             </el-table-column>
             <el-table-column prop="CarMode" label="车型"></el-table-column>
+            <el-table-column prop="CarNumber" label="车牌号"></el-table-column>
             <el-table-column prop="OperationCity" label="运营城市"></el-table-column>
             <el-table-column prop="SeatNum" label="座位数"></el-table-column>
-            <el-table-column prop="SeatingNum" label="最大载客数" width="120"></el-table-column>
+            <el-table-column prop="SeatingNum" label="最大载客数"></el-table-column>
             <el-table-column prop="LuggageNum" label="行李数"></el-table-column>
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="120px">
@@ -60,17 +61,22 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="车牌号" prop="carNumber">
+                            <el-input placeholder="请输入车牌号" v-model="form.carNumber"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                         <el-form-item label="运营城市" prop="operationCity">
                             <el-input placeholder="请输入运营城市" v-model="form.operationCity"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="座位数" prop="seatNum">
                             <el-input placeholder="请输入座位数" v-model="form.seatNum"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="最大载客人数" prop="seatingNum">
                             <el-input placeholder="请输入最大载客人数" v-model="form.seatingNum"></el-input>
@@ -115,6 +121,7 @@ export default {
                     id: '',
                     carClassify: '',
                     carMode: '',
+                    carNumber:'',
                     operationCity: '',
                     seatNum: '',
                     seatingNum: '',
@@ -129,6 +136,10 @@ export default {
                     carMode: [{
                         required: true,
                         message: '请输入车型'
+                    }],
+                    carNumber:[{
+                        required: true,
+                        message: '请输入车牌号'
                     }],
                     operationCity: [{
                         required: true,
@@ -216,6 +227,7 @@ export default {
                     _self.form.id = res.data.Data.ID;
                     _self.form.carClassify = res.data.Data.CarClassify;
                     _self.form.carMode = res.data.Data.CarMode;
+                    _self.form.carNumber = res.data.Data.CarNumber;
                     _self.form.luggageNum = res.data.Data.LuggageNum;
                     _self.form.operationCity = res.data.Data.OperationCity;
                     _self.form.seatNum = res.data.Data.SeatNum;

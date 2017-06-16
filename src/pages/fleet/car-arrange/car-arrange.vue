@@ -256,10 +256,10 @@ export default {
             async fetchCarList() {
                 try {
                     const options = {
-                        pageIndex: '',
-                        pageSize: '',
+                        pageIndex: 1,
+                        pageSize: 100,
                         order: 'ID',
-                        query: {},
+                        query: {"carClassify":"","carMode":""},
                     };
                     const res = await carBaseApi.listByQuery(options);
                     this.carList = res.data.Data;
@@ -273,11 +273,7 @@ export default {
                         pageIndex: '',
                         pageSize: '',
                         order: 'ID',
-                        query: {
-                            name: '',
-                            phone: '',
-                            jobStatus: 1
-                        },
+                        query: {"name":"","phone":"","jobStatus":1},
                     };
                     const res = await driverBaseApi.listByQuery(options);
                     this.driverList = res.data.Data;
