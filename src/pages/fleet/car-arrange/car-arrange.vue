@@ -256,10 +256,10 @@ export default {
             async fetchCarList() {
                 try {
                     const options = {
-                        pageIndex: 1,
-                        pageSize: 100,
+                        pageIndex: '',
+                        pageSize: '',
                         order: 'ID',
-                        query: {"carClassify":"","carMode":""},
+                        query: {},
                     };
                     const res = await carBaseApi.listByQuery(options);
                     this.carList = res.data.Data;
@@ -273,7 +273,7 @@ export default {
                         pageIndex: '',
                         pageSize: '',
                         order: 'ID',
-                        query: {"name":"","phone":"","jobStatus":1},
+                        query: {},
                     };
                     const res = await driverBaseApi.listByQuery(options);
                     this.driverList = res.data.Data;
@@ -339,12 +339,25 @@ export default {
             async clickEditBtn($index, row) {
                 const _self = this;
                 try {
-                    // const res = await carArrangeApi.detail(row.ID);
+                    const res = await carArrangeApi.detail(row.ID);
                     _self.showDialog = true;
-                    // _self.form.id = res.data.ID;
-                    // _self.form.accountName = res.data.AccountName;
-                    // _self.form.accountNum = res.data.AccountNum;
-                    // _self.form.remark = res.data.Remark;
+                    _self.form.id = res.data.Data.ID;
+                    _self.form.orderId = res.data.Data.OrderID;
+                    _self.form.webOrderId = res.data.Data.WebOrderID;
+                    _self.form.carId = res.data.Data.CarID;
+                    _self.form.driverId = res.data.Data.DriverID;
+                    console.log(_self.form.carId, _self.form.driverId)
+                    _self.form.arrangeStatus = res.data.Data.ArrangeStatus;
+                    _self.form.origin = res.data.Data.Origin;
+                    _self.form.destination = res.data.Data.Destination;
+                    _self.form.predictMileage = res.data.Data.PredictMileage;
+                    _self.form.predictTime = res.data.Data.PredictTime;
+                    _self.form.arrangeTime = res.data.Data.ArrangeTime;
+                    _self.form.arrangeUserId = res.data.Data.ArrangeUserId;
+                    _self.form.remark = res.data.Data.Remark;
+                    _self.form.cancelTime = res.data.Data.CancelTime;
+                    _self.form.cancelUserId = res.data.Data.CancelUserId;
+                    _self.form.cancelRemark = res.data.Data.CancelRemark;
                 } catch (e) {
                     console.error(e);
                 }

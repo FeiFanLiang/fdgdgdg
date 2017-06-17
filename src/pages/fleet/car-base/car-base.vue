@@ -1,6 +1,6 @@
 <template lang="html">
     <div id="car-base">
-        <el-row :gutter="20">
+        <el-row :gutter="20" class="align-center">
             <el-col :span="4">
                 <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData">
                     <el-option label="全部" value="">全部</el-option>
@@ -9,6 +9,9 @@
             </el-col>
             <el-col :span="4">
                 <el-input placeholder="请输入车型" v-model="filters.carMode"></el-input>
+            </el-col>
+            <el-col :span="4">
+                <el-checkbox v-model="filters.isdelete">包含已删除车辆</el-checkbox>
             </el-col>
             <el-col :span="6">
                 <el-button type="primary" @click="search">搜索</el-button>
@@ -66,17 +69,36 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="运营城市" prop="operationCity">
-                            <el-input placeholder="请输入运营城市" v-model="form.operationCity"></el-input>
+                        <el-form-item label="品牌" prop="carBrand">
+                            <el-input placeholder="请输入品牌" v-model="form.carBrand"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="车辆颜色" prop="carColor">
+                            <el-input placeholder="请输入车辆颜色" v-model="form.carColor"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="出厂日期" prop="releaseDate">
+                            <el-input placeholder="请输入出厂日期" v-model="form.releaseDate"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="运营城市" prop="operationCity">
+                            <el-input placeholder="请输入运营城市" v-model="form.operationCity"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                         <el-form-item label="座位数" prop="seatNum">
                             <el-input placeholder="请输入座位数" v-model="form.seatNum"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="最大载客人数" prop="seatingNum">
                             <el-input placeholder="请输入最大载客人数" v-model="form.seatingNum"></el-input>
@@ -121,7 +143,10 @@ export default {
                     id: '',
                     carClassify: '',
                     carMode: '',
-                    carNumber:'',
+                    carBrand: '',
+                    carColor: '',
+                    releaseDate: '',
+                    carNumber: '',
                     operationCity: '',
                     seatNum: '',
                     seatingNum: '',
@@ -137,7 +162,7 @@ export default {
                         required: true,
                         message: '请输入车型'
                     }],
-                    carNumber:[{
+                    carNumber: [{
                         required: true,
                         message: '请输入车牌号'
                     }],
@@ -173,7 +198,8 @@ export default {
                 }],
                 filters: {
                     carMode: '',
-                    carClassify: ''
+                    carClassify: '',
+                    isdelete: true
                 }
 
             };
@@ -194,6 +220,7 @@ export default {
                     query: {
                         carClassify: _self.filters.carClassify,
                         carMode: _self.filters.carMode,
+                        isdelete: !_self.filters.isdelete
                     },
                 };
                 try {
@@ -227,6 +254,9 @@ export default {
                     _self.form.id = res.data.Data.ID;
                     _self.form.carClassify = res.data.Data.CarClassify;
                     _self.form.carMode = res.data.Data.CarMode;
+                    _self.form.carBrand = res.data.Data.CarBrand;
+                    _self.form.carColor = res.data.Data.CarColor;
+                    _self.form.releaseDate = res.data.Data.ReleaseDate;
                     _self.form.carNumber = res.data.Data.CarNumber;
                     _self.form.luggageNum = res.data.Data.LuggageNum;
                     _self.form.operationCity = res.data.Data.OperationCity;
@@ -317,9 +347,16 @@ export default {
 </script>
 <style lang="scss">
 #car-base {
+    .align-center {
+        display: flex;
+        align-items: center;
+    }
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
+    }
+    .el-dialog .el-row {
+        margin-bottom: 5px !important;
     }
 }
 </style>
