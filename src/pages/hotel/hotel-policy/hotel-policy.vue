@@ -134,7 +134,7 @@
         </el-dialog>
         <!-- table end -->
         <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
-            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+            <el-form ref="form" :model="form" :rules="rules" label-width="110">
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="政策负责人">

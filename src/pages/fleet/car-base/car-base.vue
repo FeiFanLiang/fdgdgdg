@@ -47,7 +47,7 @@
             </el-pagination>
         </div>
         <el-dialog :title="form.id?'编辑车辆基本信息':'添加车辆基本信息'" v-model="showDialog" @close="resetForm('form')">
-            <el-form :rules="rules" ref="form" :model="form">
+            <el-form :rules="rules" ref="form" :model="form" label-width="110px">
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="车辆分类" prop="carClassify">
@@ -82,7 +82,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="出厂日期" prop="releaseDate">
-                            <el-input placeholder="请输入出厂日期" v-model="form.releaseDate"></el-input>
+                            <el-date-picker v-model="form.releaseDate" type="date" placeholder="请选择出厂日期" :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -139,6 +139,7 @@ export default {
                 count: 0,
                 loading: false,
                 showDialog: false,
+                pickerOptions: {},
                 form: {
                     id: '',
                     carClassify: '',
