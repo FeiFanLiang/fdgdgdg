@@ -127,7 +127,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await imagesInfoApi.removeImages({
+                    await imagesInfoApi.delImages({
                         id: row.id
                     });
                     _self.fetchData();

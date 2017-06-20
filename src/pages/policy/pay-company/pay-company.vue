@@ -17,7 +17,6 @@
         <el-table-column  width="150"  label="操作" fixed="right">
           <template scope="scope">
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-            <!-- <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button> -->
             <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
            </template>
         </el-table-column>
@@ -45,11 +44,7 @@
 <script>
 import { payCompanyApi } from 'api';
 
-import DeleteButton from '../../../components/common/delete-button.vue';
 export default {
-  components: {
-    DeleteButton
-  },
   data() {
     return {
       list: [],
@@ -167,28 +162,6 @@ export default {
           return false;
         }
       });
-    },
-    async clickDelBtn($index, row) {
-      const _self = this;
-      _self
-        .$confirm(`是否删除${row.accountName}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(async () => {
-          try {
-            await payCompanyApi.del(row.ID);
-            _self.fetchData();
-            _self.$message({
-              message: '删除成功',
-              type: 'success'
-            });
-          } catch (e) {
-            console.error(e);
-          }
-        })
-        .catch(() => {});
     }
   },
   mounted() {

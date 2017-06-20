@@ -5,7 +5,7 @@
   placement="top"
   width="160"
   v-model="visible">
-  <p>这是一段内容这是一段内容确定删除吗？</p>
+  <p>你确定删除这条数据吗？</p>
   <div style="text-align: right; margin: 0">
     <el-button size="mini" type="text" @click="visible = false">取消</el-button>
     <el-button  type="primary" size="mini" @click="del">确定</el-button>
@@ -19,6 +19,7 @@
 import ApiService from 'api';
 
 export default {
+  name: 'DeleteButton',
   props: {
     api: '',
     id: ''

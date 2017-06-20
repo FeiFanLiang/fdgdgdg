@@ -397,7 +397,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await hotelPolicyApi.remove(row.ID);
+                    await hotelPolicyApi.del(row.ID);
                     _self.fetchData();
                     _self.$message({
                         message: '删除成功',
@@ -431,7 +431,7 @@ export default {
         },
         async handleRemove(file, fileList) {
             if (file && file.id) {
-                await hotelPolicyImageApi.remove(file.id);
+                await hotelPolicyImageApi.del(file.id);
             }
         },
         handlePictureCardPreview(file) {

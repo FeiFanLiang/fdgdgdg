@@ -7,10 +7,13 @@ export default {
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelThreePlatInfo', params);
   },
-  remove(id) {
+  del(id) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/${id}`);
   },
   edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelThreePlatInfo/${id}`, params);
+    return axios.put(
+      path.apiBaseUrl + `Hotel/HotelThreePlatInfo/${id}`,
+      params
+    );
   }
-}
+};

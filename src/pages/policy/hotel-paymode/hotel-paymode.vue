@@ -14,7 +14,7 @@
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+          <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
         </template>
       </el-table-column>
     </el-table>
@@ -36,139 +36,120 @@
 </template>
 
 <script>
-import {
-    hotelPayModeApi
-} from 'api';
+import { hotelPayModeApi } from 'api';
 
 export default {
-    data() {
-        return {
-            list: [],
-            loading: true,
-            showDialog: false,
-            form: {
-                id: '',
-                modeName: '',
-                remark: ''
-            },
-            rules: {
-                modeName: [{
-                    required: true,
-                    message: '请输入账户名称'
-                }]
-            }
-        };
-    },
+  data() {
+    return {
+      list: [],
+      loading: true,
+      showDialog: false,
+      form: {
+        id: '',
+        modeName: '',
+        remark: ''
+      },
+      rules: {
+        modeName: [
+          {
+            required: true,
+            message: '请输入账户名称'
+          }
+        ]
+      }
+    };
+  },
 
-    methods: {
-        async fetchData() {
-            const _self = this;
-            _self.loading = true;
-            try {
-                const res = await hotelPayModeApi.list();
-                _self.list = res.data;
-                _self.loading = false;
-            } catch (e) {
-                console.error(e);
-                _self.loading = false;
-            }
-        },
-        clickAddBtn() {
-            const _self = this;
-            _self.showDialog = true;
-            _self.form = {};
-        },
-        async clickEditBtn($index, row) {
-            const _self = this;
-            try {
-                const res = await hotelPayModeApi.detail(row.ID);
-                _self.showDialog = true;
-                _self.form.id = res.data.ID;
-                _self.form.modeName = res.data.ModeName;
-                _self.form.remark = res.data.Remark;
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        submitForm() {
-            const _self = this;
-            if (_self.form.id) {
-                _self.editSave();
-            } else {
-                _self.addSave();
-            }
-        },
-        async addSave() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        const form = { ..._self.form
-                        }
-                        delete form.id
-                        await hotelPayModeApi.add(form);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('添加失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async editSave() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await hotelPayModeApi.edit(_self.form);
-                        _self.fetchData();
-                        _self.$refs['form'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('编辑失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async clickDelBtn($index, row) {
-            const _self = this;
-            _self.$confirm(`是否删除${row.modeName}?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async() => {
-                try {
-                    await hotelPayModeApi.del(row.ID);
-                    _self.fetchData();
-                    _self.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    console.error(e);
-                    _self.$message.error('删除失败!!!');
-                }
-            }).catch(() => {});
-        }
+  methods: {
+    async fetchData() {
+      const _self = this;
+      _self.loading = true;
+      try {
+        const res = await hotelPayModeApi.list();
+        _self.list = res.data;
+        _self.loading = false;
+      } catch (e) {
+        console.error(e);
+        _self.loading = false;
+      }
     },
-    mounted() {
-        this.fetchData();
+    clickAddBtn() {
+      const _self = this;
+      _self.showDialog = true;
+      _self.form = {};
+    },
+    async clickEditBtn($index, row) {
+      const _self = this;
+      try {
+        const res = await hotelPayModeApi.detail(row.ID);
+        _self.showDialog = true;
+        _self.form.id = res.data.ID;
+        _self.form.modeName = res.data.ModeName;
+        _self.form.remark = res.data.Remark;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    submitForm() {
+      const _self = this;
+      if (_self.form.id) {
+        _self.editSave();
+      } else {
+        _self.addSave();
+      }
+    },
+    async addSave() {
+      const _self = this;
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            const form = {
+              ..._self.form
+            };
+            delete form.id;
+            await hotelPayModeApi.add(form);
+            _self.fetchData();
+            _self.$refs['form'].resetFields();
+            _self.showDialog = false;
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+            _self.$message.error('添加失败!!!');
+          }
+        } else {
+          return false;
+        }
+      });
+    },
+    async editSave() {
+      const _self = this;
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await hotelPayModeApi.edit(_self.form);
+            _self.fetchData();
+            _self.$refs['form'].resetFields();
+            _self.showDialog = false;
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
+          } catch (e) {
+            console.error(e);
+            _self.$message.error('编辑失败!!!');
+          }
+        } else {
+          return false;
+        }
+      });
     }
+  },
+  mounted() {
+    this.fetchData();
+  }
 };
 </script>
 
