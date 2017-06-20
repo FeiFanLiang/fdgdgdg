@@ -261,7 +261,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await sonRoomPlatformApi.remove(row.ID);
+                    await sonRoomPlatformApi.del(row.ID);
                     _self.getList();
                     _self.$message({
                         message: '删除成功',

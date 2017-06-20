@@ -43,7 +43,7 @@
           <template scope="scope">
             <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="small" type="danger" @click="hotelbaseDelete(scope.$index, scope.row)">删除</el-button>
+            <DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
           </template>
         </el-table-column>
       </el-table>
@@ -66,10 +66,8 @@
 </template>
 
 <script>
-import {
-  hotelBaseApi
-} from 'api';
-import HotelBaseAdd from './hotel-base-add.vue'
+import { hotelBaseApi } from 'api';
+import HotelBaseAdd from './hotel-base-add.vue';
 export default {
   components: {
     HotelBaseAdd
@@ -88,7 +86,8 @@ export default {
         HotelName_En: '',
         labelVal: '1'
       },
-      selectedOptions: [{
+      selectedOptions: [
+        {
           value: '1',
           label: '酒店ID'
         },
@@ -119,10 +118,10 @@ export default {
       });
     },*/
     /*addHotelBase(){
-       this.dialogTableVisible=true; 
-       this.getHotelbaseList(); 
+       this.dialogTableVisible=true;
+       this.getHotelbaseList();
     },*/
-    
+
     areaTypeChange(isForeign) {
       this.getHotelbaseList();
     },
@@ -132,26 +131,34 @@ export default {
     async getHotelbaseList(currentPage, pageSize) {
       const _self = this;
       _self.currentPage = currentPage || _self.currentPage;
-      _self.pageSize = pageSize || _self.pageSize
+      _self.pageSize = pageSize || _self.pageSize;
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
         query: {
           ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-          HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-          HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+          HotelName: _self.filters.labelVal === '2'
+            ? _self.filters.HotelName
+            : '',
+          HotelName_En: _self.filters.labelVal === '3'
+            ? _self.filters.HotelName_En
+            : ''
         },
         IsForeign: _self.isForeign
       };
       const res = await hotelBaseApi.listAll(options);
       if (res && res.data && res.data.Data) {
-        let data = res.data.Data
+        let data = res.data.Data;
         for (let item of data) {
-          if (item.Policys && Array.isArray(item.Policys) && item.Policys.length > 0) {
+          if (
+            item.Policys &&
+            Array.isArray(item.Policys) &&
+            item.Policys.length > 0
+          ) {
             for (let n of item.Policys) {
               if (n.IsDefault) {
-                item.Policys = n
+                item.Policys = n;
               }
             }
           }
@@ -159,10 +166,9 @@ export default {
         _self.hotelbase = data;
         _self.count = res.data.Count;
       }
-
     },
     handleSizeChange(val) {
-      this.pageSize = val
+      this.pageSize = val;
       this.getHotelbaseList(this.pageSize);
     },
     handleCurrentChange(val) {
@@ -179,25 +185,6 @@ export default {
           hotelName: row.HotelName
         }
       });
-    },
-    async hotelbaseDelete($index, row) {
-      const _self = this;
-      _self.$confirm('是否删除此条信息?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async() => {
-        try {
-          await hotelBaseApi.remove(row.ID);
-          _self.getHotelbaseList();
-          _self.$message({
-            message: '删除成功',
-            type: 'success'
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      }).catch(() => {});
     }
   }
 };

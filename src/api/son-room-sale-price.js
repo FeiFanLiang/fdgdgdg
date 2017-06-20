@@ -15,7 +15,7 @@ export default {
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/SonRoomSalePrice/add');
   },
-  remove(id) {
+  del(id) {
     return axios.delete(
       path.apiBaseUrl + `Hotel/SonRoomSalePrice/remove/${id}`
     );

@@ -13,7 +13,7 @@ export default {
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelRoomBed', params);
   },
-  remove(id) {
+  del(id) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelRoomBed/${id}`);
   },
   edit(id, params) {

@@ -32,7 +32,7 @@ import carArrangeApi from './car-arrange';
 import driverBaseApi from './driver-base';
 import driverEvaluateApi from './driver-evaluate';
 
-export {
+const api = {
   accountApi,
   airlineApi,
   carOrderApi,
@@ -67,3 +67,5 @@ export {
   driverBaseApi,
   driverEvaluateApi
 };
+module.exports = api;
+export default api;

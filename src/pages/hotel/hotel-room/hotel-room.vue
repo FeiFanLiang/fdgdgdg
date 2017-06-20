@@ -434,7 +434,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await hotelRoomApi.remove(row.ID);
+                    await hotelRoomApi.del(row.ID);
                     _self.fetchData();
                     _self.$message({
                         message: '删除成功',
@@ -454,7 +454,7 @@ export default {
                 type: 'warning'
             }).then(async() => {
                 try {
-                    await sonRoomApi.remove(row.SonRooms[index].ID);
+                    await sonRoomApi.del(row.SonRooms[index].ID);
                     _self.fetchData();
                     _self.$message({
                         message: '删除成功',

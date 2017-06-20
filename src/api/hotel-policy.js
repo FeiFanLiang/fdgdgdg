@@ -10,10 +10,13 @@ export default {
   add(params) {
     return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy', params);
   },
-  remove(id) {
+  del(id) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicy/${id}`);
   },
   edit(params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicy/${params.ID}`, params);
+    return axios.put(
+      path.apiBaseUrl + `Hotel/HotelPolicy/${params.ID}`,
+      params
+    );
   }
-}
+};

@@ -222,7 +222,7 @@ export default {
             async handleRemove(file, fileList) {
                 try {
                     if (file && file.id) {
-                        await hotelImageApi.remove(file.id);
+                        await hotelImageApi.del(file.id);
                         this.$message({
                             message: '删除成功',
                             type: 'success'
