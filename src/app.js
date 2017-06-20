@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-default/index.css';
 
 import { Breadcrumb } from 'components';
 import DeleteButton from 'components/common/delete-button.vue';
+import CustomTable from 'components/common/custom-table.vue';
 
 axios.defaults.withCredentials = true;
 const VueProgressBarOptions = {
@@ -37,6 +38,7 @@ import NProgress from 'nprogress';
 
 Vue.component('db-breadcrumb', Breadcrumb);
 Vue.component('DeleteButton', DeleteButton);
+Vue.component('CustomTable', CustomTable);
 
 export const router = new VueRouter({
   routes,
