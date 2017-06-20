@@ -2,8 +2,9 @@
     <div id="car-arrange-page">
         <el-row>
             <el-col :span="4">
-                <el-select v-model="filters.labelVal" placeholder="请选择">
-                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
+                <el-select v-model="filters.arrangeStatus" placeholder="派单状态" @change="fetchData">
+                    <el-option label="全部" value="">全部</el-option>
+                    <el-option v-for="(item,index) in arrangeStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
@@ -34,9 +35,9 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="OrderID" label="OrderID"></el-table-column>
-            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column>
+            <el-table-column prop="ID" label="ID" width="55"></el-table-column>
+            <!-- <el-table-column prop="OrderID" label="OrderID"></el-table-column>
+            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column> -->
             <el-table-column prop="CarID" label="CarID"></el-table-column>
             <el-table-column prop="DriverID" label="DriverID"></el-table-column>
             <el-table-column prop="Origin" label="始发地"></el-table-column>
@@ -44,7 +45,8 @@
             <el-table-column prop="PredictTime" label="预计行车时间"></el-table-column>
             <el-table-column prop="PredictMileage" label="预计里程"></el-table-column>
             <el-table-column prop="ArrangeUserID" label="派单人员"></el-table-column>
-            <el-table-column prop="Remark" label="备注"></el-table-column>
+            <el-table-column prop="ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column width="150" label="操作" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -191,7 +193,7 @@ export default {
                 carList: [],
                 driverList: [],
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 20,
                 count: 0,
                 loading: false,
                 showDialog: false,
@@ -216,9 +218,22 @@ export default {
                 filters: {
                     name: '',
                     phone: '',
-                    jobStatus: '',
+                    arrangeStatus: '',
                     labelVal: '1'
                 },
+                arrangeStatusList: [{
+                    value: 0,
+                    label: '准备出车'
+                }, {
+                    value: 1,
+                    label: '运行中'
+                }, {
+                    value: 2,
+                    label: '完成'
+                }, {
+                    value: 3,
+                    label: '取消'
+                }],
                 selectedOptions: [{
                     value: '1',
                     label: '姓名'
@@ -241,11 +256,11 @@ export default {
 
         methods: {
             tableRowClassName(row, index) {
-                if (index === 0) {
+                if (row.ArrangeStatus === 0) {
                     return 'ready';
-                } else if (index === 1) {
+                } else if (row.ArrangeStatus === 1) {
                     return 'serviceing';
-                } else if (index === 3) {
+                } else if (row.ArrangeStatus === 3) {
                     return 'cancel';
                 }
                 return '';
@@ -293,14 +308,21 @@ export default {
                     query: {
                         // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
                         // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-                        // jobStatus: _self.filters.jobStatus
+                        arrangeStatus: _self.filters.arrangeStatus
                     },
                 };
                 try {
                     const res = await carArrangeApi.listByQuery(options);
                     _self.list = res.data.Data;
+                    if (_self.list.length > 0) {
+                        for (let [index, elem] of _self.list.entries()) {
+                            _self.list[index].ArrangeTime = new Date(_self.list[index].ArrangeTime).Format('yyyy-MM-dd hh:mm:ss');
+                            _self.list[index].CancelTime = new Date(_self.list[index].CancelTime).Format('yyyy-MM-dd hh:mm:ss')
+                        }
+                    }
                     _self.count = res.data.Count;
                     _self.loading = false;
+                    _self.carList.length === 0 ? _self.fetchCarList() : '';
                 } catch (e) {
                     console.error(e);
                     _self.loading = false;
@@ -316,6 +338,7 @@ export default {
             },
             clickAddBtn() {
                 const _self = this;
+                _self.driverList.length === 0 ? _self.fetchDriverList() : '';
                 _self.showDialog = true;
                 _self.form = {
                     id: 0,
@@ -338,6 +361,7 @@ export default {
             },
             async clickEditBtn($index, row) {
                 const _self = this;
+                _self.driverList.length === 0 ? _self.fetchDriverList() : '';
                 try {
                     const res = await carArrangeApi.detail(row.ID);
                     _self.showDialog = true;
@@ -346,7 +370,6 @@ export default {
                     _self.form.webOrderId = res.data.Data.WebOrderID;
                     _self.form.carId = res.data.Data.CarID;
                     _self.form.driverId = res.data.Data.DriverID;
-                    console.log(_self.form.carId, _self.form.driverId)
                     _self.form.arrangeStatus = res.data.Data.ArrangeStatus;
                     _self.form.origin = res.data.Data.Origin;
                     _self.form.destination = res.data.Data.Destination;
@@ -435,10 +458,34 @@ export default {
             }
         },
         mounted() {
-            this.fetchData();
-            this.fetchCarList();
-            this.fetchDriverList();
 
+            Date.prototype.Format = function(fmt) {
+                let o = {
+                    'M+': this.getMonth() + 1, //月份
+                    'd+': this.getDate(), //日
+                    'h+': this.getHours(), //小时
+                    'm+': this.getMinutes(), //分
+                    's+': this.getSeconds(), //秒
+                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+                    S: this.getMilliseconds() //毫秒
+                };
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                    );
+                for (let k in o)
+                    if (new RegExp('(' + k + ')').test(fmt))
+                        fmt = fmt.replace(
+                            RegExp.$1,
+                            RegExp.$1.length == 1 ?
+                            o[k] :
+                            ('00' + o[k]).substr(('' + o[k]).length)
+                        );
+                return fmt;
+            };
+
+            this.fetchData();
         }
 };
 </script>
