@@ -37,7 +37,7 @@
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
-                    <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                     <DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>

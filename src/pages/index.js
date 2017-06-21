@@ -31,9 +31,9 @@ import HotelPayMode from './policy/hotel-paymode/hotel-paymode';
 const policy = { PayCompany, HotelPayMode }
 
 // order
-import CarOrder from './order/car-order';
+import CarOrderManage from './order/car-order-manage';
 import HotelOrder from './order/hotel-order';
-const order = { CarOrder, HotelOrder }
+const order = { CarOrderManage, HotelOrder }
 
 // images
 import ImagesInfo from './images/imagesInfo';

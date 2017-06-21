@@ -314,7 +314,7 @@ export default {
                 try {
                     const res = await carArrangeApi.listByQuery(options);
                     _self.list = res.data.Data;
-                    if (_self.list.length > 0) {
+                    if (_self.list && _self.list.length) {
                         for (let [index, elem] of _self.list.entries()) {
                             _self.list[index].ArrangeTime = new Date(_self.list[index].ArrangeTime).Format('yyyy-MM-dd hh:mm:ss');
                             _self.list[index].CancelTime = new Date(_self.list[index].CancelTime).Format('yyyy-MM-dd hh:mm:ss')
