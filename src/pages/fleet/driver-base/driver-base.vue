@@ -25,14 +25,15 @@
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
             <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="JobNnumber" label="编号"></el-table-column>
+            <el-table-column prop="JobNnumber" label="工号"></el-table-column>
             <el-table-column prop="Name" label="姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Phone" label="电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="JobStatus" label="工作状态" width="100">
                 <template scope="scope">
-                    <p v-if="scope.row.JobStatus === 1">正产在职</p>
+                    <p v-if="scope.row.JobStatus === 1">正常在职</p>
                     <p v-if="scope.row.JobStatus === 2">已离职</p>
                     <p v-if="scope.row.JobStatus === 3">停职</p>
+                    <p v-if="scope.row.JobStatus === 4">休假</p>
                 </template>
             </el-table-column>
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
@@ -49,8 +50,8 @@
         </div>
         <el-dialog :title="form.id?'编辑司机基本信息':'添加司机基本信息'" size="tiny" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules">
-                <el-form-item label="编号" prop="jobNnumber">
-                    <el-input placeholder="请输入编号" v-model="form.jobNnumber"></el-input>
+                <el-form-item label="工号" prop="jobNnumber">
+                    <el-input placeholder="请输入工号" v-model="form.jobNnumber"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
@@ -115,18 +116,21 @@ export default {
                 }],
                 jobStatusList: [{
                     value: 1,
-                    label: '正产在职'
+                    label: '正常在职'
                 }, {
                     value: 2,
                     label: '已离职'
                 }, {
                     value: 3,
                     label: '停职'
+                }, {
+                    value: 4,
+                    label: '休假'
                 }],
                 rules: {
                     jobNnumber: [{
                         required: true,
-                        message: '请输入司机编号'
+                        message: '请输入司机工号'
                     }],
                     name: [{
                         required: true,
