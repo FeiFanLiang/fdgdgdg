@@ -53,7 +53,11 @@ const role = { Role }
 // wechat
 import CustomMenu from './weichat/custom-menu';
 import CustomService from './weichat/custom-service'
-const wechat = { CustomMenu, CustomService }
+import PayWeichat from './weichat/pay-weichat'
+import Card from './weichat/card'
+import Data from './weichat/data'
+import MembershipCard from './weichat/membership-card'
+const wechat = { CustomMenu, CustomService, PayWeichat, Card, Data, MembershipCard }
 
 //fleet
 import CarBase from './fleet/car-base/car-base';

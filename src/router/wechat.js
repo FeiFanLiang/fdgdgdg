@@ -9,10 +9,25 @@ module.exports = {
             path: 'CustomMenu',
             component: Pages.CustomMenu,
             name: '自定义菜单',
-        }, {
+        },{
             path: 'CustomService',
             component: Pages.CustomService,
             name: '客服消息'
-        },
+        },{
+            path: 'PayWeichat',
+            component: Pages.PayWeichat,
+            name: '微信支付'
+        },{
+            path: 'Card',
+            component: Pages.Card,
+            name: '卡卷功能'
+        },{
+            path: 'Data',
+            component: Pages.Data,
+            name: '数据与对账',
+            meta: {
+                hidden: true
+            }
+        }
     ]
 };
