@@ -1,3 +1,3 @@
-module.exports = {
-  store: require('./store/')
-};
+import store from './store'
+
+export { store }

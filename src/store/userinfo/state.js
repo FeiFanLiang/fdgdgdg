@@ -1,4 +1,4 @@
-// import { store } from '../../utils/';
+import { store } from '../../utils/'
 
 export default {
   // 登录成功后的用户信息
