@@ -1,5 +1,2 @@
-// 显示加载
-export const SHOW_LOADING = 'SHOW_LOADING';
-
-// 关闭加载
-export const HIDE_LOADING = 'HIDE_LOADING';
+// 设置配置列表
+export const SET_CONFIG_LIST = 'SET_CONFIG_LIST';
