@@ -1,28 +1,28 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  listAll(params = {}) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase', { params: params });
+  listAll (params = {}) {
+    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase', { params: params })
   },
-  listByQuery(params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase', { params: params });
+  listByQuery (params) {
+    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase', { params: params })
   },
-  listDefault() {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase/default');
+  listDefault () {
+    return axios.get(path.apiBaseUrl + 'Hotel/HotelBase/default')
   },
-  detailsById(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelBase/${id}`);
+  detailsById (id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelBase/${id}`)
   },
-  detailsByHotelNum(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelBase/HotelNum/${id}`);
+  detailsByHotelNum (id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelBase/HotelNum/${id}`)
   },
-  add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelBase', params);
+  add (params) {
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelBase', params)
   },
-  del(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelBase/${id}`);
+  del (id) {
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelBase/${id}`)
   },
-  edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelBase/${id}`, params);
+  edit (id, params) {
+    return axios.put(path.apiBaseUrl + `Hotel/HotelBase/${id}`, params)
   }
-};
+}

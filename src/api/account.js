@@ -1,7 +1,7 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  login(params) {
+  login (params) {
     // let { username, password } = params;
     // params = `username=${username}&password=${password}`;
     // return axios.post(path.apiBaseUrl + 'Account/Login', params);
@@ -13,12 +13,12 @@ export default {
           'Content-Type': 'application/json'
         }
       }
-    );
+    )
   },
-  register(params) {
-    return axios.post(path.apiBaseUrl + 'Account/Register', params);
+  register (params) {
+    return axios.post(path.apiBaseUrl + 'Account/Register', params)
   },
-  logout() {
-    return axios.post(path.apiBaseUrl + 'Account/Logout');
+  logout () {
+    return axios.post(path.apiBaseUrl + 'Account/Logout')
   }
-};
+}

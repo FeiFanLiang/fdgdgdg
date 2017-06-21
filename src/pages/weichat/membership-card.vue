@@ -88,27 +88,23 @@
             </div>
         </el-tab-pane>
     </el-tabs>
-</div>  
+</div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        activeIndex: '1',
-        tableData:[],
-        input:'',
-        dateValue:''
-      };
-    },
-    methods: {
-      clickEditBtn(){
-
-      },
-      clickDelBtn(){
-
-      }
+export default {
+  data() {
+    return {
+      activeIndex: '1',
+      tableData: [],
+      input: '',
+      dateValue: ''
     }
+  },
+  methods: {
+    clickEditBtn() {},
+    clickDelBtn() {}
   }
+}
 </script>
 <style lang="scss">
 #membershipCard{

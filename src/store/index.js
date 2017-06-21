@@ -8,7 +8,7 @@ import user from './userinfo';
 import global from './global';
 import config from './config';
 
-module.exports = new Vuex.Store({
+export default new Vuex.Store({
   modules: {
     global,
     router,

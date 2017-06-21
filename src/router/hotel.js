@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'hotel',
   component: Pages.Abstract,
   name: '酒店',
@@ -9,7 +9,7 @@ module.exports = {
     {
       path: 'HotelBase',
       component: Pages.HotelBase,
-      name: '酒店基础信息',
+      name: '酒店基础信息'
     },
     {
       path: 'HotelBaseAdd',
@@ -69,4 +69,4 @@ module.exports = {
       }
     }
   ]
-};
+}

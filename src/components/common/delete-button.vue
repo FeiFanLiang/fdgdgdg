@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import ApiService from 'api';
+import * as ApiService from 'api';
 
 export default {
   name: 'DeleteButton',

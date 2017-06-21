@@ -1,5 +1,5 @@
 module.exports = {
-  resetForm(formName) {
+  resetForm (formName) {
     try {
       if (
         formName &&
@@ -7,12 +7,12 @@ module.exports = {
         this.$refs[formName] &&
         typeof this.$refs[formName].resetFields === 'function'
       ) {
-        this.$refs[formName].resetFields();
+        this.$refs[formName].resetFields()
       }
     } catch (e) {
       for (let item in this[formName]) {
-        this[formName][item] = '';
+        this[formName][item] = ''
       }
     }
   }
-};
+}

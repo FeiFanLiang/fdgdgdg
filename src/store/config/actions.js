@@ -1,10 +1,10 @@
-import * as types from './mutations-types';
+import * as types from './mutations-types'
 
-module.exports = {
+export default {
   fetchConfigList: ({ commit }) => {
     return new Promise((resolve, reject) => {
-      commit(types.SET_CONFIG_LIST);
-      resolve();
-    });
+      commit(types.SET_CONFIG_LIST)
+      resolve()
+    })
   }
-};
+}

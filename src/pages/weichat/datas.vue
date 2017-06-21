@@ -11,19 +11,17 @@
 import JYGK from './data-jygk'
 import KJSJ from './data-kjsj'
 import HXJL from './data-hxjl'
-  export default {
-    components: {
-        JYGK,
-        KJSJ,
-        HXJL
-    },
-    data() {
-      return {
-        activeIndex: '1',
-      };
-    },
-    methods: {
-     
+export default {
+  components: {
+    JYGK,
+    KJSJ,
+    HXJL
+  },
+  data() {
+    return {
+      activeIndex: '1'
     }
-  }
+  },
+  methods: {}
+}
 </script>

@@ -1,9 +1,9 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  list(params) {
+  list (params) {
     return axios.get(path.apiBaseUrl + 'Hotel/SecretType', {
       params: params
-    });
+    })
   }
-};
+}

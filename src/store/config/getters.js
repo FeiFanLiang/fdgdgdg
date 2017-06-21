@@ -1,5 +1,5 @@
-module.exports = {
-  getConfigList(state) {
-    return state.configList;
+export default {
+  getConfigList (state) {
+    return state.configList
   }
-};
+}

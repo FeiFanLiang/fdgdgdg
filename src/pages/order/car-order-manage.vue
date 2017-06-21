@@ -220,261 +220,286 @@
     </div>
 </template>
 <script>
-import {
-    carOrderManageApi
-} from 'api';
-
+import { carOrderManageApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                currentPage: 1,
-                pageSize: 20,
-                count: 0,
-                loading: false,
-                showDialog: false,
-                form: {
-                    DealPrice: '',
-                    RealPrice: '',
-                    PayStatus: '',
-                    PayType: '',
-                    LinkName: '',
-                    LinkPhone: '',
-                    SpecReq: '',
-                    Remark: '',
-                    Channel: '',
-                    ExternalOrderID: '',
-                    ExternalOrderStete: '',
-                    CarTransportType: '',
-                    CarClassify: '',
-                    Origin: '',
-                    OriginAddress: '',
-                    OriginCoordinates: '',
-                    Destination: '',
-                    DestinationAddress: '',
-                    DestinationCoordinates: '',
-                    UseTime: '',
-                    IsAppointment: true,
-                    CarriageNo: '',
-                    StaffUserName: ''
-                },
-                payChannelList: [{
-                    value: 'ALIPAY',
-                    label: '支付宝'
-                }, {
-                    value: 'WEIXINPAY',
-                    label: '微信支付'
-                }, {
-                    value: 'UNIONPAY',
-                    label: '银联支付'
-                }, {
-                    value: 'PLATFORM',
-                    label: '平台'
-                }],
-                carTransportTypeList: [{
-                    value: 0,
-                    label: '接机'
-                }, {
-                    value: 1,
-                    label: '送机'
-                }, {
-                    value: 2,
-                    label: '指定线路'
-                }, {
-                    value: 3,
-                    label: '接站'
-                }, {
-                    value: 4,
-                    label: '送站'
-                }],
-                carClassifyList: [{
-                    value: 0,
-                    label: '经济型'
-                }, {
-                    value: 1,
-                    label: '舒适型'
-                }, {
-                    value: 2,
-                    label: '商务型'
-                }, {
-                    value: 3,
-                    label: '豪华型'
-                }],
-                filters: {
-                    name: '',
-                    phone: '',
-                    jobStatus: '',
-                    labelVal: '1'
-                },
-                selectedOptions: [{
-                    value: '1',
-                    label: '姓名'
-                }, {
-                    value: '2',
-                    label: '电话'
-                }],
-                rules: {
-                    jobNnumber: [{
-                        required: true,
-                        message: '请输入司机工号'
-                    }],
-                    name: [{
-                        required: true,
-                        message: '请输入司机姓名'
-                    }],
-                    phone: [{
-                        required: true,
-                        message: '请输入司机手机号'
-                    }],
-                    jobStatus: [{
-                        required: true,
-                        message: '请选择工作状态'
-                    }]
-                }
-            };
+  data() {
+    return {
+      list: [],
+      currentPage: 1,
+      pageSize: 20,
+      count: 0,
+      loading: false,
+      showDialog: false,
+      form: {
+        DealPrice: '',
+        RealPrice: '',
+        PayStatus: '',
+        PayType: '',
+        LinkName: '',
+        LinkPhone: '',
+        SpecReq: '',
+        Remark: '',
+        Channel: '',
+        ExternalOrderID: '',
+        ExternalOrderStete: '',
+        CarTransportType: '',
+        CarClassify: '',
+        Origin: '',
+        OriginAddress: '',
+        OriginCoordinates: '',
+        Destination: '',
+        DestinationAddress: '',
+        DestinationCoordinates: '',
+        UseTime: '',
+        IsAppointment: true,
+        CarriageNo: '',
+        StaffUserName: ''
+      },
+      payChannelList: [
+        {
+          value: 'ALIPAY',
+          label: '支付宝'
         },
-
-        methods: {
-            search() {
-                this.fetchData();
-            },
-            async fetchData(currentPage, pageSize) {
-                const _self = this;
-                _self.loading = true;
-                _self.currentPage = currentPage || _self.currentPage;
-                _self.pageSize = pageSize || _self.pageSize;
-                const options = {
-                    pageIndex: _self.currentPage,
-                    pageSize: _self.pageSize,
-                    order: 'ID',
-                    query: {
-                        // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-                        // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-                        // jobStatus: _self.filters.jobStatus
-                    },
-                };
-                try {
-                    const res = await carOrderManageApi.listByQuery(options);
-                    _self.list = res.data.Data;
-                    _self.count = res.data.Count;
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading = false;
-                }
-            },
-            handleSizeChange(val) {
-                this.pageSize = val
-                this.fetchData(this.pageSize);
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.fetchData(this.currentPage);
-            },
-            clickAddBtn() {
-                const _self = this;
-                _self.showDialog = true;
-                _self.form = {
-                    id: 0,
-                    name: '',
-                    phone: '',
-                    jobStatus: 1,
-                    remark: ''
-                }
-            },
-            async clickEditBtn($index, row) {
-                const _self = this;
-                try {
-                    const res = await carOrderManageApi.detail(row.ID);
-                    _self.showDialog = true;
-                    _self.form.DealPrice = res.data.Data.DealPrice;
-                    _self.form.RealPrice = res.data.Data.RealPrice;
-                    _self.form.PayStatus = res.data.Data.PayStatus;
-                    _self.form.PayType = res.data.Data.PayType;
-                    _self.form.LinkName = res.data.Data.LinkName;
-                    _self.form.LinkPhone = res.data.Data.LinkPhone;
-                    _self.form.SpecReq = res.data.Data.SpecReq;
-                    _self.form.Remark = res.data.Data.Remark;
-                    _self.form.Channel = res.data.Data.Channel;
-                    _self.form.ExternalOrderID = res.data.Data.ExternalOrderID;
-                    _self.form.ExternalOrderStete = res.data.Data.ExternalOrderStete;
-                    _self.form.CarTransportType = res.data.Data.CarTransportType;
-                    _self.form.CarClassify = res.data.Data.CarClassify;
-                    _self.form.Origin = res.data.Data.Origin;
-                    _self.form.OriginAddress = res.data.Data.OriginAddress;
-                    _self.form.OriginCoordinates = res.data.Data.OriginCoordinates;
-                    _self.form.Destination = res.data.Data.Destination;
-                    _self.form.DestinationAddress = res.data.Data.DestinationAddress;
-                    _self.form.DestinationCoordinates = res.data.Data.DestinationCoordinates;
-                    _self.form.UseTime = res.data.Data.UseTime;
-                    _self.form.IsAppointment = res.data.Data.IsAppointment;
-                    _self.form.CarriageNo = res.data.Data.CarriageNo;
-                    _self.form.StaffUserName = res.data.Data.StaffUserName;
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            submitForm() {
-                const _self = this;
-                if (_self.form.id) {
-                    _self.editSave();
-                } else {
-                    _self.addSave();
-                }
-            },
-            async addSave() {
-                const _self = this;
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carOrderManageApi.add(_self.form);
-                            _self.fetchData();
-                            _self.$refs['form'].resetFields();
-                            _self.showDialog = false;
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            });
-                        } catch (e) {
-                            console.error(e);
-                            _self.$message.error('添加失败!!!');
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            async editSave() {
-                const _self = this;
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            let form = {..._self.form
-                            }
-                            delete form.id
-                            await carOrderManageApi.edit(_self.form.id, form);
-                            _self.fetchData();
-                            _self.$refs['form'].resetFields();
-                            _self.showDialog = false;
-                            _self.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            });
-                        } catch (e) {
-                            console.error(e);
-                            _self.$message.error('编辑失败!!!');
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            }
+        {
+          value: 'WEIXINPAY',
+          label: '微信支付'
         },
-        mounted() {
-            this.fetchData();
+        {
+          value: 'UNIONPAY',
+          label: '银联支付'
+        },
+        {
+          value: 'PLATFORM',
+          label: '平台'
         }
-};
+      ],
+      carTransportTypeList: [
+        {
+          value: 0,
+          label: '接机'
+        },
+        {
+          value: 1,
+          label: '送机'
+        },
+        {
+          value: 2,
+          label: '指定线路'
+        },
+        {
+          value: 3,
+          label: '接站'
+        },
+        {
+          value: 4,
+          label: '送站'
+        }
+      ],
+      carClassifyList: [
+        {
+          value: 0,
+          label: '经济型'
+        },
+        {
+          value: 1,
+          label: '舒适型'
+        },
+        {
+          value: 2,
+          label: '商务型'
+        },
+        {
+          value: 3,
+          label: '豪华型'
+        }
+      ],
+      filters: {
+        name: '',
+        phone: '',
+        jobStatus: '',
+        labelVal: '1'
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '姓名'
+        },
+        {
+          value: '2',
+          label: '电话'
+        }
+      ],
+      rules: {
+        jobNnumber: [
+          {
+            required: true,
+            message: '请输入司机工号'
+          }
+        ],
+        name: [
+          {
+            required: true,
+            message: '请输入司机姓名'
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            message: '请输入司机手机号'
+          }
+        ],
+        jobStatus: [
+          {
+            required: true,
+            message: '请选择工作状态'
+          }
+        ]
+      }
+    }
+  },
+
+  methods: {
+    search() {
+      this.fetchData()
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: {
+          // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+          // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+          // jobStatus: _self.filters.jobStatus
+        }
+      }
+      try {
+        const res = await carOrderManageApi.listByQuery(options)
+        _self.list = res.data.Data
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.showDialog = true
+      _self.form = {
+        id: 0,
+        name: '',
+        phone: '',
+        jobStatus: 1,
+        remark: ''
+      }
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await carOrderManageApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.DealPrice = res.data.Data.DealPrice
+        _self.form.RealPrice = res.data.Data.RealPrice
+        _self.form.PayStatus = res.data.Data.PayStatus
+        _self.form.PayType = res.data.Data.PayType
+        _self.form.LinkName = res.data.Data.LinkName
+        _self.form.LinkPhone = res.data.Data.LinkPhone
+        _self.form.SpecReq = res.data.Data.SpecReq
+        _self.form.Remark = res.data.Data.Remark
+        _self.form.Channel = res.data.Data.Channel
+        _self.form.ExternalOrderID = res.data.Data.ExternalOrderID
+        _self.form.ExternalOrderStete = res.data.Data.ExternalOrderStete
+        _self.form.CarTransportType = res.data.Data.CarTransportType
+        _self.form.CarClassify = res.data.Data.CarClassify
+        _self.form.Origin = res.data.Data.Origin
+        _self.form.OriginAddress = res.data.Data.OriginAddress
+        _self.form.OriginCoordinates = res.data.Data.OriginCoordinates
+        _self.form.Destination = res.data.Data.Destination
+        _self.form.DestinationAddress = res.data.Data.DestinationAddress
+        _self.form.DestinationCoordinates = res.data.Data.DestinationCoordinates
+        _self.form.UseTime = res.data.Data.UseTime
+        _self.form.IsAppointment = res.data.Data.IsAppointment
+        _self.form.CarriageNo = res.data.Data.CarriageNo
+        _self.form.StaffUserName = res.data.Data.StaffUserName
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.id) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carOrderManageApi.add(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            let form = {
+              ..._self.form
+            }
+            delete form.id
+            await carOrderManageApi.edit(_self.form.id, form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  },
+  mounted() {
+    this.fetchData()
+  }
+}
 </script>
 <style lang="scss" scoped>
 #car-order-manage-page {

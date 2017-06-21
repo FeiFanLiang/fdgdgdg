@@ -53,55 +53,53 @@
 </template>
 
 <script>
-import {
-    accountApi
-} from 'api';
+import { accountApi } from 'api'
 export default {
-    data() {
-        return {
-            hotelName: '',
-            user: {
-                id: '',
-                username: '',
-                avatar: ''
-            },
-            activeMenu: ''
-        };
-    },
-    created() {
-        const _self = this;
-        _self.activeMenu = _self.$route.name;
-        _self.hotelName = _self.$route.query.hotelName;
-        _self.user = JSON.parse(localStorage.getItem('user'));
-    },
-    watch: {
-        $route(to, from) {
-            const _self = this;
-            _self.activeMenu = _self.$route.name;
-            _self.hotelName = _self.$route.query.hotelName;
-            _self.user = JSON.parse(localStorage.getItem('user'));
-        }
-    },
-    methods: {
-        async logout() {
-            try {
-                await this.$confirm('确定要注销吗?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'info'
-                });
-                localStorage.removeItem('user');
-
-                this.$router.push({
-                    path: '/login'
-                });
-                await accountApi.logout();
-            } catch (e) {
-                console.error(e);
-            }
-        }
+  data() {
+    return {
+      hotelName: '',
+      user: {
+        id: '',
+        username: '',
+        avatar: ''
+      },
+      activeMenu: ''
     }
-};
+  },
+  created() {
+    const _self = this
+    _self.activeMenu = _self.$route.name
+    _self.hotelName = _self.$route.query.hotelName
+    _self.user = JSON.parse(localStorage.getItem('user'))
+  },
+  watch: {
+    $route(to, from) {
+      const _self = this
+      _self.activeMenu = _self.$route.name
+      _self.hotelName = _self.$route.query.hotelName
+      _self.user = JSON.parse(localStorage.getItem('user'))
+    }
+  },
+  methods: {
+    async logout() {
+      try {
+        await this.$confirm('确定要注销吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info'
+        })
+        localStorage.removeItem('user')
+
+        this.$router.push({
+          path: '/login'
+        })
+        await accountApi.logout()
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss">@import './styles/_variables.scss';
@@ -167,11 +165,12 @@ export default {
             overflow: auto;
             z-index: 98;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.35);
+            background-color: #324157;
             border-right: 1px solid #eee;
             .db-menu-bar {
-                height: 100%;
                 flex-grow: 0;
                 width: 200px;
+                padding-bottom: 60px;
             }
         }
 

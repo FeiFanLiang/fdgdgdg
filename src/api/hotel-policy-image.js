@@ -1,19 +1,19 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  detailsById(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`);
+  detailsById (id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`)
   },
-  listByPid(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/Pid/${id}`);
+  listByPid (id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelPolicyImage/Pid/${id}`)
   },
-  add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicyImage', params);
+  add (params) {
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicyImage', params)
   },
-  del(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`);
+  del (id) {
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`)
   },
-  edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`, params);
+  edit (id, params) {
+    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicyImage/${id}`, params)
   }
-};
+}

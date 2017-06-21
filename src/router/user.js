@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'user',
   component: Pages.Abstract,
   name: '用户管理',
@@ -9,7 +9,7 @@ module.exports = {
     {
       path: 'user',
       component: Pages.User,
-      name: '用户管理',
+      name: '用户管理'
     }
   ]
-};
+}

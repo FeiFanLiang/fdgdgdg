@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'role',
   component: Pages.Abstract,
   name: '角色管理',
@@ -9,7 +9,7 @@ module.exports = {
     {
       path: 'role',
       component: Pages.Role,
-      name: '角色管理',
+      name: '角色管理'
     }
   ]
-};
+}

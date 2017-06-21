@@ -1,18 +1,18 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  listByPArea(PArea) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/pid/${PArea}`);
+  listByPArea (PArea) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/pid/${PArea}`)
   },
-  listByQuery(params = {}) {
+  listByQuery (params = {}) {
     return axios.get(path.apiBaseUrl + 'Hotel/HotelArea/query', {
       params: params
-    });
+    })
   },
-  listByQue(que) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/query/${que}`);
+  listByQue (que) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/query/${que}`)
   },
-  listById(id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/${id}`);
+  listById (id) {
+    return axios.get(path.apiBaseUrl + `Hotel/HotelArea/${id}`)
   }
-};
+}

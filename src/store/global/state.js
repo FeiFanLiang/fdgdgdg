@@ -1,3 +1,3 @@
-module.exports = {
+export default {
   ajax_loading: false
-};
+}

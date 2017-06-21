@@ -80,196 +80,211 @@
     </div>
 </template>
 <script>
-import {
-    driverBaseApi
-} from 'api';
+import { driverBaseApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                currentPage: 1,
-                pageSize: 10,
-                count: 0,
-                loading: false,
-                showDialog: false,
-                form: {
-                    id: 0,
-                    jobNnumber: '',
-                    name: '',
-                    phone: '',
-                    jobStatus: '',
-                    remark: ''
-                },
-                filters: {
-                    name: '',
-                    phone: '',
-                    jobStatus: '',
-                    labelVal: '1'
-                },
-                selectedOptions: [{
-                    value: '1',
-                    label: '姓名'
-                }, {
-                    value: '2',
-                    label: '电话'
-                }],
-                jobStatusList: [{
-                    value: 1,
-                    label: '正常在职'
-                }, {
-                    value: 2,
-                    label: '已离职'
-                }, {
-                    value: 3,
-                    label: '停职'
-                }, {
-                    value: 4,
-                    label: '休假'
-                }],
-                rules: {
-                    jobNnumber: [{
-                        required: true,
-                        message: '请输入司机工号'
-                    }],
-                    name: [{
-                        required: true,
-                        message: '请输入司机姓名'
-                    }],
-                    phone: [{
-                        required: true,
-                        message: '请输入司机手机号'
-                    }],
-                    jobStatus: [{
-                        required: true,
-                        message: '请选择工作状态'
-                    }]
-                }
-            };
+  data() {
+    return {
+      list: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      loading: false,
+      showDialog: false,
+      form: {
+        id: 0,
+        jobNnumber: '',
+        name: '',
+        phone: '',
+        jobStatus: '',
+        remark: ''
+      },
+      filters: {
+        name: '',
+        phone: '',
+        jobStatus: '',
+        labelVal: '1'
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '姓名'
         },
-        methods: {
-            search() {
-                this.fetchData();
-            },
-            async fetchData(currentPage, pageSize) {
-                const _self = this;
-                _self.loading = true;
-                _self.currentPage = currentPage || _self.currentPage;
-                _self.pageSize = pageSize || _self.pageSize;
-                const options = {
-                    pageIndex: _self.currentPage,
-                    pageSize: _self.pageSize,
-                    order: 'ID',
-                    query: {
-                        name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-                        phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-                        jobStatus: _self.filters.jobStatus
-                    },
-                };
-                try {
-                    const res = await driverBaseApi.listByQuery(options);
-                    _self.list = res.data.Data;
-                    _self.count = res.data.Count;
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading = false;
-                }
-            },
-            handleSizeChange(val) {
-                this.pageSize = val
-                this.fetchData(this.pageSize);
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.fetchData(this.currentPage);
-            },
-            clickAddBtn() {
-                const _self = this;
-                _self.showDialog = true;
-                _self.form = {
-                    id: 0,
-                    name: '',
-                    phone: '',
-                    jobStatus: 1,
-                    remark: ''
-                }
-            },
-            async clickEditBtn($index, row) {
-                const _self = this;
-                try {
-                    const res = await driverBaseApi.detail(row.ID);
-                    _self.showDialog = true;
-                    _self.form.id = res.data.Data.ID;
-                    _self.form.jobNnumber = res.data.Data.JobNnumber;
-                    _self.form.name = res.data.Data.Name;
-                    _self.form.phone = res.data.Data.Phone;
-                    _self.form.jobStatus = res.data.Data.JobStatus;
-                    _self.form.remark = res.data.Data.Remark;
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            submitForm() {
-                const _self = this;
-                if (_self.form.id) {
-                    _self.editSave();
-                } else {
-                    _self.addSave();
-                }
-            },
-            async addSave() {
-                const _self = this;
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await driverBaseApi.add(_self.form);
-                            _self.fetchData();
-                            _self.$refs['form'].resetFields();
-                            _self.showDialog = false;
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            });
-                        } catch (e) {
-                            console.error(e);
-                            _self.$message.error('添加失败!!!');
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            async editSave() {
-                const _self = this;
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            let form = {..._self.form
-                            }
-                            delete form.id
-                            await driverBaseApi.edit(_self.form.id, form);
-                            _self.fetchData();
-                            _self.$refs['form'].resetFields();
-                            _self.showDialog = false;
-                            _self.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            });
-                        } catch (e) {
-                            console.error(e);
-                            _self.$message.error('编辑失败!!!');
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            }
-        },
-        mounted() {
-            this.fetchData();
+        {
+          value: '2',
+          label: '电话'
         }
-};
+      ],
+      jobStatusList: [
+        {
+          value: 1,
+          label: '正常在职'
+        },
+        {
+          value: 2,
+          label: '已离职'
+        },
+        {
+          value: 3,
+          label: '停职'
+        },
+        {
+          value: 4,
+          label: '休假'
+        }
+      ],
+      rules: {
+        jobNnumber: [
+          {
+            required: true,
+            message: '请输入司机工号'
+          }
+        ],
+        name: [
+          {
+            required: true,
+            message: '请输入司机姓名'
+          }
+        ],
+        phone: [
+          {
+            required: true,
+            message: '请输入司机手机号'
+          }
+        ],
+        jobStatus: [
+          {
+            required: true,
+            message: '请选择工作状态'
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    search() {
+      this.fetchData()
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: {
+          name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+          phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+          jobStatus: _self.filters.jobStatus
+        }
+      }
+      try {
+        const res = await driverBaseApi.listByQuery(options)
+        _self.list = res.data.Data
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.showDialog = true
+      _self.form = {
+        id: 0,
+        name: '',
+        phone: '',
+        jobStatus: 1,
+        remark: ''
+      }
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await driverBaseApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.id = res.data.Data.ID
+        _self.form.jobNnumber = res.data.Data.JobNnumber
+        _self.form.name = res.data.Data.Name
+        _self.form.phone = res.data.Data.Phone
+        _self.form.jobStatus = res.data.Data.JobStatus
+        _self.form.remark = res.data.Data.Remark
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.id) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await driverBaseApi.add(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            let form = {
+              ..._self.form
+            }
+            delete form.id
+            await driverBaseApi.edit(_self.form.id, form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  },
+  mounted() {
+    this.fetchData()
+  }
+}
 </script>
 <style lang="scss">
 #driver-base {

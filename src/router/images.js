@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'images',
   component: Pages.Abstract,
   name: '截图信息',
@@ -9,7 +9,7 @@ module.exports = {
     {
       path: 'imagesInfo',
       component: Pages.ImagesInfo,
-      name: '截图信息',
+      name: '截图信息'
     },
     {
       path: 'imagesInfoAdd',
@@ -36,4 +36,4 @@ module.exports = {
       }
     }
   ]
-};
+}

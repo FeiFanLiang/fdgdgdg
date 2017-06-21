@@ -1,69 +1,57 @@
-/* eslint-disable */
-var path = require('path');
-var config = require('../config');
-var utils = require('./utils');
-var projectRoot = path.resolve(__dirname, '../');
+var path = require('path')
+var utils = require('./utils')
+var config = require('../config')
+var vueLoaderConfig = require('./vue-loader.conf')
 
-var env = process.env.NODE_ENV;
-// check env & config/index.js to decide whether to enable CSS source maps for the
-// various preprocessor loaders added to vue-loader at the end of this file
-var cssSourceMapDev = env === 'development' && config.dev.cssSourceMap;
-var cssSourceMapProd = env === 'production' && config.build.productionSourceMap;
-var useCssSourceMap = cssSourceMapDev || cssSourceMapProd;
+function resolve (dir) {
+  return path.join(__dirname, '..', dir)
+}
 
 module.exports = {
   entry: {
-    app: './src/app.js'
+    app: './src/main.js'
   },
   output: {
     path: config.build.assetsRoot,
+    filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath,
-    filename: '[name].js'
+      : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['', '.js', '.vue', '.json'],
-    fallback: [path.join(__dirname, '../node_modules')],
+    extensions: ['.js', '.vue', '.json'],
     alias: {
-      vue$: 'vue/dist/vue.common.js',
-      src: path.resolve(__dirname, '../src'),
-      assets: path.resolve(__dirname, '../src/assets'),
-      components: path.resolve(__dirname, '../src/components'),
-      config: path.resolve(__dirname, '../src/config'),
-      api: path.resolve(__dirname, '../src/api'),
-      plugins: path.resolve(__dirname, '../src/plugins'),
-      mixin: path.resolve(__dirname, '../src/mixin')
+      'vue$': 'vue/dist/vue.esm.js',
+      '@': resolve('src'),
+      src: resolve( 'src'),
+      assets: resolve( 'src/assets'),
+      components: resolve( 'src/components'),
+      config: resolve( 'src/config'),
+      api: resolve( 'src/api'),
+      plugins: resolve( 'src/plugins'),
+      mixin: resolve( 'src/mixin')
     }
   },
-  resolveLoader: {
-    fallback: [path.join(__dirname, '../node_modules')]
-  },
   module: {
-    // preLoaders: [
-    //   {
-    //     test: /\.vue$/,
-    //     loader: 'eslint',
-    //     include: projectRoot,
-    //     exclude: /node_modules/
-    //   },
-    //   {
-    //     test: /\.js$/,
-    //     loader: 'eslint',
-    //     include: projectRoot,
-    //     exclude: /node_modules/
-    //   }
-    // ],
-    loaders: [
+    rules: [
+      // {
+      //   test: /\.(js|vue)$/,
+      //   loader: 'eslint-loader',
+      //   enforce: 'pre',
+      //   include: [resolve('src'), resolve('test')],
+      //   options: {
+      //     formatter: require('eslint-friendly-formatter')
+      //   }
+      // },
       {
         test: /\.vue$/,
-        loader: 'vue'
+        loader: 'vue-loader',
+        options: vueLoaderConfig
       },
       {
         test: /\.js$/,
-        loader: 'babel',
-        include: projectRoot,
-        exclude: /node_modules/
+        loader: 'babel-loader',
+        include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.json$/,
@@ -71,35 +59,20 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url',
-        query: {
+        loader: 'url-loader',
+        options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url',
-        query: {
+        loader: 'url-loader',
+        options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
       }
     ]
-  },
-  eslint: {
-    formatter: require('eslint-friendly-formatter')
-  },
-  vue: {
-    preserveWhitespace: false,
-    loaders: utils.cssLoaders({ sourceMap: useCssSourceMap }),
-    postcss: [
-      require('autoprefixer')({
-        browsers: ['last 2 versions']
-      })
-    ]
-    // transformToRequire: {
-    //   avatar: ['default-src']
-    // }
   }
-};
+}

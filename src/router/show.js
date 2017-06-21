@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'show',
   component: Pages.Abstract,
   name: '展示信息',
@@ -9,7 +9,7 @@ module.exports = {
     {
       path: 'bargains-room',
       component: Pages.BargainsRoom,
-      name: '特价房型展示',
+      name: '特价房型展示'
     }
   ]
-};
+}

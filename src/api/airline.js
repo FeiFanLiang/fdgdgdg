@@ -3,21 +3,21 @@
 // GET /Airline/Airline/query/{que}
 // GET /Airline/Airline/query
 // GET /Airline/Airline/{id}
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  listAll(params) {
+  listAll (params) {
     return axios.get(path.apiBaseUrl + 'Hotel/HotelPolicy/all', {
       params: params
-    });
+    })
   },
-  add(params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy/add');
+  add (params) {
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy/add')
   },
-  del(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicy/remove/${id}`);
+  del (id) {
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicy/remove/${id}`)
   },
-  edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicy/edit/${id}`, params);
+  edit (id, params) {
+    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicy/edit/${id}`, params)
   }
-};
+}

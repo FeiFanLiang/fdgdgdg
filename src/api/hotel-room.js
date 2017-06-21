@@ -1,15 +1,15 @@
-import axios from 'axios';
-import path from './api';
+import axios from 'axios'
+import path from './api'
 export default {
-  list(pid) {
+  list (pid) {
     // 根据酒店id获取房间列表
-    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/Hotel/${pid}`);
+    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/Hotel/${pid}`)
   },
-  details(id) {
+  details (id) {
     // 根据房间id获取详情
-    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/${id}`);
+    return axios.get(path.apiBaseUrl + `Hotel/HotelRoom/${id}`)
   },
-  add(params) {
+  add (params) {
     // {
     // "HotelID": 3,
     //   "RoomName": "string",酒店名称
@@ -18,12 +18,12 @@ export default {
     //   "Remark": "string"备注
     // }
 
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelRoom', params);
+    return axios.post(path.apiBaseUrl + 'Hotel/HotelRoom', params)
   },
-  del(id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelRoom/${id}`);
+  del (id) {
+    return axios.delete(path.apiBaseUrl + `Hotel/HotelRoom/${id}`)
   },
-  edit(id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelRoom/${id}`, params);
+  edit (id, params) {
+    return axios.put(path.apiBaseUrl + `Hotel/HotelRoom/${id}`, params)
   }
-};
+}

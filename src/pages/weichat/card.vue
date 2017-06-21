@@ -19,33 +19,31 @@
         <Datas></Datas>
     </el-tab-pane>
   </el-tabs>
-</div> 
+</div>
 </template>
 <script>
-import OverviewPage from './overview';
-import TicketPage from './ticket';
-import MembershipCard from './membership-card';
-import Datas from './datas';
-import Verification from './verification';
-  export default {
-    components: {
-        OverviewPage,
-        TicketPage,
-        MembershipCard,
-        Datas,
-        Verification
-    },
-    data() {
-      return {
-        activeName: 'a'
-      };
-    },
-    methods: {
-      handleClick(tab, event) {
-        
-      }
+import OverviewPage from './overview'
+import TicketPage from './ticket'
+import MembershipCard from './membership-card'
+import Datas from './datas'
+import Verification from './verification'
+export default {
+  components: {
+    OverviewPage,
+    TicketPage,
+    MembershipCard,
+    Datas,
+    Verification
+  },
+  data() {
+    return {
+      activeName: 'a'
     }
-  };
+  },
+  methods: {
+    handleClick(tab, event) {}
+  }
+}
 </script>
 <style lang="scss">
 #card{
@@ -66,4 +64,3 @@ import Verification from './verification';
   }
 }
 </style>
-

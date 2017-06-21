@@ -1,17 +1,17 @@
-import * as types from './mutations-types';
+import * as types from './mutations-types'
 
-module.exports = {
+export default {
   show_loading: ({ commit }) => {
     return new Promise((resolve, reject) => {
-      commit(types.SHOW_LOADING);
-      resolve();
-    });
+      commit(types.SHOW_LOADING)
+      resolve()
+    })
   },
 
   hide_loading: ({ commit }) => {
     return new Promise((resolve, reject) => {
-      commit(types.HIDE_LOADING);
-      resolve();
-    });
+      commit(types.HIDE_LOADING)
+      resolve()
+    })
   }
-};
+}

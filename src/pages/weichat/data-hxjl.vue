@@ -104,78 +104,97 @@
 </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        verification:true,
-        pay:false,
-        input:'',
-        options: [{
+export default {
+  data() {
+    return {
+      verification: true,
+      pay: false,
+      input: '',
+      options: [
+        {
           value: '选项1',
           label: '会员卡'
-        }, {
+        },
+        {
           value: '选项2',
           label: '普通券'
-        }],
-        value1: '',
-        options2: [{
+        }
+      ],
+      value1: '',
+      options2: [
+        {
           value: '选项1',
           label: '不限'
-        }, {
+        },
+        {
           value: '选项2',
           label: '最近7天'
-        }, {
+        },
+        {
           value: '选项3',
           label: '最近15天'
-        }, {
+        },
+        {
           value: '选项4',
           label: '最近30天'
-        }],
-        value2: '',
-        value22: '',
-        options3: [{
+        }
+      ],
+      value2: '',
+      value22: '',
+      options3: [
+        {
           value: '选项1',
           label: '全部'
-        }, {
+        },
+        {
           value: '选项2',
           label: '自助买单'
-        }, {
+        },
+        {
           value: '选项3',
           label: '激活'
-        }, {
+        },
+        {
           value: '选项4',
           label: '自助核销'
-        }, {
+        },
+        {
           value: '选项5',
           label: '手机核销'
-        }, {
+        },
+        {
           value: '选项6',
           label: '网页核销'
-        }, {
+        },
+        {
           value: '选项7',
           label: 'API核销'
-        }],
-        value3: '',
-        options4: [{
+        }
+      ],
+      value3: '',
+      options4: [
+        {
           value: '选项1',
           label: '全部门店'
-        }, {
+        },
+        {
           value: '选项2',
           label: '良辰美景'
-        }],
-        value4: '',
-        tableData:[]
-      }
-    },
-    methods:{
-        showKaquan() {
-          this.verification = true;
-          this.pay = false;
-        },
-        showYeji() {
-          this.pay = true;
-          this.verification = false;
         }
+      ],
+      value4: '',
+      tableData: []
+    }
+  },
+  methods: {
+    showKaquan() {
+      this.verification = true
+      this.pay = false
+    },
+    showYeji() {
+      this.pay = true
+      this.verification = false
     }
   }
+}
 </script>

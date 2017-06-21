@@ -1,5 +1,5 @@
-import Pages from '../pages';
-module.exports = {
+import Pages from '../pages'
+export default {
   path: 'policy',
   component: Pages.Abstract,
   name: '政策',
@@ -9,12 +9,12 @@ module.exports = {
     {
       path: 'pay-company',
       name: '公司支付账号',
-      component: Pages.PayCompany,
+      component: Pages.PayCompany
     },
     {
       path: 'hotel-paymode',
       name: '支付方式',
-      component: Pages.HotelPayMode,
+      component: Pages.HotelPayMode
     }
   ]
-};
+}

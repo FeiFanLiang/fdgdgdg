@@ -80,42 +80,41 @@
 <script>
 export default {
   data() {
-      return {
-        dialogVisible:false,
-        dialogVisible2:false,
-        message:'全部卡券',
-        nonePrompt:true,
-        form:{
-            radio: '1',
-        },
-        tableData: [{
+    return {
+      dialogVisible: false,
+      dialogVisible2: false,
+      message: '全部卡券',
+      nonePrompt: true,
+      form: {
+        radio: '1'
+      },
+      tableData: [
+        {
           type: 'aaa',
           name: 'aaa',
           indate: 'aaa',
           stock: 'aaa',
           tag: '审核中'
-        },{
+        },
+        {
           type: 'aaa',
           name: 'aaa',
           indate: 'aaa',
           stock: 'aaa',
           tag: '未通过'
-        }]
-      }
+        }
+      ]
+    }
   },
-  methods:{
-      filterTag(value, row) {
-        return row.tag === value;
-      },
-      clickEditBtn() {
-
-      },
-      clickDelBtn() {
-
-      },
-      handleCommand(command) {
-        this.message = command;
-      }
+  methods: {
+    filterTag(value, row) {
+      return row.tag === value
+    },
+    clickEditBtn() {},
+    clickDelBtn() {},
+    handleCommand(command) {
+      this.message = command
+    }
   }
 }
 </script>
@@ -134,4 +133,3 @@ export default {
     }
 }
 </style>
-
