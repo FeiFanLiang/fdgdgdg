@@ -1,5 +1,5 @@
 <template>
-<div id="data">
+<div id="datas">
     <el-tabs type="border-card">
         <el-tab-pane label="经营概况"><JYGK></JYGK></el-tab-pane>
         <el-tab-pane label="卡券数据"><KJSJ></KJSJ></el-tab-pane>

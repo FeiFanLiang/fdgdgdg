@@ -22,8 +22,8 @@ module.exports = {
             component: Pages.Card,
             name: '卡卷功能'
         },{
-            path: 'Data',
-            component: Pages.Data,
+            path: 'Datas',
+            component: Pages.Datas,
             name: '数据与对账',
             meta: {
                 hidden: true

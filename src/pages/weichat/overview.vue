@@ -16,7 +16,7 @@
                 </el-tooltip>
             </span>
             <el-button style="float: right;" type="text">
-                <router-link :to="{path: 'Data'}">查看详细数据</router-link>
+                <router-link :to="{path: 'Datas'}">查看详细数据</router-link>
             </el-button>
         </div>
         <div class="text item">

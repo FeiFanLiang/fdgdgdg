@@ -30,16 +30,61 @@
                     <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
                     <el-button type="primary" icon="plus" style="margin-top:10px;float:right;">新建标签</el-button>
                 </div>
-                <!--<div style="margin-top:20px;">
-                    <div style="border:1px solid red;width:80%;">
-                        <el-row :gutter="24">
-                            <el-col :span="19">全部用户</el-col>
-                        </el-row>
-                    </div>
-                    <div style="border:1px solid red;width:20%;float:right;">
-                        <p>全部用户(0)</p>
-                    </div>
-                </div>-->
+                <div class="div">
+                  <el-row>
+                      <el-col :span="21">
+                          <div>
+                                <div class="div1">
+                                    <el-row :gutter="24">
+                                        <el-col :span="19">全部用户</el-col>
+                                    </el-row>
+                                </div>
+                                <div class="div2">
+                                    <el-row :gutter="24">
+                                        <el-col :span="6">
+                                            <el-checkbox>全选</el-checkbox>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                            <el-button type="primary" :disabled="true">打标签</el-button>
+                                        </el-col>
+                                        <el-col :span="5" class="text">当前状态
+                                            <el-tooltip class="item" placement="bottom" effect="light">
+                                                <div slot="content" class="content">
+                                                    <p style="font-size:14px;margin:10px;">有效：会员卡状态为“有效”，且用<br>户未删除已激活/领取的卡；</p>
+                                                    <p style="font-size:14px;margin:10px;"> 无效：会员卡状态为“失效”，或用<br>户删除了已激活/领取的卡；</p>
+                                                    <p style="font-size:14px;margin:10px;">删除的会员卡可重新领取，会员信息<br>及历史积分将自动恢复</p>
+                                                </div>
+                                                <i class="el-icon-information"></i>
+                                            </el-tooltip>
+                                        </el-col>
+                                        <el-col :span="4" class="text">积分</el-col>
+                                        <el-col :span="5" class="text">上次使用日期</el-col>
+                                        <el-col :span="4" class="text">操作</el-col>
+                                    </el-row>
+                                </div>
+                                <div class="div3">
+                                    <el-row :gutter="24">
+                                        <el-col :span="6">全部用户</el-col>
+                                        <el-col :span="5">全部用户</el-col>
+                                        <el-col :span="4">全部用户</el-col>
+                                        <el-col :span="5">全部用户</el-col>
+                                        <el-col :span="4">全部用户</el-col>
+                                    </el-row>
+                                </div>
+                                <div class="div4">
+                                    <el-row :gutter="24">
+                                        <el-col :span="19">可对会员<a href="#" style="color:#20A0FF;">群发消息</a></el-col>
+                                    </el-row>
+                                </div>
+                          </div>
+                      </el-col>
+                      <el-col :span="3">
+                          <div class="div5">
+                            <p>全部用户(0)</p>
+                            <hr color="#F4F5F9">
+                          </div>
+                      </el-col>
+                  </el-row>
+                </div>
             </div>
         </el-tab-pane>
     </el-tabs>
@@ -65,8 +110,42 @@
     }
   }
 </script>
-<style>
- .el-input {
+<style lang="scss">
+#membershipCard{
+  .el-input {
     width: 30%;
   }
+  .div{
+      width:100%;
+      margin-top:20px;
+      border: 1px solid #E7E7EB;
+  }
+  .div1,.div2,.div3{
+      border-bottom:1px solid #E7E7EB;
+      border-right:1px solid #E7E7EB;
+      padding:10px 0 0 20px;
+  }
+  .div2{
+      height:45px;
+      background-color: #F4F5F9;
+  }
+  .div3{
+      min-height:150px;
+  }
+  .div1,.div4{
+      height:35px;
+      border-right:1px solid #E7E7EB;
+      padding:10px 0 0 20px;
+  }
+  .div5{
+      min-height:270px;
+      p{
+          font-size: 15px;
+          padding:10px 0 0 20px;
+      }
+  }
+  .text{
+      margin-top: 8px;
+  }
+}
 </style>

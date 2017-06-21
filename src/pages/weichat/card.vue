@@ -11,10 +11,12 @@
         <MembershipCard></MembershipCard>
     </el-tab-pane>
     <el-tab-pane label="卡券投放" name="d">卡券投放</el-tab-pane>
-    <el-tab-pane label="卡券核销" name="e">卡券核销</el-tab-pane>
+    <el-tab-pane label="卡券核销" name="e">
+      <Verification></Verification>
+    </el-tab-pane>
     <el-tab-pane label="经营工具" name="f">经营工具</el-tab-pane>
     <el-tab-pane label="数据与对账" name="g">
-        <Data></Data>
+        <Datas></Datas>
     </el-tab-pane>
   </el-tabs>
 </div> 
@@ -23,13 +25,15 @@
 import OverviewPage from './overview';
 import TicketPage from './ticket';
 import MembershipCard from './membership-card';
-import Data from './data';
+import Datas from './datas';
+import Verification from './verification';
   export default {
     components: {
         OverviewPage,
         TicketPage,
         MembershipCard,
-        Data
+        Datas,
+        Verification
     },
     data() {
       return {

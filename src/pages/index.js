@@ -55,9 +55,10 @@ import CustomMenu from './weichat/custom-menu';
 import CustomService from './weichat/custom-service'
 import PayWeichat from './weichat/pay-weichat'
 import Card from './weichat/card'
-import Data from './weichat/data'
+import Datas from './weichat/datas'
 import MembershipCard from './weichat/membership-card'
-const wechat = { CustomMenu, CustomService, PayWeichat, Card, Data, MembershipCard }
+import Verification from './weichat/verification'
+const wechat = { CustomMenu, CustomService, PayWeichat, Card, Datas, MembershipCard,Verification }
 
 //fleet
 import CarBase from './fleet/car-base/car-base';

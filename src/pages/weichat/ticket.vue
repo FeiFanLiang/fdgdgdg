@@ -7,7 +7,7 @@
         <el-table-column prop="name" label="卡券名称"></el-table-column>
         <el-table-column prop="indate" label="卡券有效期"></el-table-column>
         <el-table-column prop="stock " label="库存"></el-table-column>
-        <el-table-column prop="tag" label="全部状态"
+        <el-table-column prop="tag" label="全部状态" :filter-multiple="false"
         :filters="[{ text: '审核中', value: '审核中' },{ text: '未通过', value: '未通过' },{ text: '待投放', value: '待投放' },{ text: '已投放', value: '已投放' },{ text: '违规下架', value: '违规下架' }]"
         :filter-method="filterTag"
         filter-placement="bottom-end">
