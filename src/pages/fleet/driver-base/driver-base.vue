@@ -25,6 +25,7 @@
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
             <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="JobNnumber" label="编号"></el-table-column>
             <el-table-column prop="Name" label="姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Phone" label="电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="JobStatus" label="工作状态" width="100">
@@ -35,10 +36,10 @@
                 </template>
             </el-table-column>
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" width="120px">
+            <el-table-column label="操作" width="150">
                 <template scope="scope">
-                    <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                    <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>
         </el-table>
@@ -48,6 +49,9 @@
         </div>
         <el-dialog :title="form.id?'编辑司机基本信息':'添加司机基本信息'" size="tiny" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules">
+                <el-form-item label="编号" prop="jobNnumber">
+                    <el-input placeholder="请输入编号" v-model="form.jobNnumber"></el-input>
+                </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
                 </el-form-item>
@@ -90,6 +94,7 @@ export default {
                 showDialog: false,
                 form: {
                     id: 0,
+                    jobNnumber: '',
                     name: '',
                     phone: '',
                     jobStatus: '',
@@ -119,6 +124,10 @@ export default {
                     label: '停职'
                 }],
                 rules: {
+                    jobNnumber: [{
+                        required: true,
+                        message: '请输入司机编号'
+                    }],
                     name: [{
                         required: true,
                         message: '请输入司机姓名'
@@ -188,6 +197,7 @@ export default {
                     const res = await driverBaseApi.detail(row.ID);
                     _self.showDialog = true;
                     _self.form.id = res.data.Data.ID;
+                    _self.form.jobNnumber = res.data.Data.JobNnumber;
                     _self.form.name = res.data.Data.Name;
                     _self.form.phone = res.data.Data.Phone;
                     _self.form.jobStatus = res.data.Data.JobStatus;
@@ -250,26 +260,6 @@ export default {
                         return false;
                     }
                 });
-            },
-            async clickDelBtn($index, row) {
-                const _self = this;
-                _self.$confirm(`是否删除${row.Name}?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async() => {
-                    try {
-                        await driverBaseApi.del(row.ID);
-                        _self.fetchData();
-                        _self.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('删除失败!!!');
-                    }
-                }).catch(() => {});
             }
         },
         mounted() {

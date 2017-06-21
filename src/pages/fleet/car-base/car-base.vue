@@ -35,10 +35,10 @@
             <el-table-column prop="SeatingNum" label="最大载客数"></el-table-column>
             <el-table-column prop="LuggageNum" label="行李数"></el-table-column>
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" width="120px">
+            <el-table-column label="操作" width="150">
                 <template scope="scope">
-                    <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                    <DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>
         </el-table>
@@ -319,26 +319,6 @@ export default {
                         return false;
                     }
                 });
-            },
-            async clickDelBtn($index, row) {
-                const _self = this;
-                _self.$confirm(`是否删除${row.CarMode}?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async() => {
-                    try {
-                        await carBaseApi.del(row.ID);
-                        _self.fetchData();
-                        _self.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('删除失败!!!');
-                    }
-                }).catch(() => {});
             }
         },
         mounted() {

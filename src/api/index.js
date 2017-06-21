@@ -1,6 +1,7 @@
 import accountApi from './account';
 import airlineApi from './airline';
 import carOrderApi from './car-order';
+import carOrderManageApi from './car-order-manage';
 import hotelAreaApi from './hotel-area';
 import hotelBaseApi from './hotel-base';
 import hotelPayModeApi from './hotel-paymode';
@@ -32,38 +33,41 @@ import carArrangeApi from './car-arrange';
 import driverBaseApi from './driver-base';
 import driverEvaluateApi from './driver-evaluate';
 
-export {
-  accountApi,
-  airlineApi,
-  carOrderApi,
-  hotelAreaApi,
-  hotelBaseApi,
-  hotelPayModeApi,
-  hotelPlatformApi,
-  hotelPolicyApi,
-  hotelPolicyImageApi,
-  hotelRoomApi,
-  hotelRoomBedApi,
-  hotelStarApi,
-  hotelThreePlatInfoApi,
-  imagesInfoApi,
-  orderApi,
-  payCompanyApi,
-  roomStateApi,
-  rserveModeApi,
-  secretTypeApi,
-  sonRoomApi,
-  sonRoomPlatformApi,
-  sonRoomSalePriceApi,
-  userApi,
-  roleApi,
-  hotelShowApi,
-  hotelImageApi,
-  roomShowApi,
-  bargainsRoomApi,
-  carBaseApi,
-  carUseApi,
-  carArrangeApi,
-  driverBaseApi,
-  driverEvaluateApi
+const api = {
+    accountApi,
+    airlineApi,
+    carOrderApi,
+    carOrderManageApi,
+    hotelAreaApi,
+    hotelBaseApi,
+    hotelPayModeApi,
+    hotelPlatformApi,
+    hotelPolicyApi,
+    hotelPolicyImageApi,
+    hotelRoomApi,
+    hotelRoomBedApi,
+    hotelStarApi,
+    hotelThreePlatInfoApi,
+    imagesInfoApi,
+    orderApi,
+    payCompanyApi,
+    roomStateApi,
+    rserveModeApi,
+    secretTypeApi,
+    sonRoomApi,
+    sonRoomPlatformApi,
+    sonRoomSalePriceApi,
+    userApi,
+    roleApi,
+    hotelShowApi,
+    hotelImageApi,
+    roomShowApi,
+    bargainsRoomApi,
+    carBaseApi,
+    carUseApi,
+    carArrangeApi,
+    driverBaseApi,
+    driverEvaluateApi
 };
+module.exports = api;
+export default api;

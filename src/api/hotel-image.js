@@ -14,7 +14,7 @@ export default {
   edit(params) {
     return axios.put(path.apiBaseUrl + 'Hotel/HotelImage', params);
   },
-  remove(imgID) {
+  del(imgID) {
     return axios.delete(path.apiBaseUrl + `Hotel/HotelImage/${imgID}`);
   }
 };
