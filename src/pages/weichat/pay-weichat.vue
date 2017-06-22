@@ -160,6 +160,7 @@ export default{
 
   .box-card {
     width: 90%;
+    margin-bottom: 20px;
   }
 
   .el-select .el-input {

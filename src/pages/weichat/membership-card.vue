@@ -10,8 +10,9 @@
                     <el-table-column prop="date" label="状态" ></el-table-column>
                     <el-table-column label="操作" width="150">
                         <template scope="scope">
-                            <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                            <el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+                            <el-button type="primary" size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                            <!--<el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>-->
+                            <DeleteButton :id="scope.row.ID"></DeleteButton>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -28,7 +29,23 @@
                 <div class="block">
                     <p style="margin:10px 0 10px 0;">按最近使用时间查看会员</p>
                     <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
-                    <el-button type="primary" icon="plus" style="margin-top:10px;float:right;">新建标签</el-button>
+                    <el-popover ref="popover" placement="bottom" title="标签名称" width="200"  trigger="click" v-model="visible">
+                        <el-row>
+                            <el-col :span="24">
+                                <el-input v-model="inputs" placeholder="请输入内容" @change="changes" style="width:80%;"></el-input>
+                                <span style="font-size:16px;">{{count}}/6</span>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:10px;">
+                            <el-col :span="12">
+                                <el-button type="primary" size="small" style="width:80%;" :plain="true" @click="open">确定</el-button>
+                            </el-col>
+                            <el-col :span="12" style="text-align:right;">
+                                <el-button size="small" style="width:80%;" @click="visible = false">取消</el-button>
+                            </el-col>
+                        </el-row>
+                    </el-popover>
+                    <el-button type="primary" icon="plus" v-popover:popover style="margin-top:10px;float:right;">新建标签</el-button>
                 </div>
                 <div class="div">
                   <el-row>
@@ -48,10 +65,10 @@
                                         </el-col>
                                         <el-col :span="5" class="text">当前状态
                                             <el-tooltip class="item" placement="bottom" effect="light">
-                                                <div slot="content" class="content">
-                                                    <p style="font-size:14px;margin:10px;">有效：会员卡状态为“有效”，且用<br>户未删除已激活/领取的卡；</p>
-                                                    <p style="font-size:14px;margin:10px;"> 无效：会员卡状态为“失效”，或用<br>户删除了已激活/领取的卡；</p>
-                                                    <p style="font-size:14px;margin:10px;">删除的会员卡可重新领取，会员信息<br>及历史积分将自动恢复</p>
+                                                <div slot="content" class="content" style="width:150px;">
+                                                    <p style="font-size:14px;margin:10px;">有效：会员卡状态为“有效”，且用户未删除已激活/领取的卡；</p>
+                                                    <p style="font-size:14px;margin:10px;"> 无效：会员卡状态为“失效”，或用户删除了已激活/领取的卡；</p>
+                                                    <p style="font-size:14px;margin:10px;">删除的会员卡可重新领取，会员信息及历史积分将自动恢复</p>
                                                 </div>
                                                 <i class="el-icon-information"></i>
                                             </el-tooltip>
@@ -97,12 +114,26 @@ export default {
       activeIndex: '1',
       tableData: [],
       input: '',
-      dateValue: ''
+      inputs:'',
+      count: 0,
+      dateValue: '',
+      visible:false,
     }
   },
   methods: {
     clickEditBtn() {},
-    clickDelBtn() {}
+    clickDelBtn() {},
+    changes() {
+        this.count = this.inputs.length;
+    },
+    open() {
+        if(this.inputs.length>6){
+          this.$message({
+            message: '标签必须为1-6个字',
+            type: 'warning'
+          });
+        }
+    },
   }
 }
 </script>
@@ -137,7 +168,7 @@ export default {
       min-height:270px;
       p{
           font-size: 15px;
-          padding:10px 0 0 20px;
+          padding:0 0 0 20px;
       }
   }
   .text{

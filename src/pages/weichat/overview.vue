@@ -4,13 +4,13 @@
         <div slot="header" class="clearfix">
             <span style="line-height: 36px;">昨日经营效果汇总
                 <el-tooltip class="item" placement="bottom" effect="light">
-                    <div slot="content" class="content">
-                        <p style="font-size:14px;margin:10px;">“浏览”指用户在领取前打开会员卡<br>及优惠券，进入卡券领取页的操作。</p>
-                        <p style="font-size:14px;margin:10px;"> “领取”即用户将卡券添加到“微信<br>卡券”的操作。</p>
-                        <p style="font-size:14px;margin:10px;">“使用”指用户核销券或使用会员卡<br>的操作</p>
-                        <p style="font-size:14px;margin:10px;">“朋友券核销”是指用户核销朋友券<br>的操作</p>
-                        <p style="font-size:14px;margin:10px;">“实收金额”指用户通过“快速买<br>单”最终实际支付的金额，即“应收<br>金额”经过抵扣得到的用户需支付金<br>额</p>
-                        <p style="font-size:14px;margin:10px;">此处的“次数”均为所有卡券被浏览<br>的次数总和</p>
+                    <div slot="content" class="content" style="width:200px;">
+                        <p style="font-size:14px;margin:10px;">“浏览”指用户在领取前打开会员卡及优惠券，进入卡券领取页的操作。</p>
+                        <p style="font-size:14px;margin:10px;"> “领取”即用户将卡券添加到“微信卡券”的操作。</p>
+                        <p style="font-size:14px;margin:10px;">“使用”指用户核销券或使用会员卡的操作</p>
+                        <p style="font-size:14px;margin:10px;">“朋友券核销”是指用户核销朋友券的操作</p>
+                        <p style="font-size:14px;margin:10px;">“实收金额”指用户通过“快速买单”最终实际支付的金额，即“应收<br>金额”经过抵扣得到的用户需支付金<br>额</p>
+                        <p style="font-size:14px;margin:10px;">此处的“次数”均为所有卡券被浏览的次数总和</p>
                     </div>
                     <i class="el-icon-information"></i>
                 </el-tooltip>
