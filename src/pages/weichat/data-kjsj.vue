@@ -10,15 +10,15 @@
                 <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
             </div>
             <div class="div2 div22">
-                <el-dropdown trigger="click">
+                <el-dropdown trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
-                        最近7天<i class="el-icon-caret-bottom el-icon--right"></i>
+                        {{message}}<i class="el-icon-caret-bottom el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>不限</el-dropdown-item>
-                        <el-dropdown-item>最近7天</el-dropdown-item>
-                        <el-dropdown-item>最近15天</el-dropdown-item>
-                        <el-dropdown-item>最近30天</el-dropdown-item>
+                        <el-dropdown-item command="不限">不限</el-dropdown-item>
+                        <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
+                        <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
+                        <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
@@ -53,21 +53,27 @@
                 <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
             </div>
             <div class="div2 div22">
-                <el-dropdown trigger="click">
+                <el-dropdown trigger="click" @command="handleCommand1">
                     <span class="el-dropdown-link">
-                        最近7天<i class="el-icon-caret-bottom el-icon--right"></i>
+                        {{message1}}<i class="el-icon-caret-bottom el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item>不限</el-dropdown-item>
-                        <el-dropdown-item>最近7天</el-dropdown-item>
-                        <el-dropdown-item>最近15天</el-dropdown-item>
-                        <el-dropdown-item>最近30天</el-dropdown-item>
+                        <el-dropdown-item command="不限">不限</el-dropdown-item>
+                        <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
+                        <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
+                        <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </div>
         </div>
         <el-table :data="tableData" border style="width: 100%;min-height:250px;">
-            <el-table-column prop="tag" label="全部类型"></el-table-column>
+            <el-table-column prop="tag" :label="kinds" :filter-multiple="false" 
+            :filters="[{ text: '优惠券', value: '优惠券' },{ text: '代金券', value: '代金券' },{ text: '团购券', value: '团购券' },{ text: '折扣券', value: '折扣券' },{ text: '兑换券', value: '兑换券' }]" 
+            :filter-method="filterTag" filter-placement="bottom-end" width="120px">
+                <template scope="scope">
+                    <el-tag type="primary" close-transition>{{scope.row.tag}}</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column prop="cardName" label="卡券名称"></el-table-column>
             <el-table-column label="浏览">
                 <el-table-column prop="people" label="人数"></el-table-column>
@@ -96,9 +102,27 @@
 export default {
   data() {
       return {
-          tableData:[],
-          dateValue:''
+          kinds:'全部类型',
+          tableData:[{
+          tag: '优惠券'
+        }],
+          dateValue:'',
+          message: '最近7天',
+          message1: '最近7天', 
       }
+  },
+  methods:{
+        
+        filterTag(value, row) {
+            this.kinds = value;
+            return row.tag === value;
+        },
+        handleCommand(command) {
+            this.message = command;
+        },
+        handleCommand1(command) {
+            this.message1 = command;
+        },
   }
 }
 </script>

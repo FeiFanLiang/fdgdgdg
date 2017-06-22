@@ -10,8 +10,8 @@
             <el-button @click="showYeji">买单</el-button>
         </el-button-group>
     </div>
-    <div style="width:100%;margin-top:20px;" v-if="verification">
-        <el-row :gutter="24">
+    <div style="width:100%;margin-top:0px;" v-if="verification">
+        <el-row :gutter="24" class="title">
             <el-col :span="3">
                 <p>卡券类型</p>
                 <el-select v-model="value1" placeholder="请选择">
@@ -38,11 +38,11 @@
                 </el-select>
             </el-col>
             <el-col :span="2">
-                <br>
+                <br><br><br>
                 <el-button type="text">清除</el-button>
             </el-col>
             <el-col :span="2" :offset="3">
-                <br>
+                <br><br><br>
                 <el-button type="text">下载表格</el-button>
             </el-col>
         </el-row>
@@ -56,13 +56,14 @@
           <el-table-column prop="nickname" label="用户昵称"></el-table-column>
           <el-table-column label="操作">
             <template scope="scope">
-                <el-button type="primary" size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                <el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+                <el-button type="primary" size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                <!--<el-button type="danger" size="mini" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>-->
+                <DeleteButton :id="scope.row.ID"></DeleteButton>
             </template>
           </el-table-column>
         </el-table>
     </div>
-    <div style="width:100%;margin-top:20px;" v-if="pay">
+    <div v-if="pay">
         <el-row :gutter="24">
             <el-col :span="8">
                 <p>时间</p>
@@ -78,15 +79,15 @@
                 </el-select>
             </el-col>
             <el-col :span="2">
-                <br>
+                <br><br><br>
                 <el-button type="text">清除</el-button>
             </el-col>
             <el-col :span="2" :offset="9">
-                <br>
+                <br><br><br>
                 <el-button type="text">下载表格</el-button>
             </el-col>
         </el-row>
-        <el-table :data="tableData" style="width: 100%;min-height:200px;">
+        <el-table :data="tableData" style="width: 100%;min-height:200px;margin-top:10px;">
           <el-table-column prop="time" label="时间" width="200" sortable></el-table-column>
           <el-table-column prop="dealnumber" label="交易单号"></el-table-column>
           <el-table-column prop="money" label="实收金额(元)"></el-table-column>
@@ -198,3 +199,13 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+#hxjl{
+  .title{
+    p{
+      margin:10px;
+    }
+  }
+}
+</style>
+
