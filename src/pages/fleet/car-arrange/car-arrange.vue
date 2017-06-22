@@ -1,18 +1,24 @@
 <template lang="html">
     <div id="car-arrange-page">
-        <el-row>
-            <el-col :span="4">
+        <el-row :gutter="20">
+            <el-col :span="3">
                 <el-select v-model="filters.arrangeStatus" placeholder="派单状态" @change="fetchData">
                     <el-option label="全部" value="">全部</el-option>
                     <el-option v-for="(item,index) in arrangeStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="3">
+                <el-select v-model="filters.labelVal" placeholder="请选择">
+                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
                 <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
             </el-col>
-            <el-col :span="4" :offset="1">
+            <el-col :span="4">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
