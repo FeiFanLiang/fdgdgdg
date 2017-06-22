@@ -21,17 +21,18 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 5"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 6"></el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-date-picker v-model="filters.useTime" type="date" placeholder="选择用车日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="8" :offset="1">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
+                <el-button type="primary" @click="syncList">同步携程订单</el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -479,6 +480,10 @@ export default {
         },
 
         methods: {
+            async syncList() {
+                const res = await carOrderManageApi.syncList();
+                console.log(res)
+            },
             search() {
                 this.fetchData()
             },
@@ -497,7 +502,7 @@ export default {
                         isCancel: _self.filters.orderVal === 2 ? true : '',
                         isCancelPrice: _self.filters.orderVal === 3 ? true : '',
                         isAppointment: _self.filters.orderVal === 4 ? true : '',
-                        useTime: new Date(_self.filters.useTime).Format('yyyy-MM-dd'),
+                        "useTime>": new Date(_self.filters.useTime).Format('yyyy-MM-dd'),
                         linkName: _self.filters.labelVal === 5 ? _self.filters.linkName : '',
                         linkPhone: _self.filters.labelVal === 6 ? _self.filters.linkPhone : '',
                     }
@@ -636,29 +641,29 @@ export default {
         },
         mounted() {
             Date.prototype.Format = function(fmt) {
-                    let o = {
-                        'M+': this.getMonth() + 1, //月份
-                        'd+': this.getDate(), //日
-                        'h+': this.getHours(), //小时
-                        'm+': this.getMinutes(), //分
-                        's+': this.getSeconds(), //秒
-                        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                        S: this.getMilliseconds() //毫秒
-                    }
-                    if (/(y+)/.test(fmt))
+                let o = {
+                    'M+': this.getMonth() + 1, //月份
+                    'd+': this.getDate(), //日
+                    'h+': this.getHours(), //小时
+                    'm+': this.getMinutes(), //分
+                    's+': this.getSeconds(), //秒
+                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+                    S: this.getMilliseconds() //毫秒
+                }
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                    )
+                for (let k in o)
+                    if (new RegExp('(' + k + ')').test(fmt))
                         fmt = fmt.replace(
                             RegExp.$1,
-                            (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                            RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
                         )
-                    for (let k in o)
-                        if (new RegExp('(' + k + ')').test(fmt))
-                            fmt = fmt.replace(
-                                RegExp.$1,
-                                RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-                            )
-                    return fmt
-                }
-                this.filters.useTime = new Date().Format('yyyy-MM-dd');
+                return fmt
+            }
+            this.filters.useTime = new Date().Format('yyyy-MM-dd');
             this.fetchData()
         }
 }
@@ -689,6 +694,16 @@ export default {
     }
     .demo-table-expand .el-form-item span {
         color: orange;
+    }
+    .el-table__expanded-cell {
+        padding: 20px 15px 20px 66px !important;
+    }
+    .demo-table-expand {
+        padding: 0 100px 10px 16px !important;
+    }
+    .el-autocomplete,
+    .el-dropdown {
+        display: block !important;
     }
 }
 </style>
