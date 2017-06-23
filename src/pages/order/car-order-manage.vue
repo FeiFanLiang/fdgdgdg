@@ -588,6 +588,13 @@ export default {
                             _self.list[index].CancelTime = new Date(
                                 _self.list[index].CancelTime
                             ).Format('yyyy-MM-dd hh:mm:ss');
+                            _self.list[index].StartingTime = new Date(
+                                _self.list[index].StartingTime
+                            ).Format('yyyy-MM-dd hh:mm:ss');
+                            _self.list[index].ArrivalTime = new Date(
+                                _self.list[index].ArrivalTime
+                            ).Format('yyyy-MM-dd hh:mm:ss');
+
                         }
                     }
                     _self.count = res.data.Count;
