@@ -62,7 +62,7 @@
                         </el-dropdown>
                     </el-col>
                     <el-col :span="5">
-                        <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                        <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:95%;"></el-date-picker>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="text">下载表格</el-button>
@@ -174,7 +174,7 @@ export default {
         },
         handleCommand3(command) {
             this.message3 = command;
-            
+
         },
     }
 }

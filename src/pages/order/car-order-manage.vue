@@ -1,16 +1,16 @@
 <template lang="html">
     <div id="car-order-manage-page">
-        <el-row :gutter="20">
+        <el-row :gutter="24">
             <el-col :span="3">
                 <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData">
-                    <el-option label="全部" value="">全部渠道</el-option>
+                    <el-option label="全部渠道" value="">全部渠道</el-option>
                     <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
                 <el-select v-model="filters.orderVal" placeholder="订单状态" @change="fetchData">
-                    <el-option label="全部" value="">全部状态</el-option>
+                    <el-option label="全部状态" value="">全部状态</el-option>
                     <el-option v-for="(item,index) in orderStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -21,17 +21,18 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 5"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 6"></el-input>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-date-picker v-model="filters.useTime" type="date" placeholder="选择用车日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
-            <el-col :span="6" :offset="1">
+            <el-col :span="7" :offset="2">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
+                <el-button type="primary" @click="syncList">同步订单</el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -41,23 +42,30 @@
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
-                        <el-form-item label="工作人员">
-                            <span>{{ props.row.StaffUserName }}</span>
-                        </el-form-item>
                         <el-form-item label="外部订单号">
                             <span>{{ props.row.ExternalOrderID }}</span>
+                        </el-form-item>
+                        <el-form-item label="工作人员">
+                            <span>{{ props.row.StaffUserName }}</span>
                         </el-form-item>
                         <el-form-item label="外部订单状态">
                             <span>{{ props.row.ExternalOrderStete }}</span>
                         </el-form-item>
                         <el-form-item label="用车类型">
-                            <span>{{ props.row.CarTransportType }}</span>
-                        </el-form-item>
-                        <el-form-item label="预定车型">
-                            <span>{{ props.row.CarClassify }}</span>
+                            <span v-if="props.row.CarTransportType === 0">接机</span>
+                            <span v-if="props.row.CarTransportType === 1">送机</span>
+                            <span v-if="props.row.CarTransportType === 2">指定线路</span>
+                            <span v-if="props.row.CarTransportType === 3">接站</span>
+                            <span v-if="props.row.CarTransportType === 4">送站</span>
                         </el-form-item>
                         <el-form-item label="始发地详细地址">
                             <span>{{ props.row.Origin }}{{props.row.OriginAddress}}</span>
+                        </el-form-item>
+                        <el-form-item label="预定车型">
+                            <span v-if="props.row.CarClassify === 0">经济型</span>
+                            <span v-if="props.row.CarClassify === 1">舒适型</span>
+                            <span v-if="props.row.CarClassify === 2">商务型</span>
+                            <span v-if="props.row.CarClassify === 3">豪华型</span>
                         </el-form-item>
                         <el-form-item label="目的地详细地址">
                             <span>{{ props.row.Destination }}{{props.row.DestinationAddress}}</span>
@@ -76,11 +84,14 @@
                                 </el-form-item>
                                 </el-col/>
                         </el-row>
+                        <el-form-item label="支付类型">
+                            <span v-if="props.row.PayType === 1">支付宝</span>
+                            <span v-if="props.row.PayType === 2">微信支付</span>
+                            <span v-if="props.row.PayType === 3">银联支付</span>
+                            <span v-if="props.row.PayType === 4">平台</span>
+                        </el-form-item>
                         <el-form-item label="支付平台订单号">
                             <span>{{ props.row.PayOrder }}</span>
-                        </el-form-item>
-                        <el-form-item label="支付类型">
-                            <span>{{ props.row.PayType }}</span>
                         </el-form-item>
                         <el-form-item label="应收费用">
                             <span>{{ props.row.DealPrice }}</span>
@@ -112,18 +123,26 @@
                         <el-form-item label="退款联系方式">
                             <span>{{ props.row.CancelContact }}</span>
                         </el-form-item>
-                        <el-form-item label="申请退款原因">
-                            <span>{{ props.row.Reason }}</span>
-                        </el-form-item>
                         <el-form-item label="申请退款金额">
                             <span>{{ props.row.ApplyCancelPrice }}</span>
-                        </el-form-item>
-                        <el-form-item label="退款审核意见">
-                            <span>{{ props.row.ApproveCancelRemark }}</span>
                         </el-form-item>
                         <el-form-item label="退款金额" class="mbtm-10">
                             <span>{{ props.row.CancelPrice }}</span>
                         </el-form-item>
+                        <el-row>
+                            <el-col :span="24">
+                                <el-form-item label="申请退款原因">
+                                    <span>{{ props.row.Reason }}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row class="mbtm-10">
+                            <el-col :span="24">
+                                <el-form-item label="退款审核意见">
+                                    <span>{{ props.row.ApproveCancelRemark }}</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
                         <el-form-item label="出发时间">
                             <span>{{ props.row.StartingTime }}</span>
                         </el-form-item>
@@ -165,10 +184,10 @@
                     <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="150" fixed="right">
+            <el-table-column label="操作" width="90" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <DeleteButton api="carOrderManageApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                    <!-- <DeleteButton api="carOrderManageApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -181,7 +200,11 @@
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="订单渠道" prop="channel">
-                            <el-input placeholder="请输入订单渠道" v-model="form.channel"></el-input>
+                            <el-select v-model="form.channel" placeholder="请选择订单渠道">
+                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
+                                    <span style="float: left">{{ item.label }}</span>
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -225,7 +248,8 @@
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="预约用车时间" prop="useTime">
-                            <el-input placeholder="请输入预约用车时间" v-model="form.useTime"></el-input>
+                            <el-date-picker v-model="form.useTime" type="datetime" placeholder="请选择预约用车时间">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -311,7 +335,11 @@
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="支付类型" prop="payType">
-                            <el-input placeholder="请输入支付类型" v-model="form.payType"></el-input>
+                            <el-select v-model="form.payType" placeholder="请选择支付类型">
+                                <el-option v-for="(item,index) in payChannelList" :key="index" :label="item.label" :value="item.value">
+                                    <span style="float: left">{{ item.label }}</span>
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -352,7 +380,7 @@ export default {
                     id: 0,
                     dealPrice: '',
                     realPrice: '',
-                    payStatus: '',
+                    payStatus: false,
                     payType: '',
                     linkName: '',
                     linkPhone: '',
@@ -401,16 +429,16 @@ export default {
                     label: "预约单"
                 }],
                 payChannelList: [{
-                    value: 'ALIPAY',
+                    value: 1,
                     label: '支付宝'
                 }, {
-                    value: 'WEIXINPAY',
+                    value: 2,
                     label: '微信支付'
                 }, {
-                    value: 'UNIONPAY',
+                    value: 3,
                     label: '银联支付'
                 }, {
-                    value: 'PLATFORM',
+                    value: 4,
                     label: '平台'
                 }],
                 carTransportTypeList: [{
@@ -458,27 +486,71 @@ export default {
                     label: '电话'
                 }],
                 rules: {
-                    jobNnumber: [{
+                    channel: [{
                         required: true,
-                        message: '请输入司机工号'
+                        message: '请选择订单渠道'
                     }],
-                    name: [{
+                    // externalOrderID: [{
+                    //     required: true,
+                    //     message: '请输入外部订单号'
+                    // }],
+                    // externalOrderStete: [{
+                    //     required: true,
+                    //     message: '请输入外部订单状态'
+                    // }],
+                    carTransportType: [{
                         required: true,
-                        message: '请输入司机姓名'
+                        message: '请选择用车类型'
                     }],
-                    phone: [{
+                    carClassify: [{
                         required: true,
-                        message: '请输入司机手机号'
+                        message: '请选择预定车型'
                     }],
-                    jobStatus: [{
+                    useTime: [{
                         required: true,
-                        message: '请选择工作状态'
+                        message: '请选择预约用车时间'
+                    }],
+                    origin: [{
+                        required: true,
+                        message: '请输入始发地'
+                    }],
+                    destination: [{
+                        required: true,
+                        message: '请输入目的地'
+                    }],
+                    linkName: [{
+                        required: true,
+                        message: '请输入联系人姓名'
+                    }],
+                    linkPhone: [{
+                        required: true,
+                        message: '请输入联系人电话'
+                    }],
+                    dealPrice: [{
+                        required: true,
+                        message: '请输入应收费用'
+                    }],
+                    realPrice: [{
+                        required: true,
+                        message: '请输入实收费用'
+                    }],
+                    payType: [{
+                        required: true,
+                        message: '请选择支付类型'
                     }]
                 }
             }
         },
 
         methods: {
+            async syncList() {
+                const _self = this;
+                _self.list = [];
+                _self.count = 0;
+                _self.loading = true;
+                const res = await carOrderManageApi.syncList();
+                _self.fetchData();
+            },
             search() {
                 this.fetchData()
             },
@@ -497,7 +569,7 @@ export default {
                         isCancel: _self.filters.orderVal === 2 ? true : '',
                         isCancelPrice: _self.filters.orderVal === 3 ? true : '',
                         isAppointment: _self.filters.orderVal === 4 ? true : '',
-                        useTime: new Date(_self.filters.useTime).Format('yyyy-MM-dd'),
+                        "useTime>": new Date(_self.filters.useTime).Format('yyyy-MM-dd'),
                         linkName: _self.filters.labelVal === 5 ? _self.filters.linkName : '',
                         linkPhone: _self.filters.labelVal === 6 ? _self.filters.linkPhone : '',
                     }
@@ -516,6 +588,13 @@ export default {
                             _self.list[index].CancelTime = new Date(
                                 _self.list[index].CancelTime
                             ).Format('yyyy-MM-dd hh:mm:ss');
+                            _self.list[index].StartingTime = new Date(
+                                _self.list[index].StartingTime
+                            ).Format('yyyy-MM-dd hh:mm:ss');
+                            _self.list[index].ArrivalTime = new Date(
+                                _self.list[index].ArrivalTime
+                            ).Format('yyyy-MM-dd hh:mm:ss');
+
                         }
                     }
                     _self.count = res.data.Count;
@@ -538,11 +617,30 @@ export default {
                 _self.showDialog = true
                 _self.form = {
                     id: 0,
-                    name: '',
-                    phone: '',
-                    jobStatus: 1,
-                    remark: ''
-                }
+                    dealPrice: '',
+                    realPrice: '',
+                    payStatus: false,
+                    payType: '',
+                    linkName: '',
+                    linkPhone: '',
+                    specReq: '',
+                    remark: '',
+                    channel: '',
+                    externalOrderID: '',
+                    externalOrderStete: '',
+                    carTransportType: '',
+                    carClassify: '',
+                    origin: '',
+                    originAddress: '',
+                    originCoordinates: '',
+                    destination: '',
+                    destinationAddress: '',
+                    destinationCoordinates: '',
+                    useTime: '',
+                    isAppointment: true,
+                    carriageNo: '',
+                    staffUserName: ''
+                };
             },
             async clickEditBtn($index, row) {
                 const _self = this
@@ -636,38 +734,35 @@ export default {
         },
         mounted() {
             Date.prototype.Format = function(fmt) {
-                    let o = {
-                        'M+': this.getMonth() + 1, //月份
-                        'd+': this.getDate(), //日
-                        'h+': this.getHours(), //小时
-                        'm+': this.getMinutes(), //分
-                        's+': this.getSeconds(), //秒
-                        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                        S: this.getMilliseconds() //毫秒
-                    }
-                    if (/(y+)/.test(fmt))
+                let o = {
+                    'M+': this.getMonth() + 1, //月份
+                    'd+': this.getDate(), //日
+                    'h+': this.getHours(), //小时
+                    'm+': this.getMinutes(), //分
+                    's+': this.getSeconds(), //秒
+                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+                    S: this.getMilliseconds() //毫秒
+                }
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                    )
+                for (let k in o)
+                    if (new RegExp('(' + k + ')').test(fmt))
                         fmt = fmt.replace(
                             RegExp.$1,
-                            (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                            RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
                         )
-                    for (let k in o)
-                        if (new RegExp('(' + k + ')').test(fmt))
-                            fmt = fmt.replace(
-                                RegExp.$1,
-                                RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-                            )
-                    return fmt
-                }
-                this.filters.useTime = new Date().Format('yyyy-MM-dd');
+                return fmt
+            }
+            this.filters.useTime = new Date().Format('yyyy-MM-dd');
             this.fetchData()
         }
 }
 </script>
 <style lang="scss" scoped>
 #car-order-manage-page {
-    .el-dialog .el-row {
-        margin-bottom: 0px !important;
-    }
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
@@ -689,6 +784,16 @@ export default {
     }
     .demo-table-expand .el-form-item span {
         color: orange;
+    }
+    .el-table__expanded-cell {
+        padding: 20px 15px 20px 66px !important;
+    }
+    .demo-table-expand {
+        padding: 0 100px 10px 16px !important;
+    }
+    .el-autocomplete,
+    .el-dropdown {
+        display: block !important;
     }
 }
 </style>

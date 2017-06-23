@@ -475,9 +475,6 @@ export default {
         font-size: 0;
         margin-right: 60px;
     }
-    .el-row {
-        margin-bottom: 5px !important;
-    }
     .el-select {
         width: 100% !important;
         display: inline-block !important;

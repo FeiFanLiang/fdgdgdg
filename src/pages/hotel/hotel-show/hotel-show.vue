@@ -341,9 +341,5 @@ export default {
 }
 </script>
 <style lang="scss">
-#hotel-show {
-    .el-row {
-        margin-bottom: 0px;
-    }
-}
+#hotel-show {}
 </style>

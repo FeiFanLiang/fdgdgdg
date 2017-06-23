@@ -336,8 +336,5 @@ export default {
         text-align: center;
         padding: 30px;
     }
-    .el-dialog .el-row {
-        margin-bottom: 5px !important;
-    }
 }
 </style>
