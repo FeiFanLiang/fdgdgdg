@@ -7,7 +7,7 @@
             <el-table-column prop="name" label="卡券名称"></el-table-column>
             <el-table-column prop="indate" label="卡券有效期"></el-table-column>
             <el-table-column prop="stock " label="库存"></el-table-column>
-            <el-table-column prop="tag" :label="allStatus" :filter-multiple="false" :filters="[{ text: '审核中', value: '审核中' },{ text: '未通过', value: '未通过' },{ text: '待投放', value: '待投放' },{ text: '已投放', value: '已投放' },{ text: '违规下架', value: '违规下架' }]" :filter-method="filterTag" filter-placement="bottom-end">
+            <el-table-column prop="tag" :label="allStatus" :filter-multiple="false" :filters="[{ text: '全部', value: '全部' },{ text: '审核中', value: '审核中' },{ text: '未通过', value: '未通过' },{ text: '待投放', value: '待投放' },{ text: '已投放', value: '已投放' },{ text: '违规下架', value: '违规下架' }]" :filter-method="filterTag" filter-placement="bottom-end">
                 <template scope="scope">
                     <el-tag :type="scope.row.tag === '已投放' ? 'success' : 'primary'" close-transition>{{scope.row.tag}}</el-tag>
                 </template>
@@ -20,7 +20,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    
+
         <el-dialog title="创建优惠券" v-model="dialogVisible" size="small">
             <p>选择你要创建的卡券类型</p>
             <el-form ref="form" :model="form" label-width="80px">
@@ -64,7 +64,7 @@
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-    
+
         <el-dialog title="选择卡券" v-model="dialogVisible2" size="small">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
@@ -109,48 +109,53 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            dialogVisible: false,
-            dialogVisible2: false,
-            message: '全部卡券',
-            nonePrompt: true,
-            allStatus:'全部状态',
-            form: {
-                radio: ''
-            },
-            tableData: [
-                {
-                    type: 'aaa',
-                    name: 'aaa',
-                    indate: 'aaa',
-                    stock: 'aaa',
-                    tag: '审核中'
-                },
-                {
-                    type: 'aaa',
-                    name: 'aaa',
-                    indate: 'aaa',
-                    stock: 'aaa',
-                    tag: '未通过'
-                }
-            ]
-        }
-    },
-    methods: {
-        filterTag(value, row) {
-            this.allStatus = value;
-            return row.tag === value
+  data() {
+    return {
+      dialogVisible: false,
+      dialogVisible2: false,
+      message: '全部',
+      nonePrompt: true,
+      allStatus: '全部',
+      form: {
+        radio: ''
+      },
+      tableData: [
+        {
+          type: 'aaa',
+          name: 'aaa',
+          indate: 'aaa',
+          stock: 'aaa',
+          tag: '审核中'
         },
-        clickEditBtn() { },
-        clickDelBtn() { },
-        handleCommand(command) {
-            this.message = command
+        {
+          type: 'aaa',
+          name: 'aaa',
+          indate: 'aaa',
+          stock: 'aaa',
+          tag: '未通过'
         }
+      ]
     }
+  },
+  methods: {
+    filterTag(value, row) {
+      this.allStatus = value
+      if (value === '全部') return true
+      return row.tag === value
+    },
+    clickEditBtn() {},
+    clickDelBtn() {},
+    handleCommand(command) {
+      this.message = command
+    }
+  }
 }
 </script>
-<style lang="scss">
+<style lang="scss" >
+// 这个表格的下拉直接渲染在了body下面,所以不能在 el-table-filter__list-item它上面加上其他限定范围的选择器
+.el-table-filter__list-item:not([label]){
+  display: none;
+}
 #ticket {
     .radio {
         margin: 10px;
@@ -163,5 +168,12 @@ export default {
         margin-left: 27px;
         color: lightgrey;
     }
+
+
+
 }
+
+
+
+
 </style>
