@@ -14,16 +14,16 @@
         <el-row :gutter="24" class="title">
             <el-col :span="3">
                 <p>卡券类型</p>
-                <el-select v-model="value1" placeholder="请选择">
+                <el-select v-model="value1" placeholder="会员卡">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-col>
             <el-col :span="8">
                 <p>时间</p>
-                <el-select v-model="value2" placeholder="请选择" style="width:100px;">
+                <el-select v-model="value2" placeholder="请选择" style="width:30%;">
                     <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
-                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围" style="width:60%;"></el-date-picker>
             </el-col>
             <el-col :span="3">
                 <p>核销方式</p>
@@ -121,7 +121,7 @@ export default {
           label: '普通券'
         }
       ],
-      value1: '',
+      value1: '会员卡',
       options2: [
         {
           value: '选项1',
@@ -140,7 +140,7 @@ export default {
           label: '最近30天'
         }
       ],
-      value2: '',
+      value2: '最近7天',
       value22: '',
       options3: [
         {
@@ -172,7 +172,7 @@ export default {
           label: 'API核销'
         }
       ],
-      value3: '',
+      value3: '全部',
       options4: [
         {
           value: '选项1',
@@ -183,7 +183,7 @@ export default {
           label: '良辰美景'
         }
       ],
-      value4: '',
+      value4: '全部门店',
       tableData: []
     }
   },
