@@ -1,5 +1,5 @@
 export default {
-  getConfigList (state) {
+  getConfigList (state, getters) {
     return state.configList
   }
 }

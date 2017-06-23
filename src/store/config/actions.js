@@ -1,5 +1,39 @@
 import * as types from './mutations-types'
-
+// const data = [
+//   {
+//     a: {
+//       ListFields: [
+//         {
+//           Name: 'AccountName',
+//           DisplayMode: 'String',
+//           title: '账户名称'
+//         },
+//         {
+//           Name: 'AccountNum',
+//           DisplayMode: 'String',
+//           title: '银行帐户'
+//         },
+//         {
+//           Name: 'Remark',
+//           DisplayMode: 'String',
+//           title: '备注'
+//         },
+//         {
+//           Name: 'ID',
+//           DisplayMode: 'String',
+//           title: 'ID'
+//         }
+//       ],
+//       SearchFields: [
+//         {
+//           Name: '',
+//           DisplayMode: 'String',
+//           title: ''
+//         }
+//       ]
+//     }
+//   }
+// ]
 export default {
   fetchConfigList ({ commit }) {
     const json = [
