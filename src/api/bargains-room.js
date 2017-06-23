@@ -1,19 +1,20 @@
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'ParkSale/BargainsRoom/'
 
 export default {
   list (params) {
-    return axios.get(path.apiBaseUrl + `ParkSale/BargainsRoom`, {
+    return axios.get(base, {
       params: params
     })
   },
   detail (id) {
-    return axios.get(path.apiBaseUrl + `ParkSale/BargainsRoom/${id}`)
+    return axios.get(base + id)
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + `ParkSale/BargainsRoom`, params)
+    return axios.post(base, params)
   },
   edit (params) {
-    return axios.put(path.apiBaseUrl + `ParkSale/BargainsRoom`, params)
+    return axios.put(base, params)
   }
 }

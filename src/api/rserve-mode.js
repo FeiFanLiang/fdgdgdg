@@ -1,7 +1,8 @@
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'Hotel/RserveMode/'
 export default {
   list () {
-    return axios.get(path.apiBaseUrl + 'Hotel/RserveMode')
+    return axios.get(base)
   }
 }

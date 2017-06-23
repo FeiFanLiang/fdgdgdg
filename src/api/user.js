@@ -1,21 +1,20 @@
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'System/User/'
 export default {
   list () {
-    return axios.get(path.apiBaseUrl + 'System/User')
+    return axios.get(base)
   },
   lockUser (userName) {
-    return axios.get(path.apiBaseUrl + `System/User/LockUser/${userName}`)
+    return axios.get(base + `LockUser/${userName}`)
   },
   unLockUser (userName) {
-    return axios.get(path.apiBaseUrl + `System/User/UnLockUser/${userName}`)
+    return axios.get(base + `UnLockUser/${userName}`)
   },
   restUserPassword (userName) {
-    return axios.get(
-      path.apiBaseUrl + `System/User/RestUserPassword/${userName}`
-    )
+    return axios.get(base + `RestUserPassword/${userName}`)
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'System/User', params)
+    return axios.post(base, params)
   }
 }

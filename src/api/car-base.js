@@ -1,20 +1,21 @@
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'ParkSale/Car/'
 
 export default {
   listByQuery (params) {
-    return axios.get(path.apiBaseUrl + 'ParkSale/Car/list', { params: params })
+    return axios.get(base + 'list', { params: params })
   },
   detail (id) {
-    return axios.get(path.apiBaseUrl + `ParkSale/Car/${id}`)
+    return axios.get(base + id)
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'ParkSale/Car', params)
+    return axios.post(base, params)
   },
   edit (id, params) {
-    return axios.put(path.apiBaseUrl + `ParkSale/Car/${id}`, params)
+    return axios.put(base + id, params)
   },
   del (id) {
-    return axios.delete(path.apiBaseUrl + `ParkSale/Car/${id}`)
+    return axios.delete(base + id)
   }
 }

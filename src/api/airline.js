@@ -1,23 +1,19 @@
-// GET /Airline/Airline/all
-// GET /Airline/Airline
-// GET /Airline/Airline/query/{que}
-// GET /Airline/Airline/query
-// GET /Airline/Airline/{id}
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'Hotel/HotelPolicy/'
 export default {
   listAll (params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelPolicy/all', {
+    return axios.get(base + 'all', {
       params: params
     })
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelPolicy/add')
+    return axios.post(base + 'add')
   },
   del (id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelPolicy/remove/${id}`)
+    return axios.delete(base + `remove/${id}`)
   },
   edit (id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelPolicy/edit/${id}`, params)
+    return axios.put(base + `edit/${id}`, params)
   }
 }

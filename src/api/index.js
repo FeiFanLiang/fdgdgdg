@@ -32,6 +32,7 @@ import carUseApi from './car-use'
 import carArrangeApi from './car-arrange'
 import driverBaseApi from './driver-base'
 import driverEvaluateApi from './driver-evaluate'
+import weixinRedirectApi from './weixin-redirect'
 
 export {
   accountApi,
@@ -67,5 +68,6 @@ export {
   carUseApi,
   carArrangeApi,
   driverBaseApi,
-  driverEvaluateApi
+  driverEvaluateApi,
+  weixinRedirectApi
 }
