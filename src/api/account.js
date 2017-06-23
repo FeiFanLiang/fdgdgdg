@@ -3,9 +3,6 @@ import path from './api'
 const base = path.apiBaseUrl + 'Account/'
 export default {
   login (params) {
-    // let { username, password } = params;
-    // params = `username=${username}&password=${password}`;
-    // return axios.post(base + 'Login', params);
     return axios.post(base + 'Login', JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json'

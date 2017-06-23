@@ -1,4 +1,3 @@
-// 房间类型的增删改查
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelRoomBed/'
