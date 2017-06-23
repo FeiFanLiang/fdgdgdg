@@ -130,7 +130,6 @@
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
     </div>
-
 </template>
 <script>
 import path from '../../../api/api.js'
@@ -467,12 +466,5 @@ export default {
 };
 </script>
 <style lang="scss">
-#bargains-room-page {
-    .el-row {
-        margin-bottom: 0px;
-    }
-    // .el-date-editor.el-input {
-    //     width: 178px;
-    // }
-}
+#bargains-room-page {}
 </style>

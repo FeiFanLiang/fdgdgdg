@@ -185,305 +185,295 @@
     </div>
 </template>
 <script>
-import { carBaseApi, driverBaseApi, carArrangeApi } from 'api'
+import {
+    carBaseApi,
+    driverBaseApi,
+    carArrangeApi
+} from 'api'
 
 export default {
-  data() {
-    return {
-      list: [],
-      carList: [],
-      driverList: [],
-      currentPage: 1,
-      pageSize: 20,
-      count: 0,
-      loading: false,
-      showDialog: false,
-      form: {
-        id: 0,
-        orderId: '',
-        webOrderId: '',
-        carId: '',
-        driverId: '',
-        arrangeStatus: '',
-        origin: '',
-        destination: '',
-        predictMileage: '',
-        predictTime: '',
-        arrangeTime: '',
-        arrangeUserId: '',
-        remark: '',
-        cancelTime: '',
-        cancelUserId: '',
-        cancelRemark: ''
-      },
-      filters: {
-        name: '',
-        phone: '',
-        arrangeStatus: '',
-        labelVal: '1'
-      },
-      arrangeStatusList: [
-        {
-          value: 0,
-          label: '准备出车'
+    data() {
+            return {
+                list: [],
+                carList: [],
+                driverList: [],
+                currentPage: 1,
+                pageSize: 20,
+                count: 0,
+                loading: false,
+                showDialog: false,
+                form: {
+                    id: 0,
+                    orderId: '',
+                    webOrderId: '',
+                    carId: '',
+                    driverId: '',
+                    arrangeStatus: '',
+                    origin: '',
+                    destination: '',
+                    predictMileage: '',
+                    predictTime: '',
+                    arrangeTime: '',
+                    arrangeUserId: '',
+                    remark: '',
+                    cancelTime: '',
+                    cancelUserId: '',
+                    cancelRemark: ''
+                },
+                filters: {
+                    name: '',
+                    phone: '',
+                    arrangeStatus: '',
+                    labelVal: '1'
+                },
+                arrangeStatusList: [{
+                    value: 0,
+                    label: '准备出车'
+                }, {
+                    value: 1,
+                    label: '运行中'
+                }, {
+                    value: 2,
+                    label: '完成'
+                }, {
+                    value: 3,
+                    label: '取消'
+                }],
+                selectedOptions: [{
+                    value: '1',
+                    label: '姓名'
+                }, {
+                    value: '2',
+                    label: '电话'
+                }],
+                rules: {
+                    accountName: [{
+                        required: true,
+                        message: '请输入账户名称'
+                    }],
+                    accountNum: [{
+                        required: true,
+                        message: '请输入银行账户'
+                    }]
+                }
+            }
         },
-        {
-          value: 1,
-          label: '运行中'
-        },
-        {
-          value: 2,
-          label: '完成'
-        },
-        {
-          value: 3,
-          label: '取消'
-        }
-      ],
-      selectedOptions: [
-        {
-          value: '1',
-          label: '姓名'
-        },
-        {
-          value: '2',
-          label: '电话'
-        }
-      ],
-      rules: {
-        accountName: [
-          {
-            required: true,
-            message: '请输入账户名称'
-          }
-        ],
-        accountNum: [
-          {
-            required: true,
-            message: '请输入银行账户'
-          }
-        ]
-      }
-    }
-  },
 
-  methods: {
-    tableRowClassName(row, index) {
-      if (row.ArrangeStatus === 0) {
-        return 'ready'
-      } else if (row.ArrangeStatus === 1) {
-        return 'serviceing'
-      } else if (row.ArrangeStatus === 3) {
-        return 'cancel'
-      }
-      return ''
-    },
-    search() {
-      this.fetchData()
-    },
-    async fetchCarList() {
-      try {
-        const options = {
-          pageIndex: '',
-          pageSize: '',
-          order: 'ID',
-          query: {}
-        }
-        const res = await carBaseApi.listByQuery(options)
-        this.carList = res.data.Data
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    async fetchDriverList() {
-      try {
-        const options = {
-          pageIndex: '',
-          pageSize: '',
-          order: 'ID',
-          query: {}
-        }
-        const res = await driverBaseApi.listByQuery(options)
-        this.driverList = res.data.Data
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    async fetchData(currentPage, pageSize) {
-      const _self = this
-      _self.loading = true
-      _self.currentPage = currentPage || _self.currentPage
-      _self.pageSize = pageSize || _self.pageSize
-      const options = {
-        pageIndex: _self.currentPage,
-        pageSize: _self.pageSize,
-        order: 'ID',
-        query: {
-          // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-          // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-          arrangeStatus: _self.filters.arrangeStatus
-        }
-      }
-      try {
-        const res = await carArrangeApi.listByQuery(options)
-        _self.list = res.data.Data
-        if (_self.list && _self.list.length) {
-          for (let [index, elem] of _self.list.entries()) {
-            _self.list[index].ArrangeTime = new Date(
-              _self.list[index].ArrangeTime
-            ).Format('yyyy-MM-dd hh:mm:ss')
-            _self.list[index].CancelTime = new Date(
-              _self.list[index].CancelTime
-            ).Format('yyyy-MM-dd hh:mm:ss')
-          }
-        }
-        _self.count = res.data.Count
-        _self.loading = false
-        _self.carList.length === 0 ? _self.fetchCarList() : ''
-      } catch (e) {
-        console.error(e)
-        _self.loading = false
-      }
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.fetchData(this.pageSize)
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val
-      this.fetchData(this.currentPage)
-    },
-    clickAddBtn() {
-      const _self = this
-      _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-      _self.showDialog = true
-      _self.form = {
-        id: 0,
-        orderId: '',
-        webOrderId: '',
-        carId: '',
-        driverId: '',
-        arrangeStatus: '',
-        origin: '',
-        destination: '',
-        predictMileage: '',
-        predictTime: '',
-        arrangeTime: '',
-        arrangeUserId: '',
-        remark: '',
-        cancelTime: '',
-        cancelUserId: '',
-        cancelRemark: ''
-      }
-    },
-    async clickEditBtn($index, row) {
-      const _self = this
-      _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-      try {
-        const res = await carArrangeApi.detail(row.ID)
-        _self.showDialog = true
-        _self.form.id = res.data.Data.ID
-        _self.form.orderId = res.data.Data.OrderID
-        _self.form.webOrderId = res.data.Data.WebOrderID
-        _self.form.carId = res.data.Data.CarID
-        _self.form.driverId = res.data.Data.DriverID
-        _self.form.arrangeStatus = res.data.Data.ArrangeStatus
-        _self.form.origin = res.data.Data.Origin
-        _self.form.destination = res.data.Data.Destination
-        _self.form.predictMileage = res.data.Data.PredictMileage
-        _self.form.predictTime = res.data.Data.PredictTime
-        _self.form.arrangeTime = res.data.Data.ArrangeTime
-        _self.form.arrangeUserId = res.data.Data.ArrangeUserId
-        _self.form.remark = res.data.Data.Remark
-        _self.form.cancelTime = res.data.Data.CancelTime
-        _self.form.cancelUserId = res.data.Data.CancelUserId
-        _self.form.cancelRemark = res.data.Data.CancelRemark
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    submitForm() {
-      const _self = this
-      if (_self.form.id) {
-        _self.editSave()
-      } else {
-        _self.addSave()
-      }
-    },
-    async addSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await carArrangeApi.add(_self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('添加失败!!!')
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    async editSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await carArrangeApi.edit(_self.form.id, _self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('编辑失败!!!')
-          }
-        } else {
-          return false
-        }
-      })
-    }
-  },
-  mounted() {
-    Date.prototype.Format = function(fmt) {
-      let o = {
-        'M+': this.getMonth() + 1, //月份
-        'd+': this.getDate(), //日
-        'h+': this.getHours(), //小时
-        'm+': this.getMinutes(), //分
-        's+': this.getSeconds(), //秒
-        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-        S: this.getMilliseconds() //毫秒
-      }
-      if (/(y+)/.test(fmt))
-        fmt = fmt.replace(
-          RegExp.$1,
-          (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-        )
-      for (let k in o)
-        if (new RegExp('(' + k + ')').test(fmt))
-          fmt = fmt.replace(
-            RegExp.$1,
-            RegExp.$1.length == 1
-              ? o[k]
-              : ('00' + o[k]).substr(('' + o[k]).length)
-          )
-      return fmt
-    }
+        methods: {
+            tableRowClassName(row, index) {
+                if (row.ArrangeStatus === 0) {
+                    return 'ready'
+                } else if (row.ArrangeStatus === 1) {
+                    return 'serviceing'
+                } else if (row.ArrangeStatus === 3) {
+                    return 'cancel'
+                }
+                return ''
+            },
+            search() {
+                this.fetchData()
+            },
+            async fetchCarList() {
+                try {
+                    const options = {
+                        pageIndex: '',
+                        pageSize: '',
+                        order: 'ID',
+                        query: {}
+                    }
+                    const res = await carBaseApi.listByQuery(options)
+                    this.carList = res.data.Data
+                } catch (e) {
+                    console.error(e)
+                }
+            },
+            async fetchDriverList() {
+                try {
+                    const options = {
+                        pageIndex: '',
+                        pageSize: '',
+                        order: 'ID',
+                        query: {}
+                    }
+                    const res = await driverBaseApi.listByQuery(options)
+                    this.driverList = res.data.Data
+                } catch (e) {
+                    console.error(e)
+                }
+            },
+            async fetchData(currentPage, pageSize) {
+                const _self = this
+                _self.loading = true
+                _self.currentPage = currentPage || _self.currentPage
+                _self.pageSize = pageSize || _self.pageSize
+                const options = {
+                    pageIndex: _self.currentPage,
+                    pageSize: _self.pageSize,
+                    order: 'ID',
+                    query: {
+                        // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+                        // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+                        arrangeStatus: _self.filters.arrangeStatus
+                    }
+                }
+                try {
+                    const res = await carArrangeApi.listByQuery(options)
+                    _self.list = res.data.Data
+                    if (_self.list && _self.list.length) {
+                        for (let [index, elem] of _self.list.entries()) {
+                            _self.list[index].ArrangeTime = new Date(
+                                _self.list[index].ArrangeTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')
+                            _self.list[index].CancelTime = new Date(
+                                _self.list[index].CancelTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')
+                        }
+                    }
+                    _self.count = res.data.Count
+                    _self.loading = false
+                    _self.carList.length === 0 ? _self.fetchCarList() : ''
+                } catch (e) {
+                    console.error(e)
+                    _self.loading = false
+                }
+            },
+            handleSizeChange(val) {
+                this.pageSize = val
+                this.fetchData(this.pageSize)
+            },
+            handleCurrentChange(val) {
+                this.currentPage = val
+                this.fetchData(this.currentPage)
+            },
+            clickAddBtn() {
+                const _self = this
+                _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+                _self.showDialog = true
+                _self.form = {
+                    id: 0,
+                    orderId: '',
+                    webOrderId: '',
+                    carId: '',
+                    driverId: '',
+                    arrangeStatus: '',
+                    origin: '',
+                    destination: '',
+                    predictMileage: '',
+                    predictTime: '',
+                    arrangeTime: '',
+                    arrangeUserId: '',
+                    remark: '',
+                    cancelTime: '',
+                    cancelUserId: '',
+                    cancelRemark: ''
+                }
+            },
+            async clickEditBtn($index, row) {
+                const _self = this
+                _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+                try {
+                    const res = await carArrangeApi.detail(row.ID)
+                    _self.showDialog = true
+                    _self.form.id = res.data.Data.ID
+                    _self.form.orderId = res.data.Data.OrderID
+                    _self.form.webOrderId = res.data.Data.WebOrderID
+                    _self.form.carId = res.data.Data.CarID
+                    _self.form.driverId = res.data.Data.DriverID
+                    _self.form.arrangeStatus = res.data.Data.ArrangeStatus
+                    _self.form.origin = res.data.Data.Origin
+                    _self.form.destination = res.data.Data.Destination
+                    _self.form.predictMileage = res.data.Data.PredictMileage
+                    _self.form.predictTime = res.data.Data.PredictTime
+                    _self.form.arrangeTime = res.data.Data.ArrangeTime
+                    _self.form.arrangeUserId = res.data.Data.ArrangeUserId
+                    _self.form.remark = res.data.Data.Remark
+                    _self.form.cancelTime = res.data.Data.CancelTime
+                    _self.form.cancelUserId = res.data.Data.CancelUserId
+                    _self.form.cancelRemark = res.data.Data.CancelRemark
+                } catch (e) {
+                    console.error(e)
+                }
+            },
+            submitForm() {
+                const _self = this
+                if (_self.form.id) {
+                    _self.editSave()
+                } else {
+                    _self.addSave()
+                }
+            },
+            async addSave() {
+                const _self = this
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carArrangeApi.add(_self.form)
+                            _self.fetchData()
+                            _self.$refs['form'].resetFields()
+                            _self.showDialog = false
+                            _self.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            })
+                        } catch (e) {
+                            console.error(e)
+                            _self.$message.error('添加失败!!!')
+                        }
+                    } else {
+                        return false
+                    }
+                })
+            },
+            async editSave() {
+                const _self = this
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carArrangeApi.edit(_self.form.id, _self.form)
+                            _self.fetchData()
+                            _self.$refs['form'].resetFields()
+                            _self.showDialog = false
+                            _self.$message({
+                                message: '编辑成功',
+                                type: 'success'
+                            })
+                        } catch (e) {
+                            console.error(e)
+                            _self.$message.error('编辑失败!!!')
+                        }
+                    } else {
+                        return false
+                    }
+                })
+            }
+        },
+        mounted() {
+            Date.prototype.Format = function(fmt) {
+                let o = {
+                    'M+': this.getMonth() + 1, //月份
+                    'd+': this.getDate(), //日
+                    'h+': this.getHours(), //小时
+                    'm+': this.getMinutes(), //分
+                    's+': this.getSeconds(), //秒
+                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
+                    S: this.getMilliseconds() //毫秒
+                }
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(
+                        RegExp.$1,
+                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
+                    )
+                for (let k in o)
+                    if (new RegExp('(' + k + ')').test(fmt))
+                        fmt = fmt.replace(
+                            RegExp.$1,
+                            RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
+                        )
+                return fmt
+            }
 
-    this.fetchData()
-  }
+            this.fetchData()
+        }
 }
 </script>
 <style lang="scss" scoped>
@@ -508,9 +498,6 @@ export default {
     }
     .cancel {
         background: #f1d4d9;
-    }
-    .el-dialog .el-row {
-        margin-bottom: 5px !important;
     }
     .pagination-wrapper {
         text-align: center;
