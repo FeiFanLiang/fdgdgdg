@@ -8,7 +8,7 @@
     <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
     <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
     <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column> -->
-      <el-table-column v-for="(item,index) in params" :key="index" sortable :prop="item.prop" :label="item.label"  show-overflow-tooltip></el-table-column>
+      <el-table-column v-if="item.is" v-for="(item,index) in configList" :key="index" sortable :prop="item.name" :label="item.label"  show-overflow-tooltip></el-table-column>
 <slot></slot>
   </el-table>
 </template>
@@ -19,34 +19,22 @@ export default {
     list: {
       type: Array,
       default: () => {
-        return [];
+        return []
+      }
+    },
+    configList: {
+      type: Array,
+      default: () => {
+        return []
       }
     }
   },
   data() {
     return {
-      loading: false,
-      params: [
-        {
-          prop: 'ID',
-          label: 'ID'
-        },
-        {
-          prop: 'AccountName',
-          label: '账户名称'
-        },
-        {
-          prop: 'AccountNum',
-          label: '银行帐户'
-        },
-        {
-          prop: 'Remark',
-          label: '备注'
-        }
-      ]
-    };
+      loading: false
+    }
   }
-};
+}
 </script>
 
 <style lang="css">

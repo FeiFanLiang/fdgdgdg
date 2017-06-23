@@ -5,7 +5,7 @@
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
-    <CustomTable :list="list">
+    <CustomTable :list="list" :configList="configList">
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -50,9 +50,14 @@
 </template>
 
 <script>
-import { payCompanyApi } from 'api';
+import { payCompanyApi } from 'api'
+import { mapGetters } from 'vuex'
 
 export default {
+  mounted() {
+    this.fetchData()
+    this.$store.dispatch('fetchConfigList')
+  },
   data() {
     return {
       list: [],
@@ -78,102 +83,103 @@ export default {
           }
         ]
       }
-    };
+    }
   },
-
+  computed: {
+    ...mapGetters({
+      configList: 'getConfigList'
+    })
+  },
   methods: {
     handleCurrentChange(val) {
-      this.currentPage = val;
+      this.currentPage = val
     },
     async fetchData() {
-      const _self = this;
-      _self.loading = true;
+      const _self = this
+      _self.loading = true
       try {
-        const res = await payCompanyApi.list();
-        _self.list = res.data;
-        _self.loading = false;
+        const res = await payCompanyApi.list()
+        _self.list = res.data
+        _self.loading = false
       } catch (e) {
-        console.error(e);
-        _self.loading = false;
+        console.error(e)
+        _self.loading = false
       }
     },
     clickAddBtn() {
-      const _self = this;
-      _self.showDialog = true;
-      _self.form = {};
+      const _self = this
+      _self.showDialog = true
+      _self.form = {}
     },
     async clickEditBtn($index, row) {
-      const _self = this;
+      const _self = this
       try {
-        const res = await payCompanyApi.detail(row.ID);
-        _self.showDialog = true;
-        _self.form.id = res.data.ID;
-        _self.form.accountName = res.data.AccountName;
-        _self.form.accountNum = res.data.AccountNum;
-        _self.form.remark = res.data.Remark;
+        const res = await payCompanyApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.id = res.data.ID
+        _self.form.accountName = res.data.AccountName
+        _self.form.accountNum = res.data.AccountNum
+        _self.form.remark = res.data.Remark
       } catch (e) {
-        console.error(e);
+        console.error(e)
       }
     },
     submitForm() {
-      const _self = this;
+      const _self = this
       if (_self.form.id) {
-        _self.editSave();
+        _self.editSave()
       } else {
-        _self.addSave();
+        _self.addSave()
       }
     },
     async addSave() {
-      const _self = this;
+      const _self = this
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
             const form = {
               ..._self.form
-            };
-            delete form.id;
-            await payCompanyApi.add(form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
+            }
+            delete form.id
+            await payCompanyApi.add(form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
             _self.$message({
               message: '保存成功',
               type: 'success'
-            });
+            })
           } catch (e) {
-            console.error(e);
-            _self.$message.error('添加失败!!!');
+            console.error(e)
+            _self.$message.error('添加失败!!!')
           }
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
     async editSave() {
-      const _self = this;
+      const _self = this
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            await payCompanyApi.edit(_self.form);
-            _self.fetchData();
-            _self.$refs['form'].resetFields();
-            _self.showDialog = false;
+            await payCompanyApi.edit(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
             _self.$message({
               message: '编辑成功',
               type: 'success'
-            });
+            })
           } catch (e) {
-            console.error(e);
-            _self.$message.error('编辑失败!!!');
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
           }
         } else {
-          return false;
+          return false
         }
-      });
+      })
     }
-  },
-  mounted() {
-    this.fetchData();
   }
-};
+}
 </script>
