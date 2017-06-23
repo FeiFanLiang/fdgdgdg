@@ -7,20 +7,11 @@
                 <el-button type="text">下载表格</el-button>
             </div>
             <div class="div2">
-                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:100%;"></el-date-picker>
+                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" 
+                style="width:100%;" :picker-options="pickerOptions" @change="dataTimes"></el-date-picker>
             </div>
             <div class="div2 div22">
-                <el-dropdown trigger="click" @command="handleCommand">
-                    <span class="el-dropdown-link">
-                        {{message}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="不限">不限</el-dropdown-item>
-                        <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
-                        <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
-                        <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                {{message}}
             </div>
         </div>
         <el-table :data="tableData" border style="width: 100%;min-height:250px;">
@@ -50,25 +41,16 @@
                 <el-button type="text">下载表格</el-button>
             </div>
             <div class="div2">
-                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:100%;"></el-date-picker>
+                <el-date-picker v-model="dateValue2" type="daterange" placeholder="选择日期范围" 
+                style="width:100%;" :picker-options="pickerOptions" @change="dataTimes2"></el-date-picker>
             </div>
             <div class="div2 div22">
-                <el-dropdown trigger="click" @command="handleCommand1">
-                    <span class="el-dropdown-link">
-                        {{message1}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="不限">不限</el-dropdown-item>
-                        <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
-                        <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
-                        <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+                {{message2}}
             </div>
         </div>
         <el-table :data="tableData" border style="width: 100%;min-height:250px;">
             <el-table-column prop="tag" :label="kinds" :filter-multiple="false" 
-            :filters="[{ text: '优惠券', value: '优惠券' },{ text: '代金券', value: '代金券' },{ text: '团购券', value: '团购券' },{ text: '折扣券', value: '折扣券' },{ text: '兑换券', value: '兑换券' }]" 
+            :filters="[{ text: '全部类型', value: '全部类型' },{ text: '优惠券', value: '优惠券' },{ text: '代金券', value: '代金券' },{ text: '团购券', value: '团购券' },{ text: '折扣券', value: '折扣券' },{ text: '兑换券', value: '兑换券' }]" 
             :filter-method="filterTag" filter-placement="bottom-end" width="120px">
                 <template scope="scope">
                     <el-tag type="primary" close-transition>{{scope.row.tag}}</el-tag>
@@ -107,14 +89,62 @@ export default {
           tag: '优惠券'
         }],
           dateValue:'',
+          dateValue2:'',
           message: '最近7天',
-          message1: '最近7天', 
+          message2: '最近7天',
+          pickerOptions: {
+                shortcuts: [{
+                    text: '最近7天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                    }
+                },{
+                    text: '最近15天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 15);
+                    picker.$emit('pick', [start, end]);
+                    }
+                },{
+                    text: '最近30天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }]
+          }, 
       }
   },
   methods:{
-        
+        dataTimes(){
+            let date = this.dateValue[1]-this.dateValue[0];
+            let days=Math.floor(date/(24*3600*1000));
+            switch (days){ 
+                case 7 : this.message='最近7天'; break; 
+                case 15 :this.message='最近15天'; break; 
+                case 30 :this.message='最近30天'; break;
+                default :this.message='不限'; break; 
+            } 
+        },
+        dataTimes2(){
+            let date = this.dateValue2[1]-this.dateValue2[0];
+            let days=Math.floor(date/(24*3600*1000));
+            switch (days){ 
+                case 7 : this.message2='最近7天'; break; 
+                case 15 :this.message2='最近15天'; break; 
+                case 30 :this.message2='最近30天'; break;
+                default :this.message2='不限'; break; 
+            } 
+        },
         filterTag(value, row) {
             this.kinds = value;
+            if (value === '全部类型') return true
             return row.tag === value;
         },
         handleCommand(command) {

@@ -5,10 +5,10 @@
             <el-button slot="append" icon="search"></el-button>
         </el-input>
         <br><br>
-        <el-button-group>
-            <el-button @click="showKaquan">卡卷核销</el-button>
-            <el-button @click="showYeji">买单</el-button>
-        </el-button-group>
+        <el-radio-group v-model="radio" @change="showChange">
+            <el-radio-button label="卡卷核销"></el-radio-button>
+            <el-radio-button label="买单"></el-radio-button>
+        </el-radio-group>
     </div>
     <div style="width:100%;margin-top:0px;" v-if="verification">
         <el-row :gutter="24" class="title">
@@ -20,10 +20,7 @@
             </el-col>
             <el-col :span="8">
                 <p>时间</p>
-                <el-select v-model="value2" placeholder="请选择" style="width:30%;">
-                    <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围" style="width:60%;"></el-date-picker>
+                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围" style="width:60%;" :picker-options="pickerOptions"></el-date-picker>
             </el-col>
             <el-col :span="3">
                 <p>核销方式</p>
@@ -67,10 +64,7 @@
         <el-row :gutter="24">
             <el-col :span="8">
                 <p>时间</p>
-                <el-select v-model="value2" placeholder="请选择" style="width:100px;">
-                    <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                <el-date-picker v-model="value22" type="daterange" placeholder="选择日期范围" style="width:60%;" :picker-options="pickerOptions"></el-date-picker>
             </el-col>
             <el-col :span="3">
                 <p>门店</p>
@@ -108,6 +102,7 @@
 export default {
   data() {
     return {
+      radio:'卡卷核销',
       verification: true,
       pay: false,
       input: '',
@@ -122,25 +117,33 @@ export default {
         }
       ],
       value1: '会员卡',
-      options2: [
-        {
-          value: '选项1',
-          label: '不限'
+      pickerOptions: {
+          shortcuts: [{
+            text: '最近7天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '最近15天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 15);
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '最近30天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
         },
-        {
-          value: '选项2',
-          label: '最近7天'
-        },
-        {
-          value: '选项3',
-          label: '最近15天'
-        },
-        {
-          value: '选项4',
-          label: '最近30天'
-        }
-      ],
-      value2: '最近7天',
       value22: '',
       options3: [
         {
@@ -188,6 +191,16 @@ export default {
     }
   },
   methods: {
+    showChange() {
+        if(this.radio == '卡卷核销'){
+            this.verification = true;
+            this.pay = false;
+        }
+        if(this.radio == '买单'){
+            this.verification = false;
+            this.pay = true;
+        }
+    },
     showKaquan() {
       this.verification = true
       this.pay = false

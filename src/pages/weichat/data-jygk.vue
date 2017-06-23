@@ -1,9 +1,9 @@
 <template lang="html">
 <div id="hxjl">
-    <el-button-group>
-        <el-button @click="showKaquan">卡卷效果</el-button>
-        <el-button @click="showYeji">各门店业绩</el-button>
-    </el-button-group>
+    <el-radio-group v-model="radio" @change="showChange">
+        <el-radio-button label="卡卷效果"></el-radio-button>
+        <el-radio-button label="各门店业绩"></el-radio-button>
+    </el-radio-group>
     <div v-if="kaquan">
         <el-card class="box-card" style="margin:10px 0 20px 0;">
             <div slot="header" class="clearfix">
@@ -49,20 +49,11 @@
                         </el-tooltip>
                     </el-col>
                     <el-col :span="2" :offset="7" class="text">
-                        <el-dropdown trigger="click" @command="handleCommand3">
-                            <span class="el-dropdown-link">
-                                {{message3}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="不限">不限</el-dropdown-item>
-                                <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
-                                <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
-                                <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        {{dataTime}}
                     </el-col>
                     <el-col :span="5">
-                        <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:95%;"></el-date-picker>
+                        <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" 
+                        style="width:95%;" :picker-options="pickerOptions" @change="dataTimes"></el-date-picker>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="text">下载表格</el-button>
@@ -116,20 +107,11 @@
                         </el-tooltip>
                     </el-col>
                     <el-col :span="2" :offset="10" class="title">
-                        <el-dropdown trigger="click" @command="handleCommand3">
-                            <span class="el-dropdown-link">
-                                {{message3}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item command="不限">不限</el-dropdown-item>
-                                <el-dropdown-item command="最近7天">最近7天</el-dropdown-item>
-                                <el-dropdown-item command="最近15天">最近15天</el-dropdown-item>
-                                <el-dropdown-item command="最近30天">最近30天</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
+                        {{dataTime2}}
                     </el-col>
                     <el-col :span="5">
-                        <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                        <el-date-picker v-model="dateValue2" type="daterange" placeholder="选择日期范围" 
+                        style="width:95%;" :picker-options="pickerOptions" @change="dataTimes2"></el-date-picker>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="text">下载表格</el-button>
@@ -148,23 +130,76 @@
 export default {
     data() {
         return {
+            radio:'卡卷效果',
             dateValue: '',
+            dateValue2: '',
+            dataTime:'不限',
+            dataTime2:'不限',
             tableData: [],
             kaquan: true,
             yeji: false,
             message1: '会员卡',
             message2: '浏览次数趋势图',
             message3: '最近7天',
+            pickerOptions: {
+                shortcuts: [{
+                    text: '最近7天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近15天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 15);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近30天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }]
+          },
         }
     },
     methods: {
-        showKaquan() {
-            this.kaquan = true;
-            this.yeji = false;
+        dataTimes(){
+            let date = this.dateValue[1]-this.dateValue[0];
+            let days=Math.floor(date/(24*3600*1000));
+            switch (days){ 
+                case 7 : this.dataTime='最近7天'; break; 
+                case 15 :this.dataTime='最近15天'; break; 
+                case 30 :this.dataTime='最近30天'; break;
+                default :this.dataTime='不限'; break; 
+            } 
         },
-        showYeji() {
-            this.kaquan = false;
-            this.yeji = true;
+        dataTimes2(){
+            let date = this.dateValue2[1]-this.dateValue2[0];
+            let days=Math.floor(date/(24*3600*1000));
+            switch (days){ 
+                case 7 : this.dataTime2='最近7天'; break; 
+                case 15 :this.dataTime2='最近15天'; break; 
+                case 30 :this.dataTime2='最近30天'; break;
+                default :this.dataTime2='不限'; break; 
+            } 
+        },
+        showChange() {
+            if(this.radio == '卡卷效果'){
+                this.kaquan = true;
+                this.yeji = false;
+            }
+            if(this.radio == '各门店业绩'){
+                this.kaquan = false;
+                this.yeji = true;
+            }
         },
         handleCommand1(command) {
             this.message1 = command;

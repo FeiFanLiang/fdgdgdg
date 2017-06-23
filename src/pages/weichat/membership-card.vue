@@ -28,7 +28,7 @@
                 <hr color="#EEF1F6">
                 <div class="block">
                     <p style="margin:10px 0 10px 0;">按最近使用时间查看会员</p>
-                    <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                    <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions"></el-date-picker>
                     <el-popover ref="popover" placement="bottom" title="标签名称" width="200"  trigger="click" v-model="visible">
                         <el-row>
                             <el-col :span="24">
@@ -118,6 +118,33 @@ export default {
       count: 0,
       dateValue: '',
       visible:false,
+      pickerOptions: {
+                shortcuts: [{
+                    text: '最近7天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近15天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 15);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近30天',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }]
+          },
     }
   },
   methods: {
