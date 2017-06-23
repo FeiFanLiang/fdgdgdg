@@ -7,7 +7,7 @@
                 <el-button type="text">下载表格</el-button>
             </div>
             <div class="div2">
-                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:100%;"></el-date-picker>
             </div>
             <div class="div2 div22">
                 <el-dropdown trigger="click" @command="handleCommand">
@@ -50,7 +50,7 @@
                 <el-button type="text">下载表格</el-button>
             </div>
             <div class="div2">
-                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                <el-date-picker v-model="dateValue" type="daterange" placeholder="选择日期范围" style="width:100%;"></el-date-picker>
             </div>
             <div class="div2 div22">
                 <el-dropdown trigger="click" @command="handleCommand1">
