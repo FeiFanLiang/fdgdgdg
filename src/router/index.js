@@ -1,22 +1,23 @@
 import Vue from 'vue'
 import Pages from '../pages'
+
 import hotelRoute from './hotel'
+import showRoute from './show'
 import orderRoute from './order'
 import policyRoute from './policy'
 import roleRoute from './role'
 import userRoute from './user'
-import showRoute from './show'
-import wechatRoute from './wechat'
 import fleetRoute from './fleet'
+import wechatRoute from './wechat'
 const children = [
-  hotelRoute,
-  showRoute,
-  policyRoute,
-  orderRoute,
-  roleRoute,
-  userRoute,
-  wechatRoute,
-  fleetRoute
+  hotelRoute, // 酒店
+  showRoute, // 展示信息
+  orderRoute, // 订单
+  policyRoute, // 政策
+  roleRoute, // 角色
+  userRoute, // 用户
+  fleetRoute, // 车队
+  wechatRoute // 微信
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

@@ -46,13 +46,6 @@ import CarOrderManage from './order/car-order-manage'
 import HotelOrder from './order/hotel-order'
 const order = { CarOrderManage, HotelOrder }
 
-// images
-import ImagesInfo from './images/imagesInfo'
-import ImagesInfoAdd from './images/imagesInfoAdd'
-import ImagesInfoEdit from './images/imagesInfoEdit'
-import ImagesInfoList from './images/imagesInfoList'
-const images = { ImagesInfo, ImagesInfoAdd, ImagesInfoEdit, ImagesInfoList }
-
 // user
 import User from './user/user'
 const user = { User }
