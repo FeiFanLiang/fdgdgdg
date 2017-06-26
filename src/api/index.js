@@ -12,7 +12,6 @@ import hotelRoomApi from './hotel-room'
 import hotelRoomBedApi from './hotel-room-bed'
 import hotelStarApi from './hotel-star'
 import hotelThreePlatInfoApi from './hotel-threeplat-info'
-import imagesInfoApi from './images-info'
 import orderApi from './order'
 import payCompanyApi from './pay-company'
 import roomStateApi from './room-state'
@@ -49,7 +48,6 @@ export {
   hotelRoomBedApi,
   hotelStarApi,
   hotelThreePlatInfoApi,
-  imagesInfoApi,
   orderApi,
   payCompanyApi,
   roomStateApi,
