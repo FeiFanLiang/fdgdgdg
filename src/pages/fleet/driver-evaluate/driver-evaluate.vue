@@ -25,6 +25,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="Driver" label="工号"></el-table-column>
             <el-table-column prop="Openid" label="司机姓名"></el-table-column>
             <el-table-column sortable prop="field3" label="关注人次"></el-table-column>
             <el-table-column sortable prop="field1" label="评论次数"></el-table-column>

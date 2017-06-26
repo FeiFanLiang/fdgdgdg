@@ -42,14 +42,14 @@
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
-                        <el-form-item label="外部订单号">
-                            <span>{{ props.row.ExternalOrderID }}</span>
-                        </el-form-item>
                         <el-form-item label="工作人员">
                             <span>{{ props.row.StaffUserName }}</span>
                         </el-form-item>
                         <el-form-item label="外部订单状态">
                             <span>{{ props.row.ExternalOrderStete }}</span>
+                        </el-form-item>
+                        <el-form-item label="始发地详细地址">
+                            <span>{{ props.row.Origin }}{{props.row.OriginAddress}}</span>
                         </el-form-item>
                         <el-form-item label="用车类型">
                             <span v-if="props.row.CarTransportType === 0">接机</span>
@@ -58,8 +58,8 @@
                             <span v-if="props.row.CarTransportType === 3">接站</span>
                             <span v-if="props.row.CarTransportType === 4">送站</span>
                         </el-form-item>
-                        <el-form-item label="始发地详细地址">
-                            <span>{{ props.row.Origin }}{{props.row.OriginAddress}}</span>
+                        <el-form-item label="目的地详细地址">
+                            <span>{{ props.row.Destination }}{{props.row.DestinationAddress}}</span>
                         </el-form-item>
                         <el-form-item label="预定车型">
                             <span v-if="props.row.CarClassify === 0">经济型</span>
@@ -67,20 +67,10 @@
                             <span v-if="props.row.CarClassify === 2">商务型</span>
                             <span v-if="props.row.CarClassify === 3">豪华型</span>
                         </el-form-item>
-                        <el-form-item label="目的地详细地址">
-                            <span>{{ props.row.Destination }}{{props.row.DestinationAddress}}</span>
-                        </el-form-item>
-                        <el-row>
+                        <el-row class="mbtm-10">
                             <el-col :span="24">
                                 <el-form-item label="客人要求">
                                     <span>{{ props.row.SpecReq }}</span>
-                                </el-form-item>
-                                </el-col/>
-                        </el-row>
-                        <el-row class="mbtm-10">
-                            <el-col :span="24">
-                                <el-form-item label="订单备注">
-                                    <span>{{ props.row.Remark }}</span>
                                 </el-form-item>
                                 </el-col/>
                         </el-row>
@@ -89,6 +79,8 @@
                             <span v-if="props.row.PayType === 2">微信支付</span>
                             <span v-if="props.row.PayType === 3">银联支付</span>
                             <span v-if="props.row.PayType === 4">平台</span>
+                            <span v-if="props.row.PayType === 5">线下支付</span>
+                            <span v-if="props.row.PayType === 6">其他</span>
                         </el-form-item>
                         <el-form-item label="支付平台订单号">
                             <span>{{ props.row.PayOrder }}</span>
@@ -152,14 +144,14 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="OrderKey" label="订单号" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="externalOrderID" label="外部订单号" verflow-tooltip></el-table-column>
             <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="BookTime" label="预定时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="SpecReq" label="客人要求" show-overflow-tooltip></el-table-column> -->
+            <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
                 <template scope="scope">
                     <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.PayStatus"></i>
@@ -199,17 +191,17 @@
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="外部订单号" prop="externalOrderID">
+                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                         <el-form-item label="订单渠道" prop="channel">
                             <el-select v-model="form.channel" placeholder="请选择订单渠道">
                                 <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
                             </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="外部订单号" prop="externalOrderID">
-                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -440,6 +432,12 @@ export default {
                 }, {
                     value: 4,
                     label: '平台'
+                }, {
+                    value: 5,
+                    label: '线下支付'
+                }, {
+                    value: 6,
+                    label: '其他'
                 }],
                 carTransportTypeList: [{
                     value: 0,
