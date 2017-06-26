@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-
+import './libs/date'
 import { Breadcrumb } from 'components'
 import DeleteButton from 'components/common/delete-button.vue'
 import CustomTable from 'components/common/custom-table.vue'

@@ -26,7 +26,16 @@
       </el-col >
     </el-row>
     <div class="eltable">
-      <el-table
+      <CustomTable :list="hotelbase" :configList="configList.listFields">
+        <el-table-column   label="操作" width="180" fixed="right">
+          <template scope="scope">
+            <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
+            <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
+            <DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
+          </template>
+        </el-table-column>
+      </CustomTable>
+      <!-- <el-table
       :data="hotelbase"
       border
       :default-sort = "{prop: 'ID', order: 'descending'}"
@@ -41,12 +50,12 @@
         <el-table-column prop="Policys.PayMode.ModeName" label="结款"></el-table-column>
         <el-table-column   label="操作" width="180" fixed="right">
           <template scope="scope">
-            <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
+            <el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
             <DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
           </template>
         </el-table-column>
-      </el-table>
+      </el-table> -->
     </div>
       <div class="pagination-wrapper" >
         <el-pagination
@@ -66,11 +75,15 @@
 </template>
 
 <script>
-import { hotelBaseApi } from 'api';
-import HotelBaseAdd from './hotel-base-add.vue';
+import { hotelBaseApi } from 'api'
+import HotelBaseAdd from './hotel-base-add.vue'
 export default {
   components: {
     HotelBaseAdd
+  },
+  created() {
+    this.getHotelbaseList()
+    this.configList = hotelBaseApi.getConfig()
   },
   data() {
     return {
@@ -100,11 +113,9 @@ export default {
           label: '酒店英文名称'
         }
       ]
-    };
+    }
   },
-  mounted() {
-    this.getHotelbaseList();
-  },
+
   methods: {
     /*addHotelShow(row) {
       this.$router.push({
@@ -123,15 +134,15 @@ export default {
     },*/
 
     areaTypeChange(isForeign) {
-      this.getHotelbaseList();
+      this.getHotelbaseList()
     },
     hotelbaseSearch() {
-      this.getHotelbaseList();
+      this.getHotelbaseList()
     },
     async getHotelbaseList(currentPage, pageSize) {
-      const _self = this;
-      _self.currentPage = currentPage || _self.currentPage;
-      _self.pageSize = pageSize || _self.pageSize;
+      const _self = this
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -146,10 +157,10 @@ export default {
             : ''
         },
         IsForeign: _self.isForeign
-      };
-      const res = await hotelBaseApi.listAll(options);
+      }
+      const res = await hotelBaseApi.listAll(options)
       if (res && res.data && res.data.Data) {
-        let data = res.data.Data;
+        let data = res.data.Data
         for (let item of data) {
           if (
             item.Policys &&
@@ -158,22 +169,22 @@ export default {
           ) {
             for (let n of item.Policys) {
               if (n.IsDefault) {
-                item.Policys = n;
+                item.Policys = n
               }
             }
           }
         }
-        _self.hotelbase = data;
-        _self.count = res.data.Count;
+        _self.hotelbase = data
+        _self.count = res.data.Count
       }
     },
     handleSizeChange(val) {
-      this.pageSize = val;
-      this.getHotelbaseList(this.pageSize);
+      this.pageSize = val
+      this.getHotelbaseList(this.pageSize)
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      this.getHotelbaseList(this.currentPage);
+      this.currentPage = val
+      this.getHotelbaseList(this.currentPage)
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
@@ -184,10 +195,10 @@ export default {
         query: {
           hotelName: row.HotelName
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

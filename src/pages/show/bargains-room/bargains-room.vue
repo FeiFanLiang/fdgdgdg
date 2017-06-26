@@ -133,337 +133,334 @@
 </template>
 <script>
 import path from '../../../api/api.js'
-import {
-    bargainsRoomApi,
-    hotelBaseApi,
-    hotelRoomApi,
-    hotelImageApi
-} from 'api';
+import { bargainsRoomApi, hotelBaseApi, hotelRoomApi, hotelImageApi } from 'api'
 
 export default {
-    data() {
-            return {
-                uploadUrl: path.uploadUrl,
-                imageList: [],
-                dialogVisible: false,
-                dialogImageUrl: '',
-                list: [],
-                loading: true,
-                loadingHotel: false,
-                hotelList: [],
-                hotelRoomList: [],
-                searchForm: {
-                    beginDate: '',
-                    endDate: ''
-                },
-                pickerOptions: {
-                    // disabledDate(time) {
-                    //     return time.getTime() < Date.now() - 8.64e7;
-                    // }
-                },
-                showDialog: false,
-                roomId: '',
-                bargainsForm: {
-                    id: 0,
-                    hotelId: '',
-                    rooms: [],
-                    sonRoomId: '',
-                    useDate: '',
-                    days: '',
-                    price: '',
-                    createUser: '',
-                    webLowestPrice: '',
-                    label: '',
-                    cancleReason: '',
-                    isSolded: false,
-                    buyUserPhone: ''
-                },
-                bargainsRules: {
-                    hotelId: [{
-                        required: true,
-                        message: '请输入酒店名称'
-                    }],
-                    rooms: [{
-                        required: true,
-                        message: '请选择子房型'
-                    }],
-                    sonRoomId: [{
-                        required: true,
-                        message: '请填写子房型ID'
-                    }],
-                    useDate: [{
-                        required: true,
-                        message: '请填写入住日期'
-                    }],
-                    days: [{
-                        required: true,
-                        message: '请填写入住天数'
-                    }],
-                    price: [{
-                        required: true,
-                        message: '请填写价格'
-                    }],
-                    webLowestPrice: [{
-                        required: true,
-                        message: '请填写网站最低价'
-                    }]
-                }
-            };
-        },
-        watch: {
-            'bargainsForm.hotelId': async function(newQuestion) {
-                const _self = this;
-                _self.hotelRoomList = [];
-                _self.bargainsForm.id ? '' : _self.bargainsForm.sonRoomId = '';
-                if (newQuestion !== '') {
-                    const res = await hotelRoomApi.list(newQuestion);
-                    // _self.hotelRoomList = res.data;
-                    for (let [a, elem] of res.data.entries()) {
-                        if (res.data[a].SonRooms.length > 0) {
-                            _self.hotelRoomList.push({
-                                label: '',
-                                value: '',
-                                children: []
-                            });
-                            _self.hotelRoomList[a].label = res.data[a].RoomName;
-                            _self.hotelRoomList[a].value = res.data[a].ID;
-                            for (let [b, elem] of res.data[a].SonRooms.entries()) {
-                                _self.hotelRoomList[a].children.push({});
-                                _self.hotelRoomList[a].children[b].label = res.data[a].SonRooms[b].SonRoomName;
-                                _self.hotelRoomList[a].children[b].value = res.data[a].SonRooms[b].ID;
-                            }
-                        }
-                    }
-                    console.dir(_self.hotelRoomList)
-                }
-            },
-        },
-        methods: {
-            async getImageList(id) {
-                const res = await hotelImageApi.listByRoomId(id);
-                if (res.data && Array.isArray(res.data)) {
-                    this.imageList = res.data.map(item => ({
-                        id: item.ID,
-                        name: item.ImageUrl,
-                        url: path.imageUrl + item.ImageUrl
-                    }))
-                }
-            },
-            beforeAvatarUpload(file) {
-                const _self = this;
-                if (!_self.bargainsForm.sonRoomId && !Object.is(_self.bargainsForm.sonRoomId, 0)) {
-                    _self.$message({
-                        message: '请先选择子房型',
-                        type: 'warning'
-                    });
-                    return false;
-                }
-                const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
-                if (!isJPG) {
-                    _self.$message.error('上传图片只能是 JPG/PNG 格式!');
-                }
-                return isJPG;
-            },
-            async handleRemove(file, fileList) {
-                try {
-                    if (file && file.id) {
-                        await hotelImageApi.del(file.id);
-                        this.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        });
-                    }
-                } catch (e) {
-                    this.$message.error('删除失败,请重试！');
-                }
-            },
-            handlePictureCardPreview(file) {
-                this.dialogImageUrl = file.url;
-                this.dialogVisible = true;
-            },
-            async handleSuccess(response, file, fileList) {
-                try {
-                    if (!response) {
-                        this.$message.error('上传失败,请重新上传');
-                        return false;
-                    }
-                    const form = {
-                        hotelId: this.bargainsForm.hotelId,
-                        roomId: this.roomId,
-                        imageUrl: response,
-                        smallImageUrl: '',
-                        imageType: file.type,
-                        description: '',
-                        imgWidth: 0,
-                        imgHeight: 0,
-                        imgGroup: ''
-                    };
-                    await hotelImageApi.add(form);
-                    this.$message({
-                        message: '上传成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    this.$message.error('上传失败,请重新上传');
-                }
-            },
-            handleError(err, file, fileList) {
-                this.$message.error('上传失败,请重新上传');
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-            },
-            handleChange(value) {
-                console.log(value);
-                this.bargainsForm.sonRoomId = value[1];
-                this.roomId = value[0]
-            },
-            async fetchData() {
-                const _self = this;
-                _self.loading = true;
-                try {
-                    _self.searchForm.beginDate = new Date(_self.searchForm.beginDate).Format('yyyy-MM-dd');
-                    _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format('yyyy-MM-dd');
-                    const res = await bargainsRoomApi.list(_self.searchForm);
-                    _self.list = res.data;
-                    for (let [index, elem] of _self.list.entries()) {
-                        _self.list[index].UseDate = new Date(_self.list[index].UseDate).Format('yyyy-MM-dd')
-                    }
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading = false;
-                }
-            },
-            async remoteHotelList(querys) {
-                const _self = this;
-                if (querys !== '') {
-                    _self.loadingHotel = true;
-                    const options = {
-                        pageIndex: 1,
-                        pageSize: 20,
-                        order: 'ID',
-                        query: {
-                            HotelName: querys
-                        }
-                    };
-                    const res = await hotelBaseApi.listAll(options);
-                    if (res && res.data && res.data.Data) {
-                        _self.hotelList = res.data.Data;
-                        _self.loadingHotel = false;
-                    }
-                } else {
-                    _self.hotelList = [];
-                }
-            },
-            clickAddBtn() {
-                const _self = this;
-
-                _self.bargainsForm = {
-                    id: 0,
-                    hotelId: '',
-                    rooms: [],
-                    sonRoomId: '',
-                    useDate: '',
-                    days: '',
-                    price: '',
-                    createUser: '',
-                    webLowestPrice: '',
-                    label: '',
-                    cancleReason: '',
-                    isSolded: true,
-                    buyUserPhone: ''
-                }
-                _self.imageList = [];
-                _self.showDialog = true;
-            },
-            async clickEditBtn($index, row) {
-                const _self = this;
-                try {
-                    const res = await bargainsRoomApi.detail(row.ID);
-                    // Hotel
-                    // RoomroomShowIdhotelShowId
-                    // SonRoom
-                    _self.bargainsForm.id = res.data.ID;
-                    _self.bargainsForm.sonRoomId = res.data.SonRoom.ID;
-                    _self.bargainsForm.useDate = res.data.UseDate;
-                    _self.bargainsForm.days = res.data.Days;
-                    _self.bargainsForm.price = res.data.Price;
-                    _self.bargainsForm.createUser = res.data.CreateUser;
-                    _self.bargainsForm.webLowestPrice = res.data.WebLowestPrice;
-                    _self.bargainsForm.label = res.data.Label;
-                    _self.bargainsForm.cancleReason = res.data.CancleReason;
-                    _self.bargainsForm.isSolded = res.data.IsSolded;
-                    _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone;
-                    _self.bargainsForm.hotelId = res.data.Hotel.ID;
-                    _self.roomId = res.data.Room.ID;
-                    _self.getImageList(_self.roomId);
-                    _self.showDialog = true;
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            async handleBargainsRoomSaveAndEdit(formName) {
-                const _self = this;
-                _self.$refs[formName].validate(async valid => {
-                    if (valid) {
-                        try {
-                            _self.bargainsForm.useDate = new Date(_self.bargainsForm.useDate).Format('yyyy-MM-dd');
-                            if (_self.bargainsForm.id) {
-                                await bargainsRoomApi.edit(_self.bargainsForm);
-                            } else {
-                                await bargainsRoomApi.add(_self.bargainsForm);
-                            }
-                            _self.$refs[formName].resetFields();
-                            _self.showDialog = false;
-                            _self.fetchData();
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            });
-                        } catch (e) {
-                            console.error(e);
-                            _self.$message.error('保存失败!!!');
-                        }
-                    } else {
-                        return false;
-                    }
-                });
+  mounted() {
+    this.searchForm.beginDate = new Date(
+      new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
+    ).Format('yyyy-MM-dd')
+    this.searchForm.endDate = new Date().Format('yyyy-MM-dd')
+    this.fetchData()
+  },
+  data() {
+    return {
+      uploadUrl: path.uploadUrl,
+      imageList: [],
+      dialogVisible: false,
+      dialogImageUrl: '',
+      list: [],
+      loading: true,
+      loadingHotel: false,
+      hotelList: [],
+      hotelRoomList: [],
+      searchForm: {
+        beginDate: '',
+        endDate: ''
+      },
+      pickerOptions: {
+        // disabledDate(time) {
+        //     return time.getTime() < Date.now() - 8.64e7;
+        // }
+      },
+      showDialog: false,
+      roomId: '',
+      bargainsForm: {
+        id: 0,
+        hotelId: '',
+        rooms: [],
+        sonRoomId: '',
+        useDate: '',
+        days: '',
+        price: '',
+        createUser: '',
+        webLowestPrice: '',
+        label: '',
+        cancleReason: '',
+        isSolded: false,
+        buyUserPhone: ''
+      },
+      bargainsRules: {
+        hotelId: [
+          {
+            required: true,
+            message: '请输入酒店名称'
+          }
+        ],
+        rooms: [
+          {
+            required: true,
+            message: '请选择子房型'
+          }
+        ],
+        sonRoomId: [
+          {
+            required: true,
+            message: '请填写子房型ID'
+          }
+        ],
+        useDate: [
+          {
+            required: true,
+            message: '请填写入住日期'
+          }
+        ],
+        days: [
+          {
+            required: true,
+            message: '请填写入住天数'
+          }
+        ],
+        price: [
+          {
+            required: true,
+            message: '请填写价格'
+          }
+        ],
+        webLowestPrice: [
+          {
+            required: true,
+            message: '请填写网站最低价'
+          }
+        ]
+      }
+    }
+  },
+  watch: {
+    'bargainsForm.hotelId': async function(newQuestion) {
+      const _self = this
+      _self.hotelRoomList = []
+      _self.bargainsForm.id ? '' : (_self.bargainsForm.sonRoomId = '')
+      if (newQuestion !== '') {
+        const res = await hotelRoomApi.list(newQuestion)
+        // _self.hotelRoomList = res.data;
+        for (let [a, elem] of res.data.entries()) {
+          if (res.data[a].SonRooms.length > 0) {
+            _self.hotelRoomList.push({
+              label: '',
+              value: '',
+              children: []
+            })
+            _self.hotelRoomList[a].label = res.data[a].RoomName
+            _self.hotelRoomList[a].value = res.data[a].ID
+            for (let [b, elem] of res.data[a].SonRooms.entries()) {
+              _self.hotelRoomList[a].children.push({})
+              _self.hotelRoomList[a].children[b].label =
+                res.data[a].SonRooms[b].SonRoomName
+              _self.hotelRoomList[a].children[b].value =
+                res.data[a].SonRooms[b].ID
             }
-        },
-        mounted() {
-
-            Date.prototype.Format = function(fmt) {
-                let o = {
-                    'M+': this.getMonth() + 1, //月份
-                    'd+': this.getDate(), //日
-                    'h+': this.getHours(), //小时
-                    'm+': this.getMinutes(), //分
-                    's+': this.getSeconds(), //秒
-                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                    S: this.getMilliseconds() //毫秒
-                };
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(
-                        RegExp.$1,
-                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-                    );
-                for (let k in o)
-                    if (new RegExp('(' + k + ')').test(fmt))
-                        fmt = fmt.replace(
-                            RegExp.$1,
-                            RegExp.$1.length == 1 ?
-                            o[k] :
-                            ('00' + o[k]).substr(('' + o[k]).length)
-                        );
-                return fmt;
-            };
-
-            this.searchForm.beginDate = new Date(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01').Format('yyyy-MM-dd');
-            this.searchForm.endDate = new Date().Format('yyyy-MM-dd');
-            this.fetchData();
+          }
         }
-};
+        console.dir(_self.hotelRoomList)
+      }
+    }
+  },
+  methods: {
+    async getImageList(id) {
+      const res = await hotelImageApi.listByRoomId(id)
+      if (res.data && Array.isArray(res.data)) {
+        this.imageList = res.data.map(item => ({
+          id: item.ID,
+          name: item.ImageUrl,
+          url: path.imageUrl + item.ImageUrl
+        }))
+      }
+    },
+    beforeAvatarUpload(file) {
+      const _self = this
+      if (
+        !_self.bargainsForm.sonRoomId &&
+        !Object.is(_self.bargainsForm.sonRoomId, 0)
+      ) {
+        _self.$message({
+          message: '请先选择子房型',
+          type: 'warning'
+        })
+        return false
+      }
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+      if (!isJPG) {
+        _self.$message.error('上传图片只能是 JPG/PNG 格式!')
+      }
+      return isJPG
+    },
+    async handleRemove(file, fileList) {
+      try {
+        if (file && file.id) {
+          await hotelImageApi.del(file.id)
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
+      } catch (e) {
+        this.$message.error('删除失败,请重试！')
+      }
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    async handleSuccess(response, file, fileList) {
+      try {
+        if (!response) {
+          this.$message.error('上传失败,请重新上传')
+          return false
+        }
+        const form = {
+          hotelId: this.bargainsForm.hotelId,
+          roomId: this.roomId,
+          imageUrl: response,
+          smallImageUrl: '',
+          imageType: file.type,
+          description: '',
+          imgWidth: 0,
+          imgHeight: 0,
+          imgGroup: ''
+        }
+        await hotelImageApi.add(form)
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$message.error('上传失败,请重新上传')
+      }
+    },
+    handleError(err, file, fileList) {
+      this.$message.error('上传失败,请重新上传')
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
+    handleChange(value) {
+      console.log(value)
+      this.bargainsForm.sonRoomId = value[1]
+      this.roomId = value[0]
+    },
+    async fetchData() {
+      const _self = this
+      _self.loading = true
+      try {
+        _self.searchForm.beginDate = new Date(
+          _self.searchForm.beginDate
+        ).Format('yyyy-MM-dd')
+        _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format(
+          'yyyy-MM-dd'
+        )
+        const res = await bargainsRoomApi.list(_self.searchForm)
+        _self.list = res.data
+        for (let [index, elem] of _self.list.entries()) {
+          _self.list[index].UseDate = new Date(
+            _self.list[index].UseDate
+          ).Format('yyyy-MM-dd')
+        }
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    async remoteHotelList(querys) {
+      const _self = this
+      if (querys !== '') {
+        _self.loadingHotel = true
+        const options = {
+          pageIndex: 1,
+          pageSize: 20,
+          order: 'ID',
+          query: {
+            HotelName: querys
+          }
+        }
+        const res = await hotelBaseApi.listAll(options)
+        if (res && res.data && res.data.Data) {
+          _self.hotelList = res.data.Data
+          _self.loadingHotel = false
+        }
+      } else {
+        _self.hotelList = []
+      }
+    },
+    clickAddBtn() {
+      const _self = this
+
+      _self.bargainsForm = {
+        id: 0,
+        hotelId: '',
+        rooms: [],
+        sonRoomId: '',
+        useDate: '',
+        days: '',
+        price: '',
+        createUser: '',
+        webLowestPrice: '',
+        label: '',
+        cancleReason: '',
+        isSolded: true,
+        buyUserPhone: ''
+      }
+      _self.imageList = []
+      _self.showDialog = true
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await bargainsRoomApi.detail(row.ID)
+        // Hotel
+        // RoomroomShowIdhotelShowId
+        // SonRoom
+        _self.bargainsForm.id = res.data.ID
+        _self.bargainsForm.sonRoomId = res.data.SonRoom.ID
+        _self.bargainsForm.useDate = res.data.UseDate
+        _self.bargainsForm.days = res.data.Days
+        _self.bargainsForm.price = res.data.Price
+        _self.bargainsForm.createUser = res.data.CreateUser
+        _self.bargainsForm.webLowestPrice = res.data.WebLowestPrice
+        _self.bargainsForm.label = res.data.Label
+        _self.bargainsForm.cancleReason = res.data.CancleReason
+        _self.bargainsForm.isSolded = res.data.IsSolded
+        _self.bargainsForm.buyUserPhone = res.data.BuyUserPhone
+        _self.bargainsForm.hotelId = res.data.Hotel.ID
+        _self.roomId = res.data.Room.ID
+        _self.getImageList(_self.roomId)
+        _self.showDialog = true
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async handleBargainsRoomSaveAndEdit(formName) {
+      const _self = this
+      _self.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            _self.bargainsForm.useDate = new Date(
+              _self.bargainsForm.useDate
+            ).Format('yyyy-MM-dd')
+            if (_self.bargainsForm.id) {
+              await bargainsRoomApi.edit(_self.bargainsForm)
+            } else {
+              await bargainsRoomApi.add(_self.bargainsForm)
+            }
+            _self.$refs[formName].resetFields()
+            _self.showDialog = false
+            _self.fetchData()
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('保存失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  }
+}
 </script>
 <style lang="scss">
 #bargains-room-page {}
