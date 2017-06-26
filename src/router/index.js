@@ -1,22 +1,22 @@
 import Vue from 'vue'
 import Pages from '../pages'
+import fleetRoute from './fleet'
 import hotelRoute from './hotel'
 import orderRoute from './order'
 import policyRoute from './policy'
 import roleRoute from './role'
-import userRoute from './user'
 import showRoute from './show'
+import userRoute from './user'
 import wechatRoute from './wechat'
-import fleetRoute from './fleet'
 const children = [
+  fleetRoute,
   hotelRoute,
-  showRoute,
-  policyRoute,
   orderRoute,
+  policyRoute,
   roleRoute,
+  showRoute,
   userRoute,
-  wechatRoute,
-  fleetRoute
+  wechatRoute
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

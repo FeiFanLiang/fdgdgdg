@@ -1,19 +1,19 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-Vue.use(Vuex);
+import Vue from 'vue'
+import Vuex from 'vuex'
+Vue.use(Vuex)
 
-import router from './router';
-import leftmenu from './leftmenu';
-import user from './userinfo';
-import global from './global';
-import config from './config';
+import config from './config'
+import global from './global'
+import leftmenu from './leftmenu'
+import router from './router'
+import user from './userinfo'
 
 export default new Vuex.Store({
   modules: {
+    config,
     global,
-    router,
     leftmenu,
-    user,
-    config
+    router,
+    user
   }
-});
+})
