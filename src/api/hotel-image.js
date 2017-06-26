@@ -1,20 +1,21 @@
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'Hotel/HotelImage/'
 
 export default {
   listByHotelId (HotelID) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/Hotel/${HotelID}`)
+    return axios.get(base + `Hotel/${HotelID}`)
   },
   listByRoomId (RoomID) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelImage/Room/${RoomID}`)
+    return axios.get(base + `Room/${RoomID}`)
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelImage', params)
+    return axios.post(base, params)
   },
   edit (params) {
-    return axios.put(path.apiBaseUrl + 'Hotel/HotelImage', params)
+    return axios.put(base, params)
   },
   del (imgID) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelImage/${imgID}`)
+    return axios.delete(base + imgID)
   }
 }

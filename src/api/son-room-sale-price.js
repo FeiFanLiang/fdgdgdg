@@ -1,27 +1,19 @@
-// GET /Hotel/SonRoomSalePrice/{id}
-// GET /Hotel/SonRoomSalePrice/SonRoom/{SonRoomID}
-// GET /Hotel/SonRoomSalePrice/Room/{SonRoomID}
-// GET /Hotel/SonRoomSalePrice/ThreePlat/{ThreePlatId}
-// POST /Hotel/SonRoomSalePrice
-// PUT /Hotel/SonRoomSalePrice
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'Hotel/SonRoomSalePrice/'
 export default {
   listAll (params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/SonRoomSalePrice/all', {
+    return axios.get(base + 'all', {
       params: params
     })
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/SonRoomSalePrice/add')
+    return axios.post(base + 'add')
   },
   del (id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/SonRoomSalePrice/remove/${id}`)
+    return axios.delete(base + `remove/${id}`)
   },
   edit (id, params) {
-    return axios.put(
-      path.apiBaseUrl + `Hotel/SonRoomSalePrice/edit/${id}`,
-      params
-    )
+    return axios.put(base + `edit/${id}`, params)
   }
 }

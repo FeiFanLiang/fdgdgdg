@@ -5,8 +5,8 @@
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
-    <CustomTable :list="list" :configList="configList">
-      <el-table-column  width="150"  label="操作" fixed="right">
+    <CustomTable :list="list" :configList="configList.listFields">
+      <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
@@ -51,12 +51,11 @@
 
 <script>
 import { payCompanyApi } from 'api'
-import { mapGetters } from 'vuex'
 
 export default {
-  mounted() {
+  created() {
     this.fetchData()
-    this.$store.dispatch('fetchConfigList')
+    this.configList = payCompanyApi.getConfig()
   },
   data() {
     return {
@@ -85,11 +84,7 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters({
-      configList: 'getConfigList'
-    })
-  },
+
   methods: {
     handleCurrentChange(val) {
       this.currentPage = val

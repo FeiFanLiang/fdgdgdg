@@ -377,14 +377,18 @@
 </template>
 
 <script>
-import chunk from 'lodash/chunk';
-const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+import chunk from 'lodash/chunk'
+const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
+  created() {
+    this.chosenDate = Date.now()
+  },
   data() {
     return {
       stateText: '全部',
       chosenDate: '',
-      list: [{
+      list: [
+        {
           name: '单人间',
           isExpand: false
         },
@@ -404,7 +408,7 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       chosenDelete: ''
-    };
+    }
   },
   computed: {
     calendar() {
@@ -413,137 +417,111 @@ export default {
           curYear: '2017',
           curMonth: '4',
           curDay: '12'
-        };
-      let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd');
-      let arry = time1.split('-');
+        }
+      let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
+      let arry = time1.split('-')
       return {
         curYear: arry[0],
         curMonth: arry[1],
         curDay: arry[2]
-      };
+      }
     },
     dayList() {
       let firstDay = new Date(
         this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
-      );
-      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay();
-      let item, status, tempArr = [],
-        tempItem;
+      )
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
+      let item,
+        status,
+        tempArr = [],
+        tempItem
       for (let i = 0; i < 42; i++) {
-        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24);
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
         if (this.calendar.curMonth === item.getMonth()) {
-          status = 1;
+          status = 1
         } else {
-          status = 0;
+          status = 0
         }
         tempItem = {
-          date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          date: `${item.getFullYear()}/${item.getMonth() +
+            1}/${item.getDate()}`,
           status: status,
-          CNY:'100',
-          odd:'3'
-        };
+          CNY: '100',
+          odd: '3'
+        }
         // this.events.forEach(event => {
         //   if (isEqualDateStr(event.date, tempItem.date)) {
         //     tempItem.title = event.title;
         //     tempItem.desc = event.desc || '';
         //   }
         // });
-        tempArr.push(tempItem);
+        tempArr.push(tempItem)
       }
-      return chunk(tempArr, 7);
+      return chunk(tempArr, 7)
     }
   },
   methods: {
     expand(item) {
-      item.isExpand = !item.isExpand;
+      item.isExpand = !item.isExpand
     },
     pre() {
-      let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
+      let nowdays = new Date(this.chosenDate)
+      let year = nowdays.getFullYear()
+      let month = nowdays.getMonth()
       if (month == 0) {
-        month = 12;
-        year = year - 1;
+        month = 12
+        year = year - 1
       }
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
+      this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
     },
     next() {
-      let nowdays = new Date(this.chosenDate);
-      let year = nowdays.getFullYear();
-      let month = nowdays.getMonth();
+      let nowdays = new Date(this.chosenDate)
+      let year = nowdays.getFullYear()
+      let month = nowdays.getMonth()
       if (month == 11) {
-        month = -1;
-        year = year + 1;
+        month = -1
+        year = year + 1
       }
-      month += 2;
+      month += 2
       if (month < 10) {
-        month = '0' + month;
+        month = '0' + month
       }
-      this.chosenDate = year + '-' + month + '-' + '01'; // 上个月的第一天
+      this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
     },
     editPrice(day) {
-      alert(JSON.stringify(day));
+      alert(JSON.stringify(day))
     },
     showDelete(item) {
-      this.chosenDelete = item;
+      this.chosenDelete = item
     },
     addCycle() {
-      this.cycle.push(Math.random().toString(36).substr(2));
+      this.cycle.push(Math.random().toString(36).substr(2))
     },
     deleteCycle(item, index) {
-      this.cycle.splice(index, 1);
+      this.cycle.splice(index, 1)
     },
     priceOne(date) {
-      this.priceChangeForOne = true;
-      this.value7=[new Date(date),new Date(date)];
-
+      this.priceChangeForOne = true
+      this.value7 = [new Date(date), new Date(date)]
     },
     priceMore() {
-      this.priceChangeForMore = true;
+      this.priceChangeForMore = true
     },
     handleCheckAllChange(event) {
-      this.checkedCities = event.target.checked ? cityOptions : [];
-      this.isIndeterminate = false;
+      this.checkedCities = event.target.checked ? cityOptions : []
+      this.isIndeterminate = false
     },
     handleCheckedCitiesChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.cities.length;
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.cities.length
       this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.cities.length;
+        checkedCount > 0 && checkedCount < this.cities.length
     }
-  },
-  mounted() {
-    Date.prototype.Format = function(fmt) {
-      let o = {
-        'M+': this.getMonth() + 1, //月份
-        'd+': this.getDate(), //日
-        'h+': this.getHours(), //小时
-        'm+': this.getMinutes(), //分
-        's+': this.getSeconds(), //秒
-        'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-        S: this.getMilliseconds() //毫秒
-      };
-      if (/(y+)/.test(fmt))
-        fmt = fmt.replace(
-          RegExp.$1,
-          (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-        );
-      for (let k in o)
-        if (new RegExp('(' + k + ')').test(fmt))
-          fmt = fmt.replace(
-            RegExp.$1,
-            RegExp.$1.length == 1 ?
-            o[k] :
-            ('00' + o[k]).substr(('' + o[k]).length)
-          );
-      return fmt;
-    };
-    this.chosenDate = Date.now();
   }
-};
+}
 </script>
 
 <style lang="scss">

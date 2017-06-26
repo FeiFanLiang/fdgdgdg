@@ -1,22 +1,22 @@
-// 房间类型的增删改查
 import axios from 'axios'
 import path from './api'
+const base = path.apiBaseUrl + 'Hotel/HotelRoomBed/'
 export default {
   list (params) {
-    return axios.get(path.apiBaseUrl + 'Hotel/HotelRoomBed', {
+    return axios.get(base, {
       params: params
     })
   },
   details (id) {
-    return axios.get(path.apiBaseUrl + `Hotel/HotelRoomBed/${id}`)
+    return axios.get(base + id)
   },
   add (params) {
-    return axios.post(path.apiBaseUrl + 'Hotel/HotelRoomBed', params)
+    return axios.post(base, params)
   },
   del (id) {
-    return axios.delete(path.apiBaseUrl + `Hotel/HotelRoomBed/${id}`)
+    return axios.delete(base + id)
   },
   edit (id, params) {
-    return axios.put(path.apiBaseUrl + `Hotel/HotelRoomBed/${id}`, params)
+    return axios.put(base + id, params)
   }
 }

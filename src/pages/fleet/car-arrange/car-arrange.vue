@@ -29,7 +29,26 @@
                 <el-tag class="mytag cancel">已取消</el-tag>
             </el-col>
         </el-row>
-        <el-table :data="list" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
+        <CustomTable :list="list" :configList="configList.listFields" :className="tableRowClassName">
+          <el-table-column type="expand" slot="left-one">
+              <template scope="props" v-if="props.row.CancelTime">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item>
+                          <p>取消时间：{{props.row.CancelTime}}</p>
+                          <p>取消单人员：{{props.row.CancelUserID}}</p>
+                          <p>取消说明：{{props.row.CancelRemark}}</p>
+                      </el-form-item>
+                  </el-form>
+              </template>
+          </el-table-column>
+          <el-table-column width="150" label="操作" fixed="right" slot="right-one">
+              <template scope="scope">
+                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                  <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -42,8 +61,8 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ID" label="ID" width="55"></el-table-column>
-            <!-- <el-table-column prop="OrderID" label="OrderID"></el-table-column>
-            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column> -->
+            <el-table-column prop="OrderID" label="OrderID"></el-table-column>
+            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column>
             <el-table-column prop="CarID" label="CarID"></el-table-column>
             <el-table-column prop="DriverID" label="DriverID"></el-table-column>
             <el-table-column prop="Origin" label="始发地"></el-table-column>
@@ -59,7 +78,7 @@
                     <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
         <div class="pagination-wrapper">
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
@@ -185,295 +204,280 @@
     </div>
 </template>
 <script>
-import {
-    carBaseApi,
-    driverBaseApi,
-    carArrangeApi
-} from 'api'
+import { carBaseApi, driverBaseApi, carArrangeApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                carList: [],
-                driverList: [],
-                currentPage: 1,
-                pageSize: 20,
-                count: 0,
-                loading: false,
-                showDialog: false,
-                form: {
-                    id: 0,
-                    orderId: '',
-                    webOrderId: '',
-                    carId: '',
-                    driverId: '',
-                    arrangeStatus: '',
-                    origin: '',
-                    destination: '',
-                    predictMileage: '',
-                    predictTime: '',
-                    arrangeTime: '',
-                    arrangeUserId: '',
-                    remark: '',
-                    cancelTime: '',
-                    cancelUserId: '',
-                    cancelRemark: ''
-                },
-                filters: {
-                    name: '',
-                    phone: '',
-                    arrangeStatus: '',
-                    labelVal: '1'
-                },
-                arrangeStatusList: [{
-                    value: 0,
-                    label: '准备出车'
-                }, {
-                    value: 1,
-                    label: '运行中'
-                }, {
-                    value: 2,
-                    label: '完成'
-                }, {
-                    value: 3,
-                    label: '取消'
-                }],
-                selectedOptions: [{
-                    value: '1',
-                    label: '姓名'
-                }, {
-                    value: '2',
-                    label: '电话'
-                }],
-                rules: {
-                    accountName: [{
-                        required: true,
-                        message: '请输入账户名称'
-                    }],
-                    accountNum: [{
-                        required: true,
-                        message: '请输入银行账户'
-                    }]
-                }
-            }
+  created() {
+    this.fetchData()
+    this.configList = carArrangeApi.getConfig()
+  },
+  data() {
+    return {
+      list: [],
+      carList: [],
+      driverList: [],
+      currentPage: 1,
+      pageSize: 20,
+      count: 0,
+      loading: false,
+      showDialog: false,
+      form: {
+        id: 0,
+        orderId: '',
+        webOrderId: '',
+        carId: '',
+        driverId: '',
+        arrangeStatus: '',
+        origin: '',
+        destination: '',
+        predictMileage: '',
+        predictTime: '',
+        arrangeTime: '',
+        arrangeUserId: '',
+        remark: '',
+        cancelTime: '',
+        cancelUserId: '',
+        cancelRemark: ''
+      },
+      filters: {
+        name: '',
+        phone: '',
+        arrangeStatus: '',
+        labelVal: '1'
+      },
+      arrangeStatusList: [
+        {
+          value: 0,
+          label: '准备出车'
         },
-
-        methods: {
-            tableRowClassName(row, index) {
-                if (row.ArrangeStatus === 0) {
-                    return 'ready'
-                } else if (row.ArrangeStatus === 1) {
-                    return 'serviceing'
-                } else if (row.ArrangeStatus === 3) {
-                    return 'cancel'
-                }
-                return ''
-            },
-            search() {
-                this.fetchData()
-            },
-            async fetchCarList() {
-                try {
-                    const options = {
-                        pageIndex: '',
-                        pageSize: '',
-                        order: 'ID',
-                        query: {}
-                    }
-                    const res = await carBaseApi.listByQuery(options)
-                    this.carList = res.data.Data
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            async fetchDriverList() {
-                try {
-                    const options = {
-                        pageIndex: '',
-                        pageSize: '',
-                        order: 'ID',
-                        query: {}
-                    }
-                    const res = await driverBaseApi.listByQuery(options)
-                    this.driverList = res.data.Data
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            async fetchData(currentPage, pageSize) {
-                const _self = this
-                _self.loading = true
-                _self.currentPage = currentPage || _self.currentPage
-                _self.pageSize = pageSize || _self.pageSize
-                const options = {
-                    pageIndex: _self.currentPage,
-                    pageSize: _self.pageSize,
-                    order: 'ID',
-                    query: {
-                        // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-                        // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-                        arrangeStatus: _self.filters.arrangeStatus
-                    }
-                }
-                try {
-                    const res = await carArrangeApi.listByQuery(options)
-                    _self.list = res.data.Data
-                    if (_self.list && _self.list.length) {
-                        for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].ArrangeTime = new Date(
-                                _self.list[index].ArrangeTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].CancelTime = new Date(
-                                _self.list[index].CancelTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                        }
-                    }
-                    _self.count = res.data.Count
-                    _self.loading = false
-                    _self.carList.length === 0 ? _self.fetchCarList() : ''
-                } catch (e) {
-                    console.error(e)
-                    _self.loading = false
-                }
-            },
-            handleSizeChange(val) {
-                this.pageSize = val
-                this.fetchData(this.pageSize)
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val
-                this.fetchData(this.currentPage)
-            },
-            clickAddBtn() {
-                const _self = this
-                _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-                _self.showDialog = true
-                _self.form = {
-                    id: 0,
-                    orderId: '',
-                    webOrderId: '',
-                    carId: '',
-                    driverId: '',
-                    arrangeStatus: '',
-                    origin: '',
-                    destination: '',
-                    predictMileage: '',
-                    predictTime: '',
-                    arrangeTime: '',
-                    arrangeUserId: '',
-                    remark: '',
-                    cancelTime: '',
-                    cancelUserId: '',
-                    cancelRemark: ''
-                }
-            },
-            async clickEditBtn($index, row) {
-                const _self = this
-                _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-                try {
-                    const res = await carArrangeApi.detail(row.ID)
-                    _self.showDialog = true
-                    _self.form.id = res.data.Data.ID
-                    _self.form.orderId = res.data.Data.OrderID
-                    _self.form.webOrderId = res.data.Data.WebOrderID
-                    _self.form.carId = res.data.Data.CarID
-                    _self.form.driverId = res.data.Data.DriverID
-                    _self.form.arrangeStatus = res.data.Data.ArrangeStatus
-                    _self.form.origin = res.data.Data.Origin
-                    _self.form.destination = res.data.Data.Destination
-                    _self.form.predictMileage = res.data.Data.PredictMileage
-                    _self.form.predictTime = res.data.Data.PredictTime
-                    _self.form.arrangeTime = res.data.Data.ArrangeTime
-                    _self.form.arrangeUserId = res.data.Data.ArrangeUserId
-                    _self.form.remark = res.data.Data.Remark
-                    _self.form.cancelTime = res.data.Data.CancelTime
-                    _self.form.cancelUserId = res.data.Data.CancelUserId
-                    _self.form.cancelRemark = res.data.Data.CancelRemark
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            submitForm() {
-                const _self = this
-                if (_self.form.id) {
-                    _self.editSave()
-                } else {
-                    _self.addSave()
-                }
-            },
-            async addSave() {
-                const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carArrangeApi.add(_self.form)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('添加失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            },
-            async editSave() {
-                const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carArrangeApi.edit(_self.form.id, _self.form)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('编辑失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            }
+        {
+          value: 1,
+          label: '运行中'
         },
-        mounted() {
-            Date.prototype.Format = function(fmt) {
-                let o = {
-                    'M+': this.getMonth() + 1, //月份
-                    'd+': this.getDate(), //日
-                    'h+': this.getHours(), //小时
-                    'm+': this.getMinutes(), //分
-                    's+': this.getSeconds(), //秒
-                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                    S: this.getMilliseconds() //毫秒
-                }
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(
-                        RegExp.$1,
-                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-                    )
-                for (let k in o)
-                    if (new RegExp('(' + k + ')').test(fmt))
-                        fmt = fmt.replace(
-                            RegExp.$1,
-                            RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-                        )
-                return fmt
-            }
-
-            this.fetchData()
+        {
+          value: 2,
+          label: '完成'
+        },
+        {
+          value: 3,
+          label: '取消'
         }
+      ],
+      selectedOptions: [
+        {
+          value: '1',
+          label: '姓名'
+        },
+        {
+          value: '2',
+          label: '电话'
+        }
+      ],
+      rules: {
+        accountName: [
+          {
+            required: true,
+            message: '请输入账户名称'
+          }
+        ],
+        accountNum: [
+          {
+            required: true,
+            message: '请输入银行账户'
+          }
+        ]
+      }
+    }
+  },
+
+  methods: {
+    tableRowClassName(row, index) {
+      if (row.ArrangeStatus === 0) {
+        return 'ready'
+      } else if (row.ArrangeStatus === 1) {
+        return 'serviceing'
+      } else if (row.ArrangeStatus === 3) {
+        return 'cancel'
+      }
+      return ''
+    },
+    search() {
+      this.fetchData()
+    },
+    async fetchCarList() {
+      try {
+        const options = {
+          pageIndex: '',
+          pageSize: '',
+          order: 'ID',
+          query: {}
+        }
+        const res = await carBaseApi.listByQuery(options)
+        this.carList = res.data.Data
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async fetchDriverList() {
+      try {
+        const options = {
+          pageIndex: '',
+          pageSize: '',
+          order: 'ID',
+          query: {}
+        }
+        const res = await driverBaseApi.listByQuery(options)
+        this.driverList = res.data.Data
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: {
+          // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+          // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+          arrangeStatus: _self.filters.arrangeStatus
+        }
+      }
+      try {
+        const res = await carArrangeApi.listByQuery(options)
+        _self.list = res.data.Data
+        if (_self.list && _self.list.length) {
+          for (let [index, elem] of _self.list.entries()) {
+            _self.list[index].ArrangeTime = new Date(
+              _self.list[index].ArrangeTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+            _self.list[index].CancelTime = new Date(
+              _self.list[index].CancelTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+          }
+        }
+        _self.count = res.data.Count
+        _self.loading = false
+        _self.carList.length === 0 ? _self.fetchCarList() : ''
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+      _self.showDialog = true
+      _self.form = {
+        id: 0,
+        orderId: '',
+        webOrderId: '',
+        carId: '',
+        driverId: '',
+        arrangeStatus: '',
+        origin: '',
+        destination: '',
+        predictMileage: '',
+        predictTime: '',
+        arrangeTime: '',
+        arrangeUserId: '',
+        remark: '',
+        cancelTime: '',
+        cancelUserId: '',
+        cancelRemark: ''
+      }
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+      try {
+        const res = await carArrangeApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.id = res.data.Data.ID
+        _self.form.orderId = res.data.Data.OrderID
+        _self.form.webOrderId = res.data.Data.WebOrderID
+        _self.form.carId = res.data.Data.CarID
+        _self.form.driverId = res.data.Data.DriverID
+        _self.form.arrangeStatus = res.data.Data.ArrangeStatus
+        _self.form.origin = res.data.Data.Origin
+        _self.form.destination = res.data.Data.Destination
+        _self.form.predictMileage = res.data.Data.PredictMileage
+        _self.form.predictTime = res.data.Data.PredictTime
+        _self.form.arrangeTime = res.data.Data.ArrangeTime
+        _self.form.arrangeUserId = res.data.Data.ArrangeUserId
+        _self.form.remark = res.data.Data.Remark
+        _self.form.cancelTime = res.data.Data.CancelTime
+        _self.form.cancelUserId = res.data.Data.CancelUserId
+        _self.form.cancelRemark = res.data.Data.CancelRemark
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.id) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carArrangeApi.add(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carArrangeApi.edit(_self.form.id, _self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
