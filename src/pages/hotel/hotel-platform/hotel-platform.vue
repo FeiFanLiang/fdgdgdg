@@ -6,32 +6,36 @@
     <el-row>
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
-    <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
-        <el-table-column prop="platName" label="平台名称"></el-table-column>
-      <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="platHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="platHotelNameEn" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
-      <el-table-column label="平台访问路径" show-overflow-tooltip>
+    <CustomTable :list="list" :configList="configList.listFields">
+      <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
             <a target="_blank" :href="scope.row.platUrl">{{scope.row.platUrl}}</a>
         </template>
       </el-table-column>
-      <el-table-column label="有效" width="70" align="center">
+      <el-table-column label="有效" width="70" align="center" slot="right-two">
         <template scope="scope">
 <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
 <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
 </template>
       </el-table-column>
-      <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column  label="操作" width="120" fixed="right">
+
+      <el-table-column  label="操作" width="120" fixed="right" slot="right-three">
         <template scope="scope">
 <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
     编辑</el-button>
 <el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
 </template>
       </el-table-column>
-    </el-table>
+    </CustomTable>
+    <!-- <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+        <el-table-column prop="platName" label="平台名称"></el-table-column>
+      <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="platHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
+      <el-table-column prop="platHotelNameEn" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+
+    </el-table> -->
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
         @size-change="handleSizeChange"
@@ -100,6 +104,11 @@ export default {
   components: {
     HotelTopMenu
   },
+  created() {
+    this.fetchData()
+    this.getHotelThreePlatInfoList()
+    this.configList = hotelPlatformApi.getConfig()
+  },
   data() {
     return {
       list: [],
@@ -142,10 +151,7 @@ export default {
       }
     }
   },
-  mounted() {
-    this.fetchData()
-    this.getHotelThreePlatInfoList()
-  },
+
   methods: {
     handleCurrentChange(val) {
       this.currentPage = val
