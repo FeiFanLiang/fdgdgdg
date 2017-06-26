@@ -77,114 +77,109 @@
     </div>
 </template>
 <script>
-import {
-    hotelPayModeApi,
-    hotelBaseApi,
-    hotelStarApi,
-    hotelAreaApi
-} from 'api';
+import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api'
 
 export default {
-    data() {
-            return {
-                labelPosition: 'top',
-                form: {
-                    HotelNum: '',
-                    HotelName: '',
-                    HotelName_En: '',
-                    FrontPhone: '',
-                    AreaID: '',
-                    Address: '',
-                    StarID: '',
-                    PayMode: '',
-                    Remark: ''
-                },
-                loading: false,
-                list: [],
-                rules: {
-                    HotelName: [{
-                        required: true,
-                        message: '请输入酒店名称',
-                        trigger: 'blur'
-                    }]
-                },
-                areaOptions: [],
-                starOptions: [],
-                payModeOptions: []
-            };
-        },
-        mounted() {
-            const _self = this;
+  data() {
+    return {
+      labelPosition: 'top',
+      form: {
+        HotelNum: '',
+        HotelName: '',
+        HotelName_En: '',
+        FrontPhone: '',
+        AreaID: '',
+        Address: '',
+        StarID: '',
+        PayMode: '',
+        Remark: ''
+      },
+      loading: false,
+      list: [],
+      rules: {
+        HotelName: [
+          {
+            required: true,
+            message: '请输入酒店名称',
+            trigger: 'blur'
+          }
+        ]
+      },
+      areaOptions: [],
+      starOptions: [],
+      payModeOptions: []
+    }
+  },
+  mounted() {
+    const _self = this
 
-            _self.getPayModeOptions();
+    _self.getPayModeOptions()
 
-            _self.getStarOptions();
-
-        },
-        methods: {
-            async remoteMethod(query) {
-                const _self = this;
-                if (query !== '') {
-                    _self.loading = true;
-                    const res = await hotelAreaApi.listByQue(query);
-                    _self.list = res.data;
-                    setTimeout(() => {
-                        _self.loading = false;
-                        _self.areaOptions = _self.list.splice(0, 20);
-                    }, 200);
-                } else {
-                    _self.areaOptions = [];
-                }
-            },
-            async getPayModeOptions() {
-                try {
-                    const res = await hotelPayModeApi.list();
-                    this.payModeOptions = res.data;
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            async getStarOptions() {
-                try {
-                    const res = await hotelStarApi.list();
-                    this.starOptions = res.data;
-                } catch (e) {
-                    console.error(e);
-                }
-            },
-            onSubmit(formName) {
-                const _self = this;
-                _self.$refs[formName].validate(async valid => {
-                    if (valid) {
-                        try {
-                            const data = await hotelBaseApi.add(_self.form);
-                            _self.$route.params.form;
-                            // _self.form = {};
-                            this.$emit('hide');
-                            _self.$refs[formName].resetFields();
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            });
-                            this.$router.go(0);
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    } else {
-                        return false;
-                    }
-                });
-            },
-            /*Cancel() {
+    _self.getStarOptions()
+  },
+  methods: {
+    async remoteMethod(query) {
+      const _self = this
+      if (query !== '') {
+        _self.loading = true
+        const res = await hotelAreaApi.listByQue(query)
+        _self.list = res.data
+        setTimeout(() => {
+          _self.loading = false
+          _self.areaOptions = _self.list.splice(0, 20)
+        }, 200)
+      } else {
+        _self.areaOptions = []
+      }
+    },
+    async getPayModeOptions() {
+      try {
+        const res = await hotelPayModeApi.list()
+        this.payModeOptions = res.data
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async getStarOptions() {
+      try {
+        const res = await hotelStarApi.list()
+        this.starOptions = res.data
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    onSubmit(formName) {
+      const _self = this
+      _self.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            const data = await hotelBaseApi.add(_self.form)
+            _self.$route.params.form
+            // _self.form = {};
+            this.$emit('hide')
+            _self.$refs[formName].resetFields()
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+            this.$router.go(0)
+          } catch (e) {
+            console.error(e)
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    /*Cancel() {
               this.$emit('hide');
             },*/
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-                this.$emit('hide');
-            }
-
-        }
-};
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
+      this.$emit('hide')
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 #HotelbaseAdd {}
