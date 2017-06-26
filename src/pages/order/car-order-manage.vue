@@ -382,435 +382,473 @@
     </div>
 </template>
 <script>
-import {
-    carOrderManageApi
-} from 'api'
+import { carOrderManageApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                currentPage: 1,
-                pageSize: 10,
-                count: 0,
-                loading: false,
-                showDialog: false,
-                pickerOptions: {},
-                form: {
-                    id: 0,
-                    dealPrice: '',
-                    realPrice: '',
-                    payStatus: false,
-                    payType: '',
-                    linkName: '',
-                    linkPhone: '',
-                    specReq: '',
-                    remark: '',
-                    channel: '',
-                    externalOrderID: '',
-                    externalOrderStete: '',
-                    carTransportType: '',
-                    carClassify: '',
-                    origin: '',
-                    originAddress: '',
-                    originCoordinates: '',
-                    destination: '',
-                    destinationAddress: '',
-                    destinationCoordinates: '',
-                    useTime: '',
-                    isAppointment: true,
-                    carriageNo: '',
-                    staffUserName: ''
-                },
-                channelList: [{
-                    value: 1,
-                    label: "机场用车"
-                }, {
-                    value: 2,
-                    label: "线下订单"
-                }, {
-                    value: 3,
-                    label: "携程接送机"
-                }, {
-                    value: 4,
-                    label: "微信订单"
-                }],
-                orderStatusList: [{
-                    value: 1,
-                    label: "已支付"
-                }, {
-                    value: 2,
-                    label: "已取消"
-                }, {
-                    value: 3,
-                    label: "已退款"
-                }, {
-                    value: 4,
-                    label: "预约单"
-                }],
-                payChannelList: [{
-                    value: 1,
-                    label: '支付宝'
-                }, {
-                    value: 2,
-                    label: '微信支付'
-                }, {
-                    value: 3,
-                    label: '银联支付'
-                }, {
-                    value: 4,
-                    label: '平台'
-                }, {
-                    value: 5,
-                    label: '线下支付'
-                }, {
-                    value: 6,
-                    label: '其他'
-                }],
-                carTransportTypeList: [{
-                    value: 0,
-                    label: '接机'
-                }, {
-                    value: 1,
-                    label: '送机'
-                }, {
-                    value: 2,
-                    label: '指定线路'
-                }, {
-                    value: 3,
-                    label: '接站'
-                }, {
-                    value: 4,
-                    label: '送站'
-                }],
-                carClassifyList: [{
-                    value: 0,
-                    label: '经济型'
-                }, {
-                    value: 1,
-                    label: '舒适型'
-                }, {
-                    value: 2,
-                    label: '商务型'
-                }, {
-                    value: 3,
-                    label: '豪华型'
-                }],
-                filters: {
-                    channel: '',
-                    orderVal: '',
-                    useTimeS: '',
-                    useTimeE: '',
-                    labelVal: 1,
-                    linkName: '',
-                    linkPhone: '',
-                    externalOrderID: '',
-                    carTransportType: '',
-                    carClassify: ''
-                },
-                selectedOptions: [{
-                    value: 1,
-                    label: '姓名'
-                }, {
-                    value: 2,
-                    label: '电话'
-                }, {
-                    value: 3,
-                    label: '外部订单号'
-                }],
-                rules: {
-                    channel: [{
-                        required: true,
-                        message: '请选择订单渠道'
-                    }],
-                    // externalOrderID: [{
-                    //     required: true,
-                    //     message: '请输入外部订单号'
-                    // }],
-                    // externalOrderStete: [{
-                    //     required: true,
-                    //     message: '请输入外部订单状态'
-                    // }],
-                    carTransportType: [{
-                        required: true,
-                        message: '请选择产品类型'
-                    }],
-                    carClassify: [{
-                        required: true,
-                        message: '请选择车型类别'
-                    }],
-                    useTime: [{
-                        required: true,
-                        message: '请选择预约用车时间'
-                    }],
-                    origin: [{
-                        required: true,
-                        message: '请输入始发地'
-                    }],
-                    destination: [{
-                        required: true,
-                        message: '请输入目的地'
-                    }],
-                    linkName: [{
-                        required: true,
-                        message: '请输入联系人姓名'
-                    }],
-                    linkPhone: [{
-                        required: true,
-                        message: '请输入联系人电话'
-                    }],
-                    dealPrice: [{
-                        required: true,
-                        message: '请输入应收费用'
-                    }],
-                    realPrice: [{
-                        required: true,
-                        message: '请输入实收费用'
-                    }],
-                    payType: [{
-                        required: true,
-                        message: '请选择支付类型'
-                    }]
-                }
-            }
+  created() {
+    this.filters.useTimeS = new Date(
+      new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
+    ).Format('yyyy-MM-dd')
+    this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
+    this.fetchData()
+  },
+  data() {
+    return {
+      list: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      loading: false,
+      showDialog: false,
+      pickerOptions: {},
+      form: {
+        id: 0,
+        dealPrice: '',
+        realPrice: '',
+        payStatus: false,
+        payType: '',
+        linkName: '',
+        linkPhone: '',
+        specReq: '',
+        remark: '',
+        channel: '',
+        externalOrderID: '',
+        externalOrderStete: '',
+        carTransportType: '',
+        carClassify: '',
+        origin: '',
+        originAddress: '',
+        originCoordinates: '',
+        destination: '',
+        destinationAddress: '',
+        destinationCoordinates: '',
+        useTime: '',
+        isAppointment: true,
+        carriageNo: '',
+        staffUserName: ''
+      },
+      channelList: [
+        {
+          value: 1,
+          label: '机场用车'
         },
-
-        methods: {
-            clear() {
-                this.filters = {
-                    channel: '',
-                    orderVal: '',
-                    useTimeS: '',
-                    useTimeE: '',
-                    labelVal: 1,
-                    linkName: '',
-                    linkPhone: '',
-                    externalOrderID: '',
-                    carTransportType: '',
-                    carClassify: ''
-                }
-            },
-            search() {
-                this.fetchData()
-            },
-            async syncList() {
-                const _self = this;
-                _self.list = [];
-                _self.count = 0;
-                _self.loading = true;
-                const res = await carOrderManageApi.syncList();
-                _self.fetchData();
-            },
-            async fetchData(currentPage, pageSize) {
-                const _self = this
-                _self.loading = true
-                _self.currentPage = currentPage || _self.currentPage
-                _self.pageSize = pageSize || _self.pageSize
-                const options = {
-                    pageIndex: _self.currentPage,
-                    pageSize: _self.pageSize,
-                    order: 'UseTime',
-                    query: {
-                        channel: _self.filters.channel,
-                        payStatus: _self.filters.orderVal === 1 ? true : '',
-                        isCancel: _self.filters.orderVal === 2 ? true : '',
-                        isCancelPrice: _self.filters.orderVal === 3 ? true : '',
-                        isAppointment: _self.filters.orderVal === 4 ? true : '',
-                        "useTime>": _self.filters.useTimeS ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd') : '',
-                        "useTime<": _self.filters.useTimeE ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd') : '',
-                        linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
-                        linkPhone: _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
-                        externalOrderID: _self.filters.labelVal === 3 ? _self.filters.externalOrderID : '',
-                        carTransportType: _self.filters.carTransportType,
-                        carClassify: _self.filters.carClassify
-                    }
-                }
-                try {
-                    const res = await carOrderManageApi.listByQuery(options)
-                    _self.list = res.data.Data;
-                    if (_self.list && _self.list.length) {
-                        for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].UseTime = new Date(
-                                _self.list[index].UseTime
-                            ).Format('yyyy-MM-dd hh:mm:ss');
-                            _self.list[index].PayTime = new Date(
-                                _self.list[index].PayTime
-                            ).Format('yyyy-MM-dd hh:mm:ss');
-                            _self.list[index].CancelTime = new Date(
-                                _self.list[index].CancelTime
-                            ).Format('yyyy-MM-dd hh:mm:ss');
-                            _self.list[index].StartingTime = new Date(
-                                _self.list[index].StartingTime
-                            ).Format('yyyy-MM-dd hh:mm:ss');
-                            _self.list[index].ArrivalTime = new Date(
-                                _self.list[index].ArrivalTime
-                            ).Format('yyyy-MM-dd hh:mm:ss');
-                        }
-                    }
-                    _self.count = res.data.Count;
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e)
-                    _self.loading = false;
-                }
-            },
-            handleSizeChange(val) {
-                this.pageSize = val
-                this.fetchData(this.pageSize)
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val
-                this.fetchData(this.currentPage)
-            },
-            clickAddBtn() {
-                const _self = this
-                _self.showDialog = true
-                _self.form = {
-                    id: 0,
-                    dealPrice: '',
-                    realPrice: '',
-                    payStatus: false,
-                    payType: '',
-                    linkName: '',
-                    linkPhone: '',
-                    specReq: '',
-                    remark: '',
-                    channel: '',
-                    externalOrderID: '',
-                    externalOrderStete: '',
-                    carTransportType: '',
-                    carClassify: '',
-                    origin: '',
-                    originAddress: '',
-                    originCoordinates: '',
-                    destination: '',
-                    destinationAddress: '',
-                    destinationCoordinates: '',
-                    useTime: '',
-                    isAppointment: true,
-                    carriageNo: '',
-                    staffUserName: ''
-                };
-            },
-            async clickEditBtn($index, row) {
-                const _self = this
-                try {
-                    const res = await carOrderManageApi.detail(row.ID)
-                    _self.showDialog = true
-                    _self.form.id = res.data.Data.ID
-                    _self.form.dealPrice = res.data.Data.DealPrice
-                    _self.form.realPrice = res.data.Data.RealPrice
-                    _self.form.payStatus = res.data.Data.PayStatus
-                    _self.form.payType = res.data.Data.PayType
-                    _self.form.linkName = res.data.Data.LinkName
-                    _self.form.linkPhone = res.data.Data.LinkPhone
-                    _self.form.specReq = res.data.Data.SpecReq
-                    _self.form.remark = res.data.Data.Remark
-                    _self.form.channel = res.data.Data.Channel
-                    _self.form.externalOrderID = res.data.Data.ExternalOrderID
-                    _self.form.externalOrderStete = res.data.Data.ExternalOrderStete
-                    _self.form.carTransportType = res.data.Data.CarTransportType
-                    _self.form.carClassify = res.data.Data.CarClassify
-                    _self.form.origin = res.data.Data.Origin
-                    _self.form.originAddress = res.data.Data.OriginAddress
-                    _self.form.originCoordinates = res.data.Data.OriginCoordinates
-                    _self.form.destination = res.data.Data.Destination
-                    _self.form.destinationAddress = res.data.Data.DestinationAddress
-                    _self.form.destinationCoordinates = res.data.Data.DestinationCoordinates
-                    _self.form.useTime = res.data.Data.UseTime
-                    _self.form.isAppointment = res.data.Data.IsAppointment
-                    _self.form.carriageNo = res.data.Data.CarriageNo
-                    _self.form.staffUserName = res.data.Data.StaffUserName
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            submitForm() {
-                const _self = this
-                if (_self.form.id) {
-                    _self.editSave()
-                } else {
-                    _self.addSave()
-                }
-            },
-            async addSave() {
-                const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carOrderManageApi.add(_self.form)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('添加失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            },
-            async editSave() {
-                const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            let form = {
-                                ..._self.form
-                            }
-                            delete form.id
-                            await carOrderManageApi.edit(_self.form.id, form)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('编辑失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            }
+        {
+          value: 2,
+          label: '线下订单'
         },
-        mounted() {
-            Date.prototype.Format = function(fmt) {
-                let o = {
-                    'M+': this.getMonth() + 1, //月份
-                    'd+': this.getDate(), //日
-                    'h+': this.getHours(), //小时
-                    'm+': this.getMinutes(), //分
-                    's+': this.getSeconds(), //秒
-                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                    S: this.getMilliseconds() //毫秒
-                }
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(
-                        RegExp.$1,
-                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-                    )
-                for (let k in o)
-                    if (new RegExp('(' + k + ')').test(fmt))
-                        fmt = fmt.replace(
-                            RegExp.$1,
-                            RegExp.$1.length == 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
-                        )
-                return fmt
-            }
-
-            this.filters.useTimeS = new Date(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01').Format('yyyy-MM-dd');
-            this.filters.useTimeE = new Date().Format('yyyy-MM-dd');
-            this.fetchData()
+        {
+          value: 3,
+          label: '携程接送机'
+        },
+        {
+          value: 4,
+          label: '微信订单'
         }
+      ],
+      orderStatusList: [
+        {
+          value: 1,
+          label: '已支付'
+        },
+        {
+          value: 2,
+          label: '已取消'
+        },
+        {
+          value: 3,
+          label: '已退款'
+        },
+        {
+          value: 4,
+          label: '预约单'
+        }
+      ],
+      payChannelList: [
+        {
+          value: 1,
+          label: '支付宝'
+        },
+        {
+          value: 2,
+          label: '微信支付'
+        },
+        {
+          value: 3,
+          label: '银联支付'
+        },
+        {
+          value: 4,
+          label: '平台'
+        },
+        {
+          value: 5,
+          label: '线下支付'
+        },
+        {
+          value: 6,
+          label: '其他'
+        }
+      ],
+      carTransportTypeList: [
+        {
+          value: 0,
+          label: '接机'
+        },
+        {
+          value: 1,
+          label: '送机'
+        },
+        {
+          value: 2,
+          label: '指定线路'
+        },
+        {
+          value: 3,
+          label: '接站'
+        },
+        {
+          value: 4,
+          label: '送站'
+        }
+      ],
+      carClassifyList: [
+        {
+          value: 0,
+          label: '经济型'
+        },
+        {
+          value: 1,
+          label: '舒适型'
+        },
+        {
+          value: 2,
+          label: '商务型'
+        },
+        {
+          value: 3,
+          label: '豪华型'
+        }
+      ],
+      filters: {
+        channel: '',
+        orderVal: '',
+        useTimeS: '',
+        useTimeE: '',
+        labelVal: 1,
+        linkName: '',
+        linkPhone: '',
+        externalOrderID: '',
+        carTransportType: '',
+        carClassify: ''
+      },
+      selectedOptions: [
+        {
+          value: 1,
+          label: '姓名'
+        },
+        {
+          value: 2,
+          label: '电话'
+        },
+        {
+          value: 3,
+          label: '外部订单号'
+        }
+      ],
+      rules: {
+        channel: [
+          {
+            required: true,
+            message: '请选择订单渠道'
+          }
+        ],
+        // externalOrderID: [{
+        //     required: true,
+        //     message: '请输入外部订单号'
+        // }],
+        // externalOrderStete: [{
+        //     required: true,
+        //     message: '请输入外部订单状态'
+        // }],
+        carTransportType: [
+          {
+            required: true,
+            message: '请选择产品类型'
+          }
+        ],
+        carClassify: [
+          {
+            required: true,
+            message: '请选择车型类别'
+          }
+        ],
+        useTime: [
+          {
+            required: true,
+            message: '请选择预约用车时间'
+          }
+        ],
+        origin: [
+          {
+            required: true,
+            message: '请输入始发地'
+          }
+        ],
+        destination: [
+          {
+            required: true,
+            message: '请输入目的地'
+          }
+        ],
+        linkName: [
+          {
+            required: true,
+            message: '请输入联系人姓名'
+          }
+        ],
+        linkPhone: [
+          {
+            required: true,
+            message: '请输入联系人电话'
+          }
+        ],
+        dealPrice: [
+          {
+            required: true,
+            message: '请输入应收费用'
+          }
+        ],
+        realPrice: [
+          {
+            required: true,
+            message: '请输入实收费用'
+          }
+        ],
+        payType: [
+          {
+            required: true,
+            message: '请选择支付类型'
+          }
+        ]
+      }
+    }
+  },
+
+  methods: {
+    clear() {
+      this.filters = {
+        channel: '',
+        orderVal: '',
+        useTimeS: '',
+        useTimeE: '',
+        labelVal: 1,
+        linkName: '',
+        linkPhone: '',
+        externalOrderID: '',
+        carTransportType: '',
+        carClassify: ''
+      }
+    },
+    search() {
+      this.fetchData()
+    },
+    async syncList() {
+      const _self = this
+      _self.list = []
+      _self.count = 0
+      _self.loading = true
+      const res = await carOrderManageApi.syncList()
+      _self.fetchData()
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'UseTime',
+        query: {
+          channel: _self.filters.channel,
+          payStatus: _self.filters.orderVal === 1 ? true : '',
+          isCancel: _self.filters.orderVal === 2 ? true : '',
+          isCancelPrice: _self.filters.orderVal === 3 ? true : '',
+          isAppointment: _self.filters.orderVal === 4 ? true : '',
+          'useTime>': _self.filters.useTimeS
+            ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd')
+            : '',
+          'useTime<': _self.filters.useTimeE
+            ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
+            : '',
+          linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
+          linkPhone: _self.filters.labelVal === 2
+            ? _self.filters.linkPhone
+            : '',
+          externalOrderID: _self.filters.labelVal === 3
+            ? _self.filters.externalOrderID
+            : '',
+          carTransportType: _self.filters.carTransportType,
+          carClassify: _self.filters.carClassify
+        }
+      }
+      try {
+        const res = await carOrderManageApi.listByQuery(options)
+        _self.list = res.data.Data
+        if (_self.list && _self.list.length) {
+          for (let [index, elem] of _self.list.entries()) {
+            _self.list[index].UseTime = new Date(
+              _self.list[index].UseTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+            _self.list[index].PayTime = new Date(
+              _self.list[index].PayTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+            _self.list[index].CancelTime = new Date(
+              _self.list[index].CancelTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+            _self.list[index].StartingTime = new Date(
+              _self.list[index].StartingTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+            _self.list[index].ArrivalTime = new Date(
+              _self.list[index].ArrivalTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
+          }
+        }
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.showDialog = true
+      _self.form = {
+        id: 0,
+        dealPrice: '',
+        realPrice: '',
+        payStatus: false,
+        payType: '',
+        linkName: '',
+        linkPhone: '',
+        specReq: '',
+        remark: '',
+        channel: '',
+        externalOrderID: '',
+        externalOrderStete: '',
+        carTransportType: '',
+        carClassify: '',
+        origin: '',
+        originAddress: '',
+        originCoordinates: '',
+        destination: '',
+        destinationAddress: '',
+        destinationCoordinates: '',
+        useTime: '',
+        isAppointment: true,
+        carriageNo: '',
+        staffUserName: ''
+      }
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await carOrderManageApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.id = res.data.Data.ID
+        _self.form.dealPrice = res.data.Data.DealPrice
+        _self.form.realPrice = res.data.Data.RealPrice
+        _self.form.payStatus = res.data.Data.PayStatus
+        _self.form.payType = res.data.Data.PayType
+        _self.form.linkName = res.data.Data.LinkName
+        _self.form.linkPhone = res.data.Data.LinkPhone
+        _self.form.specReq = res.data.Data.SpecReq
+        _self.form.remark = res.data.Data.Remark
+        _self.form.channel = res.data.Data.Channel
+        _self.form.externalOrderID = res.data.Data.ExternalOrderID
+        _self.form.externalOrderStete = res.data.Data.ExternalOrderStete
+        _self.form.carTransportType = res.data.Data.CarTransportType
+        _self.form.carClassify = res.data.Data.CarClassify
+        _self.form.origin = res.data.Data.Origin
+        _self.form.originAddress = res.data.Data.OriginAddress
+        _self.form.originCoordinates = res.data.Data.OriginCoordinates
+        _self.form.destination = res.data.Data.Destination
+        _self.form.destinationAddress = res.data.Data.DestinationAddress
+        _self.form.destinationCoordinates = res.data.Data.DestinationCoordinates
+        _self.form.useTime = res.data.Data.UseTime
+        _self.form.isAppointment = res.data.Data.IsAppointment
+        _self.form.carriageNo = res.data.Data.CarriageNo
+        _self.form.staffUserName = res.data.Data.StaffUserName
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.id) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carOrderManageApi.add(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            let form = {
+              ..._self.form
+            }
+            delete form.id
+            await carOrderManageApi.edit(_self.form.id, form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

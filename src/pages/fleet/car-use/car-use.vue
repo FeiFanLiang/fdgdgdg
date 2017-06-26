@@ -41,110 +41,87 @@
     </div>
 </template>
 <script>
-import {
-    carUseApi
-} from 'api';
+import { carUseApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                currentPage: 1,
-                pageSize: 10,
-                count: 0,
-                loading: false,
-                searchForm: {
-                    startTime: '',
-                    endTime: ''
-                },
-                pickerOptions: {}
-                // runStatusList: [{
-                //     value: 'Stopping',
-                //     label: '不可用'
-                // }, {
-                //     value: 'Await',
-                //     label: '待命'
-                // }, {
-                //     value: 'Serviceing',
-                //     label: '运行中'
-                // }, {
-                //     value: 'Backing',
-                //     label: '回程中'
-                // }]
-            };
-        },
+  created() {
+    this.searchForm.startTime = new Date(
+      new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
+    ).Format('yyyy-MM-dd')
+    this.searchForm.endTime = new Date().Format('yyyy-MM-dd')
+    this.fetchData()
+  },
+  data() {
+    return {
+      list: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      loading: false,
+      searchForm: {
+        startTime: '',
+        endTime: ''
+      },
+      pickerOptions: {}
+      // runStatusList: [{
+      //     value: 'Stopping',
+      //     label: '不可用'
+      // }, {
+      //     value: 'Await',
+      //     label: '待命'
+      // }, {
+      //     value: 'Serviceing',
+      //     label: '运行中'
+      // }, {
+      //     value: 'Backing',
+      //     label: '回程中'
+      // }]
+    }
+  },
 
-        methods: {
-            async fetchData(currentPage, pageSize) {
-                const _self = this;
-                _self.loading = true;
-                _self.currentPage = currentPage || _self.currentPage;
-                _self.pageSize = pageSize || _self.pageSize;
-                const options = {
-                    pageIndex: _self.currentPage,
-                    pageSize: _self.pageSize,
-                    order: 'ID',
-                    query: {
-                        // startTime: new Date(_self.searchForm.startTime).Format('yyyy-MM-dd'),
-                        // endTime: new Date(_self.searchForm.endTime).Format('yyyy-MM-dd')
-                    },
-                };
-                try {
-                    const res = await carUseApi.listByQuery(options);
-                    _self.list = res.data.Data;
-                    for (let [index, elem] of _self.list.entries()) {
-                        _self.list[index].StartTime = new Date(_self.list[index].StartTime).Format('yyyy-MM-dd hh:mm');
-                        _self.list[index].EndTime = new Date(_self.list[index].EndTime).Format('yyyy-MM-dd hh:mm');
-                    }
-                    _self.count = res.data.Count;
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading = false;
-                }
-            },
-            handleSizeChange(val) {
-                this.pageSize = val
-                this.fetchData(this.pageSize);
-            },
-            handleCurrentChange(val) {
-                this.currentPage = val;
-                this.fetchData(this.currentPage);
-            }
-        },
-        mounted() {
-
-            Date.prototype.Format = function(fmt) {
-                let o = {
-                    'M+': this.getMonth() + 1, //月份
-                    'd+': this.getDate(), //日
-                    'h+': this.getHours(), //小时
-                    'm+': this.getMinutes(), //分
-                    's+': this.getSeconds(), //秒
-                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                    S: this.getMilliseconds() //毫秒
-                };
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(
-                        RegExp.$1,
-                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-                    );
-                for (let k in o)
-                    if (new RegExp('(' + k + ')').test(fmt))
-                        fmt = fmt.replace(
-                            RegExp.$1,
-                            RegExp.$1.length == 1 ?
-                            o[k] :
-                            ('00' + o[k]).substr(('' + o[k]).length)
-                        );
-                return fmt;
-            };
-
-            this.searchForm.startTime = new Date(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01').Format('yyyy-MM-dd');
-            this.searchForm.endTime = new Date().Format('yyyy-MM-dd');
-            this.fetchData();
+  methods: {
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: {
+          // startTime: new Date(_self.searchForm.startTime).Format('yyyy-MM-dd'),
+          // endTime: new Date(_self.searchForm.endTime).Format('yyyy-MM-dd')
         }
-};
+      }
+      try {
+        const res = await carUseApi.listByQuery(options)
+        _self.list = res.data.Data
+        for (let [index, elem] of _self.list.entries()) {
+          _self.list[index].StartTime = new Date(
+            _self.list[index].StartTime
+          ).Format('yyyy-MM-dd hh:mm')
+          _self.list[index].EndTime = new Date(
+            _self.list[index].EndTime
+          ).Format('yyyy-MM-dd hh:mm')
+        }
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 #car-use-page {

@@ -40,74 +40,50 @@
     </div>
 </template>
 <script>
-import {
-    driverEvaluateApi
-} from 'api';
+import { driverEvaluateApi } from 'api'
 
 export default {
-    data() {
-            return {
-                list: [],
-                searchForm: {
-                    startTime: '',
-                    endTime: ''
-                },
-                pickerOptions: {},
-                loading: false,
-            };
-        },
-
-        methods: {
-            async fetchData() {
-                const _self = this;
-                _self.loading = true;
-                _self.searchForm.startTime = new Date(_self.searchForm.startTime).Format('yyyy-MM-dd'),
-                    _self.searchForm.endTime = new Date(_self.searchForm.endTime).Format('yyyy-MM-dd')
-                try {
-                    const res = await driverEvaluateApi.listByQuery(_self.searchForm);
-                    _self.list = res.data.Data;
-                    for (let [index, elem] of _self.list.entries()) {
-                        _self.list[index].field2 = Number(_self.list[index].field2);
-                    }
-                    _self.loading = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading = false;
-                }
-            }
-        },
-        mounted() {
-            Date.prototype.Format = function(fmt) {
-                let o = {
-                    'M+': this.getMonth() + 1, //月份
-                    'd+': this.getDate(), //日
-                    'h+': this.getHours(), //小时
-                    'm+': this.getMinutes(), //分
-                    's+': this.getSeconds(), //秒
-                    'q+': Math.floor((this.getMonth() + 3) / 3), //季度
-                    S: this.getMilliseconds() //毫秒
-                };
-                if (/(y+)/.test(fmt))
-                    fmt = fmt.replace(
-                        RegExp.$1,
-                        (this.getFullYear() + '').substr(4 - RegExp.$1.length)
-                    );
-                for (let k in o)
-                    if (new RegExp('(' + k + ')').test(fmt))
-                        fmt = fmt.replace(
-                            RegExp.$1,
-                            RegExp.$1.length == 1 ?
-                            o[k] :
-                            ('00' + o[k]).substr(('' + o[k]).length)
-                        );
-                return fmt;
-            };
-
-            this.searchForm.startTime = new Date(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01').Format('yyyy-MM-dd');
-            this.searchForm.endTime = new Date().Format('yyyy-MM-dd');
-            this.fetchData();
+  created() {
+    this.searchForm.startTime = new Date(
+      new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
+    ).Format('yyyy-MM-dd')
+    this.searchForm.endTime = new Date().Format('yyyy-MM-dd')
+    this.fetchData()
+  },
+  data() {
+    return {
+      list: [],
+      searchForm: {
+        startTime: '',
+        endTime: ''
+      },
+      pickerOptions: {},
+      loading: false
+    }
+  },
+  methods: {
+    async fetchData() {
+      const _self = this
+      _self.loading = true
+      ;(_self.searchForm.startTime = new Date(
+        _self.searchForm.startTime
+      ).Format('yyyy-MM-dd')), (_self.searchForm.endTime = new Date(
+        _self.searchForm.endTime
+      ).Format('yyyy-MM-dd'))
+      try {
+        const res = await driverEvaluateApi.listByQuery(_self.searchForm)
+        _self.list = res.data.Data
+        for (let [index, elem] of _self.list.entries()) {
+          _self.list[index].field2 = Number(_self.list[index].field2)
         }
-};
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 #driver-evaluate-page {
