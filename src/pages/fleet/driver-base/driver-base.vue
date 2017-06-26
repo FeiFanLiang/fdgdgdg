@@ -23,11 +23,28 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row>
-        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
+        <CustomTable :list="list" :configList="configList.listFields">
+          <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
+              <template scope="scope">
+                  <p v-if="scope.row.JobStatus === 1">正常在职</p>
+                  <p v-if="scope.row.JobStatus === 2">已离职</p>
+                  <p v-if="scope.row.JobStatus === 3">停职</p>
+                  <p v-if="scope.row.JobStatus === 4">休假</p>
+              </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150" slot="right-two">
+              <template scope="scope">
+                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                  <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="JobNnumber" label="工号"></el-table-column>
             <el-table-column prop="Name" label="姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Phone" label="电话" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column prop="JobStatus" label="工作状态" width="100">
                 <template scope="scope">
                     <p v-if="scope.row.JobStatus === 1">正常在职</p>
@@ -36,14 +53,14 @@
                     <p v-if="scope.row.JobStatus === 4">休假</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+
             <el-table-column label="操作" width="150">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                     <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
         <div class="pagination-wrapper">
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
@@ -83,6 +100,10 @@
 import { driverBaseApi } from 'api'
 
 export default {
+  created() {
+    this.fetchData()
+    this.configList = driverBaseApi.getConfig()
+  },
   data() {
     return {
       list: [],
@@ -280,9 +301,6 @@ export default {
         }
       })
     }
-  },
-  mounted() {
-    this.fetchData()
   }
 }
 </script>

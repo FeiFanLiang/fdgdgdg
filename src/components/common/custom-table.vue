@@ -1,5 +1,6 @@
 <template lang="html">
   <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+  :row-class-name="className"
     v-loading="loading"
     border
     row-key="ID"
@@ -32,7 +33,8 @@ export default {
       default: () => {
         return []
       }
-    }
+    },
+    className: ''
   },
   data() {
     return {

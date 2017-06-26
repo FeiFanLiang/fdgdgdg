@@ -13,7 +13,25 @@
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" row-key="ID" border>
+        <CustomTable :list="list" :configList="configList.listFields">
+          <el-table-column type="expand" slot="left-one">
+              <template scope="props">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item>
+                          <p>总留言：{{props.row.Remark}}</p>
+                          <p>总评论：{{props.row.Label}}</p>
+                      </el-form-item>
+                  </el-form>
+              </template>
+          </el-table-column>
+          <el-table-column sortable prop="field2" label="平均分" width="195" slot="left-two">
+              <template scope="scope">
+                  <el-rate v-model="scope.row.field2" disabled show-text text-color="#ff9900" text-template="{value}">
+                  </el-rate>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" row-key="ID" border>
             <el-table-column type="expand">
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -36,7 +54,7 @@
                     </el-rate>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
     </div>
 </template>
 <script>
@@ -49,6 +67,7 @@ export default {
     ).Format('yyyy-MM-dd')
     this.searchForm.endTime = new Date().Format('yyyy-MM-dd')
     this.fetchData()
+    this.configList = driverEvaluateApi.getConfig()
   },
   data() {
     return {

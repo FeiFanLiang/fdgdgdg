@@ -29,7 +29,26 @@
                 <el-tag class="mytag cancel">已取消</el-tag>
             </el-col>
         </el-row>
-        <el-table :data="list" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
+        <CustomTable :list="list" :configList="configList.listFields" :className="tableRowClassName">
+          <el-table-column type="expand" slot="left-one">
+              <template scope="props" v-if="props.row.CancelTime">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item>
+                          <p>取消时间：{{props.row.CancelTime}}</p>
+                          <p>取消单人员：{{props.row.CancelUserID}}</p>
+                          <p>取消说明：{{props.row.CancelRemark}}</p>
+                      </el-form-item>
+                  </el-form>
+              </template>
+          </el-table-column>
+          <el-table-column width="150" label="操作" fixed="right" slot="right-one">
+              <template scope="scope">
+                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                  <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -42,8 +61,8 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ID" label="ID" width="55"></el-table-column>
-            <!-- <el-table-column prop="OrderID" label="OrderID"></el-table-column>
-            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column> -->
+            <el-table-column prop="OrderID" label="OrderID"></el-table-column>
+            <el-table-column prop="WebOrderID" label="WebOrderID"></el-table-column>
             <el-table-column prop="CarID" label="CarID"></el-table-column>
             <el-table-column prop="DriverID" label="DriverID"></el-table-column>
             <el-table-column prop="Origin" label="始发地"></el-table-column>
@@ -59,7 +78,7 @@
                     <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
         <div class="pagination-wrapper">
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
@@ -188,6 +207,10 @@
 import { carBaseApi, driverBaseApi, carArrangeApi } from 'api'
 
 export default {
+  created() {
+    this.fetchData()
+    this.configList = carArrangeApi.getConfig()
+  },
   data() {
     return {
       list: [],
@@ -454,9 +477,6 @@ export default {
         }
       })
     }
-  },
-  mounted() {
-    this.fetchData()
   }
 }
 </script>

@@ -13,7 +13,18 @@
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" row-key="ID" border>
+        <CustomTable :list="list" :configList="configList.listFields">
+          <el-table-column type="expand">
+              <template scope="props">
+                  <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item>
+                          <p>用车描述：{{props.row.Destination}}</p>
+                      </el-form-item>
+                  </el-form>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" row-key="ID" border>
             <el-table-column type="expand">
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -33,7 +44,7 @@
             <el-table-column prop="StartTime" label="开始时间" width="150"></el-table-column>
             <el-table-column prop="EndTime" label="结束时间" width="150"></el-table-column>
             <el-table-column prop="Channel" label="渠道"></el-table-column>
-        </el-table>
+        </el-table> -->
         <div class="pagination-wrapper">
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
@@ -50,6 +61,7 @@ export default {
     ).Format('yyyy-MM-dd')
     this.searchForm.endTime = new Date().Format('yyyy-MM-dd')
     this.fetchData()
+    this.configList = carUseApi.getConfig()
   },
   data() {
     return {
