@@ -14,8 +14,14 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
-            <!--Hotel HotelShowID Room RoomShowID SonRoom SonRoomID-->
+        <CustomTable :list="list" :configList="configList.listFields">
+          <el-table-column label="操作" fixed="right" slot="right-one">
+              <template scope="scope">
+                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+              </template>
+          </el-table-column>
+        </CustomTable>
+        <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
             <el-table-column prop="ID" label="ID" width="55"></el-table-column>
             <el-table-column prop="UseDate" label="入住日期" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Days" label="入住天数" show-overflow-tooltip></el-table-column>
@@ -31,7 +37,7 @@
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                 </template>
             </el-table-column>
-        </el-table>
+        </el-table> -->
         <p>{{bargainsForm.hotelId}}</p>
         <el-dialog :title="bargainsForm.id?'编辑特价房信息':'添加特价房信息'" v-model="showDialog" size="small" @close="resetForm('bargainsForm')">
             <el-form :model="bargainsForm" ref="bargainsForm" :rules="bargainsRules" label-width="105px">
@@ -136,12 +142,13 @@ import path from '../../../api/api.js'
 import { bargainsRoomApi, hotelBaseApi, hotelRoomApi, hotelImageApi } from 'api'
 
 export default {
-  mounted() {
+  created() {
     this.searchForm.beginDate = new Date(
       new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
     ).Format('yyyy-MM-dd')
     this.searchForm.endDate = new Date().Format('yyyy-MM-dd')
     this.fetchData()
+    this.configList = bargainsRoomApi.getConfig()
   },
   data() {
     return {

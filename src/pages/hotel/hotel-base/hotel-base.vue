@@ -27,7 +27,7 @@
     </el-row>
     <div class="eltable">
       <CustomTable :list="hotelbase" :configList="configList.listFields">
-        <el-table-column   label="操作" width="180" fixed="right">
+        <el-table-column   label="操作" width="180" fixed="right" slot="right-one">
           <template scope="scope">
             <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>

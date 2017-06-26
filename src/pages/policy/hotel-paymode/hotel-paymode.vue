@@ -7,7 +7,7 @@
         </el-col>
       </el-row>
       <CustomTable :list="list" :configList="configList.listFields">
-        <el-table-column  width="150"  label="操作" fixed="right">
+        <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
           <template scope="scope">
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
             <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
