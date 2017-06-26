@@ -1,36 +1,60 @@
 <template lang="html">
     <div id="car-order-manage-page">
         <el-row :gutter="24">
-            <el-col :span="3">
-                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData">
+            <el-col :span="4">
+                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
                     <el-option label="全部渠道" value="">全部渠道</el-option>
                     <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="3">
-                <el-select v-model="filters.orderVal" placeholder="订单状态" @change="fetchData">
+            <el-col :span="4">
+                <el-select v-model="filters.orderVal" placeholder="订单状态" @change="fetchData()">
                     <el-option label="全部状态" value="">全部状态</el-option>
                     <el-option v-for="(item,index) in orderStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="4">
+                <el-select v-model="filters.carTransportType" placeholder="产品类型" @change="fetchData()">
+                    <el-option label="全部类型" value="">全部类型</el-option>
+                    <el-option v-for="(item,index) in carTransportTypeList" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-select v-model="filters.carClassify" placeholder="车型类别" @change="fetchData()">
+                    <el-option label="全部车型" value="">全部车型</el-option>
+                    <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="4">
+                <el-date-picker v-model="filters.useTimeS" type="date" placeholder="选择起始用车日期" :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-col>
+            <el-col :span="4">
+                <el-date-picker v-model="filters.useTimeE" type="date" placeholder="选择终止用车日期" :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top:10px;">
+            <el-col :span="4">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="3">
-                <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 5"></el-input>
-                <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 6"></el-input>
+            <el-col :span="4">
+                <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
+                <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
+                <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
             </el-col>
-            <el-col :span="3">
-                <el-date-picker v-model="filters.useTime" type="date" placeholder="选择用车日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="7" :offset="2">
+            <el-col :span="4">
                 <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="clear">清除</el-button>
+            </el-col>
+            <el-col :span="6">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList">同步订单</el-button>
             </el-col>
@@ -42,30 +66,17 @@
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
-                        <el-form-item label="工作人员">
-                            <span>{{ props.row.StaffUserName }}</span>
-                        </el-form-item>
                         <el-form-item label="外部订单状态">
                             <span>{{ props.row.ExternalOrderStete }}</span>
                         </el-form-item>
                         <el-form-item label="始发地详细地址">
                             <span>{{ props.row.Origin }}{{props.row.OriginAddress}}</span>
                         </el-form-item>
-                        <el-form-item label="用车类型">
-                            <span v-if="props.row.CarTransportType === 0">接机</span>
-                            <span v-if="props.row.CarTransportType === 1">送机</span>
-                            <span v-if="props.row.CarTransportType === 2">指定线路</span>
-                            <span v-if="props.row.CarTransportType === 3">接站</span>
-                            <span v-if="props.row.CarTransportType === 4">送站</span>
-                        </el-form-item>
                         <el-form-item label="目的地详细地址">
                             <span>{{ props.row.Destination }}{{props.row.DestinationAddress}}</span>
                         </el-form-item>
-                        <el-form-item label="预定车型">
-                            <span v-if="props.row.CarClassify === 0">经济型</span>
-                            <span v-if="props.row.CarClassify === 1">舒适型</span>
-                            <span v-if="props.row.CarClassify === 2">商务型</span>
-                            <span v-if="props.row.CarClassify === 3">豪华型</span>
+                        <el-form-item label="工作人员">
+                            <span>{{ props.row.StaffUserName }}</span>
                         </el-form-item>
                         <el-row class="mbtm-10">
                             <el-col :span="24">
@@ -144,11 +155,28 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="externalOrderID" label="外部订单号" verflow-tooltip></el-table-column>
+            <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="BookTime" label="预定时间" show-overflow-tooltip></el-table-column>
+            <el-table-column label="产品类型" show-overflow-tooltip>
+                <template scope="scope">
+                    <span v-if="scope.row.CarTransportType === 0">接机</span>
+                    <span v-if="scope.row.CarTransportType === 1">送机</span>
+                    <span v-if="scope.row.CarTransportType === 2">指定线路</span>
+                    <span v-if="scope.row.CarTransportType === 3">接站</span>
+                    <span v-if="scope.row.CarTransportType === 4">送站</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="车型类别" show-overflow-tooltip>
+                <template scope="scope">
+                    <span v-if="scope.row.CarClassify === 0">经济型</span>
+                    <span v-if="scope.row.CarClassify === 1">舒适型</span>
+                    <span v-if="scope.row.CarClassify === 2">商务型</span>
+                    <span v-if="scope.row.CarClassify === 3">豪华型</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
@@ -184,7 +212,7 @@
             </el-table-column>
         </el-table>
         <div class="pagination-wrapper">
-            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
+            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 30, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
@@ -219,8 +247,8 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="用车类型" prop="carTransportType">
-                            <el-select v-model="form.carTransportType" placeholder="请选择用车类型">
+                        <el-form-item label="产品类型" prop="carTransportType">
+                            <el-select v-model="form.carTransportType" placeholder="请选择产品类型">
                                 <el-option v-for="(item,index) in carTransportTypeList" :key="index" :label="item.label" :value="item.value">
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
@@ -228,8 +256,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="预定车型" prop="carClassify">
-                            <el-select v-model="form.carClassify" placeholder="请选择预定车型">
+                        <el-form-item label="车型类别" prop="carClassify">
+                            <el-select v-model="form.carClassify" placeholder="请选择车型类别">
                                 <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
@@ -471,17 +499,24 @@ export default {
                 filters: {
                     channel: '',
                     orderVal: '',
-                    useTime: '',
-                    labelVal: 5,
+                    useTimeS: '',
+                    useTimeE: '',
+                    labelVal: 1,
                     linkName: '',
-                    linkPhone: ''
+                    linkPhone: '',
+                    externalOrderID: '',
+                    carTransportType: '',
+                    carClassify: ''
                 },
                 selectedOptions: [{
-                    value: 5,
+                    value: 1,
                     label: '姓名'
                 }, {
-                    value: 6,
+                    value: 2,
                     label: '电话'
+                }, {
+                    value: 3,
+                    label: '外部订单号'
                 }],
                 rules: {
                     channel: [{
@@ -498,11 +533,11 @@ export default {
                     // }],
                     carTransportType: [{
                         required: true,
-                        message: '请选择用车类型'
+                        message: '请选择产品类型'
                     }],
                     carClassify: [{
                         required: true,
-                        message: '请选择预定车型'
+                        message: '请选择车型类别'
                     }],
                     useTime: [{
                         required: true,
@@ -541,6 +576,23 @@ export default {
         },
 
         methods: {
+            clear() {
+                this.filters = {
+                    channel: '',
+                    orderVal: '',
+                    useTimeS: '',
+                    useTimeE: '',
+                    labelVal: 1,
+                    linkName: '',
+                    linkPhone: '',
+                    externalOrderID: '',
+                    carTransportType: '',
+                    carClassify: ''
+                }
+            },
+            search() {
+                this.fetchData()
+            },
             async syncList() {
                 const _self = this;
                 _self.list = [];
@@ -548,9 +600,6 @@ export default {
                 _self.loading = true;
                 const res = await carOrderManageApi.syncList();
                 _self.fetchData();
-            },
-            search() {
-                this.fetchData()
             },
             async fetchData(currentPage, pageSize) {
                 const _self = this
@@ -560,16 +609,20 @@ export default {
                 const options = {
                     pageIndex: _self.currentPage,
                     pageSize: _self.pageSize,
-                    order: 'BookTime',
+                    order: 'UseTime',
                     query: {
                         channel: _self.filters.channel,
                         payStatus: _self.filters.orderVal === 1 ? true : '',
                         isCancel: _self.filters.orderVal === 2 ? true : '',
                         isCancelPrice: _self.filters.orderVal === 3 ? true : '',
                         isAppointment: _self.filters.orderVal === 4 ? true : '',
-                        "useTime>": new Date(_self.filters.useTime).Format('yyyy-MM-dd'),
-                        linkName: _self.filters.labelVal === 5 ? _self.filters.linkName : '',
-                        linkPhone: _self.filters.labelVal === 6 ? _self.filters.linkPhone : '',
+                        "useTime>": _self.filters.useTimeS ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd') : '',
+                        "useTime<": _self.filters.useTimeE ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd') : '',
+                        linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
+                        linkPhone: _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
+                        externalOrderID: _self.filters.labelVal === 3 ? _self.filters.externalOrderID : '',
+                        carTransportType: _self.filters.carTransportType,
+                        carClassify: _self.filters.carClassify
                     }
                 }
                 try {
@@ -577,8 +630,8 @@ export default {
                     _self.list = res.data.Data;
                     if (_self.list && _self.list.length) {
                         for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].BookTime = new Date(
-                                _self.list[index].BookTime
+                            _self.list[index].UseTime = new Date(
+                                _self.list[index].UseTime
                             ).Format('yyyy-MM-dd hh:mm:ss');
                             _self.list[index].PayTime = new Date(
                                 _self.list[index].PayTime
@@ -592,7 +645,6 @@ export default {
                             _self.list[index].ArrivalTime = new Date(
                                 _self.list[index].ArrivalTime
                             ).Format('yyyy-MM-dd hh:mm:ss');
-
                         }
                     }
                     _self.count = res.data.Count;
@@ -754,7 +806,9 @@ export default {
                         )
                 return fmt
             }
-            this.filters.useTime = new Date().Format('yyyy-MM-dd');
+
+            this.filters.useTimeS = new Date(new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01').Format('yyyy-MM-dd');
+            this.filters.useTimeE = new Date().Format('yyyy-MM-dd');
             this.fetchData()
         }
 }
