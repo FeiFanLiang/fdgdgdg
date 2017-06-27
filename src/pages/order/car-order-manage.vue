@@ -31,9 +31,9 @@
                 </el-date-picker>
             </el-col>
             <el-col :span="4">
-                <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="fetchData()" on-color="dodgerblue" off-color="lightgray">
+                <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="payStatusChange($event)" on-color="dodgerblue" off-color="lightgray">
                 </el-switch>
-                <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="fetchData()" on-color="dodgerblue" off-color="lightgray">
+                <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="isCancelChange($event)" on-color="dodgerblue" off-color="lightgray">
                 </el-switch>
             </el-col>
         </el-row>
@@ -220,23 +220,13 @@
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
                 <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="工作人员姓名" prop="staffUserName">
-                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="4">
+                    <el-col :span="4" :offset="12">
                         <el-form-item>
                             <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="外部订单号" prop="externalOrderID">
-                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
-                        </el-form-item>
-                    </el-col>
                     <el-col :span="12">
                         <el-form-item label="订单渠道" prop="channel">
                             <el-select v-model="form.channel" placeholder="请选择订单渠道">
@@ -246,16 +236,9 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="外部订单状态" prop="externalOrderStete">
-                            <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="航班号/车次号" prop="carriageNo">
-                            <el-input placeholder="请输入航班号/车次号" v-model="form.carriageNo"></el-input>
+                        <el-form-item label="外部订单号" prop="externalOrderID">
+                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -270,6 +253,14 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
+                        <el-form-item label="预约用车时间" prop="useTime">
+                            <el-date-picker v-model="form.useTime" type="datetime" placeholder="请选择预约用车时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
                         <el-form-item label="车型类别" prop="carClassify">
                             <el-select v-model="form.carClassify" placeholder="请选择车型类别">
                                 <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
@@ -278,17 +269,9 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="预约用车时间" prop="useTime">
-                            <el-date-picker v-model="form.useTime" type="datetime" placeholder="请选择预约用车时间">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="是否预约单" prop="isAppointment">
-                            <el-switch v-model="form.isAppointment" on-text="" off-text=""></el-switch>
+                        <el-form-item label="航班号/车次号" prop="carriageNo">
+                            <el-input placeholder="请输入航班号/车次号" v-model="form.carriageNo"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -299,18 +282,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="始发地详细地址" prop="originAddress">
-                            <el-input placeholder="请输入始发地详细地址" v-model="form.originAddress"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="始发地经纬度" prop="originCoordinates">
-                            <el-input placeholder="请输入始发地经纬度" v-model="form.originCoordinates"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
                         <el-form-item label="目的地" prop="destination">
                             <el-input placeholder="请输入目的地" v-model="form.destination"></el-input>
                         </el-form-item>
@@ -318,8 +289,103 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="始发地详细地址" prop="originAddress">
+                            <el-input placeholder="请输入始发地详细地址" v-model="form.originAddress"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
                         <el-form-item label="目的地详细地址" prop="destinationAddress">
                             <el-input placeholder="请输入目的地详细地址" v-model="form.destinationAddress"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="联系人姓名" prop="linkName">
+                            <el-input placeholder="请输入联系人姓名" v-model="form.linkName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="联系人电话" prop="linkPhone">
+                            <el-input placeholder="请输入联系人电话" v-model="form.linkPhone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="应收费用" prop="dealPrice">
+                            <el-input placeholder="请输入应收费用" v-model="form.dealPrice"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="其它费用" prop="realPrice">
+                            <el-input placeholder="请输入其它费用"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="实收费用" prop="realPrice">
+                            <el-input placeholder="请输入实收费用" v-model="form.realPrice"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="提单人" prop="staffUserName">
+                            <el-input placeholder="请输入提单人" v-model="form.staffUserName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="处理人">
+                            <el-input placeholder="请输入处理人"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="支付类型" prop="payType">
+                            <el-select v-model="form.payType" placeholder="请选择支付类型">
+                                <el-option v-for="(item,index) in payChannelList" :key="index" :label="item.label" :value="item.value">
+                                    <span style="float: left">{{ item.label }}</span>
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="是否支付" prop="payStatus">
+                            <el-switch v-model="form.payStatus" on-text="" off-text=""></el-switch>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="订单备注" prop="remark">
+                            <el-input type="textarea" placeholder="请输入订单备注" v-model="form.remark"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="外部订单状态" prop="externalOrderStete">
+                            <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="工作人员姓名" prop="staffUserName">
+                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="是否预约单" prop="isAppointment">
+                            <el-switch v-model="form.isAppointment" on-text="" off-text=""></el-switch>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="始发地经纬度" prop="originCoordinates">
+                            <el-input placeholder="请输入始发地经纬度" v-model="form.originCoordinates"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -341,56 +407,9 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="联系人姓名" prop="linkName">
-                            <el-input placeholder="请输入联系人姓名" v-model="form.linkName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="联系人电话" prop="linkPhone">
-                            <el-input placeholder="请输入联系人电话" v-model="form.linkPhone"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="24">
                         <el-form-item label="客人要求" prop="specReq">
                             <el-input type="textarea" placeholder="请输入客人要求" v-model="form.specReq"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="24">
-                        <el-form-item label="订单备注" prop="remark">
-                            <el-input type="textarea" placeholder="请输入订单备注" v-model="form.remark"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="应收费用" prop="dealPrice">
-                            <el-input placeholder="请输入应收费用" v-model="form.dealPrice"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="实收费用" prop="realPrice">
-                            <el-input placeholder="请输入实收费用" v-model="form.realPrice"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="支付类型" prop="payType">
-                            <el-select v-model="form.payType" placeholder="请选择支付类型">
-                                <el-option v-for="(item,index) in payChannelList" :key="index" :label="item.label" :value="item.value">
-                                    <span style="float: left">{{ item.label }}</span>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="是否支付" prop="payStatus">
-                            <el-switch v-model="form.payStatus" on-text="" off-text=""></el-switch>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -516,7 +535,7 @@ export default {
                 }],
                 filters: {
                     channel: '',
-                    payStatus: false,
+                    payStatus: true,
                     isCancel: false,
                     useTimeS: '',
                     useTimeE: '',
@@ -593,7 +612,20 @@ export default {
                 }
             }
         },
+        watch: {
+            'form.carTransportType': function(newQuestion) {
+                const _self = this
+                if (!_self.form.id) {
+                    console.log(newQuestion)
+                    if (newQuestion === 0) {
+                        _self.form.origin = "流亭国际机场";
+                        _self.form.originCoordinates = ""
+                    } else if (newQuestion === 1) {
 
+                    }
+                }
+            }
+        },
         methods: {
             clear() {
                 this.filters = {
@@ -636,6 +668,14 @@ export default {
                     console.error(e)
                         // _self.$message.error('添加失败!!!')
                 }
+            },
+            payStatusChange(a) {
+                this.filters.payStatus = a;
+                this.fetchData();
+            },
+            isCancelChange(a) {
+                this.filters.isCancel = a;
+                this.fetchData();
             },
             async fetchData(currentPage, pageSize) {
                 const _self = this
