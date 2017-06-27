@@ -1,17 +1,10 @@
 <template lang="html">
     <div id="car-order-manage-page">
-        <el-row :gutter="24">
+        <el-row :gutter="24" style="display:flex;align-items:center;">
             <el-col :span="4">
                 <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
                     <el-option label="全部渠道" value="">全部渠道</el-option>
                     <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-select v-model="filters.orderVal" placeholder="订单状态" @change="fetchData()">
-                    <el-option label="全部状态" value="">全部状态</el-option>
-                    <el-option v-for="(item,index) in orderStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
@@ -37,8 +30,14 @@
                 <el-date-picker v-model="filters.useTimeE" type="date" placeholder="选择终止用车日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
+            <el-col :span="4">
+                <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="fetchData()" on-color="dodgerblue" off-color="lightgray">
+                </el-switch>
+                <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="fetchData()" on-color="dodgerblue" off-color="lightgray">
+                </el-switch>
+            </el-col>
         </el-row>
-        <el-row :gutter="24" style="margin-top:10px;">
+        <el-row :gutter="24" style="margin-top:10px">
             <el-col :span="4">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
@@ -54,9 +53,10 @@
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
-                <el-button type="primary" @click="syncList">同步订单</el-button>
+                <el-button type="primary" @click="syncList(0)">同步携程订单</el-button>
+                <el-button type="primary" @click="syncList(1)">同步订单里程信息</el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -86,12 +86,12 @@
                                 </el-col/>
                         </el-row>
                         <el-form-item label="支付类型">
-                            <span v-if="props.row.PayType === 1">支付宝</span>
-                            <span v-if="props.row.PayType === 2">微信支付</span>
-                            <span v-if="props.row.PayType === 3">银联支付</span>
-                            <span v-if="props.row.PayType === 4">平台</span>
-                            <span v-if="props.row.PayType === 5">线下支付</span>
-                            <span v-if="props.row.PayType === 6">其他</span>
+                            <span v-if="props.row.PayType === 0">支付宝</span>
+                            <span v-if="props.row.PayType === 1">微信支付</span>
+                            <span v-if="props.row.PayType === 2">银联支付</span>
+                            <span v-if="props.row.PayType === 3">平台</span>
+                            <span v-if="props.row.PayType === 4">线下支付</span>
+                            <span v-if="props.row.PayType === 5">其他</span>
                         </el-form-item>
                         <el-form-item label="支付平台订单号">
                             <span>{{ props.row.PayOrder }}</span>
@@ -179,6 +179,8 @@
             <el-table-column prop="UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
                 <template scope="scope">
@@ -217,6 +219,18 @@
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="工作人员姓名" prop="staffUserName">
+                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4">
+                        <el-form-item>
+                            <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="外部订单号" prop="externalOrderID">
@@ -316,6 +330,18 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="预计服务里程" prop="preServiceMileage">
+                            <el-input placeholder="请输入预计服务里程" v-model="form.preServiceMileage"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="预计服务用时" prop="preServiceTime">
+                            <el-input placeholder="请输入预计服务用时" v-model="form.preServiceTime"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
                         <el-form-item label="联系人姓名" prop="linkName">
                             <el-input placeholder="请输入联系人姓名" v-model="form.linkName"></el-input>
                         </el-form-item>
@@ -367,11 +393,6 @@
                             <el-switch v-model="form.payStatus" on-text="" off-text=""></el-switch>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="工作人员姓名" prop="staffUserName">
-                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -401,6 +422,7 @@ export default {
                 pageSize: 10,
                 count: 0,
                 loading: false,
+                loading2: false,
                 showDialog: false,
                 pickerOptions: {},
                 form: {
@@ -424,6 +446,8 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
+                    preServiceMileage: '',
+                    preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
@@ -431,7 +455,7 @@ export default {
                 },
                 channelList: [{
                     value: 1,
-                    label: '机场用车'
+                    label: '机场接送机'
                 }, {
                     value: 2,
                     label: '线下订单'
@@ -442,36 +466,23 @@ export default {
                     value: 4,
                     label: '微信订单'
                 }],
-                orderStatusList: [{
-                    value: 1,
-                    label: '已支付'
-                }, {
-                    value: 2,
-                    label: '已取消'
-                }, {
-                    value: 3,
-                    label: '已退款'
-                }, {
-                    value: 4,
-                    label: '预约单'
-                }],
                 payChannelList: [{
-                    value: 1,
+                    value: 0,
                     label: '支付宝'
                 }, {
-                    value: 2,
+                    value: 1,
                     label: '微信支付'
                 }, {
-                    value: 3,
+                    value: 2,
                     label: '银联支付'
                 }, {
-                    value: 4,
+                    value: 3,
                     label: '平台'
                 }, {
-                    value: 5,
+                    value: 4,
                     label: '线下支付'
                 }, {
-                    value: 6,
+                    value: 5,
                     label: '其他'
                 }],
                 carTransportTypeList: [{
@@ -505,7 +516,8 @@ export default {
                 }],
                 filters: {
                     channel: '',
-                    orderVal: '',
+                    payStatus: false,
+                    isCancel: false,
                     useTimeS: '',
                     useTimeE: '',
                     labelVal: 1,
@@ -586,7 +598,8 @@ export default {
             clear() {
                 this.filters = {
                     channel: '',
-                    orderVal: '',
+                    payStatus: false,
+                    isCancel: false,
                     useTimeS: '',
                     useTimeE: '',
                     labelVal: 1,
@@ -600,13 +613,29 @@ export default {
             search() {
                 this.fetchData()
             },
-            async syncList() {
+            async syncList(a) {
                 const _self = this
                 _self.list = []
                 _self.count = 0
                 _self.loading = true
-                const res = await carOrderManageApi.syncList()
+                if (a === 0) {
+                    const res = await carOrderManageApi.syncList()
+                } else if (a === 1) {
+                    const res = await carOrderManageApi.syncOrderOperDataList()
+                }
                 _self.fetchData()
+            },
+            async syncOrderOperData() {
+                const _self = this
+                _self.loading2 = true
+                try {
+                    await carOrderManageApi.syncOrderOperData(_self.form.id)
+                    _self.loading2 = false
+                } catch (e) {
+                    _self.loading2 = false
+                    console.error(e)
+                        // _self.$message.error('添加失败!!!')
+                }
             },
             async fetchData(currentPage, pageSize) {
                 const _self = this
@@ -619,10 +648,8 @@ export default {
                     order: 'channel' + '\\carTransportType' + '\\carClassify' + '\\useTime',
                     query: {
                         channel: _self.filters.channel,
-                        payStatus: _self.filters.orderVal === 1 ? true : '',
-                        isCancel: _self.filters.orderVal === 2 ? true : '',
-                        isCancelPrice: _self.filters.orderVal === 3 ? true : '',
-                        isAppointment: _self.filters.orderVal === 4 ? true : '',
+                        payStatus: _self.filters.payStatus,
+                        isCancel: _self.filters.isCancel,
                         'useTime>': _self.filters.useTimeS ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd') : '',
                         'useTime<': _self.filters.useTimeE ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd') : '',
                         linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
@@ -693,6 +720,8 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
+                    preServiceMileage: '',
+                    preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
@@ -724,6 +753,8 @@ export default {
                     _self.form.destination = res.data.Data.Destination
                     _self.form.destinationAddress = res.data.Data.DestinationAddress
                     _self.form.destinationCoordinates = res.data.Data.DestinationCoordinates
+                    _self.form.preServiceMileage = res.data.Data.PreServiceMileage
+                    _self.form.preServiceTime = res.data.Data.PreServiceTime
                     _self.form.useTime = res.data.Data.UseTime
                     _self.form.isAppointment = res.data.Data.IsAppointment
                     _self.form.carriageNo = res.data.Data.CarriageNo
