@@ -1,10 +1,16 @@
 <template lang="html">
     <div id="car-order-manage-page">
-        <el-row :gutter="24" style="display:flex;align-items:center;">
-            <el-col :span="4">
+        <el-row :gutter="24">
+            <el-col :span="3">
+                <el-select v-model="filters.sortValue" placeholder="排序方式" @change="fetchData()">
+                    <el-option v-for="(item,index) in sortList" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
                 <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
                     <el-option label="全部渠道" value="">全部渠道</el-option>
-                    <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
+                    <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
                     </el-option>
                 </el-select>
             </el-col>
@@ -30,30 +36,30 @@
                 <el-date-picker v-model="filters.useTimeE" type="date" placeholder="选择终止用车日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
+            <el-col :span="3">
+                <el-select v-model="filters.labelVal" placeholder="请选择">
+                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
+                <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
+                <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
+                <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
+            </el-col>
             <el-col :span="4">
                 <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="payStatusChange($event)" on-color="dodgerblue" off-color="lightgray">
                 </el-switch>
                 <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="isCancelChange($event)" on-color="dodgerblue" off-color="lightgray">
                 </el-switch>
             </el-col>
-        </el-row>
-        <el-row :gutter="24" style="margin-top:10px">
-            <el-col :span="4">
-                <el-select v-model="filters.labelVal" placeholder="请选择">
-                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
-                <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
-                <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
-            </el-col>
             <el-col :span="4">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="10">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList(0)">同步携程订单</el-button>
                 <el-button type="primary" @click="syncList(1)">同步订单里程信息</el-button>
@@ -78,6 +84,12 @@
                         <el-form-item label="工作人员">
                             <span>{{ props.row.StaffUserName }}</span>
                         </el-form-item>
+                        <el-form-item label="处理人员">
+                            <span>{{ props.row.ProcessorUserName }}</span>
+                        </el-form-item>
+                        <el-form-item label="审核人员">
+                            <span>{{ props.row.AuditorUserName }}</span>
+                        </el-form-item>
                         <el-row class="mbtm-10">
                             <el-col :span="24">
                                 <el-form-item label="客人要求">
@@ -98,6 +110,9 @@
                         </el-form-item>
                         <el-form-item label="应收费用">
                             <span>{{ props.row.DealPrice }}</span>
+                        </el-form-item>
+                        <el-form-item label="其他费用">
+                            <span>{{ props.row.OtherPrice }}</span>
                         </el-form-item>
                         <el-form-item label="实收费用">
                             <span>{{ props.row.RealPrice }}</span>
@@ -230,8 +245,8 @@
                     <el-col :span="12">
                         <el-form-item label="订单渠道" prop="channel">
                             <el-select v-model="form.channel" placeholder="请选择订单渠道">
-                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
-                                    <span style="float: left">{{ item.label }}</span>
+                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
+                                    <span style="float: left">{{ item.ChannelName }}</span>
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -318,8 +333,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="其它费用" prop="realPrice">
-                            <el-input placeholder="请输入其它费用"></el-input>
+                        <el-form-item label="其它费用" prop="otherPrice">
+                            <el-input placeholder="请输入其它费用" v-model="form.otherPrice"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -330,15 +345,24 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="提单人" prop="staffUserName">
-                            <el-input placeholder="请输入提单人" v-model="form.staffUserName"></el-input>
+                        <el-form-item label="工作人员" prop="staffUserName">
+                            <el-input placeholder="请输入工作人员" v-model="form.staffUserName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24" v-if="form.id">
+                    <el-col :span="12">
+                        <el-form-item label="处理人员" prop="processorUserName">
+                            <el-input placeholder="请输入处理人员" v-model="form.processorUserName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="处理人">
-                            <el-input placeholder="请输入处理人"></el-input>
+                        <el-form-item label="审核人员" prop="auditorUserNaHme">
+                            <el-input placeholder="请输入审核人员" v-model="form.auditorUserName"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="支付类型" prop="payType">
                             <el-select v-model="form.payType" placeholder="请选择支付类型">
@@ -348,8 +372,6 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="是否支付" prop="payStatus">
                             <el-switch v-model="form.payStatus" on-text="" off-text=""></el-switch>
@@ -367,13 +389,6 @@
                     <el-col :span="12">
                         <el-form-item label="外部订单状态" prop="externalOrderStete">
                             <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="工作人员姓名" prop="staffUserName">
-                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -423,7 +438,8 @@
 </template>
 <script>
 import {
-    carOrderManageApi
+    carOrderManageApi,
+    orderChannelApi
 } from 'api'
 
 export default {
@@ -433,6 +449,7 @@ export default {
             ).Format('yyyy-MM-dd')
             this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
             this.fetchData()
+            this.fetchChannelList()
         },
         data() {
             return {
@@ -470,21 +487,29 @@ export default {
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
-                    staffUserName: ''
+                    staffUserId: '',
+                    staffUserName: '',
+                    processorUserName: '',
+                    auditorUserName: '',
+                    otherPrice: ''
                 },
-                channelList: [{
-                    value: 1,
-                    label: '机场接送机'
+                sortList: [{
+                    value: 'id',
+                    label: '默认排序'
                 }, {
-                    value: 2,
-                    label: '线下订单'
+                    value: 'channel',
+                    label: '按渠道'
                 }, {
-                    value: 3,
-                    label: '携程接送机'
+                    value: 'carTransportType',
+                    label: '产品类型'
                 }, {
-                    value: 4,
-                    label: '微信订单'
+                    value: 'carClassify',
+                    label: '车型类别'
+                }, {
+                    value: 'useTime',
+                    label: '用车时间'
                 }],
+                channelList: [],
                 payChannelList: [{
                     value: 0,
                     label: '支付宝'
@@ -534,6 +559,7 @@ export default {
                     label: '豪华型'
                 }],
                 filters: {
+                    sortValue: 'id',
                     channel: '',
                     payStatus: true,
                     isCancel: false,
@@ -605,6 +631,10 @@ export default {
                         required: true,
                         message: '请输入实收费用'
                     }],
+                    otherPrice: [{
+                        required: true,
+                        message: '请输入其它费用'
+                    }],
                     payType: [{
                         required: true,
                         message: '请选择支付类型'
@@ -675,7 +705,6 @@ export default {
                 } catch (e) {
                     _self.loading2 = false
                     console.error(e)
-                        // _self.$message.error('添加失败!!!')
                 }
             },
             payStatusChange(a) {
@@ -686,6 +715,11 @@ export default {
                 this.filters.isCancel = a;
                 this.fetchData();
             },
+            async fetchChannelList() {
+                const _self = this
+                const res = await orderChannelApi.channelByQuery("用车")
+                _self.channelList = res.data
+            },
             async fetchData(currentPage, pageSize) {
                 const _self = this
                 _self.loading = true
@@ -694,7 +728,7 @@ export default {
                 const options = {
                     pageIndex: _self.currentPage,
                     pageSize: _self.pageSize,
-                    order: 'channel' + '\\carTransportType' + '\\carClassify' + '\\useTime',
+                    order: _self.filters.sortValue,
                     query: {
                         channel: _self.filters.channel,
                         payStatus: _self.filters.payStatus,
@@ -774,8 +808,15 @@ export default {
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
-                    staffUserName: ''
+                    staffUserId: '',
+                    staffUserName: '',
+                    processorUserName: '',
+                    auditorUserName: '',
+                    otherPrice: ''
                 }
+                const data = JSON.parse(localStorage.getItem('user'));
+                this.form.staffUserId = data.id;
+                this.form.staffUserName = data.username;
             },
             async clickEditBtn($index, row) {
                 const _self = this
@@ -808,6 +849,9 @@ export default {
                     _self.form.isAppointment = res.data.Data.IsAppointment
                     _self.form.carriageNo = res.data.Data.CarriageNo
                     _self.form.staffUserName = res.data.Data.StaffUserName
+                    _self.form.processorUserName = res.data.Data.ProcessorUserName
+                    _self.form.auditorUserName = res.data.Data.AuditorUserName
+                    _self.form.otherPrice = res.data.Data.OtherPrice
                 } catch (e) {
                     console.error(e)
                 }
