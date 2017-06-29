@@ -219,7 +219,7 @@
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-                <el-row :gutter="24">
+                <el-row :gutter="24" v-if="form.id">
                     <el-col :span="4" :offset="12">
                         <el-form-item>
                             <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
@@ -616,12 +616,21 @@ export default {
             'form.carTransportType': function(newQuestion) {
                 const _self = this
                 if (!_self.form.id) {
-                    console.log(newQuestion)
                     if (newQuestion === 0) {
                         _self.form.origin = "流亭国际机场";
-                        _self.form.originCoordinates = ""
+                        _self.form.originCoordinates = "120.385920000000,36.267751000000";
+                        _self.form.destination = "";
+                        _self.form.destinationCoordinates = "";
                     } else if (newQuestion === 1) {
-
+                        _self.form.destination = "流亭国际机场";
+                        _self.form.destinationCoordinates = "120.385920000000,36.267751000000";
+                        _self.form.origin = "";
+                        _self.form.originCoordinates = "";
+                    } else {
+                        _self.form.origin = "";
+                        _self.form.originCoordinates = "";
+                        _self.form.destination = "";
+                        _self.form.destinationCoordinates = "";
                     }
                 }
             }
@@ -730,7 +739,7 @@ export default {
             },
             handleSizeChange(val) {
                 this.pageSize = val
-                this.fetchData(this.pageSize)
+                this.fetchData(1, this.pageSize)
             },
             handleCurrentChange(val) {
                 this.currentPage = val
