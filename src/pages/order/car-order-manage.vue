@@ -346,7 +346,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="工作人员" prop="staffUserName">
-                            <el-input placeholder="请输入工作人员" v-model="form.staffUserName"></el-input>
+                            <el-input placeholder="请输入工作人员" v-model="form.staffUserName" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -448,6 +448,7 @@ export default {
                 new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
             ).Format('yyyy-MM-dd')
             this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
+            this.loginData = JSON.parse(localStorage.getItem('user'));
             this.fetchData()
             this.fetchChannelList()
         },
@@ -461,6 +462,7 @@ export default {
                 loading2: false,
                 showDialog: false,
                 pickerOptions: {},
+                loginData: '',
                 form: {
                     id: 0,
                     dealPrice: '',
@@ -814,9 +816,8 @@ export default {
                     auditorUserName: '',
                     otherPrice: ''
                 }
-                const data = JSON.parse(localStorage.getItem('user'));
-                this.form.staffUserId = data.id;
-                this.form.staffUserName = data.username;
+                _self.form.staffUserId = _self.loginData.id;
+                _self.form.staffUserName = _self.loginData.username;
             },
             async clickEditBtn($index, row) {
                 const _self = this
