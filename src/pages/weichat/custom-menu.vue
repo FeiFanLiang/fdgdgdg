@@ -75,139 +75,170 @@
 </div>
 </template>
 <script>
-let id = 1000;
+let id = 1000
 export default {
-    data() {
-        return {
-            editShow:false,
-            editShow2:false,
-            editShow3:true,
-            input: '',
-            radio: '',
-            activeIndex: '1',
-            imageUrl: '',
-            eltreeData: [{
-                id: 1,
-                label: '美票旅游',
-                children: [{
-                    id: 4,
-                    label: '机票',
-                },{
-                    id: 5,
-                    label: '酒店',
-                },{
-                    id: 6,
-                    label: '机场专车',
-                },{
-                    id: 7,
-                    label: '自由行',
-                },{
-                    id: 8,
-                    label: '跟团游',
-                }]
-            }, {
-                id: 2,
-                label: '我的',
-            }, {
-                id: 3,
-                label: '关于美票',
-                children: [{
-                    id: 9,
-                    label: '微店商城'
-                }, {
-                    id: 10,
-                    label: '美票说'
-                }]
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
+  data() {
+    return {
+      editShow: false,
+      editShow2: false,
+      editShow3: true,
+      input: '',
+      radio: '',
+      activeIndex: '1',
+      imageUrl: '',
+      eltreeData: [
+        {
+          id: 1,
+          label: '美票旅游',
+          children: [
+            {
+              id: 4,
+              label: '机票'
+            },
+            {
+              id: 5,
+              label: '酒店'
+            },
+            {
+              id: 6,
+              label: '机场专车'
+            },
+            {
+              id: 7,
+              label: '自由行'
+            },
+            {
+              id: 8,
+              label: '跟团游'
             }
+          ]
+        },
+        {
+          id: 2,
+          label: '我的',
+          children: []
+        },
+        {
+          id: 3,
+          label: '关于美票',
+          children: [
+            {
+              id: 9,
+              label: '微店商城'
+            },
+            {
+              id: 10,
+              label: '美票说'
+            }
+          ]
         }
-    },
-    methods: {
-        handleNodeClick(data) {
-            console.log(data)
-        },
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath)
-        },
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw)
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg'
-            const isLt2M = file.size / 1024 / 1024 < 2
-
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!')
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!')
-            }
-            return isJPG && isLt2M
-        },
-
-        addMenu(){
-            this.eltreeData.push({ id: id++, label: '主菜单名称' });
-        },
-
-        append(store, data) {
-            store.append({ id: id++, label: '子菜单名称' }, data);
-        },
-
-        remove(store, data) {
-            store.remove(data);
-        },
-
-        edit(store,data){
-            /*console.log(store)*/
-            console.log(data)
-            if(data.hasOwnProperty('children')){
-                this.editShow = false;
-                this.editShow2 = true;
-                this.editShow3 = false;
-                this.$prompt('请输入菜单名称', '提示', 
-                { 
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputValue: data.label,
-                    inputPattern: /^[\u4e00-\u9fa5A-Za-z0-9]{2,8}$/, 
-                    inputErrorMessage: '只能是中文英文数字下划线 且长度为2-8',
-                    callback:((action, value)=> {if(action == 'confirm'){data.label= value.inputValue;}})
-                }).then(({ value }) => {
-                    this.$message({
-                        type: 'success',
-                        message: value
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });       
-                });
-            }else{
-                this.editShow = true;
-                this.editShow2 = false;
-                this.editShow3 = false;
-                this.input = data.label;
-            }
-        },
-
-        renderContent(h, { node, data, store }) {
-            return (
-            <span>
-                <span>
-                <span>{node.label}</span>
-                </span>
-                <span style="float: right; margin-right: 20px">
-                <el-button size="mini" on-click={ () => this.append(store, data) }><i class="el-icon-plus"></i></el-button>
-                <el-button size="mini" on-click={ () => this.remove(store, data) }><i class="el-icon-delete"></i></el-button>
-                <el-button size="mini" on-click={ () => this.edit(store, data) }><i class="el-icon-edit"></i></el-button>
-                </span>
-            </span>);
-        }
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     }
+  },
+  methods: {
+    handleNodeClick(data) {
+      console.log(data)
+    },
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+
+    addMenu() {
+      this.eltreeData.push({ id: id++, label: '主菜单名称' })
+    },
+
+    append(store, data) {
+      console.log(store)
+      console.log(data)
+      setTimeout(() => {
+        console.log(store.currentNode)
+      }, 0)
+      store.append({ id: id++, label: '子菜单名称' }, data)
+    },
+
+    remove(store, data) {
+      store.remove(data)
+    },
+
+    edit(store, data) {
+      console.log(store)
+      console.log(data)
+      if (data.hasOwnProperty('children')) {
+        this.editShow = false
+        this.editShow2 = true
+        this.editShow3 = false
+        this.$prompt('请输入菜单名称', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputValue: data.label,
+          inputPattern: /^[\u4e00-\u9fa5A-Za-z0-9]{2,8}$/,
+          inputErrorMessage: '只能是中文英文数字下划线 且长度为2-8',
+          callback: (action, value) => {
+            if (action == 'confirm') {
+              data.label = value.inputValue
+            }
+          }
+        })
+          .then(({ value }) => {
+            this.$message({
+              type: 'success',
+              message: value
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消输入'
+            })
+          })
+      } else {
+        this.editShow = true
+        this.editShow2 = false
+        this.editShow3 = false
+        this.input = data.label
+      }
+    },
+
+    renderContent(h, { node, data, store }) {
+      return (
+        <span>
+          <span>
+            <span>{node.label}</span>
+          </span>
+          <span style="float: right; margin-right: 20px">
+            <el-button size="mini" on-click={() => this.append(store, data)}>
+              <i class="el-icon-plus" />
+            </el-button>
+            <el-button size="mini" on-click={() => this.remove(store, data)}>
+              <i class="el-icon-delete" />
+            </el-button>
+            <el-button size="mini" on-click={() => this.edit(store, data)}>
+              <i class="el-icon-edit" />
+            </el-button>
+          </span>
+        </span>
+      )
+    }
+  }
 }
 </script>
 <style lang="scss">
