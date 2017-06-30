@@ -1,17 +1,16 @@
 <template lang="html">
     <div id="car-order-manage-page">
         <el-row :gutter="24">
-            <el-col :span="4">
-                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
-                    <el-option label="全部渠道" value="">全部渠道</el-option>
-                    <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
+            <el-col :span="3">
+                <el-select v-model="filters.sortValue" placeholder="排序方式" @change="fetchData()">
+                    <el-option v-for="(item,index) in sortList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
-                <el-select v-model="filters.orderVal" placeholder="订单状态" @change="fetchData()">
-                    <el-option label="全部状态" value="">全部状态</el-option>
-                    <el-option v-for="(item,index) in orderStatusList" :key="index" :label="item.label" :value="item.value">
+            <el-col :span="3">
+                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
+                    <el-option label="全部渠道" value="">全部渠道</el-option>
+                    <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
                     </el-option>
                 </el-select>
             </el-col>
@@ -38,25 +37,32 @@
                 </el-date-picker>
             </el-col>
         </el-row>
-        <el-row :gutter="24" style="margin-top:10px;">
-            <el-col :span="4">
+        <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
+            <el-col :span="3">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
                 <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
             </el-col>
             <el-col :span="4">
+                <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="payStatusChange($event)" on-color="dodgerblue" off-color="lightgray">
+                </el-switch>
+                <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="isCancelChange($event)" on-color="dodgerblue" off-color="lightgray">
+                </el-switch>
+            </el-col>
+            <el-col :span="4">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="10">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
-                <el-button type="primary" @click="syncList">同步订单</el-button>
+                <el-button type="primary" @click="syncList(0)">同步携程订单</el-button>
+                <el-button type="primary" @click="syncList(1)">同步订单里程信息</el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -78,6 +84,12 @@
                         <el-form-item label="工作人员">
                             <span>{{ props.row.StaffUserName }}</span>
                         </el-form-item>
+                        <el-form-item label="处理人员">
+                            <span>{{ props.row.ProcessorUserName }}</span>
+                        </el-form-item>
+                        <el-form-item label="审核人员">
+                            <span>{{ props.row.AuditorUserName }}</span>
+                        </el-form-item>
                         <el-row class="mbtm-10">
                             <el-col :span="24">
                                 <el-form-item label="客人要求">
@@ -86,18 +98,21 @@
                                 </el-col/>
                         </el-row>
                         <el-form-item label="支付类型">
-                            <span v-if="props.row.PayType === 1">支付宝</span>
-                            <span v-if="props.row.PayType === 2">微信支付</span>
-                            <span v-if="props.row.PayType === 3">银联支付</span>
-                            <span v-if="props.row.PayType === 4">平台</span>
-                            <span v-if="props.row.PayType === 5">线下支付</span>
-                            <span v-if="props.row.PayType === 6">其他</span>
+                            <span v-if="props.row.PayType === 0">支付宝</span>
+                            <span v-if="props.row.PayType === 1">微信支付</span>
+                            <span v-if="props.row.PayType === 2">银联支付</span>
+                            <span v-if="props.row.PayType === 3">平台</span>
+                            <span v-if="props.row.PayType === 4">线下支付</span>
+                            <span v-if="props.row.PayType === 5">其他</span>
                         </el-form-item>
                         <el-form-item label="支付平台订单号">
                             <span>{{ props.row.PayOrder }}</span>
                         </el-form-item>
                         <el-form-item label="应收费用">
                             <span>{{ props.row.DealPrice }}</span>
+                        </el-form-item>
+                        <el-form-item label="其他费用">
+                            <span>{{ props.row.OtherPrice }}</span>
                         </el-form-item>
                         <el-form-item label="实收费用">
                             <span>{{ props.row.RealPrice }}</span>
@@ -179,6 +194,8 @@
             <el-table-column prop="UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
                 <template scope="scope">
@@ -217,31 +234,26 @@
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="外部订单号" prop="externalOrderID">
-                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="订单渠道" prop="channel">
-                            <el-select v-model="form.channel" placeholder="请选择订单渠道">
-                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.label">
-                                    <span style="float: left">{{ item.label }}</span>
-                                </el-option>
-                            </el-select>
+                <el-row :gutter="24" v-if="form.id">
+                    <el-col :span="4" :offset="12">
+                        <el-form-item>
+                            <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="外部订单状态" prop="externalOrderStete">
-                            <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
+                        <el-form-item label="订单渠道" prop="channel">
+                            <el-select v-model="form.channel" placeholder="请选择订单渠道">
+                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
+                                    <span style="float: left">{{ item.ChannelName }}</span>
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="航班号/车次号" prop="carriageNo">
-                            <el-input placeholder="请输入航班号/车次号" v-model="form.carriageNo"></el-input>
+                        <el-form-item label="外部订单号" prop="externalOrderID">
+                            <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -256,6 +268,14 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
+                        <el-form-item label="预约用车时间" prop="useTime">
+                            <el-date-picker v-model="form.useTime" type="datetime" placeholder="请选择预约用车时间">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
                         <el-form-item label="车型类别" prop="carClassify">
                             <el-select v-model="form.carClassify" placeholder="请选择车型类别">
                                 <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
@@ -264,17 +284,9 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="预约用车时间" prop="useTime">
-                            <el-date-picker v-model="form.useTime" type="datetime" placeholder="请选择预约用车时间">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="是否预约单" prop="isAppointment">
-                            <el-switch v-model="form.isAppointment" on-text="" off-text=""></el-switch>
+                        <el-form-item label="航班号/车次号" prop="carriageNo">
+                            <el-input placeholder="请输入航班号/车次号" v-model="form.carriageNo"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -285,18 +297,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="始发地详细地址" prop="originAddress">
-                            <el-input placeholder="请输入始发地详细地址" v-model="form.originAddress"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="始发地经纬度" prop="originCoordinates">
-                            <el-input placeholder="请输入始发地经纬度" v-model="form.originCoordinates"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
                         <el-form-item label="目的地" prop="destination">
                             <el-input placeholder="请输入目的地" v-model="form.destination"></el-input>
                         </el-form-item>
@@ -304,13 +304,13 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="目的地详细地址" prop="destinationAddress">
-                            <el-input placeholder="请输入目的地详细地址" v-model="form.destinationAddress"></el-input>
+                        <el-form-item label="始发地详细地址" prop="originAddress">
+                            <el-input placeholder="请输入始发地详细地址" v-model="form.originAddress"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="目的地经纬度" prop="destinationCoordinates">
-                            <el-input placeholder="请输入目的地经纬度" v-model="form.destinationCoordinates"></el-input>
+                        <el-form-item label="目的地详细地址" prop="destinationAddress">
+                            <el-input placeholder="请输入目的地详细地址" v-model="form.destinationAddress"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -327,28 +327,38 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="24">
-                        <el-form-item label="客人要求" prop="specReq">
-                            <el-input type="textarea" placeholder="请输入客人要求" v-model="form.specReq"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="24">
-                        <el-form-item label="订单备注" prop="remark">
-                            <el-input type="textarea" placeholder="请输入订单备注" v-model="form.remark"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="应收费用" prop="dealPrice">
                             <el-input placeholder="请输入应收费用" v-model="form.dealPrice"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
+                        <el-form-item label="其它费用" prop="otherPrice">
+                            <el-input placeholder="请输入其它费用" v-model="form.otherPrice"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
                         <el-form-item label="实收费用" prop="realPrice">
                             <el-input placeholder="请输入实收费用" v-model="form.realPrice"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="工作人员" prop="staffUserName">
+                            <el-input placeholder="请输入工作人员" v-model="form.staffUserName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24" v-if="form.id">
+                    <el-col :span="12">
+                        <el-form-item label="处理人员" prop="processorUserName">
+                            <el-input placeholder="请输入处理人员" v-model="form.processorUserName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="审核人员" prop="auditorUserNaHme">
+                            <el-input placeholder="请输入审核人员" v-model="form.auditorUserName"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -367,9 +377,54 @@
                             <el-switch v-model="form.payStatus" on-text="" off-text=""></el-switch>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="订单备注" prop="remark">
+                            <el-input type="textarea" placeholder="请输入订单备注" v-model="form.remark"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="工作人员姓名" prop="staffUserName">
-                            <el-input placeholder="请输入工作人员姓名" v-model="form.staffUserName"></el-input>
+                        <el-form-item label="外部订单状态" prop="externalOrderStete">
+                            <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="是否预约单" prop="isAppointment">
+                            <el-switch v-model="form.isAppointment" on-text="" off-text=""></el-switch>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="始发地经纬度" prop="originCoordinates">
+                            <el-input placeholder="请输入始发地经纬度" v-model="form.originCoordinates"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="目的地经纬度" prop="destinationCoordinates">
+                            <el-input placeholder="请输入目的地经纬度" v-model="form.destinationCoordinates"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="预计服务里程" prop="preServiceMileage">
+                            <el-input placeholder="请输入预计服务里程" v-model="form.preServiceMileage"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="预计服务用时" prop="preServiceTime">
+                            <el-input placeholder="请输入预计服务用时" v-model="form.preServiceTime"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="客人要求" prop="specReq">
+                            <el-input type="textarea" placeholder="请输入客人要求" v-model="form.specReq"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -383,7 +438,8 @@
 </template>
 <script>
 import {
-    carOrderManageApi
+    carOrderManageApi,
+    orderChannelApi
 } from 'api'
 
 export default {
@@ -392,7 +448,9 @@ export default {
                 new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
             ).Format('yyyy-MM-dd')
             this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
+            this.loginData = JSON.parse(localStorage.getItem('user'));
             this.fetchData()
+            this.fetchChannelList()
         },
         data() {
             return {
@@ -401,8 +459,10 @@ export default {
                 pageSize: 10,
                 count: 0,
                 loading: false,
+                loading2: false,
                 showDialog: false,
                 pickerOptions: {},
+                loginData: '',
                 form: {
                     id: 0,
                     dealPrice: '',
@@ -424,54 +484,51 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
+                    preServiceMileage: '',
+                    preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
-                    staffUserName: ''
+                    staffUserId: '',
+                    staffUserName: '',
+                    processorUserName: '',
+                    auditorUserName: '',
+                    otherPrice: ''
                 },
-                channelList: [{
-                    value: 1,
-                    label: '机场用车'
+                sortList: [{
+                    value: 'id',
+                    label: '默认排序'
                 }, {
-                    value: 2,
-                    label: '线下订单'
+                    value: 'channel',
+                    label: '按渠道'
                 }, {
-                    value: 3,
-                    label: '携程接送机'
+                    value: 'carTransportType',
+                    label: '产品类型'
                 }, {
-                    value: 4,
-                    label: '微信订单'
+                    value: 'carClassify',
+                    label: '车型类别'
+                }, {
+                    value: 'useTime',
+                    label: '用车时间'
                 }],
-                orderStatusList: [{
-                    value: 1,
-                    label: '已支付'
-                }, {
-                    value: 2,
-                    label: '已取消'
-                }, {
-                    value: 3,
-                    label: '已退款'
-                }, {
-                    value: 4,
-                    label: '预约单'
-                }],
+                channelList: [],
                 payChannelList: [{
-                    value: 1,
+                    value: 0,
                     label: '支付宝'
                 }, {
-                    value: 2,
+                    value: 1,
                     label: '微信支付'
                 }, {
-                    value: 3,
+                    value: 2,
                     label: '银联支付'
                 }, {
-                    value: 4,
+                    value: 3,
                     label: '平台'
                 }, {
-                    value: 5,
+                    value: 4,
                     label: '线下支付'
                 }, {
-                    value: 6,
+                    value: 5,
                     label: '其他'
                 }],
                 carTransportTypeList: [{
@@ -504,8 +561,10 @@ export default {
                     label: '豪华型'
                 }],
                 filters: {
+                    sortValue: 'id',
                     channel: '',
-                    orderVal: '',
+                    payStatus: true,
+                    isCancel: false,
                     useTimeS: '',
                     useTimeE: '',
                     labelVal: 1,
@@ -574,6 +633,10 @@ export default {
                         required: true,
                         message: '请输入实收费用'
                     }],
+                    otherPrice: [{
+                        required: true,
+                        message: '请输入其它费用'
+                    }],
                     payType: [{
                         required: true,
                         message: '请选择支付类型'
@@ -581,12 +644,35 @@ export default {
                 }
             }
         },
-
+        watch: {
+            'form.carTransportType': function(newQuestion) {
+                const _self = this
+                if (!_self.form.id) {
+                    if (newQuestion === 0) {
+                        _self.form.origin = "流亭国际机场";
+                        _self.form.originCoordinates = "120.385920000000,36.267751000000";
+                        _self.form.destination = "";
+                        _self.form.destinationCoordinates = "";
+                    } else if (newQuestion === 1) {
+                        _self.form.destination = "流亭国际机场";
+                        _self.form.destinationCoordinates = "120.385920000000,36.267751000000";
+                        _self.form.origin = "";
+                        _self.form.originCoordinates = "";
+                    } else {
+                        _self.form.origin = "";
+                        _self.form.originCoordinates = "";
+                        _self.form.destination = "";
+                        _self.form.destinationCoordinates = "";
+                    }
+                }
+            }
+        },
         methods: {
             clear() {
                 this.filters = {
                     channel: '',
-                    orderVal: '',
+                    payStatus: false,
+                    isCancel: false,
                     useTimeS: '',
                     useTimeE: '',
                     labelVal: 1,
@@ -600,13 +686,41 @@ export default {
             search() {
                 this.fetchData()
             },
-            async syncList() {
+            async syncList(a) {
                 const _self = this
                 _self.list = []
                 _self.count = 0
                 _self.loading = true
-                const res = await carOrderManageApi.syncList()
+                if (a === 0) {
+                    const res = await carOrderManageApi.syncList()
+                } else if (a === 1) {
+                    const res = await carOrderManageApi.syncOrderOperDataList()
+                }
                 _self.fetchData()
+            },
+            async syncOrderOperData() {
+                const _self = this
+                _self.loading2 = true
+                try {
+                    await carOrderManageApi.syncOrderOperData(_self.form.id)
+                    _self.loading2 = false
+                } catch (e) {
+                    _self.loading2 = false
+                    console.error(e)
+                }
+            },
+            payStatusChange(a) {
+                this.filters.payStatus = a;
+                this.fetchData();
+            },
+            isCancelChange(a) {
+                this.filters.isCancel = a;
+                this.fetchData();
+            },
+            async fetchChannelList() {
+                const _self = this
+                const res = await orderChannelApi.channelByQuery("用车")
+                _self.channelList = res.data
             },
             async fetchData(currentPage, pageSize) {
                 const _self = this
@@ -616,13 +730,11 @@ export default {
                 const options = {
                     pageIndex: _self.currentPage,
                     pageSize: _self.pageSize,
-                    order: 'channel' + '\\carTransportType' + '\\carClassify' + '\\useTime',
+                    order: _self.filters.sortValue,
                     query: {
                         channel: _self.filters.channel,
-                        payStatus: _self.filters.orderVal === 1 ? true : '',
-                        isCancel: _self.filters.orderVal === 2 ? true : '',
-                        isCancelPrice: _self.filters.orderVal === 3 ? true : '',
-                        isAppointment: _self.filters.orderVal === 4 ? true : '',
+                        payStatus: _self.filters.payStatus,
+                        isCancel: _self.filters.isCancel,
                         'useTime>': _self.filters.useTimeS ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd') : '',
                         'useTime<': _self.filters.useTimeE ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd') : '',
                         linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
@@ -663,7 +775,7 @@ export default {
             },
             handleSizeChange(val) {
                 this.pageSize = val
-                this.fetchData(this.pageSize)
+                this.fetchData(1, this.pageSize)
             },
             handleCurrentChange(val) {
                 this.currentPage = val
@@ -693,11 +805,19 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
+                    preServiceMileage: '',
+                    preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
                     carriageNo: '',
-                    staffUserName: ''
+                    staffUserId: '',
+                    staffUserName: '',
+                    processorUserName: '',
+                    auditorUserName: '',
+                    otherPrice: ''
                 }
+                _self.form.staffUserId = _self.loginData.id;
+                _self.form.staffUserName = _self.loginData.username;
             },
             async clickEditBtn($index, row) {
                 const _self = this
@@ -724,10 +844,15 @@ export default {
                     _self.form.destination = res.data.Data.Destination
                     _self.form.destinationAddress = res.data.Data.DestinationAddress
                     _self.form.destinationCoordinates = res.data.Data.DestinationCoordinates
+                    _self.form.preServiceMileage = res.data.Data.PreServiceMileage
+                    _self.form.preServiceTime = res.data.Data.PreServiceTime
                     _self.form.useTime = res.data.Data.UseTime
                     _self.form.isAppointment = res.data.Data.IsAppointment
                     _self.form.carriageNo = res.data.Data.CarriageNo
                     _self.form.staffUserName = res.data.Data.StaffUserName
+                    _self.form.processorUserName = res.data.Data.ProcessorUserName
+                    _self.form.auditorUserName = res.data.Data.AuditorUserName
+                    _self.form.otherPrice = res.data.Data.OtherPrice
                 } catch (e) {
                     console.error(e)
                 }
