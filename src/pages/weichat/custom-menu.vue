@@ -1,365 +1,210 @@
 <template lang="html">
-  <div id="role-page">
-    <el-row :gutter="20">
-      <!--<el-col :span="4">
-        <el-select v-model="filters.labelVal"  placeholder="请选择">
-          <el-option
-              v-for="(item,index) in selectedOptions"
-              :label="item.label"
-              :value="item.value"
-              :key="index">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="4">
-        <el-input placeholder="请输入角色名称" v-model="filters.realName" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入RoleName" v-model="filters.roleName" v-show="filters.labelVal == '2'"></el-input>
-      </el-col>-->
-      <el-col :span="4">
-        <!--<el-button type="primary" @click="handleSearch()">搜索</el-button>-->
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-       </el-col>
-    </el-row>
-
-    <el-table
-      :data="list"
-      ref="table"
-      style="width: 100%"
-      element-loading-text="拼命加载中"
-      v-loading="loading"
-      @expand="getUserNameByRole"
-      row-key="RoleName"
-      :expand-row-keys="expandRowKeys"
-      border
-      >
-      <el-table-column type="expand" >
-          <template scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item id="userlabel" v-loading.body="loading2">
-                <el-tag type="success" class="mytag" v-for="(a,index) in userNameList" :key="index" :closable="true" @close="delUserName(props.row.RoleName,a,props.row.RealName)">{{a}}</el-tag>
-                <div>
-                  <el-autocomplete
-                    class="myinput"
-                    :icon="userForm.userName?'check':'close'"
-                    ref="saveTagInput"
-                    v-if="inputVisible"
-                    placeholder="请输入用户名称"
-                    v-model="userForm.userName"
-                    :fetch-suggestions="querySearch"
-                    :on-icon-click="addUserName"
-                    ></el-autocomplete>
-                <el-button v-else class="button-new-tag mybtn" size="small" @click="showInput">添加用户</el-button>
+<div id="customMenu">
+    <div style="width:200px;height:600px;border:solid 1px #A9A9A9;float:left;">
+        <p style="background-color:#EAEAEA;margin:0;padding:10px;">
+           <el-row>
+               <el-col :span="22">菜单管理</el-col>
+               <el-col :span="2"><i class="el-icon-plus"></i></el-col>
+           </el-row>
+        </p>
+        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" :expand-on-click-node="false" :render-content="renderContent"></el-tree>
+    </div>
+    <div style="width:600px;height:600px;border:solid 1px #A9A9A9;float:left;">
+        <p style="background-color:#EAEAEA;margin:0;padding:10px;">
+           设置动作--子菜单
+        </p>
+        <div>
+            <p style="padding:10px;">
+                <el-row>
+                    <el-col :span="4">子菜单名称</el-col>
+                    <el-col :span="20"><el-input v-model="input" placeholder="请输入内容" style="width:50%"></el-input></el-col>
+                </el-row>
+                <el-row>
+                    <el-col :offset="4" :span="20"><span style="color:lightgrey;">字数不超过8个汉字或16个字母</span></el-col>
+                </el-row>
+            </p>
+            <p style="padding:10px;">
+                <el-row>
+                    <el-col :span="4">子菜单内容</el-col>
+                    <el-col :span="20">
+                        <el-radio-group v-model="radio">
+                            <el-radio :label="1">发送消息</el-radio>
+                            <el-radio :label="2">跳转网页</el-radio>
+                            <el-radio :label="3">跳转小程序</el-radio>
+                        </el-radio-group>
+                    </el-col>
+                </el-row>
+                <div style="border:solid 1px #A9A9A9;margin:10px;height:300px;">
+                    <p style="padding:0px;margin:0px;">
+                        <el-menu :default-active="activeIndex2" class="el-menu-demo"
+                         mode="horizontal" @select="handleSelect">
+                            <el-menu-item index="1"><i class="el-icon-menu">图文消息</i></el-menu-item>
+                            <el-menu-item index="2"><i class="el-icon-picture">图片</i></el-menu-item>
+                            <el-menu-item index="3"><i class="el-icon-document">语音</i></el-menu-item>
+                            <el-menu-item index="4"><i class="el-icon-document">视频</i></el-menu-item>
+                        </el-menu>
+                    </p>
+                    <hr>
+                    <div>
+                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                            :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <br>
+                            <span class="el-upload__text">从素材库中选择</span>
+                        </el-upload>
+                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                            :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            <br>
+                            <span class="el-upload__text">新建图文消息</span>
+                        </el-upload>
+                    </div>
                 </div>
-              </el-form-item>
-            </el-form>
-          </template>
-      </el-table-column>
-      <el-table-column sortable prop="RealName" label="角色名称" show-overflow-tooltip></el-table-column>
-      <el-table-column  prop="RoleName" label="RoleName" show-overflow-tooltip></el-table-column>
-      <el-table-column  width="100"  label="操作" fixed="right">
-        <template scope="scope">
-<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
-    编辑</el-button>
+            </p>
+        </div>
+    </div>
+</div>
 </template>
-      </el-table-column>
-    </el-table>
-
-    <el-dialog :title="dialogTitle" v-model="showDialog" size="tiny" @close="resetForm('roleForm')">
-      <el-form :rules="rules" ref="roleForm" :model="roleForm">
-        <el-form-item label="角色名称" prop="realName">
-          <el-input placeholder="请输入角色名称" v-model="roleForm.realName"></el-input>
-        </el-form-item>
-        <el-form-item label="RoleName" prop="roleName">
-          <el-input placeholder="请输入RoleName" v-model="roleForm.roleName" :disabled="dialogTitle==='编辑角色信息'"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
-      </span>
-    </el-dialog>
-  </div>
-</template>
-
 <script>
-import {
-    roleApi,
-    userApi
-} from 'api';
-// 需要方便的展示菜单及子菜单,可以对菜单进行排序,已经存在内容的菜单添加子菜单时需要提示,
-
-export default {
+  export default {
     data() {
-        return {
-            userList: [],
-            list: [],
-            expandRowKeys: [],
-            userNameList: [],
-            loading: true,
-            loading2: false,
-            inputVisible: false,
-            showDialog: false,
-            dialogTitle: '添加角色信息',
-            userForm: {
-                userName: '',
-                rolsName: ''
-            },
-            roleForm: {
-                realName: '',
-                roleName: ''
-            },
-            filters: {
-                realName: '',
-                roleName: '',
-                labelVal:'1'
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '角色名称'
-                },
-                {
-                    value: '2',
-                    label: 'RoleName'
-                }
-            ],
-            rules: {
-                realName: [{
-                    required: true,
-                    message: '请输入角色名称'
-                }],
-                roleName: [{
-                    required: true,
-                    message: '请输入RoleName'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        querySearch(queryString, cb) {
-            var userList = this.userList;
-            var results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
-            // 调用 callback 返回建议列表的数据
-            cb(results);
-        },
-        createFilter(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        showInput() {
-            this.inputVisible = true;
-            this.userForm.userName = '';
-            // this.$nextTick(_ => {
-            //     this.$refs.saveTagInput.$refs.input.focus();
-            // });
-        },
-        handleSearch() {
-            this.fetchData();
-        },
-        async fetchData() {
-            const _self = this;
-            _self.loading = true;
-            const options = {
-                query: {
-                realName: _self.filters.labelVal === '1' ? _self.filters.realName : '',
-                roleName: _self.filters.labelVal === '2' ? _self.filters.roleName : '',
-                },
-            };
-            try {
-                console.log(options)
-                const res = await roleApi.list();
-                _self.list = res.data;
-                _self.loading = false;
-            } catch (e) {
-                console.error(e);
-                _self.loading = false;
-            }
-        },
-        async getUserList() {
-            const _self = this;
-            _self.userList = [];
-            let _index = 0;
-            try {
-                const res = await userApi.list();
-                console.log(res)
-                for (let [index, elem] of res.data.entries()) {
-                    if (!_self.userNameList.includes(elem.UserName)) {
-                        _self.userList.push({});
-                        _self.userList[_index].value = elem.UserName;
-                        _index++;
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async getUserNameByRole(row, expanded) {
-            const _self = this;
-            if (expanded) {
-                _self.loading2 = true;
-                _self.inputVisible = false;
-                _self.expandRowKeys.length = 0;
-                _self.expandRowKeys.push(row.RoleName);
-                _self.userForm.rolsName = row.RoleName;
-            }
-            try {
-                const res = await roleApi.userNameListByRolesName(_self.userForm.rolsName);
-                _self.userNameList = res.data.UserName;
-                _self.loading2 = false;
-            } catch (e) {
-                console.error(e);
-            }
-            _self.getUserList();
-        },
-        clickAddBtn() {
-            const _self = this;
-            _self.dialogTitle = '添加角色信息';
-            _self.showDialog = true;
-            _self.roleForm = {};
-        },
-        clickEditBtn($index, row) {
-            const _self = this;
-            _self.dialogTitle = '编辑角色信息';
-            _self.showDialog = true;
-            _self.roleForm.realName = row.RealName;
-            _self.roleForm.roleName = row.RoleName;
-        },
-        submitForm() {
-            const _self = this;
-            if (_self.dialogTitle === '编辑角色信息') {
-                _self.editSave();
-            } else if (_self.dialogTitle === '添加角色信息') {
-                _self.addSave();
-            }
-        },
-        async addSave() {
-            const _self = this;
-            _self.$refs['roleForm'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await roleApi.add(_self.roleForm);
-                        _self.fetchData();
-                        _self.$refs['roleForm'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('添加失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async editSave() {
-            const _self = this;
-            _self.$refs['roleForm'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await roleApi.edit(_self.roleForm);
-                        _self.fetchData();
-                        _self.$refs['roleForm'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('编辑失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async addUserName() {
-            const _self = this;
-            if (_self.userForm.userName !== "") {
-                _self.loading2 = true;
-                try {
-                    await roleApi.addUserNameByRolsName(_self.userForm.rolsName, _self.userForm.userName);
-                    _self.getUserNameByRole();
-                    _self.$message({
-                        message: '添加成功',
-                        type: 'success'
-                    });
-                    _self.inputVisible = false;
-                    _self.loading2 = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading2 = false;
-                    _self.$message.error('添加失败!!!');
-                }
-            } else {
-                _self.inputVisible = false;
-            }
-        },
-        async delUserName(a, b, c) {
-            const _self = this;
-            _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async() => {
-                try {
-                    _self.loading2 = true;
-                    await roleApi.deleteUserNameByRolesName(a, b);
-                    _self.getUserNameByRole();
-                    _self.inputVisible = false;
-                    _self.loading2 = false;
-                    _self.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    console.error(e);
-                    _self.loading2 = false;
-                    _self.$message.error('删除失败!!!');
-                }
-            }).catch(() => {});
+      return {
+        input:'',
+        radio:'',
+        activeIndex2: '1',
+        imageUrl:'',
+        data: [{
+          id:1,
+          label: '美票旅游',
+          /*children: [{
+            label: '机票',
+            label: '酒店',
+            label: '机场专车',
+            label: '自由行',
+            label: '跟团游'
+          }]*/
+          children: [{
+              id:4,
+            label: '机票'},{
+                id:5,
+            label: '酒店'},{
+                id:6,
+            label: '机场专车'},{
+                id:7,
+            label: '自由行'},{
+                id:8,
+            label: '跟团游'}
+          ]
+        }, {
+            id:2,
+          label: '我的'
+        }, {
+            id:3,
+          label: '关于美票',
+          children: [{
+              id:9,
+            label: '微店商城'},{
+                id:10,
+            label: '美票说'}
+          ]
+        }],
+        defaultProps: {
+          children: 'children',
+          label: 'label'
         }
+      };
     },
-    mounted() {
-        this.fetchData();
+    methods: {
+      handleNodeClick(data) {
+        console.log(data);
+      },
+      handleSelect(key, keyPath) {
+        console.log(key, keyPath);
+      },
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      append(store, data) {
+        store.append({ id: id++, label: 'testtest', children: [] }, data);
+      },
+
+      remove(store, data) {
+        store.remove(data);
+      },
+
+      
+      renderContent(h, { node, data, store }) {
+          /*let a = [<span>
+            <span>
+              <span>{node.label}</span>
+            </span>
+            <span style="float: right; margin-right: 20px">
+              <el-button size="mini" on-click={ () => this.append(store, data) }>Append</el-button>
+              <el-button size="mini" on-click={ () => this.remove(store, data) }>Delete</el-button>
+            </span>
+          </span>];
+        return (
+          a);*/
+      }
     }
-};
+  }
 </script>
-
-<style lang="scss" scoped>
-#userlabel {
-    width: 100%;
-}
-#userlabel .mytag {
-    margin-top: 10px;
-    margin-right: 10px;
-    height: 36px;
-    line-height: 36px;
-    box-sizing: border-box;
-    flex: 0 0 25%;
-}
-#userlabel .mybtn {
-    height: 36px;
-    margin-top: 15px;
-}
-#userlabel .myinput {
-    width: 180px;
-    margin-top: 15px;
-}
-
-.el-table__expanded-cell {
-    padding: 20px 15px 20px 66px !important;
-}
-.demo-table-expand {
-    padding: 0 0 10px 16px !important;
-    margin-right: 50px !important;
-}
-.el-autocomplete,
-.el-dropdown {
-    display: block !important;
+<style lang="scss">
+#customMenu{
+    .el-menu--horizontal>.el-menu-item:hover{
+        border-bottom: solid 0px white;
+    }
+    .el-menu--horizontal .el-menu-item:hover{
+        background-color: white;
+    }
+    .el-menu {
+        background-color: white;
+    }
+    .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    height: 178px;
+    margin: 20px;
+    margin-left: 50px;
+    float:left;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 18px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .el-upload__text{
+      color: lightgrey;
+      padding-top: 10px;
+  }
 }
 </style>
+

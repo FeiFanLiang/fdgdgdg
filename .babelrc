@@ -12,3 +12,12 @@
     }
   }
 }
+/*{
+  "presets": ["es2015"],
+  "plugins": ["./index"],
+  "ignore": ["node_modules"]
+}*/
+/*{
+"presets": ["es2015"],
+"plugins": ["transform-vue-jsx"]
+}*/

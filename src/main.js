@@ -23,6 +23,7 @@ axios.defaults.withCredentials = true
 // import Mock from './mock';
 // Mock.bootstrap();
 
+
 import App from './app.vue'
 import routes from './router'
 import './style.scss'
@@ -100,6 +101,11 @@ new Vue({
   router,
   store
 }).$mount('#app')
+/*Vue.component('jsx-example', {
+  render (h) { // <-- h must be in scope
+    return <div id="foo">bar</div>
+  }
+})*/
 
 /**
  *               ii.                                         ;9ABH,
