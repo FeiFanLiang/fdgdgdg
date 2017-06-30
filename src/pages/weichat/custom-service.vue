@@ -1,23 +1,8 @@
 <template lang="html">
 <div id="customService">
   <el-row class="tac" :guiter="24">
-    <!--<el-col :span="1">
-      <el-menu style="min-height:700px;" default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" theme="dark">
-        <img src="../../assets/images/common/hh.png" width="70%" style="margin:15%;">
-        <el-menu-item index="1"><i class="el-icon-message"></i></el-menu-item>
-        <el-menu-item index="2"><i class="el-icon-menu"></i></el-menu-item>
-      </el-menu>
-    </el-col>-->
-    <!--<el-col :span="4">
-      <el-menu style="width:200px;min-height:700px;max-height:700px;overflow-y:scroll;position:fixed;" default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
-        <el-input placeholder="搜索" icon="search" v-model="input" :on-icon-click="handleIconClick" style="position:fixed;width:180px;z-index:99"></el-input>
-        <el-menu-item index="1"><i class="el-icon-message"></i></el-menu-item>
-        <el-menu-item index="2"><i class="el-icon-menu"></i></el-menu-item>
-      </el-menu>
-      aaa
-    </el-col>-->
     <el-col :span="6">
-      <el-menu default-active="2" class="el-menu-vertical-demo" style="height:700px;overflow-y:auto;">
+      <el-menu default-active="2-1" class="el-menu-vertical-demo" style="height:700px;overflow-y:auto;" @select="handleSelect">
         <div style="position:relative;">
           <img src="../../assets/images/img/dog.jpg" width="30%" style="margin:10% 15px 10px 10%;"><span style="position:absolute;top:45%;">admin</span>
         </div>
@@ -27,41 +12,21 @@
             <img src="../../assets/images/message.png" style="width:15%;margin:0px 15px 0 0;vertical-align: middle;">
             <span>消息</span>
           </template>
-          <el-menu-item-group style="height:400px;overflow-y:auto;">
-            <el-menu-item index="1-1" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-35px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称(时间)</p>
-                  <p style="padding:0;margin-top:-20px;">消息</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-            <el-menu-item index="1-2" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-35px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称(时间)</p>
-                  <p style="padding:0;margin-top:-20px;">消息</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-            <el-menu-item index="1-3" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-35px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称(时间)</p>
-                  <p style="padding:0;margin-top:-20px;">消息</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-          </el-menu-item-group>
+          <div style="height:400px;overflow-y:auto;">
+            <el-menu-item-group v-for="item in list" :key="item.ID">
+              <el-menu-item :index="item.ID" style="padding:40px;" >
+                <el-row :guiter="24">
+                  <el-col :span="4">
+                    <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
+                  </el-col>
+                  <el-col :span="10" style="margin:-35px 0 0 0;">
+                    <p style="padding:0;margin:0;overflow: hidden;text-overflow: ellipsis;width:10em;">{{item.name}}({{item.time}})</p>
+                    <p style="padding:0;margin-top:-20px;overflow: hidden;text-overflow: ellipsis;width:10em;" >{{item.message}}</p>
+                  </el-col>
+                </el-row>
+              </el-menu-item>
+            </el-menu-item-group>
+          </div>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
@@ -70,7 +35,7 @@
           </template>
           
             <div class="contact-friends" style="height:400px;overflow-y:auto;">
-              <template v-for="(grouping,key) in contact_friends">        
+              <template v-for="grouping in contact_friends">        
                   <el-menu-item-group>
                     <p class="contact-alpha" v-text="grouping.alpha" style="margin-left:10px;"></p>
                     <div v-for="item in grouping.list">
@@ -81,7 +46,7 @@
                                     <img :src="item.imgSrc" height="35px" style="vertical-align:middle;margin-right:10px;">
                                     <div slot="content" class="contents" style="width:200px;">
                                             <div style="font-size:14px;">
-                                                <p>昵称:{{item.remark}}</p>
+                                                <p>昵称:{{item.name}}</p>
                                                 <p>签名</p>
                                                 <hr>
                                                 <p>备注</p>
@@ -90,7 +55,7 @@
                                             </div>
                                       </div>
                                   </el-tooltip>
-                                  <span v-text="item.remark"></span>                                 
+                                  <span v-text="item.name"></span>
                               </div>
                             </div>
                       </el-menu-item>
@@ -98,46 +63,13 @@
                   </el-menu-item-group>
               </template>
             </div>
-
-          <!--<el-menu-item-group style="height:400px;overflow-y:scroll;">
-            <el-menu-item index="2-1" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-20px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-            <el-menu-item index="2-2" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-20px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-            <el-menu-item index="2-3" style="padding:40px;">
-              <el-row :guiter="24">
-                <el-col :span="4">
-                  <img src="../../assets/images/img/dog.jpg" height="50px" style="margin:-30px 0 0 -30px;">
-                </el-col>
-                <el-col :span="10" style="margin:-20px 0 0 0;">
-                  <p style="padding:0;margin:0;">昵称</p>
-                </el-col>
-              </el-row>
-            </el-menu-item>
-          </el-menu-item-group>-->
         </el-submenu>
       </el-menu>
     </el-col>
     <el-col :span="18">
       <el-card class="box-card" style="height:700px;z-index:-1;">
         <div slot="header" class="clearfix">
-          <span style="line-height: 36px;font-size:17px;">昵称</span>
+          <span style="line-height: 36px;font-size:17px;">{{names}}</span>
           <i class="el-icon-star-off" style="float: right;margin-top:10px;"></i>
         </div>
         <div class="text item">
@@ -172,18 +104,19 @@ import Texts from './texts';
         search: '',
         // 选中的会话Index
         sessionIndex: 0,
+        names:'aaa',
         contact_friends:[
           {
             alpha:'A',
             list:[
               {
-                ID:'1',
-                remark:'昵称',
+                ID:'1-1',
+                name:'昵称1',
                 imgSrc:'http://localhost:8081/static/img/dog.b3efc3f.jpg'
               },
               {
-                ID:'2',
-                remark:'昵称2',
+                ID:'1-2',
+                name:'昵称2',
                 imgSrc:'http://localhost:8081/static/img/dog.b3efc3f.jpg'
               }
             ]
@@ -192,41 +125,75 @@ import Texts from './texts';
             alpha:'B',
             list:[
               {
-                ID:'3',
-                remark:'昵称',
+                ID:'1-3',
+                name:'昵称3',
                 imgSrc:'http://localhost:8081/static/img/dog.b3efc3f.jpg'
               },
               {
-                ID:'4',
-                remark:'昵称2',
+                ID:'1-4',
+                name:'昵称4',
                 imgSrc:'http://localhost:8081/static/img/dog.b3efc3f.jpg'
               }
             ]
+          }
+        ],
+        list:[
+          {
+            ID:'2-1',
+            name:'aaa',
+            time:'2017-6-27',
+            message:'aaaaaaa'
+          },
+          {
+            ID:'2-2',
+            name:'bbb',
+            time:'2017-6-26',
+            message:'bbbbbbbbb'
+          },
+          {
+            ID:'2-3',
+            name:'ccc',
+            time:'2017-6-25',
+            message:'cccccccccccccccccccccccc11111111111111111111111111111cccccccccccccccccccccccccccc'
           }
         ]
       }
     },
      computed: {
-            session () {
-                return this.sessionList[this.sessionIndex];
-            }
-        },
-        watch: {
-            // 每当sessionList改变时，保存到localStorage中
-            sessionList: {
-                deep: true,
-                handler () {
-                    store.save({
-                        user: this.user,
-                        userList: this.userList,
-                        sessionList: this.sessionList
-                    });
-                }
-            }
+          session () {
+              return this.sessionList[this.sessionIndex];
+          }
+      },
+      watch: {
+          // 每当sessionList改变时，保存到localStorage中
+          sessionList: {
+              deep: true,
+              handler () {
+                  store.save({
+                      user: this.user,
+                      userList: this.userList,
+                      sessionList: this.sessionList
+                  });
+              }
+          }
         },
     methods: {
       handleIconClick(){
 
+      },
+      handleSelect(key, keyPath) {
+        for(let i=0;i<this.list.length;i++){
+          if (key === this.list[i].ID) {
+            this.names = this.list[i].name;
+          }
+        }
+        for(let j=0;j<this.contact_friends.length;j++){
+          for(let k=0;k<this.contact_friends[j].list.length;k++){
+            if (key === this.contact_friends[j].list[k].ID) {
+              this.names = this.contact_friends[j].list[k].name;
+            }
+          }
+        }
       }
     }
   }
