@@ -46,14 +46,14 @@
                     </p>
                     <hr>
                     <div>
-                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
                             :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             <br>
                             <span class="el-upload__text">从素材库中选择</span>
                         </el-upload>
-                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
                             :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -68,15 +68,16 @@
 </div>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        input:'',
-        radio:'',
-        activeIndex2: '1',
-        imageUrl:'',
-        data: [{
-          id:1,
+export default {
+  data() {
+    return {
+      input: '',
+      radio: '',
+      activeIndex2: '1',
+      imageUrl: '',
+      data: [
+        {
+          id: 1,
           label: '美票旅游',
           /*children: [{
             label: '机票',
@@ -85,83 +86,106 @@
             label: '自由行',
             label: '跟团游'
           }]*/
-          children: [{
-              id:4,
-            label: '机票'},{
-                id:5,
-            label: '酒店'},{
-                id:6,
-            label: '机场专车'},{
-                id:7,
-            label: '自由行'},{
-                id:8,
-            label: '跟团游'}
+          children: [
+            {
+              id: 4,
+              label: '机票'
+            },
+            {
+              id: 5,
+              label: '酒店'
+            },
+            {
+              id: 6,
+              label: '机场专车'
+            },
+            {
+              id: 7,
+              label: '自由行'
+            },
+            {
+              id: 8,
+              label: '跟团游'
+            }
           ]
-        }, {
-            id:2,
+        },
+        {
+          id: 2,
           label: '我的'
-        }, {
-            id:3,
+        },
+        {
+          id: 3,
           label: '关于美票',
-          children: [{
-              id:9,
-            label: '微店商城'},{
-                id:10,
-            label: '美票说'}
+          children: [
+            {
+              id: 9,
+              label: '微店商城'
+            },
+            {
+              id: 10,
+              label: '美票说'
+            }
           ]
-        }],
-        defaultProps: {
-          children: 'children',
-          label: 'label'
         }
-      };
-    },
-    methods: {
-      handleNodeClick(data) {
-        console.log(data);
-      },
-      handleSelect(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-      },
-      beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-        const isLt2M = file.size / 1024 / 1024 < 2;
-
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!');
-        }
-        return isJPG && isLt2M;
-      },
-      append(store, data) {
-        store.append({ id: id++, label: 'testtest', children: [] }, data);
-      },
-
-      remove(store, data) {
-        store.remove(data);
-      },
-
-      
-      renderContent(h, { node, data, store }) {
-          /*let a = [<span>
-            <span>
-              <span>{node.label}</span>
-            </span>
-            <span style="float: right; margin-right: 20px">
-              <el-button size="mini" on-click={ () => this.append(store, data) }>Append</el-button>
-              <el-button size="mini" on-click={ () => this.remove(store, data) }>Delete</el-button>
-            </span>
-          </span>];
-        return (
-          a);*/
+      ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
       }
     }
+  },
+  methods: {
+    handleNodeClick(data) {
+      console.log(data)
+    },
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    append(store, data) {
+      store.append({ id: id++, label: 'testtest', children: [] }, data)
+    },
+
+    remove(store, data) {
+      store.remove(data)
+    },
+
+    renderContent(h, { node, data, store }) {
+      // let a = [
+
+      // ]
+      return (
+        <span>
+          <span>
+            <span>{node.label}</span>
+          </span>
+          <span style="float: right; margin-right: 20px">
+            <el-button size="mini" on-click={() => this.append(store, data)}>
+              Append
+            </el-button>
+            <el-button size="mini" on-click={() => this.remove(store, data)}>
+              Delete
+            </el-button>
+          </span>
+        </span>
+      )
+    }
   }
+}
 </script>
 <style lang="scss">
 #customMenu{
@@ -207,4 +231,3 @@
   }
 }
 </style>
-
