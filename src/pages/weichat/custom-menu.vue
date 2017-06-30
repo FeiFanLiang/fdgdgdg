@@ -107,7 +107,7 @@ export default {
                 }]
             }, {
                 id: 2,
-                label: '我的',
+                label: '我的'
             }, {
                 id: 3,
                 label: '关于美票',
@@ -149,21 +149,21 @@ export default {
         },
 
         addMenu(){
-            this.eltreeData.push({ id: id++, label: '主菜单名称' });
+            this.eltreeData.push({ id: id++, label: '主菜单名称'});
         },
 
         append(store, data) {
-            store.append({ id: id++, label: '子菜单名称' }, data);
+            data.children = [];
+            store.append({ id: id++, label: '子菜单名称'}, data);
         },
 
         remove(store, data) {
+            data.children = [];
             store.remove(data);
         },
 
         edit(store,data){
-            /*console.log(store)*/
-            console.log(data)
-            if(data.hasOwnProperty('children')){
+            if(data.children){
                 this.editShow = false;
                 this.editShow2 = true;
                 this.editShow3 = false;
