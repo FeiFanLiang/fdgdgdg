@@ -75,7 +75,7 @@
 </div>
 </template>
 <script>
-let id = 1000;
+let id = 1000
 export default {
     data() {
         return {
@@ -124,36 +124,29 @@ export default {
                 label: 'label'
             }
         }
+  },
+  methods: {
+    handleNodeClick(data) {
+      console.log(data)
     },
-    methods: {
-        handleNodeClick(data) {
-            console.log(data)
-        },
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath)
-        },
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw)
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg'
-            const isLt2M = file.size / 1024 / 1024 < 2
-
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!')
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!')
-            }
-            return isJPG && isLt2M
-        },
-
+    handleSelect(key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+    },
         addMenu(){
             this.eltreeData.push({ id: id++, label: '主菜单名称'});
         },
 
         append(store, data) {
-            data.children = [];
+            if(!data.children){
+                data.children = [];
+            }
             store.append({ id: id++, label: '子菜单名称'}, data);
         },
 
@@ -192,22 +185,28 @@ export default {
                 this.editShow3 = false;
                 this.input = data.label;
             }
-        },
-
-        renderContent(h, { node, data, store }) {
+          },
+          renderContent(h, { node, data, store }) {
             return (
-            <span>
                 <span>
-                <span>{node.label}</span>
+                <span>
+                    <span>{node.label}</span>
                 </span>
                 <span style="float: right; margin-right: 20px">
-                <el-button size="mini" on-click={ () => this.append(store, data) }><i class="el-icon-plus"></i></el-button>
-                <el-button size="mini" on-click={ () => this.remove(store, data) }><i class="el-icon-delete"></i></el-button>
-                <el-button size="mini" on-click={ () => this.edit(store, data) }><i class="el-icon-edit"></i></el-button>
+                    <el-button size="mini" on-click={() => this.append(store, data)}>
+                    <i class="el-icon-plus" />
+                    </el-button>
+                    <el-button size="mini" on-click={() => this.remove(store, data)}>
+                    <i class="el-icon-delete" />
+                    </el-button>
+                    <el-button size="mini" on-click={() => this.edit(store, data)}>
+                    <i class="el-icon-edit" />
+                    </el-button>
                 </span>
-            </span>);
+                </span>
+            )
         }
-    }
+    },
 }
 </script>
 <style lang="scss">
