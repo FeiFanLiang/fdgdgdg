@@ -14,14 +14,21 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
+                <el-select v-model="filters.externalOrderStete" placeholder="订单状态" @change="fetchData()">
+                    <el-option label="全部状态" value="">全部状态</el-option>
+                    <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
                 <el-select v-model="filters.carTransportType" placeholder="产品类型" @change="fetchData()">
                     <el-option label="全部类型" value="">全部类型</el-option>
                     <el-option v-for="(item,index) in carTransportTypeList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="3">
                 <el-select v-model="filters.carClassify" placeholder="车型类别" @change="fetchData()">
                     <el-option label="全部车型" value="">全部车型</el-option>
                     <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
@@ -49,11 +56,17 @@
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
                 <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
             </el-col>
-            <el-col :span="4">
-                <el-switch :width="73" v-model="filters.payStatus" on-text="已支付" off-text="未支付" :on-value="true" :off-value="false" @change="payStatusChange($event)" on-color="dodgerblue" off-color="lightgray">
-                </el-switch>
-                <el-switch :width="73" v-model="filters.isCancel" on-text="已取消" off-text="未取消" :on-value="true" :off-value="false" @change="isCancelChange($event)" on-color="dodgerblue" off-color="lightgray">
-                </el-switch>
+            <el-col :span="5">
+                <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
+                    <el-radio label="">全部</el-radio>
+                    <el-radio :label="true">已支付</el-radio>
+                    <el-radio :label="false">未支付</el-radio>
+                </el-radio-group>
+                <el-radio-group v-model="filters.isCancel" @change="isCancelChange($event)">
+                    <el-radio label="">全部</el-radio>
+                    <el-radio :label="true">已取消</el-radio>
+                    <el-radio :label="false">未取消</el-radio>
+                </el-radio-group>
             </el-col>
             <el-col :span="4">
                 <el-button type="primary" @click="search">搜索</el-button>
@@ -72,9 +85,9 @@
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
-                        <el-form-item label="外部订单状态">
+                        <!-- <el-form-item label="外部订单状态">
                             <span>{{ props.row.ExternalOrderStete }}</span>
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item label="始发地详细地址">
                             <span>{{props.row.OriginAddress}}</span>
                         </el-form-item>
@@ -116,6 +129,9 @@
                         </el-form-item>
                         <el-form-item label="实收费用">
                             <span>{{ props.row.RealPrice }}</span>
+                        </el-form-item>
+                        <el-form-item label="是否支付">
+                            <span>{{ props.row.IsAppointment?"是":"否" }}</span>
                         </el-form-item>
                         <el-form-item label="是否支付">
                             <span>{{ props.row.PayStatus?"是":"否" }}</span>
@@ -171,6 +187,14 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
+            <el-table-column label="外部订单状态" show-overflow-tooltip>
+                <template scope="scope">
+                    <span v-if="scope.row.ExternalOrderStete == 0">待确认</span>
+                    <span v-if="scope.row.ExternalOrderStete == 1">已取消</span>
+                    <span v-if="scope.row.ExternalOrderStete == 2">已派车</span>
+                    <span v-if="scope.row.ExternalOrderStete == 3">已完成</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
@@ -215,12 +239,12 @@
                     <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
                 </template>
             </el-table-column>
-            <el-table-column label="是否预约" width="65">
+            <!-- <el-table-column label="是否预约" width="65">
                 <template scope="scope">
                     <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsAppointment"></i>
                     <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="操作" width="90" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -388,7 +412,11 @@
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="外部订单状态" prop="externalOrderStete">
-                            <el-input placeholder="请输入外部订单状态" v-model="form.externalOrderStete"></el-input>
+                            <el-select v-model="form.externalOrderStete" placeholder="请选择外部订单状态">
+                                <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                                    <span style="float: left">{{ item.label }}</span>
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -450,7 +478,6 @@ export default {
             this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
             this.loginData = JSON.parse(localStorage.getItem('user'));
             this.fetchData()
-            this.fetchChannelList()
         },
         data() {
             return {
@@ -484,7 +511,7 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
-                    preServiceMileage: '',
+                    preServiceMileage: 0,
                     preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
@@ -512,6 +539,19 @@ export default {
                     label: '用车时间'
                 }],
                 channelList: [],
+                orderSteteList: [{
+                    value: 0,
+                    label: '待确认'
+                }, {
+                    value: 1,
+                    label: '已取消'
+                }, {
+                    value: 2,
+                    label: '已派车'
+                }, {
+                    value: 3,
+                    label: '已完成'
+                }],
                 payChannelList: [{
                     value: 0,
                     label: '支付宝'
@@ -563,6 +603,7 @@ export default {
                 filters: {
                     sortValue: 'id',
                     channel: '',
+                    externalOrderStete: '',
                     payStatus: true,
                     isCancel: false,
                     useTimeS: '',
@@ -670,9 +711,11 @@ export default {
         methods: {
             clear() {
                 this.filters = {
+                    sortValue: 'id',
                     channel: '',
-                    payStatus: false,
-                    isCancel: false,
+                    externalOrderStete: '',
+                    payStatus: '',
+                    isCancel: '',
                     useTimeS: '',
                     useTimeE: '',
                     labelVal: 1,
@@ -740,6 +783,7 @@ export default {
                         linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
                         linkPhone: _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
                         externalOrderID: _self.filters.labelVal === 3 ? _self.filters.externalOrderID : '',
+                        externalOrderStete: _self.filters.externalOrderStete,
                         carTransportType: _self.filters.carTransportType,
                         carClassify: _self.filters.carClassify
                     }
@@ -768,6 +812,7 @@ export default {
                     }
                     _self.count = res.data.Count
                     _self.loading = false
+                    _self.channelList.length === 0 ? _self.fetchChannelList() : ''
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
@@ -805,7 +850,7 @@ export default {
                     destination: '',
                     destinationAddress: '',
                     destinationCoordinates: '',
-                    preServiceMileage: '',
+                    preServiceMileage: 0,
                     preServiceTime: '00:00:00',
                     useTime: '',
                     isAppointment: true,
@@ -849,10 +894,12 @@ export default {
                     _self.form.useTime = res.data.Data.UseTime
                     _self.form.isAppointment = res.data.Data.IsAppointment
                     _self.form.carriageNo = res.data.Data.CarriageNo
+                        // staffUserId
                     _self.form.staffUserName = res.data.Data.StaffUserName
                     _self.form.processorUserName = res.data.Data.ProcessorUserName
                     _self.form.auditorUserName = res.data.Data.AuditorUserName
                     _self.form.otherPrice = res.data.Data.OtherPrice
+                    console.log(_self.form.externalOrderStete)
                 } catch (e) {
                     console.error(e)
                 }
