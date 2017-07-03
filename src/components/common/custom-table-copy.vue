@@ -12,11 +12,7 @@
     <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
     <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
     <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column> -->
-    <el-table-column v-if="item.is" v-for="(item,index) in configList" :key="index" sortable :prop="item.name" :label="item.label"  show-overflow-tooltip>
-      <template scope="scope">
-        <Popover :rowData="scope.row" :propData="item" :index="index" ></Popover>
-      </template>
-    </el-table-column>
+    <el-table-column v-if="item.is" v-for="(item,index) in configList" :key="index" sortable :prop="item.name" :label="item.label"  show-overflow-tooltip></el-table-column>
     <slot name="right-one"></slot>
     <slot name="right-two"></slot>
     <slot name="right-three"></slot>
@@ -24,11 +20,7 @@
 </template>
 
 <script>
-import Popover from './popover'
 export default {
-  components: {
-    Popover
-  },
   props: {
     list: {
       type: Array,
@@ -48,8 +40,7 @@ export default {
     return {
       loading: false
     }
-  },
-  methods: {}
+  }
 }
 </script>
 
