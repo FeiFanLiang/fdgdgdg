@@ -1,10 +1,17 @@
 import axios from 'axios'
 import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/CarArrange/'
-import { carArrangeApi } from '../table-data'
+const base = path.apiBaseUrl + 'ParkSale/CarOrderManage/'
 
 export default {
-  getConfig: carArrangeApi.getConfig,
+  syncList () {
+    return axios.get(base + 'SyncCtripOrder')
+  },
+  syncOrderOperDataList () {
+    return axios.get(base + 'SyncOrderOperData')
+  },
+  syncOrderOperData (id) {
+    return axios.get(base + 'SyncOrderOperData/' + id)
+  },
   listByQuery (params) {
     return axios.get(base + 'list', {
       params: params

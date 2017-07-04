@@ -1,17 +1,10 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/PayCompany/'
-const listFields = [
-  { label: '账户名称', name: 'AccountName', is: true, isEditable: true },
-  { label: '银行帐户', name: 'AccountNum', is: true, isEditable: true },
-  { label: '备注', name: 'Remark', is: true, isEditable: true },
-  { label: 'ID', name: 'ID', is: true, isEditable: false }
-]
-const searchFields = {}
+import { payCompanyApi } from '../table-data'
+
 export default {
-  getConfig () {
-    return { listFields, searchFields, editMethod: this.edit }
-  },
+  getConfig: payCompanyApi.getConfig,
   list (params) {
     return axios.get(base + `All`, params)
   },
