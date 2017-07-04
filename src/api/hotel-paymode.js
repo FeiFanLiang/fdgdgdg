@@ -2,14 +2,14 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPayMode/'
 const listFields = [
-  { label: '账户名称', name: 'ModeName', is: true },
-  { label: '备注', name: 'Remark', is: true },
+  { label: '账户名称', name: 'ModeName', is: true, isEditable: true },
+  { label: '备注', name: 'Remark', is: true, isEditable: true },
   { label: 'ID', name: 'ID', is: true }
 ]
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
+    return { listFields, searchFields, editMethod: this.edit }
   },
   list (params) {
     return axios.get(base + 'All')
