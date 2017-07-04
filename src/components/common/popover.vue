@@ -1,13 +1,14 @@
 <template lang="html">
 
-  <el-popover placement="top" width="220"  v-model="visible">
-<el-input v-model="input" :placeholder="'请输入'+propData.label"></el-input>
+  <el-popover placement="top" width="220"  v-model="visible" @show="show" :disabled="!propData.isEditable">
+<el-input v-model="input" :placeholder="'请输入'+propData.label" v-if="propData.isEditable"></el-input>
 <div style="    text-align: right;
-    margin: 5px;">
+    margin: 5px;" v-if="propData.isEditable">
     <el-button size="mini" type="text" @click="visible = false">取消</el-button>
     <el-button type="primary" size="mini" @click="submit">确定</el-button>
   </div>
-       <el-button type="text" slot="reference" >{{rowData[propData.name]}}</el-button>
+       <el-button type="text" slot="reference" v-if="propData.isEditable">{{rowData[propData.name]}}</el-button>
+       <p v-else slot="reference">{{rowData[propData.name]}}</p>
    </el-popover>
 </template>
 
@@ -16,7 +17,8 @@ export default {
   props: {
     rowData: '',
     propData: '',
-    index: ''
+    index: '',
+    editMethod: ''
   },
   data() {
     return {
@@ -25,8 +27,21 @@ export default {
     }
   },
   methods: {
-    submit() {
-      console.log(this.rowData)
+    show() {
+      this.input = this.rowData[this.propData.name]
+    },
+    async submit() {
+      if (!this.input) return
+      const form = { ...this.rowData }
+      form[this.propData.name] = this.input
+      form.id = form.ID
+      await this.editMethod(form)
+      this.visible = false
+      this.$emit('successCallBack')
+      this.$message({
+        message: '编辑成功',
+        type: 'success'
+      })
     }
   }
 }

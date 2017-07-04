@@ -26,7 +26,7 @@
       </el-col >
     </el-row>
     <div class="eltable">
-      <CustomTable :list="hotelbase" :configList="configList.listFields">
+      <CustomTable :list="hotelbase" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="getHotelbaseList">
         <el-table-column   label="操作" width="180" fixed="right" slot="right-one">
           <template scope="scope">
             <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
@@ -149,12 +149,10 @@ export default {
         order: 'ID',
         query: {
           ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-          HotelName: _self.filters.labelVal === '2'
-            ? _self.filters.HotelName
-            : '',
-          HotelName_En: _self.filters.labelVal === '3'
-            ? _self.filters.HotelName_En
-            : ''
+          HotelName:
+            _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+          HotelName_En:
+            _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
         },
         IsForeign: _self.isForeign
       }

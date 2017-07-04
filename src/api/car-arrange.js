@@ -1,7 +1,9 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'ParkSale/CarArrange/'
+import { carArrangeApi } from '../table-data'
 
+<<<<<<< HEAD
 const listFields = [
     { label: 'CarID', name: 'CarID', is: true },
     { label: 'DriverID', name: 'DriverID', is: true },
@@ -50,4 +52,25 @@ export default {
         del(id) {
             return axios.delete(base + id)
         }
+=======
+export default {
+  getConfig: carArrangeApi.getConfig,
+  listByQuery (params) {
+    return axios.get(base + 'list', {
+      params: params
+    })
+  },
+  detail (id) {
+    return axios.get(base + id)
+  },
+  add (params) {
+    return axios.post(base, params)
+  },
+  edit (id, params) {
+    return axios.put(base + id, params)
+  },
+  del (id) {
+    return axios.delete(base + id)
+  }
+>>>>>>> e127e95df9e535401e7bbe043dadc03eecf1abcf
 }
