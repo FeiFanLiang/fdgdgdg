@@ -33,7 +33,7 @@
             </el-table-column>
             </CustomTable> -->
         <h3>待派车订单</h3>
-        <el-table :data="unArrangeList" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
+        <el-table :data="unArrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -78,7 +78,7 @@
             </el-table-column>
         </el-table>
         <h3>已派车订单</h3>
-        <el-table :data="arrangeList" ref="table" :row-class-name="tableRowClassName" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
+        <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
@@ -333,16 +333,6 @@ export default {
             }
         },
         methods: {
-            tableRowClassName(row, index) {
-                if (row.ArrangeStatus === 0) {
-                    return 'ready'
-                } else if (row.ArrangeStatus === 1) {
-                    return 'serviceing'
-                } else if (row.ArrangeStatus === 3) {
-                    return 'cancel'
-                }
-                return ''
-            },
             async fetchCarList() {
                 try {
                     const options = {
@@ -469,174 +459,7 @@ export default {
                     }
                 })
             }
-        } << << << < HEAD === === =
-        const res = await carBaseApi.listByQuery(options)
-    this.carList = res.data.Data
-} catch (e) {
-    console.error(e)
-}
-},
-async fetchDriverList() {
-        try {
-            const options = {
-                pageIndex: '',
-                pageSize: '',
-                order: 'ID',
-                query: {}
-            }
-            const res = await driverBaseApi.listByQuery(options)
-            this.driverList = res.data.Data
-        } catch (e) {
-            console.error(e)
         }
-    },
-    async fetchData(currentPage, pageSize) {
-        const _self = this
-        _self.loading = true
-        _self.currentPage = currentPage || _self.currentPage
-        _self.pageSize = pageSize || _self.pageSize
-        const options = {
-            pageIndex: _self.currentPage,
-            pageSize: _self.pageSize,
-            order: 'ID',
-            query: {
-                // name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-                // phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-                arrangeStatus: _self.filters.arrangeStatus
-            }
-        }
-        try {
-            const res = await carArrangeApi.listByQuery(options)
-            _self.list = res.data.Data
-            console.log(_self.list)
-            if (_self.list && _self.list.length) {
-                for (let [index, elem] of _self.list.entries()) {
-                    _self.list[index].ArrangeTime = new Date(
-                        _self.list[index].ArrangeTime
-                    ).Format('yyyy-MM-dd hh:mm:ss')
-                    _self.list[index].CancelTime = new Date(
-                        _self.list[index].CancelTime
-                    ).Format('yyyy-MM-dd hh:mm:ss')
-                }
-            }
-            _self.count = res.data.Count
-            _self.loading = false
-            _self.carList.length === 0 ? _self.fetchCarList() : ''
-        } catch (e) {
-            console.error(e)
-            _self.loading = false
-        }
-    },
-    handleSizeChange(val) {
-        this.pageSize = val
-        this.fetchData(this.pageSize)
-    },
-    handleCurrentChange(val) {
-        this.currentPage = val
-        this.fetchData(this.currentPage)
-    },
-    clickAddBtn() {
-        const _self = this
-        _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-        _self.showDialog = true
-        _self.form = {
-            id: 0,
-            orderId: '',
-            webOrderId: '',
-            carId: '',
-            driverId: '',
-            arrangeStatus: '',
-            origin: '',
-            destination: '',
-            predictMileage: '',
-            predictTime: '',
-            arrangeTime: '',
-            arrangeUserId: '',
-            remark: '',
-            cancelTime: '',
-            cancelUserId: '',
-            cancelRemark: ''
-        }
-    },
-    async clickEditBtn($index, row) {
-        const _self = this
-        _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-        try {
-            const res = await carArrangeApi.detail(row.ID)
-            _self.showDialog = true
-            _self.form.id = res.data.Data.ID
-            _self.form.orderId = res.data.Data.OrderID
-            _self.form.webOrderId = res.data.Data.WebOrderID
-            _self.form.carId = res.data.Data.CarID
-            _self.form.driverId = res.data.Data.DriverID
-            _self.form.arrangeStatus = res.data.Data.ArrangeStatus
-            _self.form.origin = res.data.Data.Origin
-            _self.form.destination = res.data.Data.Destination
-            _self.form.predictMileage = res.data.Data.PredictMileage
-            _self.form.predictTime = res.data.Data.PredictTime
-            _self.form.arrangeTime = res.data.Data.ArrangeTime
-            _self.form.arrangeUserId = res.data.Data.ArrangeUserId
-            _self.form.remark = res.data.Data.Remark
-            _self.form.cancelTime = res.data.Data.CancelTime
-            _self.form.cancelUserId = res.data.Data.CancelUserId
-            _self.form.cancelRemark = res.data.Data.CancelRemark
-        } catch (e) {
-            console.error(e)
-        }
-    },
-    submitForm() {
-        const _self = this
-        if (_self.form.id) {
-            _self.editSave()
-        } else {
-            _self.addSave()
-        }
-    },
-    async addSave() {
-        const _self = this
-        _self.$refs['form'].validate(async valid => {
-            if (valid) {
-                try {
-                    await carArrangeApi.add(_self.form)
-                    _self.fetchData()
-                    _self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
-                        message: '保存成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('添加失败!!!')
-                }
-            } else {
-                return false
-            }
-        })
-    },
-    async editSave() {
-        const _self = this
-        _self.$refs['form'].validate(async valid => {
-            if (valid) {
-                try {
-                    await carArrangeApi.edit(_self.form.id, _self.form)
-                    _self.fetchData()
-                    _self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
-                        message: '编辑成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('编辑失败!!!')
-                }
-            } else {
-                return false
-            }
-        })
-    }
-} >>> >>> > e127e95df9e535401e7bbe043dadc03eecf1abcf
 }
 </script>
 <style lang="scss" scoped>
