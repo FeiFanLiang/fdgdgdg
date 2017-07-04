@@ -29,7 +29,7 @@
                 <el-tag class="mytag cancel">已取消</el-tag>
             </el-col>
         </el-row>
-        <CustomTable :list="list" :configList="configList.listFields" :className="tableRowClassName">
+        <CustomTable :list="list" :configList="configList.listFields" :className="tableRowClassName" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column type="expand" slot="left-one">
               <template scope="props" v-if="props.row.CancelTime">
                   <el-form label-position="left" inline class="demo-table-expand">
@@ -350,6 +350,7 @@ export default {
       try {
         const res = await carArrangeApi.listByQuery(options)
         _self.list = res.data.Data
+        console.log(_self.list)
         if (_self.list && _self.list.length) {
           for (let [index, elem] of _self.list.entries()) {
             _self.list[index].ArrangeTime = new Date(
