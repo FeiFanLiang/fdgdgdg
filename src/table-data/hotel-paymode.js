@@ -1,29 +1,20 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'Hotel/HotelPayMode/'
-const listFields = [
-  { label: '账户名称', name: 'ModeName', is: true, isEditable: true },
-  { label: '备注', name: 'Remark', is: true, isEditable: true },
-  { label: 'ID', name: 'ID', is: true }
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
+
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields, editMethod: this.edit }
-  },
-  list (params) {
-    return axios.get(base + 'All')
-  },
-  detail (id) {
-    return axios.get(base + id)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (params) {
-    return axios.put(base + params.id, params)
-  },
-  del (id) {
-    return axios.delete(base + id)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

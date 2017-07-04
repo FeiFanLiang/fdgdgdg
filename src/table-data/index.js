@@ -12,7 +12,7 @@ import carArrangeApi from './car-arrange'
 // import hotelAreaApi from './hotel-area'
 // import hotelBaseApi from './hotel-base'
 // import hotelImageApi from './hotel-image'
-// import hotelPayModeApi from './hotel-paymode'
+import hotelPayModeApi from './hotel-paymode'
 // import hotelPlatformApi from './hotel-platform'
 // import hotelPolicyApi from './hotel-policy'
 // import hotelPolicyImageApi from './hotel-policy-image'
@@ -49,7 +49,7 @@ export {
   // hotelAreaApi,
   // hotelBaseApi,
   // hotelImageApi,
-  // hotelPayModeApi,
+  hotelPayModeApi,
   // hotelPlatformApi,
   // hotelPolicyApi,
   // hotelPolicyImageApi,
