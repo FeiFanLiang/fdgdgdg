@@ -2,7 +2,7 @@
     <div id="car-base">
         <el-row :gutter="20" class="align-center">
             <el-col :span="4">
-                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData">
+                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
                     <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>

@@ -102,8 +102,8 @@ export default {
         pageSize: _self.pageSize,
         order: 'ID',
         query: {
-          // startTime: new Date(_self.searchForm.startTime).Format('yyyy-MM-dd'),
-          // endTime: new Date(_self.searchForm.endTime).Format('yyyy-MM-dd')
+          startTime: new Date(_self.searchForm.startTime).Format('yyyy-MM-dd'),
+          endTime: new Date(_self.searchForm.endTime).Format('yyyy-MM-dd')
         }
       }
       try {

@@ -2,7 +2,7 @@
     <div id="driver-base">
         <el-row :gutter="20">
             <el-col :span="5">
-                <el-select v-model="filters.jobStatus" placeholder="工作状态" @change="fetchData">
+                <el-select v-model="filters.jobStatus" placeholder="工作状态" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
                     <el-option v-for="(item,index) in jobStatusList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
@@ -35,7 +35,7 @@
           <el-table-column label="操作" width="150" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                  <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                  <DeleteButton api="driverBaseApi" @successCallBack="fetchData()" :id="scope.row.ID"></DeleteButton>
               </template>
           </el-table-column>
         </CustomTable>
