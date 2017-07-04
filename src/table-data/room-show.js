@@ -1,35 +1,30 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'Hotel/RoomShow/'
+// const listFields = [
+//    '酒店',  'HotelID',  true ],
+//    '房间ID',  'RoomID',  true ],
+//    '房间面积',  'Acreage',  true ],
+//    '入住人数',  'CheakInNum',  true ],
+//    '楼层',  'Floor',  true ],
+//    '网络状况',  'NetWork',  true ],
+//    '无烟状况',  'Smoke',  true ],
+//    '特色标签',  'Lable',  true ]
+// ]
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
 
-const listFields = [
-  { label: '酒店', name: 'HotelID', is: true },
-  { label: '房间ID', name: 'RoomID', is: true },
-  { label: '房间面积', name: 'Acreage', is: true },
-  { label: '入住人数', name: 'CheakInNum', is: true },
-  { label: '楼层', name: 'Floor', is: true },
-  { label: '网络状况', name: 'NetWork', is: true },
-  { label: '无烟状况', name: 'Smoke', is: true },
-  { label: '特色标签', name: 'Lable', is: true }
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
-  },
-  detailByRoomshowID (RoomshowID) {
-    return axios.get(base + RoomshowID)
-  },
-  detailByRoomID (roomID) {
-    return axios.get(base + `Room/${roomID}`)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (params) {
-    return axios.put(base, params)
-  },
-  del (roomID) {
-    return axios.delete(base + roomID)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

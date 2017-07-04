@@ -1,34 +1,28 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/Driver/'
+// const listFields = [
+//    'ID',  'ID',  true ],
+//    '工号',  'JobNnumber',  true ],
+//    '姓名',  'Name',  true ],
+//    '电话',  'Phone',  true ],
+//    '备注',  'Remark',  true ]
+// ]
 
-const listFields = [
-  { label: 'ID', name: 'ID', is: true },
-  { label: '工号', name: 'JobNnumber', is: true },
-  { label: '姓名', name: 'Name', is: true },
-  { label: '电话', name: 'Phone', is: true },
-  { label: '备注', name: 'Remark', is: true }
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
+
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
-  },
-  listByQuery (params) {
-    return axios.get(base + 'list', {
-      params: params
-    })
-  },
-  detail (id) {
-    return axios.get(base + id)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (id, params) {
-    return axios.put(base, params)
-  },
-  del (id) {
-    return axios.delete(base + id)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

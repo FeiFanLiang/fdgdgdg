@@ -1,36 +1,32 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/BargainsRoom/'
+// const listFields = [
+//    'ID',  'ID',  true ],
+//    '入住日期',  'UseDate',  true ],
+//    '入住天数',  'Days',  true ],
+//    '网站最低价',  'WebLowestPrice',  true ],
+//    '售卖价格',  'Price',  true ],
+//    '卖点标签',  'Label',  true ],
+//    '退改规则',  'CancleReason',  true ],
+//    '已售出',  'IsSolded',  true ],
+//    '购买人手机号',  'BuyUserPhone',  true ],
+//    '创建人',  'CreateUser',  true ]
+// ]
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
 
-const listFields = [
-  { label: 'ID', name: 'ID', is: true },
-  { label: '入住日期', name: 'UseDate', is: true },
-  { label: '入住天数', name: 'Days', is: true },
-  { label: '网站最低价', name: 'WebLowestPrice', is: true },
-  { label: '售卖价格', name: 'Price', is: true },
-  { label: '卖点标签', name: 'Label', is: true },
-  { label: '退改规则', name: 'CancleReason', is: true },
-  { label: '已售出', name: 'IsSolded', is: true },
-  { label: '购买人手机号', name: 'BuyUserPhone', is: true },
-  { label: '创建人', name: 'CreateUser', is: true }
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
-  },
-  list (params) {
-    return axios.get(base, {
-      params: params
-    })
-  },
-  detail (id) {
-    return axios.get(base + id)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (params) {
-    return axios.put(base, params)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

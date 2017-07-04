@@ -1,26 +1,32 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/CarUse/'
+// const listFields = [
+//    '车型',  'Car.CarMode',  true ],
+//    '司机姓名',  'Driver.Name',  true ],
+//    '始发地',  'Origin',  true ],
+//    '目的地',  'Destination',  true ],
+//    '起始里程数',  'StartMileage',  true ],
+//    '结束里程数',  'EndMileage',  true ],
+//    '开始时间',  'StartTime',  true ],
+//    '结束时间',  'EndTime',  true ],
+//    '渠道',  'Channel',  true ]
+// ]
 
-const listFields = [
-  { label: '车型', name: 'Car.CarMode', is: true },
-  { label: '司机姓名', name: 'Driver.Name', is: true },
-  { label: '始发地', name: 'Origin', is: true },
-  { label: '目的地', name: 'Destination', is: true },
-  { label: '起始里程数', name: 'StartMileage', is: true },
-  { label: '结束里程数', name: 'EndMileage', is: true },
-  { label: '开始时间', name: 'StartTime', is: true },
-  { label: '结束时间', name: 'EndTime', is: true },
-  { label: '渠道', name: 'Channel', is: true }
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
+
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
-  },
-  listByQuery (params) {
-    return axios.get(base + 'list', {
-      params: params
-    })
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

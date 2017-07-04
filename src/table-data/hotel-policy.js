@@ -1,34 +1,29 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'Hotel/HotelPolicy/'
+// const listFields = [
+//    'ID',  'ID',  true ],
+//    '政策负责人',  'PersonName',  true ],
+//    '政策采购人',  'PurchasingName',  true ],
+//    '酒店联系人',  'LinkMan',  true ],
+//    '酒店联系电话',  'PhoneNum',  true ],
+//    '保密类型',  'SecretType.SecretName',  true ],
+//    '酒店预订方式',  'ReserveMode.ModeName',  true ]
+// ]
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
 
-const listFields = [
-  { label: 'ID', name: 'ID', is: true },
-  { label: '政策负责人', name: 'PersonName', is: true },
-  { label: '政策采购人', name: 'PurchasingName', is: true },
-  { label: '酒店联系人', name: 'LinkMan', is: true },
-  { label: '酒店联系电话', name: 'PhoneNum', is: true },
-  { label: '保密类型', name: 'SecretType.SecretName', is: true },
-  { label: '酒店预订方式', name: 'ReserveMode.ModeName', is: true }
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields }
-  },
-  listByID (id) {
-    return axios.get(base + id)
-  },
-  listByHotelID (hotelid) {
-    return axios.get(base + `Hotel/${hotelid}`)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  del (id) {
-    return axios.delete(base + id)
-  },
-  edit (params) {
-    return axios.put(base + params.ID, params)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }

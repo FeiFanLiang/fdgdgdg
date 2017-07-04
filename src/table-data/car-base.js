@@ -1,34 +1,29 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/Car/'
+// const listFields = [
+//    '车型',  'CarMode',  true, isEditable: true ],
+//    '车牌号',  'CarNumber',  true, isEditable: true ],
+//    '运营城市',  'OperationCity',  true, isEditable: true ],
+//    '座位数',  'SeatNum',  true, isEditable: true ],
+//    '最大载客数',  'SeatingNum',  true, isEditable: true ],
+//    '行李数',  'LuggageNum',  true, isEditable: true ],
+//    '备注',  'Remark',  true, isEditable: true ]
+// ]
+import lib from './lib'
+import { hotelPayModeApi } from 'api'
 
-const listFields = [
-  { label: '车型', name: 'CarMode', is: true, isEditable: true },
-  { label: '车牌号', name: 'CarNumber', is: true, isEditable: true },
-  { label: '运营城市', name: 'OperationCity', is: true, isEditable: true },
-  { label: '座位数', name: 'SeatNum', is: true, isEditable: true },
-  { label: '最大载客数', name: 'SeatingNum', is: true, isEditable: true },
-  { label: '行李数', name: 'LuggageNum', is: true, isEditable: true },
-  { label: '备注', name: 'Remark', is: true, isEditable: true }
+const data = [
+  ['账户名称', 'ModeName', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string']
 ]
+
+const listFields = lib.trans(data)
 const searchFields = {}
 export default {
   getConfig () {
-    return { listFields, searchFields, editMethod: this.edit }
-  },
-  listByQuery (params) {
-    return axios.get(base + 'list', { params: params })
-  },
-  detail (id) {
-    return axios.get(base + id)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (params) {
-    return axios.put(base + params.id, params)
-  },
-  del (id) {
-    return axios.delete(base + id)
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: hotelPayModeApi.edit
+    }
   }
 }
