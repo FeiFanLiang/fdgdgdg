@@ -3,11 +3,11 @@
         <el-row>
             <el-button type="primary" @click="hotelShowAdd">创建</el-button>
         </el-row>
-        <CustomTable :list="hotelShowList" :configList="configList.listFields">
+        <CustomTable :list="hotelShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column width="150" label="操作" fixed="right">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>
-                  <el-button size="small" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+                    <DeleteButton api="hotelShowApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
               </template>
           </el-table-column>
         </CustomTable>
@@ -275,28 +275,6 @@ export default {
     },
     handleError(err, file, fileList) {
       this.$message.error('上传失败,请重新上传')
-    },
-    async clickDelBtn($index, row) {
-      const _self = this
-      _self
-        .$confirm(`是否删除?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(async () => {
-          try {
-            await hotelShowApi.del(row.ID)
-            _self.fetchData()
-            _self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-          }
-        })
-        .catch(() => {})
     },
     async clickEditBtn(row) {
       const _self = this

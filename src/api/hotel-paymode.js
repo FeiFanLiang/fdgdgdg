@@ -1,7 +1,7 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPayMode/'
-import { hotelPayModeApi } from '../table-data'
+import { hotelPayModeApi } from '../config-data'
 
 export default {
   getConfig: hotelPayModeApi.getConfig,

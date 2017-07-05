@@ -3,7 +3,7 @@
         <el-row>
             <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
         </el-row>
-        <CustomTable :list="hotelpolicy" :configList="configList.listFields">
+        <CustomTable :list="hotelpolicy" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column type="expand" slot="left-one">
               <template scope="props">
                   <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
@@ -117,8 +117,7 @@
           </el-table-column>
           <el-table-column width="100" label="操作" fixed="right" slot="right-two">
               <template scope="scope">
-                  <el-button size="mini" type="danger" @click="hotelpolicyDelete(scope.$index, scope.row)">
-                      删除</el-button>
+                  <DeleteButton api="hotelPolicyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
               </template>
           </el-table-column>
         </CustomTable>
@@ -251,7 +250,6 @@
         <el-dialog v-model="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="">
         </el-dialog>
-        <!-- table end -->
         <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110">
                 <el-row :gutter="24">
@@ -512,28 +510,6 @@ export default {
           return false
         }
       })
-    },
-    async hotelpolicyDelete($index, row) {
-      const _self = this
-      _self
-        .$confirm(`是否删除ID${row.ID}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(async () => {
-          try {
-            await hotelPolicyApi.del(row.ID)
-            _self.fetchData()
-            _self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-          }
-        })
-        .catch(() => {})
     },
     async fetchData() {
       if (!this.$route.params.ID) return
