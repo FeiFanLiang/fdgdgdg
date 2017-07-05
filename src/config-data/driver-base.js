@@ -1,8 +1,8 @@
 import lib from './lib'
-import { hotelPayModeApi } from 'api'
+import { driverBaseApi } from 'api'
 
 const data = [
-  ['ID', 'ID', true, true, 'string'],
+  ['ID', 'ID', true, false, 'string'],
   ['工号', 'JobNnumber', true, true, 'string'],
   ['姓名', 'Name', true, true, 'string'],
   ['电话', 'Phone', true, true, 'string'],
@@ -16,7 +16,7 @@ export default {
     return {
       listFields: listFields,
       searchFields: searchFields,
-      editMethod: hotelPayModeApi.edit
+      editMethod: driverBaseApi.edit
     }
   }
 }

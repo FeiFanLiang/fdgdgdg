@@ -1,5 +1,5 @@
 import lib from './lib'
-import { hotelPayModeApi } from 'api'
+import { carBaseApi } from 'api'
 
 const data = [
   ['车型', 'CarMode', true, true, 'string'],
@@ -18,7 +18,7 @@ export default {
     return {
       listFields: listFields,
       searchFields: searchFields,
-      editMethod: hotelPayModeApi.edit
+      editMethod: carBaseApi.edit
     }
   }
 }

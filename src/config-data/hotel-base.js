@@ -1,5 +1,5 @@
 import lib from './lib'
-import { hotelPayModeApi } from 'api'
+import { hotelBaseApi } from 'api'
 
 const data = [
   ['酒店名称', 'HotelName', true, true, 'string'],
@@ -19,7 +19,7 @@ export default {
     return {
       listFields: listFields,
       searchFields: searchFields,
-      editMethod: hotelPayModeApi.edit
+      editMethod: hotelBaseApi.edit
     }
   }
 }

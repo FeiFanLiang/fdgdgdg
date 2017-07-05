@@ -2,18 +2,10 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'ParkSale/Driver/'
 
-const listFields = [
-  { label: 'ID', name: 'ID', is: true },
-  { label: '工号', name: 'JobNnumber', is: true },
-  { label: '姓名', name: 'Name', is: true },
-  { label: '电话', name: 'Phone', is: true },
-  { label: '备注', name: 'Remark', is: true }
-]
-const searchFields = {}
+import { driverBaseApi } from '../config-data'
+
 export default {
-  getConfig () {
-    return { listFields, searchFields }
-  },
+  getConfig: driverBaseApi.getConfig,
   listByQuery (params) {
     return axios.get(base + 'list', {
       params: params
@@ -25,8 +17,8 @@ export default {
   add (params) {
     return axios.post(base, params)
   },
-  edit (id, params) {
-    return axios.put(base, params)
+  edit (params) {
+    return axios.put(base + params.id, params)
   },
   del (id) {
     return axios.delete(base + id)

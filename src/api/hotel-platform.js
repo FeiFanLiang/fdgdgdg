@@ -2,19 +2,10 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPlatform/'
 
-const listFields = [
-  { label: '平台名称', name: 'platName', is: true },
-  { label: '酒店名称', name: 'hotelName', is: true },
-  { label: '平台酒店名称', name: 'platHotelName', is: true },
-  { label: '平台酒店ID', name: 'platHotelId', is: true },
-  { label: '平台酒店英文名', name: 'platHotelNameEn', is: true },
-  { label: '备注', name: 'remark', is: true }
-]
-const searchFields = {}
+import { hotelPlatformApi } from '../config-data'
+
 export default {
-  getConfig () {
-    return { listFields, searchFields }
-  },
+  getConfig: hotelPlatformApi.getConfig,
   listByHotel (hotelid) {
     return axios.get(base + `hotel/${hotelid}`)
   },

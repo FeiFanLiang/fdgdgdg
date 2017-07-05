@@ -1,0 +1,23 @@
+import lib from './lib'
+import { driverEvaluateApi } from 'api'
+
+const data = [
+  ['ID', 'ID', true, false, 'string'],
+  ['工号', 'Driver', true, false, 'string'],
+  ['司机姓名', 'Openid', true, false, 'string'],
+  ['关注人次', 'field3', true, false, 'string'],
+  ['评论次数', 'field1', true, false, 'string'],
+  ['总分', 'Rate', true, false, 'string']
+]
+
+const listFields = lib.trans(data)
+const searchFields = {}
+export default {
+  getConfig () {
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: driverEvaluateApi.edit
+    }
+  }
+}

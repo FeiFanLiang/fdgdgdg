@@ -23,7 +23,7 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row>
-        <CustomTable :list="list" :configList="configList.listFields">
+        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
               <template scope="scope">
                   <p v-if="scope.row.JobStatus === 1">正常在职</p>
@@ -35,7 +35,7 @@
           <el-table-column label="操作" width="150" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                  <DeleteButton api="driverBaseApi" @successCallBack="fetchData()" :id="scope.row.ID"></DeleteButton>
+                  <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
               </template>
           </el-table-column>
         </CustomTable>
@@ -280,11 +280,7 @@ export default {
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            let form = {
-              ..._self.form
-            }
-            delete form.id
-            await driverBaseApi.edit(_self.form.id, form)
+            await driverBaseApi.edit(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
             _self.showDialog = false
