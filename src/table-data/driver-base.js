@@ -1,18 +1,12 @@
-// const listFields = [
-//    'ID',  'ID',  true ],
-//    '工号',  'JobNnumber',  true ],
-//    '姓名',  'Name',  true ],
-//    '电话',  'Phone',  true ],
-//    '备注',  'Remark',  true ]
-// ]
-
 import lib from './lib'
 import { hotelPayModeApi } from 'api'
 
 const data = [
-  ['账户名称', 'ModeName', true, true, 'string'],
-  ['备注', 'Remark', true, true, 'string'],
-  ['ID', 'ID', true, false, 'string']
+  ['ID', 'ID', true, true, 'string'],
+  ['工号', 'JobNnumber', true, true, 'string'],
+  ['姓名', 'Name', true, true, 'string'],
+  ['电话', 'Phone', true, true, 'string'],
+  ['备注', 'Remark', true, true, 'string']
 ]
 
 const listFields = lib.trans(data)
