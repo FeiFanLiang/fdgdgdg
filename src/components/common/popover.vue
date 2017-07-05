@@ -1,5 +1,4 @@
 <template lang="html">
-
   <el-popover placement="top" width="220"  v-model="visible" @show="show" :disabled="!propData.isEditable">
 <el-input v-model="input" :placeholder="'请输入'+propData.label" v-if="propData.isEditable"></el-input>
 <div style="    text-align: right;
@@ -7,8 +6,9 @@
     <el-button size="mini" type="text" @click="visible = false">取消</el-button>
     <el-button type="primary" size="mini" @click="submit">确定</el-button>
   </div>
-       <el-button type="text" slot="reference" v-if="propData.isEditable">{{rowData[propData.name]}}</el-button>
-       <p v-else slot="reference">{{rowData[propData.name]}}</p>
+       <el-button type="text" slot="reference" v-if="rowData[propData.name]&&propData.isEditable">{{rowData[propData.name]}}</el-button>
+       <p  slot="reference" v-if="rowData[propData.name]&&!propData.isEditable">{{rowData[propData.name]}}</p>
+       <el-button type="text" slot="reference" v-if="!rowData[propData.name]" icon="edit"></el-button>
    </el-popover>
 </template>
 
