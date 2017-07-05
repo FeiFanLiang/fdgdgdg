@@ -5,7 +5,7 @@
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
-    <CustomTable :list="list" :configList="configList.listFields">
+    <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
       <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>

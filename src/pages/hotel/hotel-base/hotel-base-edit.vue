@@ -195,7 +195,7 @@ export default {
     },
     async submit() {
       try {
-        await hotelBaseApi.edit(this.form.id, this.form)
+        await hotelBaseApi.edit(this.form)
         this.$message({
           message: '保存成功',
           type: 'success'

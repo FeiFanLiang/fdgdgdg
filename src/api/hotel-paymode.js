@@ -1,16 +1,10 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPayMode/'
-const listFields = [
-  { label: '账户名称', name: 'ModeName', is: true },
-  { label: '备注', name: 'Remark', is: true },
-  { label: 'ID', name: 'ID', is: true }
-]
-const searchFields = {}
+import { hotelPayModeApi } from '../table-data'
+
 export default {
-  getConfig () {
-    return { listFields, searchFields }
-  },
+  getConfig: hotelPayModeApi.getConfig,
   list (params) {
     return axios.get(base + 'All')
   },

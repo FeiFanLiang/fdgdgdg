@@ -2,7 +2,7 @@
     <div id="car-base">
         <el-row :gutter="20" class="align-center">
             <el-col :span="4">
-                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData">
+                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
                     <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
                 </el-select>
@@ -18,8 +18,8 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row>
-        <CustomTable :list="list" :configList="configList.listFields">
-          <el-table-column prop="CarClassify" label="车辆分类">
+        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+          <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
               <template scope="scope">
                   <p v-if="scope.row.CarClassify === 0">经济型</p>
                   <p v-if="scope.row.CarClassify === 1">舒适型</p>
@@ -27,7 +27,7 @@
                   <p v-if="scope.row.CarClassify === 3">豪华型</p>
               </template>
           </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作" width="150" slot="right-one">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                   <DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
@@ -339,7 +339,7 @@ export default {
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
-            await carBaseApi.edit(_self.form.id, _self.form)
+            await carBaseApi.edit(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
             _self.showDialog = false
