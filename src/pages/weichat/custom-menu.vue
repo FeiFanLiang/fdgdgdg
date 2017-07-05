@@ -1,23 +1,18 @@
 <template lang="html">
 <div id="customMenu">
-    <div style="width:300px;height:600px;border:solid 1px #A9A9A9;float:left;">
+    <div style="width:250px;height:600px;border:solid 1px #A9A9A9;float:left;">
         <p style="background-color:#EAEAEA;margin:0;padding:10px;">
            <el-row>
                <el-col :span="21">菜单管理</el-col>
-               <el-col :span="1">
-                   <el-button size="mini" @click="addMenu()" >
-                       <i class="el-icon-plus"></i>
-                   </el-button>
-               </el-col>
            </el-row>
         </p>
-        <el-tree :data="eltreeData" :props="defaultProps" node-key="id" :expand-on-click-node="false" :render-content="renderContent"></el-tree>
+        <vue-tree :option="option"></vue-tree>
     </div>
     <div style="width:600px;height:600px;border:solid 1px #A9A9A9;float:left;">
         <p style="background-color:#EAEAEA;margin:0;padding:10px;">
            设置动作--子菜单
         </p>
-        <div v-if="editShow">
+        <div>
             <p style="padding:10px;">
                 <el-row>
                     <el-col :span="4">子菜单名称</el-col>
@@ -32,16 +27,15 @@
                     <el-col :span="4">子菜单内容</el-col>
                     <el-col :span="20">
                         <el-radio-group v-model="radio">
-                            <el-radio :label="1">发送消息</el-radio>
-                            <el-radio :label="2">跳转网页</el-radio>
-                            <el-radio :label="3">跳转小程序</el-radio>
+                            <el-radio label="1">发送消息</el-radio>
+                            <el-radio label="2">跳转网页</el-radio>
+                            <el-radio label="3">跳转小程序</el-radio>
                         </el-radio-group>
                     </el-col>
                 </el-row>
                 <div style="border:solid 1px #A9A9A9;margin:10px;height:300px;">
                     <p style="padding:0px;margin:0px;">
-                        <el-menu :default-active="activeIndex" class="el-menu-demo"
-                         mode="horizontal" @select="handleSelect">
+                        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                             <el-menu-item index="1"><i class="el-icon-menu">图文消息</i></el-menu-item>
                             <el-menu-item index="2"><i class="el-icon-picture">图片</i></el-menu-item>
                             <el-menu-item index="3"><i class="el-icon-document">语音</i></el-menu-item>
@@ -69,144 +63,205 @@
             </p>
             <el-button style="margin:10px;">保存</el-button>
         </div>
-        <div v-if="editShow2" style="padding:35%">已有子菜单，无法设置动作</div>
-        <div v-if="editShow3" style="padding:40%">暂无内容</div>
     </div>
 </div>
 </template>
 <script>
+import {weixinRedirectApi} from 'api'
 let id = 1000
 export default {
     data() {
         return {
-            editShow:false,
-            editShow2:false,
-            editShow3:true,
             input: '',
-            radio: '',
+            radio: '1',
             activeIndex: '1',
             imageUrl: '',
-            eltreeData: [{
-                id: 1,
-                label: '美票旅游',
-                children: [{
-                    id: 4,
-                    label: '机票',
-                },{
-                    id: 5,
-                    label: '酒店',
-                },{
-                    id: 6,
-                    label: '机场专车',
-                },{
-                    id: 7,
-                    label: '自由行',
-                },{
-                    id: 8,
-                    label: '跟团游',
-                }]
-            }, {
-                id: 2,
-                label: '我的'
-            }, {
-                id: 3,
-                label: '关于美票',
-                children: [{
-                    id: 9,
-                    label: '微店商城'
-                }, {
-                    id: 10,
-                    label: '美票说'
-                }]
-            }],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
+            //////////////////
+            option: {
+                root: {
+                    name: '菜单栏',
+                    isParent: true,
+                    isOpen: true,
+                    buttons: [{
+                        title: 'Add',
+                        icon: 'el-icon-plus',
+                        click: this.addMainNode
+                    },{
+                        title: 'Delete',
+                        icon: 'el-icon-delete',     
+                        click: this.removeNode
+                    }],
+                    children: [],
+                }
+            },
+            button:[]
+      }
+    },
+    created() {
+        this.fetchData();
+    },
+    methods: {
+        async fetchData(){
+            const res = await weixinRedirectApi.list();
+            this.button = res.data.menu.button;
+            for(let i=0;i<this.button.length;i++){
+                    this.option.root.children.push(
+                        {
+                                name: this.button[i].name,
+                                isParent: true,
+                                isOpen: true,
+                                children: [],
+                                buttons: [
+                                        {
+                                            title: 'Add',
+                                            icon: 'el-icon-plus',
+                                            click: this.addMenuNode
+                                        },
+                                        {
+                                            title: 'Edit',
+                                            icon: 'el-icon-edit',
+                                            click: this.editNode
+                                        }
+                                ]
+                        }
+                    );
+                    if(this.button[i].sub_button){
+                        for(let j=0;j<this.button[i].sub_button.length;j++){
+                            this.option.root.children[i].children.push(
+                                {
+                                    name: this.button[i].sub_button[j].name,
+                                    isParent: true,
+                                    children:[],
+                                    buttons: [
+                                        {
+                                            title: 'Edit',
+                                            icon: 'el-icon-edit',
+                                            click: this.editNode
+                                        }
+                                    ]
+                                }
+                            )
+                        }
+                    }
             }
-        }
-  },
-  methods: {
-    handleNodeClick(data) {
-      console.log(data)
-    },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-    },
-        addMenu(){
-            this.eltreeData.push({ id: id++, label: '主菜单名称'});
+            console.log(this.option.root.children)
+            console.log(this.button[0].name)
+        },
+        handleNodeClick(data) {
+            console.log(data)
+        },
+        handleSelect(key, keyPath) {
+            console.log(key, keyPath)
+        },
+        handleAvatarSuccess(res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw)
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg'
+            const isLt2M = file.size / 1024 / 1024 < 2
         },
 
-        append(store, data) {
-            if(!data.children){
-                data.children = [];
-            }
-            store.append({ id: id++, label: '子菜单名称'}, data);
-        },
+        ///////////////////////////////////////////////////////
 
-        remove(store, data) {
-            data.children = [];
-            store.remove(data);
-        },
-
-        edit(store,data){
-            if(data.children){
-                this.editShow = false;
-                this.editShow2 = true;
-                this.editShow3 = false;
-                this.$prompt('请输入菜单名称', '提示', 
-                { 
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    inputValue: data.label,
-                    inputPattern: /^[\u4e00-\u9fa5A-Za-z0-9]{2,8}$/, 
-                    inputErrorMessage: '只能是中文英文数字下划线 且长度为2-8',
-                    callback:((action, value)=> {if(action == 'confirm'){data.label= value.inputValue;}})
-                }).then(({ value }) => {
-                    this.$message({
-                        type: 'success',
-                        message: value
-                    });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '取消输入'
-                    });       
+        async addMenuNode (node) {
+                "use strict";
+                node.isOpen = true;
+                node.children.push({
+                    name: '二级名称',
+                    parent: node,
+                    isParent: true,
+                    children:[],
+                    buttons: [
+                        {
+                            title:'Edit',
+                            icon:'el-icon-edit',
+                            click: this.editNode
+                        }
+                    ]
                 });
-            }else{
-                this.editShow = true;
-                this.editShow2 = false;
-                this.editShow3 = false;
-                this.input = data.label;
+                const res2 = await weixinRedirectApi.list();
+                console.log(res2.data)
+                console.log("1111111")
+                console.log(node)
+                //let a = res2.data.menu.button[res2.data.menu.button.length-1]
+                /*={
+                    "sub_button":[],
+                     "name":node.children[node.children.length-1].parent.name,
+                };*/
+                this.sub_button.push(
+                     {"url":"https://weidian.com/s/173363319?wfr=wechatpo_welcome_shop","type":"view","name":node.children[node.children.length-1].name}
+                )
+                //res2.data.menu.button.push(a);
+                console.log(res2.data)
+                let newData = {
+                    "menu":{
+                        "button":res2.data.menu.button
+                        }
+                }
+                console.log(JSON.stringify(newData))
+                await weixinRedirectApi.add(newData)
+        },
+        async addMainNode (node) {
+                "use strict";
+                node.isOpen = true;
+                console.log(node.children);
+                if(node.children.length<3){
+                   node.children.push({
+                        name: '一级名称',
+                        parent: node,
+                        isParent: true,
+                        children: [],
+                        buttons: [
+                            {
+                                title: 'Add',
+                                icon: 'el-icon-plus',
+                                click: this.addMenuNode
+                            },{
+                                title:'Edit',
+                                icon:'el-icon-edit',
+                                click: this.editNode
+                            }
+                        ]
+                    });
+                    const res = await weixinRedirectApi.list();
+                    res.data.menu.button.push({
+                        "type":"view",
+                        "name":node.children[node.children.length-1].name,
+                        "url":"http://m.qdjp.cn/member/membernav.aspx",
+                        "sub_button":[],
+                    });
+                    let newData = {
+                        "menu":{
+                            "button":res.data.menu.button
+                         }
+                    }
+                    await weixinRedirectApi.add(newData)
             }
-          },
-          renderContent(h, { node, data, store }) {
-            return (
-                <span>
-                <span>
-                    <span>{node.label}</span>
-                </span>
-                <span style="float: right; margin-right: 20px">
-                    <el-button size="mini" on-click={() => this.append(store, data)}>
-                    <i class="el-icon-plus" />
-                    </el-button>
-                    <el-button size="mini" on-click={() => this.remove(store, data)}>
-                    <i class="el-icon-delete" />
-                    </el-button>
-                    <el-button size="mini" on-click={() => this.edit(store, data)}>
-                    <i class="el-icon-edit" />
-                    </el-button>
-                </span>
-                </span>
-            )
+        },
+        addNode(){
+            console.log("aaaaaa")
+        },
+        async editNode (node) {
+            console.log(node.children.length)
+            if(node.children.length>0){
+                node.name = prompt('Editing node name, require string', node.name) || node.name;
+                console.log(node)
+                const res = await weixinRedirectApi.list();
+                console.log(res.data)
+            }
+            if(node.children.length==0){
+                this.input = node.name;
+                console.log("111111111111111111")
+            }
+        },
+        async removeNode (node) {
+            //node.parent.children.splice(node.parent.children.indexOf(node), 1);
+            await weixinRedirectApi.del();
         }
-    },
+
+        //////////////////////////////////////////////////////////////////////////
+        
+  },
 }
 </script>
 <style lang="scss">
@@ -253,3 +308,5 @@ export default {
     }
 }
 </style>
+
+

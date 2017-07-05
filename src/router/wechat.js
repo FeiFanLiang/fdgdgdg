@@ -33,6 +33,11 @@ export default {
       meta: {
         hidden: true
       }
-    }
+    },
+    {
+      path: 'Test',
+      component: Pages.Test,
+      name: 'Test'
+    },
   ]
 }
