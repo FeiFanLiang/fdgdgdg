@@ -2,7 +2,7 @@ import lib from './lib'
 import { hotelShowApi } from 'api'
 
 const data = [
-  ['酒店ID', 'HotelID', true, true, 'string'],
+  ['酒店ID', 'HotelID', true, false, 'string'],
   ['房间数量', 'Rooms', true, true, 'string'],
   ['楼层数', 'FloorLevelsNum', true, true, 'string'],
   ['经营时间', 'BusinessTime', true, true, 'string'],

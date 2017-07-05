@@ -21,7 +21,6 @@ export default {
   edit (params) {
     return axios.put(base + params.id, params)
   },
-
   getPlatformList (platid) {
     return axios.get(base + `plat/${platid}`)
   }
