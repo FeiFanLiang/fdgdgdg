@@ -26,6 +26,9 @@ axios.defaults.withCredentials = true
 import App from './app.vue'
 import routes from './router'
 import './style.scss'
+import './tree.vue.css'
+import './tree.vue.js'
+//import './demo.js'
 
 // import 'plugins/'
 import 'mixin/'
@@ -100,11 +103,6 @@ new Vue({
   router,
   store
 }).$mount('#app')
-/* Vue.component('jsx-example', {
-  render (h) { // <-- h must be in scope
-    return <div id="foo">bar</div>
-  }
-}) */
 
 /**
  *               ii.                                         ;9ABH,

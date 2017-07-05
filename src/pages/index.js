@@ -62,6 +62,7 @@ import Card from './weichat/card'
 import Datas from './weichat/datas'
 import MembershipCard from './weichat/membership-card'
 import Verification from './weichat/verification'
+import Test from './weichat/test'
 const wechat = {
   CustomMenu,
   CustomService,
@@ -69,7 +70,8 @@ const wechat = {
   Card,
   Datas,
   MembershipCard,
-  Verification
+  Verification,
+  Test
 }
 
 // fleet
