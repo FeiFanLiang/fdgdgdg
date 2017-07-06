@@ -23,6 +23,9 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row>
+        <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+            <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
+        </CustomSearch> -->
         <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
               <template scope="scope">

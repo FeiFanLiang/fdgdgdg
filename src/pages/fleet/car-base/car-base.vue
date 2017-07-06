@@ -249,9 +249,6 @@ export default {
       this.filters = filters
       this.fetchData()
     },
-    // search() {
-    //   this.fetchData()
-    // },
     async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true

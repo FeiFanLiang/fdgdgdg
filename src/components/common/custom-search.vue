@@ -18,12 +18,6 @@
 <script>
 export default {
   props: {
-    // list: {
-    //   type: Array,
-    //   default: () => {
-    //     return []
-    //   }
-    // },
     configList: {
       type: Array,
       default: () => {
