@@ -39,6 +39,7 @@ export default {
           message: '删除成功',
           type: 'success'
         });
+        this.visible=false;
       } catch (e) {
         console.error(e);
       }
