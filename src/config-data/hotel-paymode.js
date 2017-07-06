@@ -4,7 +4,7 @@ import { hotelPayModeApi } from 'api'
 const data = [
   ['账户名称', 'ModeName', true, true, 'string'],
   ['备注', 'Remark', true, true, 'string'],
-  ['ID', 'ID', true, false, 'string']
+  ['ID', 'ID', false, false, 'string']
 ]
 
 const listFields = lib.trans(data)

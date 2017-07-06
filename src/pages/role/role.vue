@@ -82,251 +82,264 @@
 </template>
 
 <script>
-import {
-    roleApi,
-    userApi
-} from 'api';
+import { roleApi, userApi } from 'api'
 
 export default {
-    data() {
-        return {
-            userList: [],
-            list: [],
-            expandRowKeys: [],
-            userNameList: [],
-            loading: true,
-            loading2: false,
-            inputVisible: false,
-            showDialog: false,
-            dialogTitle: '添加角色信息',
-            userForm: {
-                userName: '',
-                rolsName: ''
-            },
-            roleForm: {
-                realName: '',
-                roleName: ''
-            },
-            filters: {
-                realName: '',
-                roleName: '',
-                labelVal:'1'
-            },
-            selectedOptions: [{
-                    value: '1',
-                    label: '角色名称'
-                },
-                {
-                    value: '2',
-                    label: 'RoleName'
-                }
-            ],
-            rules: {
-                realName: [{
-                    required: true,
-                    message: '请输入角色名称'
-                }],
-                roleName: [{
-                    required: true,
-                    message: '请输入RoleName'
-                }]
-            }
-        };
-    },
-
-    methods: {
-        querySearch(queryString, cb) {
-            var userList = this.userList;
-            var results = queryString ? userList.filter(this.createFilter(queryString)) : userList;
-            // 调用 callback 返回建议列表的数据
-            cb(results);
+  data() {
+    return {
+      userList: [],
+      list: [],
+      expandRowKeys: [],
+      userNameList: [],
+      loading: true,
+      loading2: false,
+      inputVisible: false,
+      showDialog: false,
+      dialogTitle: '添加角色信息',
+      userForm: {
+        userName: '',
+        rolsName: ''
+      },
+      roleForm: {
+        realName: '',
+        roleName: ''
+      },
+      filters: {
+        realName: '',
+        roleName: '',
+        labelVal: '1'
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '角色名称'
         },
-        createFilter(queryString) {
-            return (restaurant) => {
-                return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
-            };
-        },
-        showInput() {
-            this.inputVisible = true;
-            this.userForm.userName = '';
-            // this.$nextTick(_ => {
-            //     this.$refs.saveTagInput.$refs.input.focus();
-            // });
-        },
-        handleSearch() {
-            this.fetchData();
-        },
-        async fetchData() {
-            const _self = this;
-            _self.loading = true;
-            const options = {
-                query: {
-                realName: _self.filters.labelVal === '1' ? _self.filters.realName : '',
-                roleName: _self.filters.labelVal === '2' ? _self.filters.roleName : '',
-                },
-            };
-            try {
-                console.log(options)
-                const res = await roleApi.list();
-                _self.list = res.data;
-                _self.loading = false;
-            } catch (e) {
-                console.error(e);
-                _self.loading = false;
-            }
-        },
-        async getUserList() {
-            const _self = this;
-            _self.userList = [];
-            let _index = 0;
-            try {
-                const res = await userApi.list();
-                console.log(res)
-                for (let [index, elem] of res.data.entries()) {
-                    if (!_self.userNameList.includes(elem.UserName)) {
-                        _self.userList.push({});
-                        _self.userList[_index].value = elem.UserName;
-                        _index++;
-                    }
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        },
-        async getUserNameByRole(row, expanded) {
-            const _self = this;
-            if (expanded) {
-                _self.loading2 = true;
-                _self.inputVisible = false;
-                _self.expandRowKeys.length = 0;
-                _self.expandRowKeys.push(row.RoleName);
-                _self.userForm.rolsName = row.RoleName;
-            }
-            try {
-                const res = await roleApi.userNameListByRolesName(_self.userForm.rolsName);
-                _self.userNameList = res.data.UserName;
-                _self.loading2 = false;
-            } catch (e) {
-                console.error(e);
-            }
-            _self.getUserList();
-        },
-        clickAddBtn() {
-            const _self = this;
-            _self.dialogTitle = '添加角色信息';
-            _self.showDialog = true;
-            _self.roleForm = {};
-        },
-        clickEditBtn($index, row) {
-            const _self = this;
-            _self.dialogTitle = '编辑角色信息';
-            _self.showDialog = true;
-            _self.roleForm.realName = row.RealName;
-            _self.roleForm.roleName = row.RoleName;
-        },
-        submitForm() {
-            const _self = this;
-            if (_self.dialogTitle === '编辑角色信息') {
-                _self.editSave();
-            } else if (_self.dialogTitle === '添加角色信息') {
-                _self.addSave();
-            }
-        },
-        async addSave() {
-            const _self = this;
-            _self.$refs['roleForm'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await roleApi.add(_self.roleForm);
-                        _self.fetchData();
-                        _self.$refs['roleForm'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('添加失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async editSave() {
-            const _self = this;
-            _self.$refs['roleForm'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await roleApi.edit(_self.roleForm);
-                        _self.fetchData();
-                        _self.$refs['roleForm'].resetFields();
-                        _self.showDialog = false;
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        });
-                    } catch (e) {
-                        console.error(e);
-                        _self.$message.error('编辑失败!!!');
-                    }
-                } else {
-                    return false;
-                }
-            });
-        },
-        async addUserName() {
-            const _self = this;
-            if (_self.userForm.userName !== "") {
-                _self.loading2 = true;
-                try {
-                    await roleApi.addUserNameByRolsName(_self.userForm.rolsName, _self.userForm.userName);
-                    _self.getUserNameByRole();
-                    _self.$message({
-                        message: '添加成功',
-                        type: 'success'
-                    });
-                    _self.inputVisible = false;
-                    _self.loading2 = false;
-                } catch (e) {
-                    console.error(e);
-                    _self.loading2 = false;
-                    _self.$message.error('添加失败!!!');
-                }
-            } else {
-                _self.inputVisible = false;
-            }
-        },
-        async delUserName(a, b, c) {
-            const _self = this;
-            _self.$confirm(`是否将${b}从${c}移除?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async() => {
-                try {
-                    _self.loading2 = true;
-                    await roleApi.deleteUserNameByRolesName(a, b);
-                    _self.getUserNameByRole();
-                    _self.inputVisible = false;
-                    _self.loading2 = false;
-                    _self.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    console.error(e);
-                    _self.loading2 = false;
-                    _self.$message.error('删除失败!!!');
-                }
-            }).catch(() => {});
+        {
+          value: '2',
+          label: 'RoleName'
         }
-    },
-    mounted() {
-        this.fetchData();
+      ],
+      rules: {
+        realName: [
+          {
+            required: true,
+            message: '请输入角色名称'
+          }
+        ],
+        roleName: [
+          {
+            required: true,
+            message: '请输入RoleName'
+          }
+        ]
+      }
     }
-};
+  },
+
+  methods: {
+    querySearch(queryString, cb) {
+      var userList = this.userList
+      var results = queryString
+        ? userList.filter(this.createFilter(queryString))
+        : userList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return restaurant => {
+        return restaurant.value.indexOf(queryString.toLowerCase()) === 0
+      }
+    },
+    showInput() {
+      this.inputVisible = true
+      this.userForm.userName = ''
+      // this.$nextTick(_ => {
+      //     this.$refs.saveTagInput.$refs.input.focus();
+      // });
+    },
+    handleSearch() {
+      this.fetchData()
+    },
+    async fetchData() {
+      const _self = this
+      _self.loading = true
+      const options = {
+        query: {
+          realName:
+            _self.filters.labelVal === '1' ? _self.filters.realName : '',
+          roleName: _self.filters.labelVal === '2' ? _self.filters.roleName : ''
+        }
+      }
+      try {
+        console.log(options)
+        const res = await roleApi.list()
+        _self.list = res.data
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    async getUserList() {
+      const _self = this
+      _self.userList = []
+      let _index = 0
+      try {
+        const res = await userApi.list()
+        console.log(res)
+        for (let [index, elem] of res.data.entries()) {
+          if (!_self.userNameList.includes(elem.UserName)) {
+            _self.userList.push({})
+            _self.userList[_index].value = elem.UserName
+            _index++
+          }
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async getUserNameByRole(row, expanded) {
+      const _self = this
+      if (expanded) {
+        _self.loading2 = true
+        _self.inputVisible = false
+        _self.expandRowKeys.length = 0
+        _self.expandRowKeys.push(row.RoleName)
+        _self.userForm.rolsName = row.RoleName
+      }
+      try {
+        const res = await roleApi.userNameListByRolesName(
+          _self.userForm.rolsName
+        )
+        _self.userNameList = res.data.UserName
+        _self.loading2 = false
+      } catch (e) {
+        console.error(e)
+      }
+      _self.getUserList()
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.dialogTitle = '添加角色信息'
+      _self.showDialog = true
+      _self.roleForm = {}
+    },
+    clickEditBtn($index, row) {
+      const _self = this
+      _self.dialogTitle = '编辑角色信息'
+      _self.showDialog = true
+      _self.roleForm.realName = row.RealName
+      _self.roleForm.roleName = row.RoleName
+    },
+    submitForm() {
+      const _self = this
+      if (_self.dialogTitle === '编辑角色信息') {
+        _self.editSave()
+      } else if (_self.dialogTitle === '添加角色信息') {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['roleForm'].validate(async valid => {
+        if (valid) {
+          try {
+            await roleApi.add(_self.roleForm)
+            _self.fetchData()
+            _self.$refs['roleForm'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['roleForm'].validate(async valid => {
+        if (valid) {
+          try {
+            await roleApi.edit(_self.roleForm)
+            _self.fetchData()
+            _self.$refs['roleForm'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async addUserName() {
+      const _self = this
+      if (_self.userForm.userName !== '') {
+        _self.loading2 = true
+        try {
+          await roleApi.addUserNameByRolsName(
+            _self.userForm.rolsName,
+            _self.userForm.userName
+          )
+          _self.getUserNameByRole()
+          _self.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+          _self.inputVisible = false
+          _self.loading2 = false
+        } catch (e) {
+          console.error(e)
+          _self.loading2 = false
+          _self.$message.error('添加失败!!!')
+        }
+      } else {
+        _self.inputVisible = false
+      }
+    },
+    async delUserName(a, b, c) {
+      const _self = this
+      _self
+        .$confirm(`是否将${b}从${c}移除?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(async () => {
+          try {
+            _self.loading2 = true
+            await roleApi.deleteUserNameByRolesName(a, b)
+            _self.getUserNameByRole()
+            _self.inputVisible = false
+            _self.loading2 = false
+            _self.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.loading2 = false
+            _self.$message.error('删除失败!!!')
+          }
+        })
+        .catch(() => {})
+    }
+  },
+  mounted() {
+    this.fetchData()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
