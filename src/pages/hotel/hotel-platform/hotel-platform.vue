@@ -1,12 +1,9 @@
 <template lang="html">
   <div id="hotel-platform-info-page">
-    <!-- <HotelTopMenu path="platform">
-      <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-    </HotelTopMenu> -->
     <el-row>
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
-    <CustomTable :list="list" :configList="configList.listFields">
+    <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
       <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
             <a target="_blank" :href="scope.row.platUrl">{{scope.row.platUrl}}</a>
@@ -23,7 +20,7 @@
         <template scope="scope">
 <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
     编辑</el-button>
-<el-button size="mini" type="danger" @click="clickDelBtn(scope.$index, scope.row)">删除</el-button>
+      <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.id"></DeleteButton>
 </template>
       </el-table-column>
     </CustomTable>
@@ -38,7 +35,6 @@
     </el-table> -->
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
-        @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-sizes="[10, 20, 30]"
@@ -156,26 +152,11 @@ export default {
     handleCurrentChange(val) {
       this.currentPage = val
     },
-    handleSizeChange(val) {},
     async fetchData() {
       const _self = this
       _self.loading = true
-      _self.list = []
       const res = await hotelPlatformApi.listByHotel(this.$route.params.ID)
-      for (let [index, elem] of res.data.entries()) {
-        _self.list.push({})
-        _self.list[index].platformId = elem.PlatformID
-        _self.list[index].hotelId = elem.HotelID
-        _self.list[index].platHotelId = elem.PlatHotelID
-        _self.list[index].platUrl = elem.PlatURL
-        _self.list[index].platHotelName = elem.PlatHotelName
-        _self.list[index].platHotelNameEn = elem.PlatHotelName_En
-        _self.list[index].remark = elem.Remark
-        _self.list[index].isValid = elem.IsValid
-        _self.list[index].id = elem.ID
-        _self.list[index].hotelName = elem.Hotel.HotelName
-        _self.list[index].platName = elem.Platform.PlatName
-      }
+      _self.list = res.data
       _self.total = _self.list.length
       _self.loading = false
     },
@@ -276,29 +257,6 @@ export default {
           return false
         }
       })
-    },
-    async clickDelBtn($index, row) {
-      const _self = this
-      _self
-        .$confirm(`是否删除${row.platName}?`, '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-        .then(async () => {
-          try {
-            await hotelPlatformApi.del(row.id)
-            _self.fetchData()
-            _self.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('删除失败!!!')
-          }
-        })
-        .catch(() => {})
     }
   }
 }

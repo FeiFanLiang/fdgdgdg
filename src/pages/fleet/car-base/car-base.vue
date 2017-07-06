@@ -1,6 +1,6 @@
 <template lang="html">
     <div id="car-base">
-        <el-row :gutter="20" class="align-center">
+        <!-- <el-row :gutter="20" class="align-center">
             <el-col :span="4">
                 <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
@@ -17,7 +17,10 @@
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
-        </el-row>
+        </el-row> -->
+        <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+            <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
+        </CustomSearch>
         <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
               <template scope="scope">
@@ -242,7 +245,8 @@ export default {
     }
   },
   methods: {
-    search() {
+    searchCallback(filters) {
+      this.filters = filters
       this.fetchData()
     },
     async fetchData(currentPage, pageSize) {

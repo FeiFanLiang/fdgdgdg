@@ -8,6 +8,7 @@ import './libs/date'
 import { Breadcrumb } from 'components'
 import DeleteButton from 'components/common/delete-button.vue'
 import CustomTable from 'components/common/custom-table.vue'
+import CustomSearch from 'components/common/custom-search.vue'
 
 axios.defaults.withCredentials = true
 // const VueProgressBarOptions = {
@@ -26,6 +27,8 @@ axios.defaults.withCredentials = true
 import App from './app.vue'
 import routes from './router'
 import './style.scss'
+import './tree.vue.css'
+import './tree.vue.js'
 
 // import 'plugins/'
 import 'mixin/'
@@ -39,6 +42,7 @@ import NProgress from 'nprogress'
 Vue.component('db-breadcrumb', Breadcrumb)
 Vue.component('DeleteButton', DeleteButton)
 Vue.component('CustomTable', CustomTable)
+Vue.component('CustomSearch', CustomSearch)
 
 export const router = new VueRouter({
   routes,
@@ -100,11 +104,6 @@ new Vue({
   router,
   store
 }).$mount('#app')
-/* Vue.component('jsx-example', {
-  render (h) { // <-- h must be in scope
-    return <div id="foo">bar</div>
-  }
-}) */
 
 /**
  *               ii.                                         ;9ABH,

@@ -5,8 +5,8 @@ export default {
   list () {
     return axios.get(base + `GetMenu`)
   },
-  add () {
-    return axios.post(base + `CreateMenu`)
+  add (params) {
+    return axios.post(base + `CreateMenu`,params)
   },
   del () {
     return axios.post(base + `DeleteMenu`)
