@@ -1,5 +1,5 @@
-function trans (data) {
-  return data.map(item => {
+function transTable (listData) {
+  return listData.map(item => {
     return {
       label: item[0],
       name: item[1],
@@ -9,7 +9,17 @@ function trans (data) {
     }
   })
 }
-
+function transSearch (listData) {
+  return listData.map(item => {
+    return {
+      label: item[0],
+      name: item[1],
+      type: item[2],
+      data: item[3]
+    }
+  })
+}
 export default {
-  trans
+  transTable,
+  transSearch
 }

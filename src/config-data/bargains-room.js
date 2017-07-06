@@ -1,7 +1,7 @@
 import lib from './lib'
 import { bargainsRoomApi } from 'api'
 
-const data = [
+const listData = [
   ['ID', 'ID', true, true, 'string'],
   ['入住日期', 'UseDate', true, true, 'string'],
   ['入住天数', 'Days', true, true, 'string'],
@@ -14,7 +14,7 @@ const data = [
   ['创建人', 'CreateUser', true, true, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {

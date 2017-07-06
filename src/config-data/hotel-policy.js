@@ -1,7 +1,7 @@
 import lib from './lib'
 import { hotelPolicyApi } from 'api'
 
-const data = [
+const listData = [
   ['ID', 'ID', true, false, 'string'],
   ['政策负责人', 'PersonName', true, true, 'string'],
   ['政策采购人', 'PurchasingName', true, true, 'string'],
@@ -11,7 +11,7 @@ const data = [
   ['酒店预订方式', 'ReserveMode.ModeName', true, true, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {

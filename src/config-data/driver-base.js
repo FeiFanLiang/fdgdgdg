@@ -1,7 +1,7 @@
 import lib from './lib'
 import { driverBaseApi } from 'api'
 
-const data = [
+const listData = [
   ['ID', 'ID', true, false, 'string'],
   ['工号', 'JobNnumber', true, true, 'string'],
   ['姓名', 'Name', true, true, 'string'],
@@ -9,7 +9,7 @@ const data = [
   ['备注', 'Remark', true, true, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {
