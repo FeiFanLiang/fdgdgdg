@@ -913,6 +913,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             await carOrderManageApi.add(_self.form)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
@@ -935,6 +936,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             let form = {
                                 ..._self.form
                             }
