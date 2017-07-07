@@ -195,10 +195,10 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车辆类型" prop="carId">
-                            <el-select v-model="form.carId" placeholder="请选择车型">
-                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarMode" :value="item.ID">
-                                    <span style="float: left">{{ item.CarMode }}</span>
+                        <el-form-item label="派遣车辆" prop="carId">
+                            <el-select v-model="form.carId" placeholder="请选择车辆">
+                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarNumber" :value="item.ID">
+                                    <span style="float: left">{{ item.CarNumber }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 0">经济型</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 1">舒适型</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 2">商务型</span>
@@ -222,7 +222,7 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="备注" prop="remark">
+                        <el-form-item label="备注">
                             <el-input placeholder="请输入备注" type="textarea" v-model="form.remark"></el-input>
                         </el-form-item>
                     </el-col>
@@ -313,15 +313,11 @@ export default {
                 rules: {
                     carId: [{
                         required: true,
-                        message: '请选择车型'
+                        message: '请选择车辆'
                     }],
                     driverId: [{
                         required: true,
                         message: '请选择司机'
-                    }],
-                    remark: [{
-                        required: true,
-                        message: '请输入备注'
                     }]
                 }
             }
@@ -453,12 +449,15 @@ export default {
             async submitForm() {
                 const _self = this
                 const options = {
+                    orderId: _self.form.id,
+                    carId: _self.form.carId,
+                    driverId: _self.form.driverId,
                     remark: _self.form.remark
                 }
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
-                            await carArrangeApi.arrange(_self.form.id, _self.form.carId, _self.form.driverId, options)
+                            await carArrangeApi.arrange(options)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false

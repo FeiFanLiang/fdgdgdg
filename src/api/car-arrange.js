@@ -15,8 +15,8 @@ export default {
             params: params
         })
     },
-    arrange(a, b, c, params) {
-        return axios.post(base + `Arrange?orderID=${a}&CarID=${b}&DriverID=${c}`, params)
+    arrange( params) {
+        return axios.post(base + 'Arrange', params)
     },
     arrangeInterior(params) {
         return axios.get(base + 'ArrangeInterior', {
