@@ -24,7 +24,6 @@
         <el-table-column prop="date" label="操作" width="180">
             <template scope="scope">
                 <el-button type="primary" size="small">编辑</el-button>
-                <!--<el-button type="danger" size="mini">删除</el-button>-->
                 <DeleteButton :id="scope.row.ID"></DeleteButton>
             </template>
         </el-table-column>
@@ -34,21 +33,23 @@
 <script>
 export default {
   data() {
-      return {
-        input:'',
-        tableData:[{
-            tag:'全部门店'
-        }],
-        dialogVisible:false,
-        selectPlace:'全部门店'
-      }
+    return {
+      input: '',
+      tableData: [
+        {
+          tag: '全部门店'
+        }
+      ],
+      dialogVisible: false,
+      selectPlace: '全部门店'
+    }
   },
   methods: {
-      filterTag(value, row) {
-            this.selectPlace = value;
-            if (value === '全部门店') return true
-            return row.tag === value
-      },
+    filterTag(value, row) {
+      this.selectPlace = value
+      if (value === '全部门店') return true
+      return row.tag === value
+    }
   }
 }
 </script>
@@ -57,5 +58,3 @@ export default {
 
 }
 </style>
-
-
