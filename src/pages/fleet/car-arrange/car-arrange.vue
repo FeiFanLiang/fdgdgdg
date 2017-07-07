@@ -45,7 +45,7 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="order.ID" label="ID"></el-table-column>
+            <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
@@ -91,7 +91,7 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="order.ID" label="ID"></el-table-column>
+            <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
@@ -122,8 +122,8 @@
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="ID">
-                            <el-input v-model="form.id" disabled></el-input>
+                        <el-form-item label="订单渠道">
+                            <el-input v-model="form.channel" disabled></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -263,9 +263,10 @@ export default {
                 loading2: false,
                 showDialog: false,
                 pickerOptions: {},
-                tag:'',
+                tag: '',
                 form: {
                     id: '',
+                    channel: '',
                     orderId: '',
                     carId: '',
                     driverId: '',
@@ -408,6 +409,7 @@ export default {
                 _self.carList.length === 0 ? _self.fetchCarList() : ''
                 _self.showDialog = true
                 _self.form.id = row.order.ID
+                _self.form.channel = row.order.Channel
                 _self.form.carriageNo = row.order.CarriageNo
                 _self.form.linkName = row.order.LinkName
                 _self.form.linkPhone = row.order.LinkPhone
@@ -428,21 +430,6 @@ export default {
                     _self.form.remark = ''
                 }
 
-            },
-            clickEditBtn($index, row) {
-                const _self = this
-                _self.showDialog = true
-                _self.form.id = row.order.ID
-                _self.form.carriageNo = row.order.CarriageNo
-                _self.form.linkName = row.order.LinkName
-                _self.form.linkPhone = row.order.LinkPhone
-                _self.form.specReq = row.order.SpecReq
-                _self.form.carTransportType = row.order.CarTransportType
-                _self.form.carClassify = row.order.CarClassify
-                _self.form.origin = row.order.Origin
-                _self.form.destination = row.order.Destination
-                _self.form.preServiceMileage = row.order.PreServiceMileage
-                _self.form.preServiceTime = row.order.PreServiceTime
             },
             submitForm() {
                 const _self = this
@@ -468,7 +455,7 @@ export default {
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
-                                message: '保存成功',
+                                message: '派单成功',
                                 type: 'success'
                             })
                         } catch (e) {
@@ -497,7 +484,7 @@ export default {
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
-                                message: '保存成功',
+                                message: '改派成功',
                                 type: 'success'
                             })
                         } catch (e) {
