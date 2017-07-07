@@ -13,11 +13,11 @@ const children = [
   hotelRoute, // 酒店
   showRoute, // 展示信息
   orderRoute, // 订单
+  fleetRoute, // 车队
+  wechatRoute, // 微信
   policyRoute, // 政策
   roleRoute, // 角色
-  userRoute, // 用户
-  fleetRoute, // 车队
-  wechatRoute // 微信
+  userRoute // 用户
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

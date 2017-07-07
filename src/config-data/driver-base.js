@@ -36,20 +36,18 @@ const searchData = [
   [
     '请选择',
     'labelVal',
-    'select',
+    'multiple',
     [
       {
-        value: '1',
+        value: 'name',
         label: '姓名'
       },
       {
-        value: '2',
+        value: 'phone',
         label: '电话'
       }
     ]
-  ],
-  ['请输入姓名', 'name', 'input', ''],
-  ['请输入电话', 'phone', 'input', '']
+  ]
 ]
 const listFields = lib.transTable(listData)
 const searchFields = lib.transSearch(searchData)
