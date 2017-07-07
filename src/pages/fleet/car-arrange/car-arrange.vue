@@ -33,96 +33,92 @@
             </el-table-column>
             </CustomTable> -->
         <h3>待派车订单</h3>
-        <el-table :data="unArrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
+        <el-table :data="unArrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item>
-                            <p>取消时间：{{props.row.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.CancelRemark}}</p>
+                            <p>取消时间：{{props.row.order.CancelTime}}</p>
+                            <p>取消单人员：{{props.row.order.CancelUserID}}</p>
+                            <p>取消说明：{{props.row.order.CancelRemark}}</p>
                         </el-form-item>
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LinkName" label="联系人"></el-table-column>
+            <el-table-column prop="order.ID" label="ID"></el-table-column>
+            <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
-                    <span v-if="scope.row.CarTransportType === 0">接机</span>
-                    <span v-if="scope.row.CarTransportType === 1">送机</span>
-                    <span v-if="scope.row.CarTransportType === 2">指定线路</span>
-                    <span v-if="scope.row.CarTransportType === 3">接站</span>
-                    <span v-if="scope.row.CarTransportType === 4">送站</span>
+                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
                 </template>
             </el-table-column>
             <el-table-column label="车型类别" show-overflow-tooltip>
                 <template scope="scope">
-                    <span v-if="scope.row.CarClassify === 0">经济型</span>
-                    <span v-if="scope.row.CarClassify === 1">舒适型</span>
-                    <span v-if="scope.row.CarClassify === 2">商务型</span>
-                    <span v-if="scope.row.CarClassify === 3">豪华型</span>
+                    <span v-if="scope.row.order.CarClassify === 0">经济型</span>
+                    <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
+                    <span v-if="scope.row.order.CarClassify === 2">商务型</span>
+                    <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
                 <template scope="scope">
-                    <el-button size="small" @click="dispatchOrder(scope.$index, scope.row)">派车</el-button>
+                    <el-button size="small" @click="dispatch(scope.$index, scope.row,0)">派车</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <h3>已派车订单</h3>
-        <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="250">
+        <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
             <el-table-column type="expand">
                 <template scope="props" v-if="props.row.CancelTime">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item>
-                            <p>取消时间：{{props.row.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.CancelRemark}}</p>
+                            <p>取消时间：{{props.row.arrange.CancelTime}}</p>
+                            <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
+                            <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
                         </el-form-item>
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LinkName" label="联系人"></el-table-column>
+            <el-table-column prop="order.ID" label="ID"></el-table-column>
+            <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
-                    <span v-if="scope.row.CarTransportType === 0">接机</span>
-                    <span v-if="scope.row.CarTransportType === 1">送机</span>
-                    <span v-if="scope.row.CarTransportType === 2">指定线路</span>
-                    <span v-if="scope.row.CarTransportType === 3">接站</span>
-                    <span v-if="scope.row.CarTransportType === 4">送站</span>
+                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
                 </template>
             </el-table-column>
-            <el-table-column label="车型类别" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.CarClassify === 0">经济型</span>
-                    <span v-if="scope.row.CarClassify === 1">舒适型</span>
-                    <span v-if="scope.row.CarClassify === 2">商务型</span>
-                    <span v-if="scope.row.CarClassify === 3">豪华型</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.Driver.Name" label="司机姓名" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.Car.CarMode" label="车型" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
                 <template scope="scope">
-                    <el-button size="small" @click="dispatchOrder(scope.$index, scope.row)">改派</el-button>
+                    <el-button size="small" @click="dispatch(scope.$index, scope.row,1)">改派</el-button>
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :title="form.id?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
+        <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
                     <el-col :span="12">
@@ -201,10 +197,10 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车辆类型" prop="carId">
-                            <el-select v-model="form.carId" placeholder="请选择车型">
-                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarMode" :value="item.ID">
-                                    <span style="float: left">{{ item.CarMode }}</span>
+                        <el-form-item label="派遣车辆" prop="carId">
+                            <el-select v-model="form.carId" placeholder="请选择车辆">
+                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarNumber" :value="item.ID">
+                                    <span style="float: left">{{ item.CarNumber }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 0">经济型</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 1">舒适型</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.CarClassify === 2">商务型</span>
@@ -228,7 +224,7 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
-                        <el-form-item label="备注" prop="remark">
+                        <el-form-item label="备注">
                             <el-input placeholder="请输入备注" type="textarea" v-model="form.remark"></el-input>
                         </el-form-item>
                     </el-col>
@@ -267,6 +263,7 @@ export default {
                 loading2: false,
                 showDialog: false,
                 pickerOptions: {},
+                tag:'',
                 form: {
                     id: '',
                     orderId: '',
@@ -319,15 +316,11 @@ export default {
                 rules: {
                     carId: [{
                         required: true,
-                        message: '请选择车型'
+                        message: '请选择车辆'
                     }],
                     driverId: [{
                         required: true,
                         message: '请选择司机'
-                    }],
-                    remark: [{
-                        required: true,
-                        message: '请输入备注'
                     }]
                 }
             }
@@ -364,7 +357,6 @@ export default {
             async fetchData() {
                 const _self = this
                 _self.fetchUnArrangeData()
-                _self.fetchArrangeData()
             },
             async fetchUnArrangeData() {
                 const _self = this
@@ -376,12 +368,10 @@ export default {
                 try {
                     const res = await carArrangeApi.unArrangeOrderList(options)
                     if (res.data && res.data.length) {
-                        for (let [index, elem] of res.data.entries()) {
-                            _self.unArrangeList.push(res.data[index].order)
-                        }
+                        _self.unArrangeList = res.data
                     }
                     _self.loading = false
-                    _self.carList.length === 0 ? _self.fetchCarList() : ''
+                    _self.fetchArrangeData()
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
@@ -389,52 +379,83 @@ export default {
             },
             async fetchArrangeData() {
                 const _self = this
-                _self.loading2 = true
+                _self.loading = true
                 const options = {
                     beginTime: _self.filters.beginTime ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
                     endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
                 }
                 try {
                     const res = await carArrangeApi.arrangeOrderList(options)
-                    _self.arrangeList = res.data.Data
-                    console.log(res)
-                        // if (_self.arrangeList && _self.arrangeList.length) {
-                        //     for (let [index, elem] of _self.arrangeList.entries()) {
-                        //         _self.arrangeList[index].ArrangeTime = new Date(
-                        //             _self.arrangeList[index].ArrangeTime
-                        //         ).Format('yyyy-MM-dd hh:mm:ss')
-                        //         _self.arrangeList[index].CancelTime = new Date(
-                        //             _self.arrangeList[index].CancelTime
-                        //         ).Format('yyyy-MM-dd hh:mm:ss')
-                        //     }
-                        // }
-                    _self.count = res.data.Count
-                    _self.loading2 = false
+                    if (res.data) {
+                        _self.arrangeList = []
+                        let data = Object.values(res.data)
+                        for (let [index1, elem1] of data.entries()) {
+                            for (let [index2, elem2] of data[index1].entries()) {
+                                _self.arrangeList.push(data[index1][index2])
+                            }
+                        }
+                    }
+                    _self.loading = false
                     _self.driverList.length === 0 ? _self.fetchDriverList() : ''
                 } catch (e) {
                     console.error(e)
                     _self.loading2 = false
                 }
             },
-            async dispatchOrder($index, row) {
+            dispatch($index, row, a) {
+                const _self = this
+                _self.tag = a
+                _self.carList.length === 0 ? _self.fetchCarList() : ''
+                _self.showDialog = true
+                _self.form.id = row.order.ID
+                _self.form.carriageNo = row.order.CarriageNo
+                _self.form.linkName = row.order.LinkName
+                _self.form.linkPhone = row.order.LinkPhone
+                _self.form.specReq = row.order.SpecReq
+                _self.form.carTransportType = row.order.CarTransportType
+                _self.form.carClassify = row.order.CarClassify
+                _self.form.origin = row.order.Origin
+                _self.form.destination = row.order.Destination
+                _self.form.preServiceMileage = row.order.PreServiceMileage
+                _self.form.preServiceTime = row.order.PreServiceTime
+                if (_self.tag) {
+                    _self.form.carId = row.arrange.CarID
+                    _self.form.driverId = row.arrange.DriverID
+                    _self.form.remark = row.arrange.Remark
+                } else {
+                    _self.form.carId = ''
+                    _self.form.driverId = ''
+                    _self.form.remark = ''
+                }
+
+            },
+            clickEditBtn($index, row) {
                 const _self = this
                 _self.showDialog = true
-                _self.form.id = row.ID
-                _self.form.carriageNo = row.CarriageNo
-                _self.form.linkName = row.LinkName
-                _self.form.linkPhone = row.LinkPhone
-                _self.form.specReq = row.SpecReq
-                _self.form.carTransportType = row.CarTransportType
-                _self.form.carClassify = row.CarClassify
-                _self.form.origin = row.Origin
-                _self.form.destination = row.Destination
-                _self.form.preServiceMileage = row.PreServiceMileage
-                _self.form.preServiceTime = row.PreServiceTime
+                _self.form.id = row.order.ID
+                _self.form.carriageNo = row.order.CarriageNo
+                _self.form.linkName = row.order.LinkName
+                _self.form.linkPhone = row.order.LinkPhone
+                _self.form.specReq = row.order.SpecReq
+                _self.form.carTransportType = row.order.CarTransportType
+                _self.form.carClassify = row.order.CarClassify
+                _self.form.origin = row.order.Origin
+                _self.form.destination = row.order.Destination
+                _self.form.preServiceMileage = row.order.PreServiceMileage
+                _self.form.preServiceTime = row.order.PreServiceTime
             },
-            async submitForm() {
+            submitForm() {
+                const _self = this
+                if (_self.tag) {
+                    _self.editSave()
+                } else {
+                    _self.addSave()
+                }
+            },
+            async addSave() {
                 const _self = this
                 const options = {
-                    orderId: 0,
+                    orderId: _self.form.id,
                     carId: _self.form.carId,
                     driverId: _self.form.driverId,
                     remark: _self.form.remark
@@ -443,6 +464,35 @@ export default {
                     if (valid) {
                         try {
                             await carArrangeApi.arrange(options)
+                            _self.fetchData()
+                            _self.$refs['form'].resetFields()
+                            _self.showDialog = false
+                            _self.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            })
+                        } catch (e) {
+                            console.error(e)
+                            _self.$message.error('添加失败!!!')
+                        }
+                    } else {
+                        return false
+                    }
+                })
+            },
+            async editSave() {
+                const _self = this
+                const options = {
+                    arrangeId: _self.form.id,
+                    orderId: _self.form.id,
+                    carId: _self.form.carId,
+                    driverId: _self.form.driverId,
+                    remark: _self.form.remark
+                }
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carArrangeApi.editArrange(options)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false

@@ -2,34 +2,34 @@
     <div id="car-order-manage-page">
         <el-row :gutter="24">
             <el-col :span="3">
-                <el-select v-model="filters.sortValue" placeholder="排序方式" @change="fetchData()">
+                <el-select v-model="filters.sortValue" placeholder="排序方式">
                     <el-option v-for="(item,index) in sortList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
+                <el-select v-model="filters.channel" placeholder="订单渠道">
                     <el-option label="全部渠道" value="">全部渠道</el-option>
                     <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.externalOrderStete" placeholder="订单状态" @change="fetchData()">
+                <el-select v-model="filters.externalOrderStete" placeholder="订单状态">
                     <el-option label="全部状态" value="">全部状态</el-option>
                     <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.carTransportType" placeholder="产品类型" @change="fetchData()">
+                <el-select v-model="filters.carTransportType" placeholder="产品类型">
                     <el-option label="全部类型" value="">全部类型</el-option>
                     <el-option v-for="(item,index) in carTransportTypeList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.carClassify" placeholder="车型类别" @change="fetchData()">
+                <el-select v-model="filters.carClassify" placeholder="车型类别">
                     <el-option label="全部车型" value="">全部车型</el-option>
                     <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
@@ -754,11 +754,9 @@ export default {
             },
             payStatusChange(a) {
                 this.filters.payStatus = a;
-                this.fetchData();
             },
             isCancelChange(a) {
                 this.filters.isCancel = a;
-                this.fetchData();
             },
             async fetchChannelList() {
                 const _self = this
@@ -791,25 +789,6 @@ export default {
                 try {
                     const res = await carOrderManageApi.listByQuery(options)
                     _self.list = res.data.Data
-                    if (_self.list && _self.list.length) {
-                        for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].UseTime = new Date(
-                                _self.list[index].UseTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].PayTime = new Date(
-                                _self.list[index].PayTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].CancelTime = new Date(
-                                _self.list[index].CancelTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].StartingTime = new Date(
-                                _self.list[index].StartingTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].ArrivalTime = new Date(
-                                _self.list[index].ArrivalTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                        }
-                    }
                     _self.count = res.data.Count
                     _self.loading = false
                     _self.channelList.length === 0 ? _self.fetchChannelList() : ''
@@ -917,6 +896,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             await carOrderManageApi.add(_self.form)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
@@ -939,6 +919,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             let form = {
                                 ..._self.form
                             }
