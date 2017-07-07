@@ -791,7 +791,7 @@ export default {
                     _self.list = res.data.Data
                     if (_self.list && _self.list.length) {
                         for (let [index, elem] of _self.list.entries()) {
-                            // _self.list[index].UseTime = new Date(_self.list[index].UseTime).Format('yyyy-MM-dd hh:mm:ss')
+                            _self.list[index].UseTime = new Date(_self.list[index].UseTime).Format('yyyy-MM-dd hh:mm:ss')
                             _self.list[index].PayTime = new Date(
                                 _self.list[index].PayTime
                             ).Format('yyyy-MM-dd hh:mm:ss')
