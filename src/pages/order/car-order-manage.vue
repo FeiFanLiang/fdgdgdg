@@ -789,23 +789,6 @@ export default {
                 try {
                     const res = await carOrderManageApi.listByQuery(options)
                     _self.list = res.data.Data
-                    if (_self.list && _self.list.length) {
-                        for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].UseTime = new Date(_self.list[index].UseTime).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].PayTime = new Date(
-                                _self.list[index].PayTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].CancelTime = new Date(
-                                _self.list[index].CancelTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].StartingTime = new Date(
-                                _self.list[index].StartingTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].ArrivalTime = new Date(
-                                _self.list[index].ArrivalTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                        }
-                    }
                     _self.count = res.data.Count
                     _self.loading = false
                     _self.channelList.length === 0 ? _self.fetchChannelList() : ''

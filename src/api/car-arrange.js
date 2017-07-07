@@ -15,8 +15,11 @@ export default {
             params: params
         })
     },
-    arrange( params) {
+    arrange(params) {
         return axios.post(base + 'Arrange', params)
+    },
+    editArrange(params) {
+        return axios.put(base + 'Arrange', params)
     },
     arrangeInterior(params) {
         return axios.get(base + 'ArrangeInterior', {

@@ -48,6 +48,8 @@
             <el-table-column prop="order.ID" label="ID"></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
                     <span v-if="scope.row.order.CarTransportType === 0">接机</span>
@@ -65,7 +67,6 @@
                     <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
@@ -94,6 +95,7 @@
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
                     <span v-if="scope.row.order.CarTransportType === 0">接机</span>
@@ -116,7 +118,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-dialog :title="form.id?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
+        <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
                     <el-col :span="12">
@@ -261,6 +263,7 @@ export default {
                 loading2: false,
                 showDialog: false,
                 pickerOptions: {},
+                tag:'',
                 form: {
                     id: '',
                     orderId: '',
@@ -354,7 +357,6 @@ export default {
             async fetchData() {
                 const _self = this
                 _self.fetchUnArrangeData()
-                    // _self.fetchArrangeData()
             },
             async fetchUnArrangeData() {
                 const _self = this
@@ -370,7 +372,6 @@ export default {
                     }
                     _self.loading = false
                     _self.fetchArrangeData()
-                        // _self.carList.length === 0 ? _self.fetchCarList() : ''
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
@@ -385,13 +386,11 @@ export default {
                 }
                 try {
                     const res = await carArrangeApi.arrangeOrderList(options)
-                    console.log(res)
                     if (res.data) {
                         _self.arrangeList = []
                         let data = Object.values(res.data)
                         for (let [index1, elem1] of data.entries()) {
                             for (let [index2, elem2] of data[index1].entries()) {
-                                data[index1][index2].arrange.ArrangeTime = new Date(data[index1][index2].arrange.ArrangeTime).Format('yyyy-MM-dd hh:mm:ss')
                                 _self.arrangeList.push(data[index1][index2])
                             }
                         }
@@ -405,6 +404,7 @@ export default {
             },
             dispatch($index, row, a) {
                 const _self = this
+                _self.tag = a
                 _self.carList.length === 0 ? _self.fetchCarList() : ''
                 _self.showDialog = true
                 _self.form.id = row.order.ID
@@ -418,7 +418,7 @@ export default {
                 _self.form.destination = row.order.Destination
                 _self.form.preServiceMileage = row.order.PreServiceMileage
                 _self.form.preServiceTime = row.order.PreServiceTime
-                if (a) {
+                if (_self.tag) {
                     _self.form.carId = row.arrange.CarID
                     _self.form.driverId = row.arrange.DriverID
                     _self.form.remark = row.arrange.Remark
@@ -443,10 +443,16 @@ export default {
                 _self.form.destination = row.order.Destination
                 _self.form.preServiceMileage = row.order.PreServiceMileage
                 _self.form.preServiceTime = row.order.PreServiceTime
-
-
             },
-            async submitForm() {
+            submitForm() {
+                const _self = this
+                if (_self.tag) {
+                    _self.editSave()
+                } else {
+                    _self.addSave()
+                }
+            },
+            async addSave() {
                 const _self = this
                 const options = {
                     orderId: _self.form.id,
@@ -458,6 +464,35 @@ export default {
                     if (valid) {
                         try {
                             await carArrangeApi.arrange(options)
+                            _self.fetchData()
+                            _self.$refs['form'].resetFields()
+                            _self.showDialog = false
+                            _self.$message({
+                                message: '保存成功',
+                                type: 'success'
+                            })
+                        } catch (e) {
+                            console.error(e)
+                            _self.$message.error('添加失败!!!')
+                        }
+                    } else {
+                        return false
+                    }
+                })
+            },
+            async editSave() {
+                const _self = this
+                const options = {
+                    arrangeId: _self.form.id,
+                    orderId: _self.form.id,
+                    carId: _self.form.carId,
+                    driverId: _self.form.driverId,
+                    remark: _self.form.remark
+                }
+                _self.$refs['form'].validate(async valid => {
+                    if (valid) {
+                        try {
+                            await carArrangeApi.editArrange(options)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false
