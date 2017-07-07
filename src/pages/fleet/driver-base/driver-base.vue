@@ -1,6 +1,6 @@
 <template lang="html">
     <div id="driver-base">
-        <el-row :gutter="20">
+        <!-- <el-row :gutter="20">
             <el-col :span="5">
                 <el-select v-model="filters.jobStatus" placeholder="工作状态" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
@@ -18,14 +18,15 @@
                 <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
             </el-col>
+
             <el-col :span="10">
                 <el-button type="primary" @click="search">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
-        </el-row>
-        <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+        </el-row> -->
+        <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-        </CustomSearch> -->
+        </CustomSearch>
         <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
               <template scope="scope">
@@ -123,12 +124,7 @@ export default {
         jobStatus: '',
         remark: ''
       },
-      filters: {
-        name: '',
-        phone: '',
-        jobStatus: '',
-        labelVal: '1'
-      },
+      filters: {},
       selectedOptions: [
         {
           value: '1',
@@ -186,7 +182,8 @@ export default {
     }
   },
   methods: {
-    search() {
+    searchCallback(filters) {
+      this.filters = filters
       this.fetchData()
     },
     async fetchData(currentPage, pageSize) {
@@ -198,11 +195,7 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
-        query: {
-          name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-          phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-          jobStatus: _self.filters.jobStatus
-        }
+        query: this.filters
       }
       try {
         const res = await driverBaseApi.listByQuery(options)
