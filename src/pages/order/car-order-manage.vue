@@ -187,14 +187,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
-            <el-table-column label="外部订单状态" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.ExternalOrderStete == 0">待确认</span>
-                    <span v-if="scope.row.ExternalOrderStete == 1">已取消</span>
-                    <span v-if="scope.row.ExternalOrderStete == 2">已派车</span>
-                    <span v-if="scope.row.ExternalOrderStete == 3">已完成</span>
-                </template>
-            </el-table-column>
+            <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
@@ -413,7 +406,7 @@
                     <el-col :span="12">
                         <el-form-item label="外部订单状态" prop="externalOrderStete">
                             <el-select v-model="form.externalOrderStete" placeholder="请选择外部订单状态">
-                                <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                                <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.label">
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
                             </el-select>
