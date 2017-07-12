@@ -118,6 +118,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <!-- <p id="example">2222222222222</p> -->
         <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
@@ -244,14 +245,29 @@ import {
     carArrangeApi
 } from 'api'
 
+import * as d3 from "d3";
+
 export default {
-    created() {
-            this.filters.beginTime = new Date(
-                new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
-            ).Format('yyyy-MM-dd')
-            this.filters.endTime = new Date().Format('yyyy-MM-dd')
+    mounted() {
+            this.filters.beginTime = new Date().Format('yyyy-MM-dd')
+            const now = new Date();
+            now.setDate(now.getDate() + 1);
+            this.filters.endTime = now.Format('yyyy-MM-dd');
             this.fetchData()
             this.configList = carArrangeApi.getConfig()
+
+            // var validate = require("validate.js")
+            // var chart = visavailChart().width(800);
+
+            // d3.select("#example")
+            //     .datum(dataset)
+            //     .call(chart);
+
+
+            // d3.select('#example').text('Hello,yiifaa!')
+            // d3.selectAll("#example")
+            //     .attr("class", "graf")
+            //     .style("color", "red");
         },
         data() {
             return {
@@ -323,7 +339,28 @@ export default {
                         required: true,
                         message: '请选择司机'
                     }]
-                }
+                },
+                dataSet: [{
+                    "measure": "Birds Sing",
+                    "data": [
+                        ["2016-01-01 12:00:00", 1, "2016-01-01 13:00:00"],
+                        ["2016-01-01 14:22:51", 1, "2016-01-01 16:14:12"],
+                        ["2016-01-01 19:20:05", 0, "2016-01-01 20:30:00"],
+                        ["2016-01-01 20:30:00", 1, "2016-01-01 22:00:00"]
+                    ]
+                }, {
+                    "measure": "It Rains",
+                    "data": [
+                        ["2016-01-01 07:10:00", 1, "2016-01-01 08:20:34"],
+                        ["2016-01-02 07:05:51", 1, "2016-01-02 07:34:55"],
+                        ["2016-01-02 15:36:20", 1, "2016-01-02 16:02:40"]
+                    ]
+                }, {
+                    "measure": "Rob Awake",
+                    "data": [
+                        ["2016-01-01 05:00:00", 1, "2016-01-02 22:02:14"]
+                    ]
+                }]
             }
         },
         methods: {
@@ -339,6 +376,7 @@ export default {
                     this.carList = res.data.Data
                 } catch (e) {
                     console.error(e)
+                    _self.$message.error('车辆信息数据获取失败!!!')
                 }
             },
             async fetchDriverList() {
@@ -353,6 +391,7 @@ export default {
                     this.driverList = res.data.Data
                 } catch (e) {
                     console.error(e)
+                    _self.$message.error('司机信息数据获取失败!!!')
                 }
             },
             async fetchData() {
@@ -376,6 +415,7 @@ export default {
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
+                    _self.$message.error('未安排订单数据获取失败!!!')
                 }
             },
             async fetchArrangeData() {
@@ -401,6 +441,7 @@ export default {
                 } catch (e) {
                     console.error(e)
                     _self.loading2 = false
+                    _self.$message.error('已安排订单数据获取失败!!!')
                 }
             },
             dispatch($index, row, a) {
@@ -460,7 +501,7 @@ export default {
                             })
                         } catch (e) {
                             console.error(e)
-                            _self.$message.error('添加失败!!!')
+                            _self.$message.error('派单失败!!!')
                         }
                     } else {
                         return false
@@ -489,7 +530,7 @@ export default {
                             })
                         } catch (e) {
                             console.error(e)
-                            _self.$message.error('添加失败!!!')
+                            _self.$message.error('改派失败!!!')
                         }
                     } else {
                         return false

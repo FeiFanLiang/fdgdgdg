@@ -28,6 +28,9 @@
                 <el-form-item label="工号" prop="jobNnumber">
                     <el-input placeholder="请输入工号" v-model="form.jobNnumber"></el-input>
                 </el-form-item>
+                <el-form-item label="代码" prop="codeNum">
+                    <el-input placeholder="请输入代码" v-model="form.codeNum"></el-input>
+                </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
                 </el-form-item>
@@ -73,6 +76,7 @@ export default {
       form: {
         id: 0,
         jobNnumber: '',
+        codeNum:'',
         name: '',
         phone: '',
         jobStatus: '',
@@ -112,6 +116,12 @@ export default {
           {
             required: true,
             message: '请输入司机工号'
+          }
+        ],
+        codeNum: [
+          {
+            required: true,
+            message: '请输入司机代码'
           }
         ],
         name: [
@@ -173,6 +183,8 @@ export default {
       const _self = this
       _self.showDialog = true
       _self.form = {
+        jobNnumber: '',
+        codeNum:'',
         id: 0,
         name: '',
         phone: '',
@@ -187,6 +199,7 @@ export default {
         _self.showDialog = true
         _self.form.id = res.data.Data.ID
         _self.form.jobNnumber = res.data.Data.JobNnumber
+        _self.form.codeNum = res.data.Data.CodeNum
         _self.form.name = res.data.Data.Name
         _self.form.phone = res.data.Data.Phone
         _self.form.jobStatus = res.data.Data.JobStatus

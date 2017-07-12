@@ -17,7 +17,7 @@
             <el-col :span="3">
                 <el-select v-model="filters.externalOrderStete" placeholder="订单状态">
                     <el-option label="全部状态" value="">全部状态</el-option>
-                    <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.label">
                     </el-option>
                 </el-select>
             </el-col>
@@ -69,7 +69,7 @@
                 </el-radio-group>
             </el-col>
             <el-col :span="4">
-                <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="fetchData">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
             <el-col :span="10">
@@ -186,10 +186,11 @@
                     </el-form>
                 </template>
             </el-table-column>
+            <el-table-column prop="Channel" label="渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="LinkName" label="联系人" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
@@ -465,10 +466,10 @@ import {
 
 export default {
     created() {
-            this.filters.useTimeS = new Date(
-                new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
-            ).Format('yyyy-MM-dd')
-            this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
+            this.filters.useTimeS = new Date().Format('yyyy-MM-dd')
+            const now = new Date();
+            now.setDate(now.getDate() + 1);
+            this.filters.useTimeE = now.Format('yyyy-MM-dd');
             this.loginData = JSON.parse(localStorage.getItem('user'));
             this.fetchData()
         },
@@ -719,18 +720,23 @@ export default {
                     carClassify: ''
                 }
             },
-            search() {
-                this.fetchData()
-            },
             async syncList(a) {
                 const _self = this
                 _self.list = []
                 _self.count = 0
                 _self.loading = true
                 if (a === 0) {
-                    const res = await carOrderManageApi.syncList()
+                    try {
+                        const res = await carOrderManageApi.syncList()
+                    } catch (e) {
+                        _self.$message.error('同步携程订单失败!!!')
+                    }
                 } else if (a === 1) {
-                    const res = await carOrderManageApi.syncOrderOperDataList()
+                    try {
+                        const res = await carOrderManageApi.syncOrderOperDataList()
+                    } catch (e) {
+                        _self.$message.error('同步订单里程信息失败!!!')
+                    }
                 }
                 _self.fetchData()
             },
@@ -788,6 +794,7 @@ export default {
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
+                    _self.$message.error('数据获取失败!!!')
                 }
             },
             handleSizeChange(val) {
