@@ -1,4 +1,4 @@
-function visavailChart() {
+export default function visavailChart() {
   // define chart layout
   var margin = {
     // top margin includes title and legend

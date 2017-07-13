@@ -55,15 +55,7 @@
 
 <style>
 #div1{
-    /* border: 1px solid red; */
     width: 100%;
 }
-/* #editorElem{
-   height:180px;
-    overflow-y: hidden; 
-   margin-bottom: 10px;
-   border-top: 1px solid lightgrey;
-   border-bottom: 1px solid lightgrey;
-}*/
  .w-e-text { height:100px; overflow-y: auto;}  
 </style>
