@@ -34,5 +34,13 @@ export default {
         hidden: true
       }
     },
+    {
+      path: 'Texts',
+      component: Pages.Texts,
+      name: '编辑器',
+      meta: {
+        hidden: true
+      }
+    },
   ]
 }

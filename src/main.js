@@ -26,9 +26,6 @@ axios.defaults.withCredentials = true
 import App from './app.vue'
 import routes from './router'
 import './style.scss'
-import './tree.vue.css'
-import './tree.vue.js'
-//import './demo.js'
 
 // import 'plugins/'
 import 'mixin/'

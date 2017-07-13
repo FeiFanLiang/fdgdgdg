@@ -1,7 +1,8 @@
 <template lang="html">
 <div id="customMenu">
     <el-button type="primary" @click="addOneMenu">添加一级菜单</el-button>
-    <DeleteButton api="weixinRedirectApi" @successCallBack="fetchData"></DeleteButton>
+    <!--<DeleteButton api="weixinRedirectApi" @successCallBack="fetchData"></DeleteButton>-->
+    <el-button type="danger" @click="deleteAll">全部删除</el-button>
     <el-table :data="menuData" style="width: 100%">
         <el-table-column type="expand">
         <template scope="props">
@@ -173,13 +174,19 @@ import {weixinRedirectApi} from 'api'
                 alert("二级菜单数量最多不超过5个!")
             }
         },
-        editMenu($index, row) {
+        async editMenu($index, row) {
             const _self = this
             _self.dialogVisible = true
             _self.form.name = row.name
             this.index = $index;
-            this.disabled = true;
-            this.disabled2 = true;
+            const res = await weixinRedirectApi.list();
+            if(res.data.menu.button[$index].sub_button==undefined){
+                this.disabled = false;
+                this.disabled2 = false;
+            }else{
+                this.disabled = true;
+                this.disabled2 = true;
+            }
             this.addORedit = 'editOne';
             this.titles = '一级菜单编辑'
         },
@@ -197,7 +204,7 @@ import {weixinRedirectApi} from 'api'
         },
         async deleteMenu($index,row){
             this.index = $index;
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该菜单, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -237,6 +244,24 @@ import {weixinRedirectApi} from 'api'
             }else{
                 this.del2();
             }
+        },
+        deleteAll(){
+            this.$confirm('是否要删除全部菜单?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                weixinRedirectApi.del(),
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                });
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         },
         async deleteMenu2($index,$index2, row){
             this.deleteMenu();
