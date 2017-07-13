@@ -727,7 +727,10 @@ export default {
                 _self.loading = true
                 if (a === 0) {
                     try {
-                        const res = await carOrderManageApi.syncList()
+                        const form = {
+                            begin: _self.filters.useTimeS ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd') : '',
+                        }
+                        const res = await carOrderManageApi.syncList(form)
                     } catch (e) {
                         _self.$message.error('同步携程订单失败!!!')
                     }

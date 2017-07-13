@@ -245,29 +245,33 @@ import {
     carArrangeApi
 } from 'api'
 
+// import * as moment from "moment";
+// import "../../../libs/vendors/moment/moment-with-locales.js";
 import * as d3 from "d3";
+
 
 export default {
     mounted() {
-            this.filters.beginTime = new Date().Format('yyyy-MM-dd')
+            this.filters.beginTime = '2017-07-01' || new Date().Format('yyyy-MM-dd')
             const now = new Date();
             now.setDate(now.getDate() + 1);
             this.filters.endTime = now.Format('yyyy-MM-dd');
             this.fetchData()
             this.configList = carArrangeApi.getConfig()
 
-            // var validate = require("validate.js")
-            // var chart = visavailChart().width(800);
+            // let moment = require("../../../libs/vendors/moment/moment-with-locales.min.js")
+            // var moment = require("../../../libs/vendors/moment/moment.js");
+            // window.moment = moment;
+            // window.d3 = d3;
+            // moment().format();
+            // moment.locale('en');
+            // let visavailChart = require("../../../libs/visavail/js/visavail.js")
+            // let chart = visavailChart.default().width(800);
+            // console.log(window)
 
             // d3.select("#example")
-            //     .datum(dataset)
+            //     .datum(this.dataSet)
             //     .call(chart);
-
-
-            // d3.select('#example').text('Hello,yiifaa!')
-            // d3.selectAll("#example")
-            //     .attr("class", "graf")
-            //     .style("color", "red");
         },
         data() {
             return {
@@ -275,6 +279,7 @@ export default {
                 arrangeList: [],
                 carList: [],
                 driverList: [],
+                chartData: [],
                 loading: false,
                 loading2: false,
                 showDialog: false,
@@ -428,6 +433,7 @@ export default {
                 try {
                     const res = await carArrangeApi.arrangeOrderList(options)
                     if (res.data) {
+                        _self.chartData = res.data
                         _self.arrangeList = []
                         let data = Object.values(res.data)
                         for (let [index1, elem1] of data.entries()) {
@@ -438,6 +444,7 @@ export default {
                     }
                     _self.loading = false
                     _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+                    _self.handleChartData()
                 } catch (e) {
                     console.error(e)
                     _self.loading2 = false
@@ -536,6 +543,26 @@ export default {
                         return false
                     }
                 })
+            },
+            // increaseTime(date, second) {
+            //     var a = Math.round(new Date(date).getTime() / 1000);
+            //     return formatTime(Number(a) + Number(second || 0));
+            // },
+            // decreaseTime(date, second) {
+            //     var a = Math.round(new Date(date).getTime() / 1000);
+            //     return formatTime(Number(a) - Number(second || 0));
+            // },
+            handleChartData() {
+                const _self = this
+                console.log(_self.chartData)
+                let arr = []
+                for (let [k, v] of Object.entries(_self.chartData)) {
+                    arr.push({
+                        'measure': JSON.stringify(k),
+                        'data': v
+                    })
+                }
+                console.log(arr)
             }
         }
 }
