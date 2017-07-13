@@ -1,7 +1,7 @@
 import lib from './lib'
 import { carArrangeApi } from 'api'
 
-const data = [
+const listData = [
   ['CarID', 'CarID', true, true, 'string'],
   ['DriverID', 'DriverID', true, true, 'string'],
   ['始发地', 'Origin', true, true, 'string'],
@@ -13,7 +13,7 @@ const data = [
   ['备注', 'Remark', true, true, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {

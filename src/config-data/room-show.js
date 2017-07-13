@@ -1,7 +1,7 @@
 import lib from './lib'
 import { roomShowApi } from 'api'
 
-const data = [
+const listData = [
   ['酒店', 'HotelID', true, true, 'string'],
   ['房间ID', 'RoomID', true, true, 'string'],
   ['房间面积', 'Acreage', true, true, 'string'],
@@ -12,7 +12,7 @@ const data = [
   ['特色标签', 'Lable', true, true, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {

@@ -17,7 +17,7 @@ import hotelShowApi from './hotel-show'
 // import hotelThreePlatInfoApi from './hotel-threeplat-info'
 // import orderApi from './order'
 import payCompanyApi from './pay-company'
-// import roleApi from './role'
+import roleApi from './role'
 import roomShowApi from './room-show'
 // import sonRoomApi from './son-room'
 // import sonRoomPlatformApi from './son-room-platform'
@@ -44,7 +44,7 @@ export {
   // hotelThreePlatInfoApi,
   // orderApi,
   payCompanyApi,
-  // roleApi,
+  roleApi,
   roomShowApi
   // sonRoomApi,
   // sonRoomPlatformApi,

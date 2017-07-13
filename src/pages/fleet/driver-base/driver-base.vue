@@ -1,28 +1,8 @@
 <template lang="html">
     <div id="driver-base">
-        <el-row :gutter="20">
-            <el-col :span="5">
-                <el-select v-model="filters.jobStatus" placeholder="工作状态" @change="fetchData()">
-                    <el-option label="全部" value="">全部</el-option>
-                    <el-option v-for="(item,index) in jobStatusList" :key="index" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-select v-model="filters.labelVal" placeholder="请选择">
-                    <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
-                    </el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="5">
-                <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
-                <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
-            </el-col>
-            <el-col :span="10">
-                <el-button type="primary" @click="search">搜索</el-button>
-                <el-button type="primary" @click="clickAddBtn">创建</el-button>
-            </el-col>
-        </el-row>
+        <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+            <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
+        </CustomSearch>
         <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
           <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
               <template scope="scope">
@@ -39,28 +19,6 @@
               </template>
           </el-table-column>
         </CustomTable>
-        <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
-            <el-table-column prop="ID" label="ID"></el-table-column>
-            <el-table-column prop="JobNnumber" label="工号"></el-table-column>
-            <el-table-column prop="Name" label="姓名" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Phone" label="电话" show-overflow-tooltip></el-table-column>
-              <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="JobStatus" label="工作状态" width="100">
-                <template scope="scope">
-                    <p v-if="scope.row.JobStatus === 1">正常在职</p>
-                    <p v-if="scope.row.JobStatus === 2">已离职</p>
-                    <p v-if="scope.row.JobStatus === 3">停职</p>
-                    <p v-if="scope.row.JobStatus === 4">休假</p>
-                </template>
-            </el-table-column>
-
-            <el-table-column label="操作" width="150">
-                <template scope="scope">
-                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-                </template>
-            </el-table-column>
-        </el-table> -->
         <div class="pagination-wrapper">
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
@@ -69,6 +27,9 @@
             <el-form ref="form" :model="form" :rules="rules">
                 <el-form-item label="工号" prop="jobNnumber">
                     <el-input placeholder="请输入工号" v-model="form.jobNnumber"></el-input>
+                </el-form-item>
+                <el-form-item label="代码" prop="codeNum">
+                    <el-input placeholder="请输入代码" v-model="form.codeNum"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名" prop="name">
                     <el-input placeholder="请输入姓名" v-model="form.name"></el-input>
@@ -115,17 +76,13 @@ export default {
       form: {
         id: 0,
         jobNnumber: '',
+        codeNum:'',
         name: '',
         phone: '',
         jobStatus: '',
         remark: ''
       },
-      filters: {
-        name: '',
-        phone: '',
-        jobStatus: '',
-        labelVal: '1'
-      },
+      filters: {},
       selectedOptions: [
         {
           value: '1',
@@ -161,6 +118,12 @@ export default {
             message: '请输入司机工号'
           }
         ],
+        codeNum: [
+          {
+            required: true,
+            message: '请输入司机代码'
+          }
+        ],
         name: [
           {
             required: true,
@@ -183,7 +146,8 @@ export default {
     }
   },
   methods: {
-    search() {
+    searchCallback(filters) {
+      this.filters = filters
       this.fetchData()
     },
     async fetchData(currentPage, pageSize) {
@@ -195,11 +159,7 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
-        query: {
-          name: _self.filters.labelVal === '1' ? _self.filters.name : '',
-          phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
-          jobStatus: _self.filters.jobStatus
-        }
+        query: this.filters
       }
       try {
         const res = await driverBaseApi.listByQuery(options)
@@ -223,6 +183,8 @@ export default {
       const _self = this
       _self.showDialog = true
       _self.form = {
+        jobNnumber: '',
+        codeNum:'',
         id: 0,
         name: '',
         phone: '',
@@ -237,6 +199,7 @@ export default {
         _self.showDialog = true
         _self.form.id = res.data.Data.ID
         _self.form.jobNnumber = res.data.Data.JobNnumber
+        _self.form.codeNum = res.data.Data.CodeNum
         _self.form.name = res.data.Data.Name
         _self.form.phone = res.data.Data.Phone
         _self.form.jobStatus = res.data.Data.JobStatus

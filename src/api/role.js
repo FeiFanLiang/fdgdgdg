@@ -2,7 +2,10 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'System/Role/'
 
+import { roleApi } from '../config-data'
+
 export default {
+  getConfig: roleApi.getConfig,
   list () {
     return axios.get(base)
   },

@@ -2,34 +2,34 @@
     <div id="car-order-manage-page">
         <el-row :gutter="24">
             <el-col :span="3">
-                <el-select v-model="filters.sortValue" placeholder="排序方式" @change="fetchData()">
+                <el-select v-model="filters.sortValue" placeholder="排序方式">
                     <el-option v-for="(item,index) in sortList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.channel" placeholder="订单渠道" @change="fetchData()">
+                <el-select v-model="filters.channel" placeholder="订单渠道">
                     <el-option label="全部渠道" value="">全部渠道</el-option>
                     <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.externalOrderStete" placeholder="订单状态" @change="fetchData()">
+                <el-select v-model="filters.externalOrderStete" placeholder="订单状态">
                     <el-option label="全部状态" value="">全部状态</el-option>
-                    <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                    <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.label">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.carTransportType" placeholder="产品类型" @change="fetchData()">
+                <el-select v-model="filters.carTransportType" placeholder="产品类型">
                     <el-option label="全部类型" value="">全部类型</el-option>
                     <el-option v-for="(item,index) in carTransportTypeList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-select v-model="filters.carClassify" placeholder="车型类别" @change="fetchData()">
+                <el-select v-model="filters.carClassify" placeholder="车型类别">
                     <el-option label="全部车型" value="">全部车型</el-option>
                     <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value">
                     </el-option>
@@ -69,7 +69,7 @@
                 </el-radio-group>
             </el-col>
             <el-col :span="4">
-                <el-button type="primary" @click="search">搜索</el-button>
+                <el-button type="primary" @click="fetchData">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
             <el-col :span="10">
@@ -186,17 +186,11 @@
                     </el-form>
                 </template>
             </el-table-column>
+            <el-table-column prop="Channel" label="渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
-            <el-table-column label="外部订单状态" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.ExternalOrderStete == 0">待确认</span>
-                    <span v-if="scope.row.ExternalOrderStete == 1">已取消</span>
-                    <span v-if="scope.row.ExternalOrderStete == 2">已派车</span>
-                    <span v-if="scope.row.ExternalOrderStete == 3">已完成</span>
-                </template>
-            </el-table-column>
-            <el-table-column prop="LinkName" label="联系人姓名" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="LinkPhone" label="联系人电话" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="LinkName" label="联系人" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
                 <template scope="scope">
@@ -413,7 +407,7 @@
                     <el-col :span="12">
                         <el-form-item label="外部订单状态" prop="externalOrderStete">
                             <el-select v-model="form.externalOrderStete" placeholder="请选择外部订单状态">
-                                <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.value">
+                                <el-option v-for="(item,index) in orderSteteList" :key="index" :label="item.label" :value="item.label">
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
                             </el-select>
@@ -472,10 +466,10 @@ import {
 
 export default {
     created() {
-            this.filters.useTimeS = new Date(
-                new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
-            ).Format('yyyy-MM-dd')
-            this.filters.useTimeE = new Date().Format('yyyy-MM-dd')
+            this.filters.useTimeS = new Date().Format('yyyy-MM-dd')
+            const now = new Date();
+            now.setDate(now.getDate() + 1);
+            this.filters.useTimeE = now.Format('yyyy-MM-dd');
             this.loginData = JSON.parse(localStorage.getItem('user'));
             this.fetchData()
         },
@@ -726,18 +720,23 @@ export default {
                     carClassify: ''
                 }
             },
-            search() {
-                this.fetchData()
-            },
             async syncList(a) {
                 const _self = this
                 _self.list = []
                 _self.count = 0
                 _self.loading = true
                 if (a === 0) {
-                    const res = await carOrderManageApi.syncList()
+                    try {
+                        const res = await carOrderManageApi.syncList()
+                    } catch (e) {
+                        _self.$message.error('同步携程订单失败!!!')
+                    }
                 } else if (a === 1) {
-                    const res = await carOrderManageApi.syncOrderOperDataList()
+                    try {
+                        const res = await carOrderManageApi.syncOrderOperDataList()
+                    } catch (e) {
+                        _self.$message.error('同步订单里程信息失败!!!')
+                    }
                 }
                 _self.fetchData()
             },
@@ -754,11 +753,9 @@ export default {
             },
             payStatusChange(a) {
                 this.filters.payStatus = a;
-                this.fetchData();
             },
             isCancelChange(a) {
                 this.filters.isCancel = a;
-                this.fetchData();
             },
             async fetchChannelList() {
                 const _self = this
@@ -791,31 +788,13 @@ export default {
                 try {
                     const res = await carOrderManageApi.listByQuery(options)
                     _self.list = res.data.Data
-                    if (_self.list && _self.list.length) {
-                        for (let [index, elem] of _self.list.entries()) {
-                            _self.list[index].UseTime = new Date(
-                                _self.list[index].UseTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].PayTime = new Date(
-                                _self.list[index].PayTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].CancelTime = new Date(
-                                _self.list[index].CancelTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].StartingTime = new Date(
-                                _self.list[index].StartingTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                            _self.list[index].ArrivalTime = new Date(
-                                _self.list[index].ArrivalTime
-                            ).Format('yyyy-MM-dd hh:mm:ss')
-                        }
-                    }
                     _self.count = res.data.Count
                     _self.loading = false
                     _self.channelList.length === 0 ? _self.fetchChannelList() : ''
                 } catch (e) {
                     console.error(e)
                     _self.loading = false
+                    _self.$message.error('数据获取失败!!!')
                 }
             },
             handleSizeChange(val) {
@@ -917,6 +896,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             await carOrderManageApi.add(_self.form)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
@@ -939,6 +919,7 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
+                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
                             let form = {
                                 ..._self.form
                             }

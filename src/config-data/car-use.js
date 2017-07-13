@@ -1,7 +1,7 @@
 import lib from './lib'
 import { carUseApi } from 'api'
 
-const data = [
+const listData = [
   ['车型', 'Car.CarMode', true, false, 'string'],
   ['司机姓名', 'Driver.Name', true, false, 'string'],
   ['始发地', 'Origin', true, false, 'string'],
@@ -13,7 +13,7 @@ const data = [
   ['渠道', 'Channel', true, false, 'string']
 ]
 
-const listFields = lib.trans(data)
+const listFields = lib.transTable(listData)
 const searchFields = {}
 export default {
   getConfig () {

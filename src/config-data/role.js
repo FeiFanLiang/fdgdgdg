@@ -1,27 +1,24 @@
-import axios from 'axios'
-import path from './api'
-const base = path.apiBaseUrl + 'System/Role/'
+import lib from './lib'
+import { roleApi } from 'api'
 
+const listData = [
+  ['酒店ID', 'HotelID', true, false, 'string'],
+  ['房间数量', 'Rooms', true, true, 'string'],
+  ['楼层数', 'FloorLevelsNum', true, true, 'string'],
+  ['经营时间', 'BusinessTime', true, true, 'string'],
+  ['入住政策', 'CheckInPolicy', true, true, 'string'],
+  ['离店', 'CheckOutPolicy', true, true, 'string'],
+  ['特色标签', 'Lable', true, true, 'string']
+]
+
+const listFields = lib.transTable(listData)
+const searchFields = {}
 export default {
-  list () {
-    return axios.get(base)
-  },
-  userNameListByRolesName (rolsName) {
-    return axios.get(base + rolsName)
-  },
-  roleListByUserName (userName) {
-    return axios.get(base + `ForUser/${userName}`)
-  },
-  add (params) {
-    return axios.post(base, params)
-  },
-  edit (params) {
-    return axios.put(base, params)
-  },
-  addUserNameByRolsName (rolsName, userName, params) {
-    return axios.post(base + `${rolsName}/${userName}`, params)
-  },
-  deleteUserNameByRolesName (rolsName, userName) {
-    return axios.delete(base + `${rolsName}/${userName}`)
+  getConfig () {
+    return {
+      listFields: listFields,
+      searchFields: searchFields,
+      editMethod: roleApi.edit
+    }
   }
 }
