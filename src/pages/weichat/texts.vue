@@ -1,52 +1,64 @@
-<template lang="html">
-    <div class="m-text">
-        <p>
-            <img src="../../assets/images/common/hh.png" width="30px">&nbsp;&nbsp;
-            <el-radio-group v-model="radio" style="margin:-20px 0 0 0;">
-                <el-radio-button label="1"><i class="el-icon-edit">文字 </i></el-radio-button>
-                <el-radio-button label="2"><i class="el-icon-picture">图片</i></el-radio-button>
-                <el-radio-button label="3"><i class="el-icon-edit">语音</i></el-radio-button>
-                <el-radio-button label="4"><i class="el-icon-edit">视频</i></el-radio-button>
-            </el-radio-group>
-        </p>
-        <textarea v-model="text"></textarea>
-        <el-button @click="inputing">发送</el-button>
+<template id="Editor">
+    <div>
+        <div id="editorElem" style="text-align:left;"></div>
+        <el-button v-on:click="getContent" style="float:right;">发送</el-button>
     </div>
 </template>
+
 <script>
+    import E from 'wangeditor'
+
     export default {
-        props: ['session'],
-        data () {
-            return {
-                text: '',
-                radio:'1'
-            };
-        },
-        methods: {
-            inputing () {
-                this.session.messages.push({
-                    text: this.text,
-                    date: new Date(),
-                    self: true
-                });
-                this.text = '';
-            }
+      name: 'editor',
+      props: ['session'],
+      data () {
+        return {
         }
-    };
-</script>
-<style lang="less">
-    .m-text {
-        height: 160px;
-        border-top: solid 1px #ddd;
+      },
+      methods: {
+        getContent: function () {
+            var editor = this.editor
+            let text = editor.txt.text();
+            this.session.messages.push({
+                text: text,
+                date: new Date(),
+                self: true
+            });
+            editor.txt.clear();
+        }
+      },
+      mounted() {
+        var editor = new E('#editorElem')
+        editor.customConfig.menus = [
+            'undo',  // 撤销
+            'redo',  // 重复
+            'emoticon',  // 表情
+            'image',  // 插入图片
+            'link',  // 插入链接
+            'video',  // 插入视频
+            'foreColor',  // 文字颜色
+            'backColor',  // 背景颜色
+            'quote',  // 引用
+            'table'  // 表格
+        ]
+        // 上传图片（举例）
+        editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+        editor.create()
+        const dom = document.getElementsByID("editorElem");
+        dom.style.height = '100px';
+        this.editor = editor
         
-        textarea {
-            padding: 10px;
-            height: 65%;
-            width:97%;
-            //border: none;
-            outline: none;
-            font-family: "Micrsofot Yahei";
-            resize: none;
-        }
+      }
     }
+</script>
+
+<style>
+#editorElem{
+   height:180px;
+    overflow-y: hidden; 
+   margin-bottom: 10px;
+   border-top: 1px solid lightgrey;
+   border-bottom: 1px solid lightgrey;
+}
+ .w-e-text { height:100px; overflow-y: hidden;} 
 </style>

@@ -51,9 +51,12 @@ if (!localStorage.getItem(key)) {
             }
         ],
     };
-    
     localStorage.setItem(key, JSON.stringify(data));
 }
+
+
+
+
 
 export default {
     fetch () {
