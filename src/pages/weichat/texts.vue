@@ -1,4 +1,4 @@
-<template id="Editor">
+<!-- <template id="Editor">
     <div>
         <div id="editorElem" style="text-align:left;"></div>
         <el-button v-on:click="getContent" style="float:right;">发送</el-button>
@@ -61,4 +61,4 @@
    border-bottom: 1px solid lightgrey;
 }
  .w-e-text { height:100px; overflow-y: hidden;} 
-</style>
+</style> -->

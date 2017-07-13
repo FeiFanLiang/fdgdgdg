@@ -252,7 +252,7 @@ import * as d3 from "d3";
 
 export default {
     mounted() {
-            this.filters.beginTime = '2017-07-01' || new Date().Format('yyyy-MM-dd')
+            this.filters.beginTime =  new Date().Format('yyyy-MM-dd')
             const now = new Date();
             now.setDate(now.getDate() + 1);
             this.filters.endTime = now.Format('yyyy-MM-dd');
