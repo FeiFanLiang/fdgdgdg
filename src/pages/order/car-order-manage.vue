@@ -85,9 +85,9 @@
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
-                        <!-- <el-form-item label="外部订单状态">
+                        <el-form-item label="外部订单状态">
                             <span>{{ props.row.ExternalOrderStete }}</span>
-                        </el-form-item> -->
+                        </el-form-item>
                         <el-form-item label="始发地详细地址">
                             <span>{{props.row.OriginAddress}}</span>
                         </el-form-item>
@@ -120,6 +120,12 @@
                         </el-form-item>
                         <el-form-item label="支付平台订单号">
                             <span>{{ props.row.PayOrder }}</span>
+                        </el-form-item>
+                        <el-form-item label="过路过桥费">
+                            <span>{{ props.row.RoadBridgeFee }}</span>
+                        </el-form-item>
+                        <el-form-item label="停车费">
+                            <span>{{ props.row.ParkingFee }}</span>
                         </el-form-item>
                         <el-form-item label="应收费用">
                             <span>{{ props.row.DealPrice }}</span>
@@ -233,16 +239,9 @@
                     <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
                 </template>
             </el-table-column>
-            <!-- <el-table-column label="是否预约" width="65">
-                <template scope="scope">
-                    <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsAppointment"></i>
-                    <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-                </template>
-            </el-table-column> -->
             <el-table-column label="操作" width="90" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <!-- <DeleteButton api="carOrderManageApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -341,6 +340,18 @@
                     <el-col :span="12">
                         <el-form-item label="联系人电话" prop="linkPhone">
                             <el-input placeholder="请输入联系人电话" v-model="form.linkPhone"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="过路过桥费" prop="roadBridgeFee">
+                            <el-input placeholder="请输入过路过桥费" v-model="form.roadBridgeFee"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="停车费" prop="parkingFee">
+                            <el-input placeholder="请输入停车费" v-model="form.parkingFee"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -484,6 +495,7 @@ export default {
                 showDialog: false,
                 pickerOptions: {},
                 loginData: '',
+                copyForm: {},
                 form: {
                     id: 0,
                     dealPrice: '',
@@ -514,7 +526,9 @@ export default {
                     staffUserName: '',
                     processorUserName: '',
                     auditorUserName: '',
-                    otherPrice: ''
+                    otherPrice: '',
+                    roadBridgeFee: '',
+                    parkingFee: ''
                 },
                 sortList: [{
                     value: 'id',
@@ -841,7 +855,9 @@ export default {
                     staffUserName: '',
                     processorUserName: '',
                     auditorUserName: '',
-                    otherPrice: ''
+                    otherPrice: '',
+                    roadBridgeFee: '',
+                    parkingFee: ''
                 }
                 _self.form.staffUserId = _self.loginData.id;
                 _self.form.staffUserName = _self.loginData.username;
@@ -850,6 +866,7 @@ export default {
                 const _self = this
                 try {
                     const res = await carOrderManageApi.detail(row.ID)
+                        // _self.copyForm = res.data.Data
                     _self.showDialog = true
                     _self.form.id = res.data.Data.ID
                     _self.form.dealPrice = res.data.Data.DealPrice
@@ -881,7 +898,9 @@ export default {
                     _self.form.processorUserName = res.data.Data.ProcessorUserName
                     _self.form.auditorUserName = res.data.Data.AuditorUserName
                     _self.form.otherPrice = res.data.Data.OtherPrice
-                    console.log(_self.form.externalOrderStete)
+                    _self.form.roadBridgeFee = res.data.Data.RoadBridgeFee
+                    _self.form.parkingFee = res.data.Data.ParkingFee
+                    _self.copyForm = Object.assign({}, _self.form);
                 } catch (e) {
                     console.error(e)
                 }
@@ -922,11 +941,13 @@ export default {
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
                         try {
-                            _self.form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss')
-                            let form = {
-                                ..._self.form
+                            const form = {}
+                            for (let [k, v] of Object.entries(_self.form)) {
+                                if (_self.form[k] != _self.copyForm[k]) {
+                                    form[k] = v
+                                }
                             }
-                            delete form.id
+                            form.useTime ? form.useTime = new Date(_self.form.useTime).Format('yyyy-MM-dd hh:mm:ss') : ''
                             await carOrderManageApi.edit(_self.form.id, form)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()

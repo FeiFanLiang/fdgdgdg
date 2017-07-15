@@ -118,7 +118,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <!-- <p id="example">2222222222222</p> -->
+        <p id="chart"></p>
         <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
                 <el-row :gutter="24">
@@ -246,32 +246,17 @@ import {
 } from 'api'
 
 // import * as moment from "moment";
-// import "../../../libs/vendors/moment/moment-with-locales.js";
-import * as d3 from "d3";
+// import * as d3 from "d3";
 
 
 export default {
     mounted() {
-            this.filters.beginTime =  new Date().Format('yyyy-MM-dd')
+            this.filters.beginTime = new Date().Format('yyyy-MM-dd')
             const now = new Date();
             now.setDate(now.getDate() + 1);
             this.filters.endTime = now.Format('yyyy-MM-dd');
             this.fetchData()
             this.configList = carArrangeApi.getConfig()
-
-            // let moment = require("../../../libs/vendors/moment/moment-with-locales.min.js")
-            // var moment = require("../../../libs/vendors/moment/moment.js");
-            // window.moment = moment;
-            // window.d3 = d3;
-            // moment().format();
-            // moment.locale('en');
-            // let visavailChart = require("../../../libs/visavail/js/visavail.js")
-            // let chart = visavailChart.default().width(800);
-            // console.log(window)
-
-            // d3.select("#example")
-            //     .datum(this.dataSet)
-            //     .call(chart);
         },
         data() {
             return {
@@ -344,28 +329,7 @@ export default {
                         required: true,
                         message: '请选择司机'
                     }]
-                },
-                dataSet: [{
-                    "measure": "Birds Sing",
-                    "data": [
-                        ["2016-01-01 12:00:00", 1, "2016-01-01 13:00:00"],
-                        ["2016-01-01 14:22:51", 1, "2016-01-01 16:14:12"],
-                        ["2016-01-01 19:20:05", 0, "2016-01-01 20:30:00"],
-                        ["2016-01-01 20:30:00", 1, "2016-01-01 22:00:00"]
-                    ]
-                }, {
-                    "measure": "It Rains",
-                    "data": [
-                        ["2016-01-01 07:10:00", 1, "2016-01-01 08:20:34"],
-                        ["2016-01-02 07:05:51", 1, "2016-01-02 07:34:55"],
-                        ["2016-01-02 15:36:20", 1, "2016-01-02 16:02:40"]
-                    ]
-                }, {
-                    "measure": "Rob Awake",
-                    "data": [
-                        ["2016-01-01 05:00:00", 1, "2016-01-02 22:02:14"]
-                    ]
-                }]
+                }
             }
         },
         methods: {
@@ -405,12 +369,12 @@ export default {
             },
             async fetchUnArrangeData() {
                 const _self = this
-                _self.loading = true
-                const options = {
-                    beginTime: _self.filters.beginTime ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
-                    endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
-                }
                 try {
+                    _self.loading = true
+                    const options = {
+                        beginTime: _self.filters.beginTime ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
+                        endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
+                    }
                     const res = await carArrangeApi.unArrangeOrderList(options)
                     if (res.data && res.data.length) {
                         _self.unArrangeList = res.data
@@ -544,25 +508,48 @@ export default {
                     }
                 })
             },
-            // increaseTime(date, second) {
-            //     var a = Math.round(new Date(date).getTime() / 1000);
-            //     return formatTime(Number(a) + Number(second || 0));
-            // },
-            // decreaseTime(date, second) {
-            //     var a = Math.round(new Date(date).getTime() / 1000);
-            //     return formatTime(Number(a) - Number(second || 0));
-            // },
+            formatTime(t) {
+                return new Date(+new Date(t * 1000) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(
+                    /\.[\d]{3}Z/, '');
+            },
+            increaseTime(date, second) {
+                var a = Math.round(new Date(date).getTime() / 1000);
+                return this.formatTime(Number(a) + Number(second || 0));
+            },
+            decreaseTime(date, second) {
+                var a = Math.round(new Date(date).getTime() / 1000);
+                return this.formatTime(Number(a) - Number(second || 0));
+            },
             handleChartData() {
                 const _self = this
-                console.log(_self.chartData)
                 let arr = []
                 for (let [k, v] of Object.entries(_self.chartData)) {
                     arr.push({
-                        'measure': JSON.stringify(k),
+                        'measure': k,
                         'data': v
                     })
                 }
-                console.log(arr)
+                for (let [index1, elem1] of arr.entries()) {
+                    let mm = []
+                    for (let [index2, elem2] of arr[index1].data.entries()) {
+                        // mm.push({
+                        //     'useTimg': elem2.arrange.UseTime,
+                        //     'predictTime': elem2.arrange.PredictTime,
+                        //     'endTime': _self.increaseTime(elem2.arrange.UseTime,elem2.arrange.PredictTime*60)
+                        // })
+                        mm.push([elem2.arrange.UseTime, 1, _self.increaseTime(elem2.arrange.UseTime, elem2.arrange.PredictTime * 60)])
+                        arr[index1].data = mm;
+                    }
+                }
+                _self.chartData = arr
+                console.log(_self.chartData)
+                _self.chartData.length ? _self.createChart() : ''
+            },
+            createChart() {
+                let chart = visavailChart().width(800);
+                d3.select("#chart")
+                    .datum(this.chartData)
+                    .call(chart);
             }
         }
 }
