@@ -1,7 +1,8 @@
-<!-- <template id="Editor">
+<template id="Editor">
     <div>
-        <div id="editorElem" style="text-align:left;"></div>
-        <el-button v-on:click="getContent" style="float:right;">发送</el-button>
+        <div id="div1"></div>
+        <div id="div2"></div>
+        <el-button v-on:click="getContent" style="float:right;margin:10px;" size="small">发送</el-button> 
     </div>
 </template>
 
@@ -16,7 +17,7 @@
         }
       },
       methods: {
-        getContent: function () {
+         getContent: function () {
             var editor = this.editor
             let text = editor.txt.text();
             this.session.messages.push({
@@ -25,11 +26,11 @@
                 self: true
             });
             editor.txt.clear();
-        }
+        } 
       },
       mounted() {
-        var editor = new E('#editorElem')
-        editor.customConfig.menus = [
+         var editor = new E('#div1', '#div2')
+         editor.customConfig.menus = [
             'undo',  // 撤销
             'redo',  // 重复
             'emoticon',  // 表情
@@ -39,26 +40,22 @@
             'foreColor',  // 文字颜色
             'backColor',  // 背景颜色
             'quote',  // 引用
-            'table'  // 表格
-        ]
+            'table',  // 表格
+            
+        ] 
         // 上传图片（举例）
         editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
+        $('#div2').css('height', 140)
+        $('#div1').css('width', '100%')
         editor.create()
-        const dom = document.getElementsByID("editorElem");
-        dom.style.height = '100px';
-        this.editor = editor
-        
+        this.editor = editor 
       }
     }
 </script>
 
 <style>
-#editorElem{
-   height:180px;
-    overflow-y: hidden; 
-   margin-bottom: 10px;
-   border-top: 1px solid lightgrey;
-   border-bottom: 1px solid lightgrey;
+#div1{
+    width: 100%;
 }
- .w-e-text { height:100px; overflow-y: hidden;} 
-</style> -->
+ .w-e-text { height:100px; overflow-y: auto;}  
+</style>

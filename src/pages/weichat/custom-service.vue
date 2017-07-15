@@ -82,6 +82,7 @@
         <p style="height:50px;border-bottom:1px solid lightgrey;padding:10px;">{{names}}<i class="el-icon-star-off" style="float: right;margin-top:10px;"></i></p>
         <div class="text item">
           <Message :session="session" :user="user" :user-list="userList" style="height:350px;overflow-y:auto;"></Message>
+          <hr style="border:solid 1px lightgrey">
           <div><Texts :session="session"></Texts></div>
         </div>
       </div>
