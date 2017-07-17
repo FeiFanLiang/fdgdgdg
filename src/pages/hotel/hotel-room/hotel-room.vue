@@ -138,9 +138,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="备注">
-            <el-input v-model="form.remark" type="textarea"></el-input>
+          <el-form-item label="床型">
+            <el-select v-model="form.Beds" placeholder="请选择床型" multiple >
+              <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
+            </el-select>
           </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+            <el-form-item label="备注">
+                <el-input v-model="form.remark" type="textarea"></el-input>
+            </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -211,7 +220,8 @@
 <script>
 import {
     hotelRoomApi,
-    sonRoomApi
+    sonRoomApi,
+    hotelRoomBedApi
 } from 'api';
 import {
     HotelTopMenu
@@ -255,7 +265,7 @@ export default {
                 roomName: '',
                 roomCode: '',
                 roomCount: '',
-                remark: ''
+                remark: '',
             },
             sonForm: {
                 id: '',
@@ -271,16 +281,6 @@ export default {
                 roomName: [{
                     required: true,
                     message: '请填写房间名称',
-                    trigger: 'blur'
-                }],
-                roomCode: [{
-                    required: true,
-                    message: '请填写房间编号',
-                    trigger: 'blur'
-                }],
-                roomCount: [{
-                    required: true,
-                    message: '请填写房间数量',
                     trigger: 'blur'
                 }]
             },
@@ -298,6 +298,7 @@ export default {
             },
             dialogVisible: false,
             sonFormDialogVisible: false,
+            Beds:[],
             bedsOptions: [],
             hotelroomlist: [],
             hotelRoomPlatVisible: false
@@ -306,9 +307,14 @@ export default {
     mounted() {
         this.form.hotelId = this.$route.params.ID
         this.fetchData();
+        this.bedsList();
         //this.show();
     },
     methods: {
+        async bedsList(){
+            const res = await hotelRoomBedApi.list();
+            this.bedsOptions = res.data;
+        },
         transBreakfastTypes(value) {
             const type = this.breakfastTypes.find(item => item.value === value);
             if (type) return type.name
@@ -470,6 +476,8 @@ export default {
             const res = await hotelRoomApi.list(this.$route.params.ID);
             this.hotelroomlist = res.data;
             console.log(this.hotelroomlist)
+            const res2 = await hotelRoomBedApi.list();
+            console.log(res2.data);
         },
         hotelroomDetail(row) {
             this.$router.push({
