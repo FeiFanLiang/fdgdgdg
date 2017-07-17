@@ -5,9 +5,9 @@
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="Channel" label="渠道">
                 <template scope="scope">
-                    <p v-if="scope.row.Channel === 0">加油卡</p>
-                    <p v-if="scope.row.Channel === 1">其他</p>
-                </template>
+                            <p v-if="scope.row.Channel === 0">加油卡</p>
+                            <p v-if="scope.row.Channel === 1">其他</p>
+</template>
             </el-table-column>
             <el-table-column prop="DateTimeString" label="加油时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="SerialNumber" label="流水号"></el-table-column>
@@ -18,10 +18,11 @@
             <!-- <el-table-column prop="DateTime" label="时间" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="GasolineStation" label="加油站" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="150">
-                <template scope="scope">
-                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <DeleteButton api="gasolineLogApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-                </template>
+<template scope="scope">
+    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+        编辑</el-button>
+    <DeleteButton api="gasolineLogApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
             </el-table-column>
         </el-table>
         <div class="pagination-wrapper">
@@ -112,14 +113,13 @@
     </div>
 </template>
 <script>
-import {
-    gasolineLogApi,
-    carBaseApi,
-    driverBaseApi
-} from 'api'
-
-export default {
-    created() {
+    import {
+        gasolineLogApi,
+        carBaseApi,
+        driverBaseApi
+    } from 'api'
+    export default {
+        created() {
             this.fetchData()
             this.getList()
         },
@@ -131,31 +131,26 @@ export default {
                 count: 0,
                 loading: false,
                 showDialog: false,
-                disabled:false,
+                disabled: false,
                 form: {
-                    CarID:'',
-                    DriverID:'',
+                    CarID: '',
+                    DriverID: '',
                     Channel: 0,
-                    DateTimeString:''
+                    DateTimeString: ''
                 },
-                Channel:'',
-                channelList:[
-                    {
-                        label:'加油卡',
-                        value:0
+                Channel: '',
+                channelList: [{
+                        label: '加油卡',
+                        value: 0
                     },
                     {
-                        label:'其他',
-                        value:1
+                        label: '其他',
+                        value: 1
                     }
                 ],
-                carList:[],
-                driverList:[],
-                pickerOptions: {
-                    disabledDate(time) {
-                        return time.getTime() > Date.now();
-                    }
-                }
+                carList: [],
+                driverList: [],
+                pickerOptions: {}
             }
         },
         methods: {
@@ -168,9 +163,7 @@ export default {
                     pageIndex: _self.currentPage,
                     pageSize: _self.pageSize,
                     order: 'ID',
-                    query: {
-                        
-                    }
+                    query: {}
                 }
                 try {
                     const res = await gasolineLogApi.list(options)
@@ -182,7 +175,7 @@ export default {
                     _self.loading = false
                 }
             },
-            async getList(){
+            async getList() {
                 const res = await carBaseApi.listByQuery();
                 this.carList = res.data.Data;
                 const res2 = await driverBaseApi.listByQuery();
@@ -199,10 +192,10 @@ export default {
             clickAddBtn() {
                 const _self = this
                 this.form = {
-                    CarID:'',
-                    DriverID:'',
+                    CarID: '',
+                    DriverID: '',
                     Channel: 0,
-                    DateTimeString:''
+                    DateTimeString: ''
                 }
                 _self.showDialog = true
             },
@@ -228,63 +221,65 @@ export default {
                 const _self = this
                 /* _self.$refs['form'].validate(async valid => {
                     if (valid) { */
-                        try {
-                            await gasolineLogApi.add(_self.form)
-                            _self.fetchData()
-                            //_self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '保存成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('添加失败!!!')
+                try {
+                    _self.form.DateTimeString = new Date(_self.form.DateTimeString).Format('yyyy-MM-dd hh:mm:ss')
+                    await gasolineLogApi.add(_self.form)
+                    _self.fetchData()
+                    //_self.$refs['form'].resetFields()
+                    _self.showDialog = false
+                    _self.$message({
+                        message: '保存成功',
+                        type: 'success'
+                    })
+                } catch (e) {
+                    console.error(e)
+                    _self.$message.error('添加失败!!!')
+                }
+                /* } else {
+                            return false
                         }
-                    /* } else {
-                        return false
-                    }
-                }) */
+                    }) */
             },
             async editSave() {
                 const _self = this
                 /* _self.$refs['form'].validate(async valid => {
                     if (valid) { */
-                        try {
-                            await gasolineLogApi.edit(_self.form.ID,_self.form)
-                            _self.fetchData()
-                           // _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '编辑成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('编辑失败!!!')
+                try {
+                    _self.form.DateTimeString = new Date(_self.form.DateTimeString).Format('yyyy-MM-dd hh:mm:ss')
+                    await gasolineLogApi.edit(_self.form.ID, _self.form)
+                    _self.fetchData()
+                    // _self.$refs['form'].resetFields()
+                    _self.showDialog = false
+                    _self.$message({
+                        message: '编辑成功',
+                        type: 'success'
+                    })
+                } catch (e) {
+                    console.error(e)
+                    _self.$message.error('编辑失败!!!')
+                }
+                /* } else {
+                            return false
                         }
-                    /* } else {
-                        return false
-                    }
-                }) */
+                    }) */
             },
-            channelChange(){
+            channelChange() {
                 console.log(this.form.Channel)
-                if(this.form.Channel == 0){
+                if (this.form.Channel == 0) {
                     this.disabled = false;
                 }
-                if(this.form.Channel == 1){
+                if (this.form.Channel == 1) {
                     this.disabled = true;
                 }
             }
         }
-}
+    }
 </script>
 <style lang="scss">
-#gasoline-log {
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
+    #gasoline-log {
+        .pagination-wrapper {
+            text-align: center;
+            padding: 30px;
+        }
     }
-}
 </style>
