@@ -69,7 +69,7 @@
                 </el-radio-group>
             </el-col>
             <el-col :span="4">
-                <el-button type="primary" @click="fetchData">搜索</el-button>
+                <el-button type="primary" @click="fetchData()">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
             <el-col :span="10">
