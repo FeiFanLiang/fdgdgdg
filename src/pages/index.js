@@ -20,16 +20,16 @@ import HotelShow from './hotel/hotel-show/hotel-show'
 import HotelShowAddAndEdit from './hotel/hotel-show/hotel-show-add-and-edit'
 import RoomShow from './hotel/room-show/room-show'
 const hotel = {
-  HotelBase,
-  HotelBaseAdd,
-  HotelBaseEdit,
-  HotelPlatform,
-  HotelPolicy,
-  HotelPrice,
-  HotelRoom,
-  HotelShow,
-  HotelShowAddAndEdit,
-  RoomShow
+    HotelBase,
+    HotelBaseAdd,
+    HotelBaseEdit,
+    HotelPlatform,
+    HotelPolicy,
+    HotelPrice,
+    HotelRoom,
+    HotelShow,
+    HotelShowAddAndEdit,
+    RoomShow
 }
 
 // show
@@ -64,14 +64,14 @@ import MembershipCard from './weichat/membership-card'
 import Verification from './weichat/verification'
 import Texts from './weichat/texts'
 const wechat = {
-  CustomMenu,
-  CustomService,
-  PayWeichat,
-  Card,
-  Datas,
-  MembershipCard,
-  Verification,
-  Texts
+    CustomMenu,
+    CustomService,
+    PayWeichat,
+    Card,
+    Datas,
+    MembershipCard,
+    Verification,
+    Texts
 }
 
 // fleet
@@ -79,18 +79,19 @@ import CarBase from './fleet/car-base/car-base'
 import DriverBase from './fleet/driver-base/driver-base'
 import CarArrange from './fleet/car-arrange/car-arrange'
 import CarUse from './fleet/car-use/car-use'
+import GasolineLog from './fleet/gasoline-log/gasoline-log'
 import DriverEvaluate from './fleet/driver-evaluate/driver-evaluate'
-const fleet = { CarBase, DriverBase, CarArrange, CarUse, DriverEvaluate }
+const fleet = { CarBase, DriverBase, CarArrange, CarUse, GasolineLog, DriverEvaluate }
 
 export default {
-  ...other,
-  ...auth,
-  ...hotel,
-  ...show,
-  ...policy,
-  ...order,
-  ...user,
-  ...role,
-  ...wechat,
-  ...fleet
+    ...other,
+    ...auth,
+    ...hotel,
+    ...show,
+    ...policy,
+    ...order,
+    ...user,
+    ...role,
+    ...wechat,
+    ...fleet
 }

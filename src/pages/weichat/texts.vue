@@ -1,4 +1,4 @@
-<template id="Editor">
+<!-- <template id="Editor">
     <div>
         <div id="div1"></div>
         <div id="div2"></div>
@@ -58,4 +58,4 @@
     width: 100%;
 }
  .w-e-text { height:100px; overflow-y: auto;}  
-</style>
+</style> -->

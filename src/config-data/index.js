@@ -2,7 +2,7 @@ import bargainsRoomApi from './bargains-room'
 import carArrangeApi from './car-arrange'
 import carBaseApi from './car-base'
 // import carOrderApi from './car-order'
-// import carOrderManageApi from './car-order-manage'
+import carOrderManageApi from './car-order-manage'
 // import orderChannelApi from './order-channel'
 import carUseApi from './car-use'
 import driverBaseApi from './driver-base'
@@ -29,7 +29,7 @@ export {
   carArrangeApi,
   carBaseApi,
   // carOrderApi,
-  // carOrderManageApi,
+  carOrderManageApi,
   // orderChannelApi,
   carUseApi,
   driverBaseApi,
