@@ -232,7 +232,6 @@
             },
             async addSave() {
                 const _self = this
-<<<<<<< HEAD
                  _self.$refs['form'].validate(async valid => {
                     if (valid) { 
                         try {
@@ -277,55 +276,6 @@
             },
             channelChange(){
                 if(this.form.Channel == 0){
-=======
-                /* _self.$refs['form'].validate(async valid => {
-                    if (valid) { */
-                try {
-                    _self.form.DateTimeString = new Date(_self.form.DateTimeString).Format('yyyy-MM-dd hh:mm:ss')
-                    await gasolineLogApi.add(_self.form)
-                    _self.fetchData()
-                    //_self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
-                        message: '保存成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('添加失败!!!')
-                }
-                /* } else {
-                            return false
-                        }
-                    }) */
-            },
-            async editSave() {
-                const _self = this
-                /* _self.$refs['form'].validate(async valid => {
-                    if (valid) { */
-                try {
-                    _self.form.DateTimeString = new Date(_self.form.DateTimeString).Format('yyyy-MM-dd hh:mm:ss')
-                    await gasolineLogApi.edit(_self.form.ID, _self.form)
-                    _self.fetchData()
-                    // _self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
-                        message: '编辑成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('编辑失败!!!')
-                }
-                /* } else {
-                            return false
-                        }
-                    }) */
-            },
-            channelChange() {
-                console.log(this.form.Channel)
-                if (this.form.Channel == 0) {
->>>>>>> fffa2644207611f309dcfd829b2f3ec01f059c15
                     this.disabled = false;
                 }
                 if (this.form.Channel == 1) {
