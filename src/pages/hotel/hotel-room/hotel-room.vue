@@ -137,21 +137,21 @@
             <el-input type="number" v-model="form.roomCount"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="11" :offset="1">
-          <el-form-item label="床型">
-            <el-select v-model="form.Beds" placeholder="请选择床型" multiple >
-              <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="24">
             <el-form-item label="备注">
                 <el-input v-model="form.remark" type="textarea"></el-input>
             </el-form-item>
         </el-col>
       </el-row>
+      <!-- <el-row>
+         <el-col :span="11" :offset="1">
+          <el-form-item label="床型">
+            <el-select v-model="form.Beds" placeholder="请选择床型" multiple >
+              <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col> 
+      </el-row> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -162,29 +162,30 @@
     <el-form ref="sonForm" :model="sonForm" :rules="sonRules" label-width="100px">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="子房间名称" prop="roomName">
-            <el-input v-model="sonForm.sonRoomName"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="11" :offset="1">
-          <el-form-item label="子房间编号" prop="roomCode">
-            <el-input v-model="sonForm.sonRoomCode"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="数量">
-            <el-input v-model="sonForm.roomCount"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="11" :offset="1">
           <el-form-item label="早餐类型">
             <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型">
               <el-option v-for="(item,index) in breakfastTypes " :label="item.name" :value="item.value" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="子房间名称" prop="roomName">
+            <el-input v-model="sonForm.sonRoomName"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="11">
+          <el-form-item label="子房间编号" prop="roomCode">
+            <el-input v-model="sonForm.sonRoomCode"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="11" :offset="1">
+          <el-form-item label="数量">
+            <el-input v-model="sonForm.roomCount"></el-input>
+          </el-form-item>
+        </el-col>
+        
       </el-row>
       <el-row>
         <el-col :span="11">
@@ -265,7 +266,7 @@ export default {
                 roomName: '',
                 roomCode: '',
                 roomCount: '',
-                remark: '',
+                remark: ''
             },
             sonForm: {
                 id: '',
@@ -275,7 +276,7 @@ export default {
                 remark: '',
                 remark2: '',
                 breakfastType: '',
-                isStop: true,
+                isStop: false,
             },
             rules: {
                 roomName: [{
@@ -298,7 +299,6 @@ export default {
             },
             dialogVisible: false,
             sonFormDialogVisible: false,
-            Beds:[],
             bedsOptions: [],
             hotelroomlist: [],
             hotelRoomPlatVisible: false
@@ -343,6 +343,7 @@ export default {
                             let form = { ..._self.form
                             }
                             delete form.id
+                            console.log(this.form)
                             await hotelRoomApi.add(form);
                         }
                         _self.fetchData();
@@ -397,7 +398,8 @@ export default {
             this.sonForm = {
                 roomID : row.ID,
                 breakfastType : this.breakfastTypes.name,
-                isStop: true,
+                isStop: false,
+                sonRoomName: '房型名称[早餐类型]',
             }
             this.sonFormDialogVisible = true;
         },

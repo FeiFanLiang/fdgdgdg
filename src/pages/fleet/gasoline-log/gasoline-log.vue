@@ -3,6 +3,8 @@
         <el-button type="primary" @click="clickAddBtn">创建</el-button>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
             <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="CarID" label="汽车ID"></el-table-column>
+            <el-table-column prop="DriverID" label="司机ID"></el-table-column>
             <el-table-column prop="Channel" label="渠道">
                 <template scope="scope">
                     <p v-if="scope.row.Channel === 0">加油卡</p>
@@ -29,7 +31,7 @@
             </el-pagination>
         </div>
         <el-dialog :title="form.ID?'编辑车辆加油信息':'添加车辆加油信息'" v-model="showDialog" @close="resetForm('form')">
-            <el-form ref="form" :model="form">
+            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="车牌号" prop="CarID">
@@ -56,7 +58,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="加油时间" prop="DateTimeString">
-                            <el-date-picker v-model="form.DateTimeString" type="datetime" placeholder="选择加油时间" :picker-options="pickerOptions"></el-date-picker>
+                            <el-date-picker v-model="form.DateTimeString" type="datetime" placeholder="选择加油时间" :picker-options="pickerOptions" style="width:100%"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -125,6 +127,17 @@ export default {
         },
         data() {
             return {
+                rules: {
+                    Channel: [
+                        { required: true, message: '请选择渠道信息' },
+                    ],
+                    CarID: [
+                        { required: true, message: '请选择车辆信息' }
+                    ],
+                    DriverID: [
+                        { required: true, message: '请选择司机信息' }
+                    ]
+                },
                 list: [],
                 currentPage: 1,
                 pageSize: 10,
@@ -226,12 +239,12 @@ export default {
             },
             async addSave() {
                 const _self = this
-                /* _self.$refs['form'].validate(async valid => {
-                    if (valid) { */
+                 _self.$refs['form'].validate(async valid => {
+                    if (valid) { 
                         try {
                             await gasolineLogApi.add(_self.form)
                             _self.fetchData()
-                            //_self.$refs['form'].resetFields()
+                            _self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
                                 message: '保存成功',
@@ -241,19 +254,19 @@ export default {
                             console.error(e)
                             _self.$message.error('添加失败!!!')
                         }
-                    /* } else {
+                     } else {
                         return false
                     }
-                }) */
+                }) 
             },
             async editSave() {
                 const _self = this
-                /* _self.$refs['form'].validate(async valid => {
-                    if (valid) { */
+                 _self.$refs['form'].validate(async valid => {
+                    if (valid) { 
                         try {
                             await gasolineLogApi.edit(_self.form.ID,_self.form)
                             _self.fetchData()
-                           // _self.$refs['form'].resetFields()
+                            _self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
                                 message: '编辑成功',
@@ -263,18 +276,18 @@ export default {
                             console.error(e)
                             _self.$message.error('编辑失败!!!')
                         }
-                    /* } else {
+                     } else {
                         return false
                     }
-                }) */
+                }) 
             },
             channelChange(){
-                console.log(this.form.Channel)
                 if(this.form.Channel == 0){
                     this.disabled = false;
                 }
                 if(this.form.Channel == 1){
                     this.disabled = true;
+                    this.form.SerialNumber = ''
                 }
             }
         }
