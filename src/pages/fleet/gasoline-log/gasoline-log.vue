@@ -61,7 +61,7 @@
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
         </div>
-        <el-dialog :title="form.id?'编辑车辆基本信息':'添加车辆基本信息'" v-model="showDialog" @close="resetForm('form')">
+        <el-dialog :title="form.id?'编辑车辆加油信息':'添加车辆加油信息'" v-model="showDialog" @close="resetForm('form')">
             <el-form :rules="rules" ref="form" :model="form" label-width="110px">
                 <el-row :gutter="24">
                     <el-col :span="12">
