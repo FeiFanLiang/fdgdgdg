@@ -1,39 +1,6 @@
 <template lang="html">
     <div id="gasoline-log">
-        <el-row :gutter="20" class="align-center">
-            <el-col :span="4">
-                <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData()">
-                    <el-option label="全部" value="">全部</el-option>
-                    <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
-                </el-select>
-            </el-col>
-            <el-col :span="4">
-                <el-input placeholder="请输入车型" v-model="filters.carMode"></el-input>
-            </el-col>
-            <el-col :span="6">
-                <el-button type="primary" @click="search">搜索</el-button>
-                <el-button type="primary" @click="clickAddBtn">创建</el-button>
-            </el-col>
-        </el-row>
-        <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
-            <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-        </CustomSearch>
-        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
-          <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
-              <template scope="scope">
-                  <p v-if="scope.row.CarClassify === 0">经济型</p>
-                  <p v-if="scope.row.CarClassify === 1">舒适型</p>
-                  <p v-if="scope.row.CarClassify === 2">商务型</p>
-                  <p v-if="scope.row.CarClassify === 3">豪华型</p>
-              </template>
-          </el-table-column>
-          <el-table-column label="操作" width="150" slot="right-one">
-              <template scope="scope">
-                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                  <DeleteButton api="gasolineLogApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-              </template>
-          </el-table-column>
-        </CustomTable> -->
+        <el-button type="primary" @click="clickAddBtn">创建</el-button>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="Channel" label="渠道">
@@ -42,13 +9,13 @@
                     <p v-if="scope.row.Channel === 1">其他</p>
                 </template>
             </el-table-column>
-            <el-table-column prop="DateTimeString" label="加油时间"></el-table-column>
+            <el-table-column prop="DateTimeString" label="加油时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="SerialNumber" label="流水号"></el-table-column>
             <el-table-column prop="GasolineType" label="油品标号"></el-table-column>
             <el-table-column prop="UnitPrice" label="单价"></el-table-column>
             <el-table-column prop="Count" label="数量"></el-table-column>
             <el-table-column prop="Total" label="总额"></el-table-column>
-            <el-table-column prop="DateTime" label="时间" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="DateTime" label="时间" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="GasolineStation" label="加油站" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="150">
                 <template scope="scope">
@@ -61,77 +28,81 @@
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
         </div>
-        <el-dialog :title="form.id?'编辑车辆加油信息':'添加车辆加油信息'" v-model="showDialog" @close="resetForm('form')">
-            <el-form :rules="rules" ref="form" :model="form" label-width="110px">
+        <el-dialog :title="form.ID?'编辑车辆加油信息':'添加车辆加油信息'" v-model="showDialog" @close="resetForm('form')">
+            <el-form ref="form" :model="form">
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车辆分类" prop="carClassify">
-                            <el-select v-model="form.carClassify" clearable placeholder="请选择车辆类型" style="width:100%">
-                                <el-option v-for="(item,index) in carClassifyList" :key="index" :label="item.label" :value="item.value"></el-option>
+                        <el-form-item label="车牌号" prop="CarID">
+                            <el-select v-model="form.CarID" clearable placeholder="请选择车牌号" style="width:100%">
+                                <el-option v-for="(item,index) in carList" :key="index" :label="item.CarNumber" :value="item.ID"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="车型" prop="carMode">
-                            <el-input placeholder="请输入车型" v-model="form.carMode"></el-input>
+                        <el-form-item label="司机姓名" prop="DriverID">
+                            <el-select v-model="form.DriverID" clearable placeholder="请选择司机姓名" style="width:100%">
+                                <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车牌号" prop="carNumber">
-                            <el-input placeholder="请输入车牌号" v-model="form.carNumber"></el-input>
+                        <el-form-item label="渠道" prop="Channel">
+                            <el-select v-model="form.Channel" clearable placeholder="请选择加油渠道" style="width:100%" @change="channelChange">
+                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="品牌" prop="carBrand">
-                            <el-input placeholder="请输入品牌" v-model="form.carBrand"></el-input>
+                        <el-form-item label="加油时间" prop="DateTimeString">
+                            <el-date-picker v-model="form.DateTimeString" type="datetime" placeholder="选择加油时间" :picker-options="pickerOptions"></el-date-picker>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="车辆颜色" prop="carColor">
-                            <el-input placeholder="请输入车辆颜色" v-model="form.carColor"></el-input>
+                        <el-form-item label="流水号" prop="SerialNumber">
+                            <el-input placeholder="请输入流水号" v-model="form.SerialNumber" :disabled="disabled"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="出厂日期" prop="releaseDate">
-                            <el-date-picker v-model="form.releaseDate" type="date" placeholder="请选择出厂日期" :picker-options="pickerOptions"></el-date-picker>
+                        <el-form-item label="油品标号" prop="GasolineType">
+                            <el-input placeholder="请输入油品标号" v-model="form.GasolineType"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="运营城市" prop="operationCity">
-                            <el-input placeholder="请输入运营城市" v-model="form.operationCity"></el-input>
+                        <el-form-item label="单价" prop="UnitPrice">
+                            <el-input placeholder="请输入单价" v-model="form.UnitPrice"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="座位数" prop="seatNum">
-                            <el-input placeholder="请输入座位数" v-model="form.seatNum"></el-input>
+                        <el-form-item label="数量" prop="Count">
+                            <el-input placeholder="请输入数量" v-model="form.Count"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="最大载客人数" prop="seatingNum">
-                            <el-input placeholder="请输入最大载客人数" v-model="form.seatingNum"></el-input>
+                        <el-form-item label="总额" prop="Total">
+                            <el-input placeholder="请输入总额" v-model="form.Total"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="行李数" prop="luggageNum">
-                            <el-input placeholder="请输入行李数" v-model="form.luggageNum"></el-input>
+                        <el-form-item label="加油站" prop="GasolineStation">
+                            <el-input placeholder="请输入加油站名称" v-model="form.GasolineStation"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="24">
-                        <el-form-item label="备注" prop="remark">
-                            <el-input type="textarea" v-model="form.remark"></el-input>
+                <!-- <el-row :gutter="24">
+                     <el-col :span="12">
+                        <el-form-item label="时间" prop="DateTime">
+                            <el-date-picker v-model="form.DateTime" type="datetime" placeholder="选择时间"></el-date-picker>
                         </el-form-item>
-                    </el-col>
-                </el-row>
+                    </el-col> 
+                </el-row> -->
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -142,13 +113,15 @@
 </template>
 <script>
 import {
-    gasolineLogApi
+    gasolineLogApi,
+    carBaseApi,
+    driverBaseApi
 } from 'api'
 
 export default {
     created() {
             this.fetchData()
-                // this.configList = gasolineLogApi.getConfig()
+            this.getList()
         },
         data() {
             return {
@@ -158,75 +131,34 @@ export default {
                 count: 0,
                 loading: false,
                 showDialog: false,
-                pickerOptions: {},
+                disabled:false,
                 form: {
-                    id: '',
-                    carClassify: '',
-                    carMode: '',
-                    carBrand: '',
-                    carColor: '',
-                    releaseDate: '',
-                    carNumber: '',
-                    operationCity: '',
-                    seatNum: '',
-                    seatingNum: '',
-                    luggageNum: '',
-                    remark: ''
+                    CarID:'',
+                    DriverID:'',
+                    Channel: 0,
+                    DateTimeString:''
                 },
-                rules: {
-                    carClassify: [{
-                        required: true,
-                        message: '请输入车辆分类'
-                    }],
-                    carMode: [{
-                        required: true,
-                        message: '请输入车型'
-                    }],
-                    carNumber: [{
-                        required: true,
-                        message: '请输入车牌号'
-                    }],
-                    operationCity: [{
-                        required: true,
-                        message: '请输入运营城市'
-                    }],
-                    seatNum: [{
-                        required: true,
-                        message: '请输入座位数'
-                    }],
-                    seatingNum: [{
-                        required: true,
-                        message: '请输入最大载客人数'
-                    }],
-                    luggageNum: [{
-                        required: true,
-                        message: '请输入行李数'
-                    }]
-                },
-                carClassifyList: [{
-                    value: 0,
-                    label: '经济型'
-                }, {
-                    value: 1,
-                    label: '舒适型'
-                }, {
-                    value: 2,
-                    label: '商务型'
-                }, {
-                    value: 3,
-                    label: '豪华型'
-                }],
-                filters: {
-                    carMode: '',
-                    carClassify: '',
-                    isdelete: true
+                Channel:'',
+                channelList:[
+                    {
+                        label:'加油卡',
+                        value:0
+                    },
+                    {
+                        label:'其他',
+                        value:1
+                    }
+                ],
+                carList:[],
+                driverList:[],
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now();
+                    }
                 }
             }
         },
         methods: {
-            search() {
-                this.fetchData()
-            },
             async fetchData(currentPage, pageSize) {
                 const _self = this
                 _self.loading = true
@@ -237,9 +169,7 @@ export default {
                     pageSize: _self.pageSize,
                     order: 'ID',
                     query: {
-                        carClassify: _self.filters.carClassify,
-                        carMode: _self.filters.carMode,
-                        isdelete: !_self.filters.isdelete
+                        
                     }
                 }
                 try {
@@ -252,6 +182,12 @@ export default {
                     _self.loading = false
                 }
             },
+            async getList(){
+                const res = await carBaseApi.listByQuery();
+                this.carList = res.data.Data;
+                const res2 = await driverBaseApi.listByQuery();
+                this.driverList = res2.data.Data;
+            },
             handleSizeChange(val) {
                 this.pageSize = val
                 this.fetchData(this.pageSize)
@@ -262,33 +198,27 @@ export default {
             },
             clickAddBtn() {
                 const _self = this
+                this.form = {
+                    CarID:'',
+                    DriverID:'',
+                    Channel: 0,
+                    DateTimeString:''
+                }
                 _self.showDialog = true
-                _self.form = {}
             },
             async clickEditBtn($index, row) {
                 const _self = this
                 try {
                     const res = await gasolineLogApi.detail(row.ID)
+                    _self.form = res.data.Data;
                     _self.showDialog = true
-                    _self.form.id = res.data.Data.ID
-                    _self.form.carClassify = res.data.Data.CarClassify
-                    _self.form.carMode = res.data.Data.CarMode
-                    _self.form.carBrand = res.data.Data.CarBrand
-                    _self.form.carColor = res.data.Data.CarColor
-                    _self.form.releaseDate = res.data.Data.ReleaseDate
-                    _self.form.carNumber = res.data.Data.CarNumber
-                    _self.form.luggageNum = res.data.Data.LuggageNum
-                    _self.form.operationCity = res.data.Data.OperationCity
-                    _self.form.seatNum = res.data.Data.SeatNum
-                    _self.form.seatingNum = res.data.Data.SeatingNum
-                    _self.form.remark = res.data.Data.Remark
                 } catch (e) {
                     console.error(e)
                 }
             },
             submitForm() {
                 const _self = this
-                if (_self.form.id) {
+                if (_self.form.ID) {
                     _self.editSave()
                 } else {
                     _self.addSave()
@@ -296,12 +226,12 @@ export default {
             },
             async addSave() {
                 const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
+                /* _self.$refs['form'].validate(async valid => {
+                    if (valid) { */
                         try {
                             await gasolineLogApi.add(_self.form)
                             _self.fetchData()
-                            _self.$refs['form'].resetFields()
+                            //_self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
                                 message: '保存成功',
@@ -311,19 +241,19 @@ export default {
                             console.error(e)
                             _self.$message.error('添加失败!!!')
                         }
-                    } else {
+                    /* } else {
                         return false
                     }
-                })
+                }) */
             },
             async editSave() {
                 const _self = this
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
+                /* _self.$refs['form'].validate(async valid => {
+                    if (valid) { */
                         try {
-                            await gasolineLogApi.edit(_self.form)
+                            await gasolineLogApi.edit(_self.form.ID,_self.form)
                             _self.fetchData()
-                            _self.$refs['form'].resetFields()
+                           // _self.$refs['form'].resetFields()
                             _self.showDialog = false
                             _self.$message({
                                 message: '编辑成功',
@@ -333,20 +263,25 @@ export default {
                             console.error(e)
                             _self.$message.error('编辑失败!!!')
                         }
-                    } else {
+                    /* } else {
                         return false
                     }
-                })
+                }) */
+            },
+            channelChange(){
+                console.log(this.form.Channel)
+                if(this.form.Channel == 0){
+                    this.disabled = false;
+                }
+                if(this.form.Channel == 1){
+                    this.disabled = true;
+                }
             }
         }
 }
 </script>
 <style lang="scss">
 #gasoline-log {
-    .align-center {
-        display: flex;
-        align-items: center;
-    }
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
