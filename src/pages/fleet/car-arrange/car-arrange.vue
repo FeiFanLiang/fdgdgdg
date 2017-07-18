@@ -14,36 +14,37 @@
             </el-col>
         </el-row>
         <!-- <CustomTable :list="unArrangeList" :configList="configList.listFields" :className="tableRowClassName">
-            <el-table-column type="expand" slot="left-one">
-                <template scope="props" v-if="props.row.CancelTime">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item>
-                            <p>取消时间：{{props.row.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.CancelRemark}}</p>
-                        </el-form-item>
-                    </el-form>
-                </template>
+                        <el-table-column type="expand" slot="left-one">
+                            <template scope="props" v-if="props.row.CancelTime">
+                                <el-form label-position="left" inline class="demo-table-expand">
+                                    <el-form-item>
+                                        <p>取消时间：{{props.row.CancelTime}}</p>
+                                        <p>取消单人员：{{props.row.CancelUserID}}</p>
+                                        <p>取消说明：{{props.row.CancelRemark}}</p>
+                                    </el-form-item>
+                                </el-form>
+</template>
             </el-table-column>
             <el-table-column width="150" label="操作" fixed="right" slot="right-one">
-                <template scope="scope">
-                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-                </template>
+<template scope="scope">
+    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+        编辑</el-button>
+    <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
             </el-table-column>
             </CustomTable> -->
         <h3>待派车订单</h3>
         <el-table :data="unArrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
             <el-table-column type="expand">
-                <template scope="props" v-if="props.row.CancelTime">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item>
-                            <p>取消时间：{{props.row.order.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.order.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.order.CancelRemark}}</p>
-                        </el-form-item>
-                    </el-form>
-                </template>
+<template scope="props" v-if="props.row.CancelTime">
+    <el-form label-position="left" inline class="demo-table-expand">
+        <el-form-item>
+            <p>取消时间：{{props.row.order.CancelTime}}</p>
+            <p>取消单人员：{{props.row.order.CancelUserID}}</p>
+            <p>取消说明：{{props.row.order.CancelRemark}}</p>
+        </el-form-item>
+    </el-form>
+</template>
             </el-table-column>
             <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
@@ -51,21 +52,21 @@
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-                </template>
+<template scope="scope">
+    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
+</template>
             </el-table-column>
             <el-table-column label="车型类别" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.order.CarClassify === 0">经济型</span>
-                    <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
-                    <span v-if="scope.row.order.CarClassify === 2">商务型</span>
-                    <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
-                </template>
+<template scope="scope">
+    <span v-if="scope.row.order.CarClassify === 0">经济型</span>
+    <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
+    <span v-if="scope.row.order.CarClassify === 2">商务型</span>
+    <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
+</template>
             </el-table-column>
             <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
@@ -73,23 +74,24 @@
             <el-table-column prop="order.PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
-                <template scope="scope">
-                    <el-button size="small" @click="dispatch(scope.$index, scope.row,0)">派车</el-button>
-                </template>
+<template scope="scope">
+    <el-button size="small" @click="dispatch(scope.$index, scope.row,0)">
+        派车</el-button>
+</template>
             </el-table-column>
         </el-table>
         <h3>已派车订单</h3>
         <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
             <el-table-column type="expand">
-                <template scope="props" v-if="props.row.CancelTime">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item>
-                            <p>取消时间：{{props.row.arrange.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
-                        </el-form-item>
-                    </el-form>
-                </template>
+<template scope="props" v-if="props.row.CancelTime">
+    <el-form label-position="left" inline class="demo-table-expand">
+        <el-form-item>
+            <p>取消时间：{{props.row.arrange.CancelTime}}</p>
+            <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
+            <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
+        </el-form-item>
+    </el-form>
+</template>
             </el-table-column>
             <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
@@ -97,13 +99,13 @@
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column label="产品类型" show-overflow-tooltip>
-                <template scope="scope">
-                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-                </template>
+<template scope="scope">
+    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
+</template>
             </el-table-column>
             <el-table-column prop="arrange.Driver.Name" label="司机姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="arrange.Car.CarMode" label="车型" show-overflow-tooltip></el-table-column>
@@ -113,9 +115,10 @@
             <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
-                <template scope="scope">
-                    <el-button size="small" @click="dispatch(scope.$index, scope.row,1)">改派</el-button>
-                </template>
+<template scope="scope">
+    <el-button size="small" @click="dispatch(scope.$index, scope.row,1)">
+        改派</el-button>
+</template>
             </el-table-column>
         </el-table>
         <p id="chart"></p>
@@ -239,18 +242,15 @@
     </div>
 </template>
 <script>
-import {
-    carBaseApi,
-    driverBaseApi,
-    carArrangeApi
-} from 'api'
-
-// import * as moment from "moment";
-// import * as d3 from "d3";
-
-
-export default {
-    mounted() {
+    import {
+        carBaseApi,
+        driverBaseApi,
+        carArrangeApi
+    } from 'api'
+    // import * as moment from "moment";
+    // import * as d3 from "d3";
+    export default {
+        mounted() {
             this.filters.beginTime = new Date().Format('yyyy-MM-dd')
             const now = new Date();
             now.setDate(now.getDate() + 1);
@@ -270,6 +270,7 @@ export default {
                 showDialog: false,
                 pickerOptions: {},
                 tag: '',
+                copyForm: {},
                 form: {
                     id: '',
                     channel: '',
@@ -441,7 +442,7 @@ export default {
                     _self.form.driverId = ''
                     _self.form.remark = ''
                 }
-
+                _self.copyForm = Object.assign({}, _self.form);
             },
             submitForm() {
                 const _self = this
@@ -481,17 +482,17 @@ export default {
             },
             async editSave() {
                 const _self = this
-                const options = {
-                    arrangeId: _self.form.id,
-                    orderId: _self.form.id,
-                    carId: _self.form.carId,
-                    driverId: _self.form.driverId,
-                    remark: _self.form.remark
-                }
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
+                        const form = {}
+                        for (let [k, v] of Object.entries(_self.form)) {
+                            if (_self.form[k] != _self.copyForm[k]) {
+                                form[k] = v
+                            }
+                        }
+                        form.arrangeId = _self.form.id
                         try {
-                            await carArrangeApi.editArrange(options)
+                            await carArrangeApi.editArrange(form)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false
@@ -552,8 +553,8 @@ export default {
                     .call(chart);
             }
         }
-}
+    }
 </script>
 <style lang="scss" scoped>
-#car-arrange-page {}
+    #car-arrange-page {}
 </style>
