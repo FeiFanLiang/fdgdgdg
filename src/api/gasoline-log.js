@@ -4,7 +4,7 @@ const base = path.apiBaseUrl + 'ParkSale/GasolineLog/'
 
 export default {
     list(params) {
-            return axios.get(base + 'list')
+            return axios.get(base + 'list', {params:params})
         },
         detail(id) {
             return axios.get(base + id)

@@ -12,8 +12,12 @@
                 </el-select>
             </el-col>
             <el-col :span="3">
-                <el-input placeholder="请输入车牌号" v-model="filters.CarID" v-show="filters.labelVal == '1'"></el-input>
-                <el-input placeholder="请输入司机姓名" v-model="filters.DriverID" v-show="filters.labelVal == '2'"></el-input>
+                <el-select v-model="filters.CarID" filterable clearable placeholder="请选择车牌号" v-show="filters.labelVal == '1'">
+                    <el-option v-for="(item,index) in carList" :key="index" :label="item.CarNumber" :value="item.ID"></el-option>
+                </el-select>
+                <el-select v-model="filters.DriverID" filterable clearable placeholder="请选择司机姓名" v-show="filters.labelVal == '2'">
+                    <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID"></el-option>
+                </el-select>
             </el-col>
             <el-col :span="5">
                 <el-button type="primary" @click="gasolineSearch(filters)">搜索</el-button>
