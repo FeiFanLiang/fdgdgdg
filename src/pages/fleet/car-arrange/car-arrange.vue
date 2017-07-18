@@ -270,7 +270,6 @@
                 showDialog: false,
                 pickerOptions: {},
                 tag: '',
-                copyForm: {},
                 form: {
                     id: '',
                     channel: '',
@@ -442,7 +441,6 @@
                     _self.form.driverId = ''
                     _self.form.remark = ''
                 }
-                _self.copyForm = Object.assign({}, _self.form);
             },
             submitForm() {
                 const _self = this
@@ -490,12 +488,6 @@
                 }
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
-                        // const form = {}
-                        // for (let [k, v] of Object.entries(_self.form)) {
-                        //     if (_self.form[k] != _self.copyForm[k]) {
-                        //         form[k] = v
-                        //     }
-                        // }
                         try {
                             await carArrangeApi.editArrange(options)
                             _self.fetchData()
