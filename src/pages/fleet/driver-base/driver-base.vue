@@ -3,15 +3,6 @@
         <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
         </CustomSearch>
-        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
-          <el-table-column prop="JobStatus" label="工作状态" width="100" slot="right-one">
-              <template scope="scope">
-                  <p v-if="scope.row.JobStatus === 1">正常在职</p>
-                  <p v-if="scope.row.JobStatus === 2">已离职</p>
-                  <p v-if="scope.row.JobStatus === 3">停职</p>
-                  <p v-if="scope.row.JobStatus === 4">休假</p>
-              </template>
-          </el-table-column>
           <el-table-column label="操作" width="150" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>

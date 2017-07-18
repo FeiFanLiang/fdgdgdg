@@ -3,6 +3,7 @@
     <el-dialog title="平台酒店信息编辑" size="large"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
       <el-row>
         <el-button  @click="add">添加</el-button>
+        <el-button @click="add">返回</el-button>
       </el-row>
     <el-table :data="list" ref="table"  style="width: 100%;height:100%"  border row-key="ID">
       <el-table-column  prop="PlatformID" label="平台ID"  show-overflow-tooltip></el-table-column>
