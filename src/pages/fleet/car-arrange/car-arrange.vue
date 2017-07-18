@@ -490,7 +490,7 @@
                                 form[k] = v
                             }
                         }
-                        form.arrangeId = _self.form.id
+                        // form.arrangeId = _self.form.id
                         try {
                             await carArrangeApi.editArrange(form)
                             _self.fetchData()

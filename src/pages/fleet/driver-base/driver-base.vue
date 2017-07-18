@@ -1,13 +1,36 @@
 <template lang="html">
   <div id="driver-base">
-    <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
-      <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-    </CustomSearch>
+    <el-row :gutter="20">
+      <el-col :span="5">
+        <el-select v-model="filters.jobStatus" placeholder="工作状态">
+          <el-option label="全部" value="">全部</el-option>
+          <el-option v-for="(item,index) in jobStatusList" :key="index" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="4">
+        <el-select v-model="filters.labelVal" placeholder="请选择">
+          <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="5">
+        <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
+        <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
+      </el-col>
+      <el-col :span="10">
+        <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="clickAddBtn">创建</el-button>
+      </el-col>
+    </el-row>
+    <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+              <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
+            </CustomSearch> -->
     <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
-            <el-table-column label="操作" width="150" slot="right-two">
-              <template scope="scope">
-                            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                            <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                    <el-table-column label="操作" width="150" slot="right-two">
+                      <template scope="scope">
+                                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                                    <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
           </el-table-column>
         </CustomTable> -->
@@ -91,33 +114,29 @@
           jobStatus: '',
           remark: ''
         },
-        filters: {},
+        filters: {
+          name: '',
+          phone: '',
+          jobStatus: '',
+          labelVal: '1'
+        },
         selectedOptions: [{
-            value: '1',
-            label: '姓名'
-          },
-          {
-            value: '2',
-            label: '电话'
-          }
-        ],
+          value: '1',
+          label: '姓名'
+        }, {
+          value: '2',
+          label: '电话'
+        }],
         jobStatusList: [{
-            value: 1,
-            label: '正常在职'
-          },
-          {
-            value: 2,
-            label: '已离职'
-          },
-          {
-            value: 3,
-            label: '停职'
-          },
-          {
-            value: 4,
-            label: '休假'
-          }
-        ],
+          value: 1,
+          label: '正产在职'
+        }, {
+          value: 2,
+          label: '已离职'
+        }, {
+          value: 3,
+          label: '停职'
+        }],
         rules: {
           jobNnumber: [{
             required: true,
@@ -143,20 +162,27 @@
       }
     },
     methods: {
-      searchCallback(filters) {
-        this.filters = filters
-        this.fetchData()
+      // searchCallback(filters) {
+      //   this.filters = filters
+      //   this.fetchData()
+      // },
+      search() {
+        this.fetchData();
       },
       async fetchData(currentPage, pageSize) {
         const _self = this
         _self.loading = true
-        _self.currentPage = currentPage || _self.currentPage
-        _self.pageSize = pageSize || _self.pageSize
+        _self.currentPage = currentPage || _self.currentPage;
+        _self.pageSize = pageSize || _self.pageSize;
         const options = {
           pageIndex: _self.currentPage,
           pageSize: _self.pageSize,
           order: 'ID',
-          query: this.filters
+          query: {
+            name: _self.filters.labelVal === '1' ? _self.filters.name : '',
+            phone: _self.filters.labelVal === '2' ? _self.filters.phone : '',
+            jobStatus: _self.filters.jobStatus
+          },
         }
         try {
           const res = await driverBaseApi.listByQuery(options)
