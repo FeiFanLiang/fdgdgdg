@@ -14,15 +14,15 @@
             </el-col>
         </el-row>
         <!-- <CustomTable :list="unArrangeList" :configList="configList.listFields" :className="tableRowClassName">
-                        <el-table-column type="expand" slot="left-one">
-                            <template scope="props" v-if="props.row.CancelTime">
-                                <el-form label-position="left" inline class="demo-table-expand">
-                                    <el-form-item>
-                                        <p>取消时间：{{props.row.CancelTime}}</p>
-                                        <p>取消单人员：{{props.row.CancelUserID}}</p>
-                                        <p>取消说明：{{props.row.CancelRemark}}</p>
-                                    </el-form-item>
-                                </el-form>
+                    <el-table-column type="expand" slot="left-one">
+                        <template scope="props" v-if="props.row.CancelTime">
+                            <el-form label-position="left" inline class="demo-table-expand">
+                                <el-form-item>
+                                    <p>取消时间：{{props.row.CancelTime}}</p>
+                                    <p>取消单人员：{{props.row.CancelUserID}}</p>
+                                    <p>取消说明：{{props.row.CancelRemark}}</p>
+                                </el-form-item>
+                            </el-form>
 </template>
             </el-table-column>
             <el-table-column width="150" label="操作" fixed="right" slot="right-one">
@@ -482,17 +482,22 @@
             },
             async editSave() {
                 const _self = this
+                const options = {
+                    orderId: _self.form.id,
+                    carId: _self.form.carId,
+                    driverId: _self.form.driverId,
+                    remark: _self.form.remark
+                }
                 _self.$refs['form'].validate(async valid => {
                     if (valid) {
-                        const form = {}
-                        for (let [k, v] of Object.entries(_self.form)) {
-                            if (_self.form[k] != _self.copyForm[k]) {
-                                form[k] = v
-                            }
-                        }
-                        // form.arrangeId = _self.form.id
+                        // const form = {}
+                        // for (let [k, v] of Object.entries(_self.form)) {
+                        //     if (_self.form[k] != _self.copyForm[k]) {
+                        //         form[k] = v
+                        //     }
+                        // }
                         try {
-                            await carArrangeApi.editArrange(form)
+                            await carArrangeApi.editArrange(options)
                             _self.fetchData()
                             _self.$refs['form'].resetFields()
                             _self.showDialog = false
