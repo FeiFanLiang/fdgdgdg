@@ -1,7 +1,6 @@
 <template lang="html">
   <div id="hotel-paymode-page">
     <el-row>
-<<<<<<< HEAD
         <el-col :span="12">
             <el-button type="primary" @click="clickAddBtn()">创建</el-button>
         </el-col>
@@ -13,18 +12,6 @@
             <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
             <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
           </template>
-=======
-      <el-col :span="12">
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-      </el-col>
-    </el-row>
-    <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
-                <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
-                  <template scope="scope">
-                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                    <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
->>>>>>> 1d081305121aa3cc5f83de65bc99696d4fbf641d
         </el-table-column>
       </CustomTable> -->
      <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
@@ -58,7 +45,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import { hotelPayModeApi } from 'api'
 
 export default {
@@ -79,29 +65,6 @@ export default {
       rules: {
         modeName: [
           {
-=======
-  import {
-    hotelPayModeApi
-  } from 'api'
-  export default {
-    created() {
-      this.fetchData()
-      this.configList = hotelPayModeApi.getConfig()
-    },
-    data() {
-      return {
-        list: [],
-        loading: true,
-        showDialog: false,
-        copyForm: {},
-        form: {
-          id: '',
-          modeName: '',
-          remark: ''
-        },
-        rules: {
-          modeName: [{
->>>>>>> 1d081305121aa3cc5f83de65bc99696d4fbf641d
             required: true,
             message: '请输入账户名称'
           }]

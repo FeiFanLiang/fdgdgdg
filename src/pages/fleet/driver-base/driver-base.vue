@@ -1,5 +1,4 @@
 <template lang="html">
-<<<<<<< HEAD
     <div id="driver-base">
         <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
@@ -10,41 +9,6 @@
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                   <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
               </template>
-=======
-  <div id="driver-base">
-    <el-row :gutter="20">
-      <el-col :span="5">
-        <el-select v-model="filters.jobStatus" placeholder="工作状态">
-          <el-option label="全部" value="">全部</el-option>
-          <el-option v-for="(item,index) in jobStatusList" :key="index" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="4">
-        <el-select v-model="filters.labelVal" placeholder="请选择">
-          <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="5">
-        <el-input placeholder="请输入姓名" v-model="filters.name" v-show="filters.labelVal == '1'"></el-input>
-        <el-input placeholder="请输入电话" v-model="filters.phone" v-show="filters.labelVal == '2'"></el-input>
-      </el-col>
-      <el-col :span="10">
-        <el-button type="primary" @click="search">搜索</el-button>
-        <el-button type="primary" @click="clickAddBtn">创建</el-button>
-      </el-col>
-    </el-row>
-    <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
-              <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-            </CustomSearch> -->
-    <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
-                    <el-table-column label="操作" width="150" slot="right-two">
-                      <template scope="scope">
-                                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                                    <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
->>>>>>> 1d081305121aa3cc5f83de65bc99696d4fbf641d
           </el-table-column>
         </CustomTable> -->
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
