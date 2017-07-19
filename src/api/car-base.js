@@ -2,23 +2,27 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'ParkSale/Car/'
 
-import { carBaseApi } from '../config-data'
+import {
+  carBaseApi
+} from '../config-data'
 
 export default {
   getConfig: carBaseApi.getConfig,
-  listByQuery (params) {
-    return axios.get(base + 'list', { params: params })
+  listByQuery(params) {
+    return axios.get(base + 'list', {
+      params: params
+    })
   },
-  detail (id) {
+  detail(id) {
     return axios.get(base + id)
   },
-  add (params) {
+  add(params) {
     return axios.post(base, params)
   },
-  edit (params) {
-    return axios.put(base + params.id, params)
+  edit(id, params) {
+    return axios.put(base + id, params)
   },
-  del (id) {
+  del(id) {
     return axios.delete(base + id)
   }
 }

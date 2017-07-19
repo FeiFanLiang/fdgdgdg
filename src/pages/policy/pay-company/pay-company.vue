@@ -5,6 +5,7 @@
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
+<<<<<<< HEAD
     <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
       v-loading="loading">
       <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
@@ -12,9 +13,17 @@
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
          </template>
+=======
+    <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+              <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
+                <template scope="scope">
+                  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                  <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
+>>>>>>> 1d081305121aa3cc5f83de65bc99696d4fbf641d
       </el-table-column>
-    </CustomTable>
-      <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+    </CustomTable> -->
+       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         v-loading="loading"
         border
         row-key="ID"
@@ -24,12 +33,13 @@
         <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column  width="150"  label="操作" fixed="right">
-          <template scope="scope">
-            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-            <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-           </template>
+<template scope="scope">
+  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+    编辑</el-button>
+  <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
         </el-table-column>
-      </el-table> -->
+      </el-table> 
       <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form"  >
           <el-form-item label="账户名称" prop="accountName">
@@ -51,131 +61,135 @@
 </template>
 
 <script>
-import { payCompanyApi } from 'api'
-
-export default {
-  created() {
-    this.fetchData()
-    this.configList = payCompanyApi.getConfig()
-  },
-  data() {
-    return {
-      list: [],
-      loading: true,
-      showDialog: false,
-      form: {
-        id: '',
-        accountName: '',
-        accountNum: '',
-        remark: ''
-      },
-      rules: {
-        accountName: [
-          {
+  import {
+    payCompanyApi
+  } from 'api'
+  export default {
+    created() {
+      this.fetchData()
+      this.configList = payCompanyApi.getConfig()
+    },
+    data() {
+      return {
+        list: [],
+        loading: true,
+        showDialog: false,
+        copyForm: {},
+        form: {
+          id: '',
+          accountName: '',
+          accountNum: '',
+          remark: ''
+        },
+        rules: {
+          accountName: [{
             required: true,
             message: '请输入账户名称'
-          }
-        ],
-        accountNum: [
-          {
+          }],
+          accountNum: [{
             required: true,
             message: '请输入银行账户'
-          }
-        ]
-      }
-    }
-  },
-
-  methods: {
-    handleCurrentChange(val) {
-      this.currentPage = val
-    },
-    async fetchData() {
-      const _self = this
-      _self.loading = true
-      try {
-        const res = await payCompanyApi.list()
-        _self.list = res.data
-        _self.loading = false
-      } catch (e) {
-        console.error(e)
-        _self.loading = false
+          }]
+        }
       }
     },
-    clickAddBtn() {
-      const _self = this
-      _self.showDialog = true
-      _self.form = {}
-    },
-    async clickEditBtn($index, row) {
-      const _self = this
-      try {
-        const res = await payCompanyApi.detail(row.ID)
+    methods: {
+      handleCurrentChange(val) {
+        this.currentPage = val
+      },
+      async fetchData() {
+        const _self = this
+        _self.loading = true
+        try {
+          const res = await payCompanyApi.list()
+          _self.list = res.data
+          _self.loading = false
+        } catch (e) {
+          console.error(e)
+          _self.loading = false
+        }
+      },
+      clickAddBtn() {
+        const _self = this
         _self.showDialog = true
-        _self.form.id = res.data.ID
-        _self.form.accountName = res.data.AccountName
-        _self.form.accountNum = res.data.AccountNum
-        _self.form.remark = res.data.Remark
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    submitForm() {
-      const _self = this
-      if (_self.form.id) {
-        _self.editSave()
-      } else {
-        _self.addSave()
-      }
-    },
-    async addSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            const form = {
-              ..._self.form
+        _self.form = {}
+      },
+      async clickEditBtn($index, row) {
+        const _self = this
+        try {
+          const res = await payCompanyApi.detail(row.ID)
+          _self.showDialog = true
+          _self.form.id = res.data.Data.ID
+          _self.form.accountName = res.data.Data.AccountName
+          _self.form.accountNum = res.data.Data.AccountNum
+          _self.form.remark = res.data.Data.Remark
+          _self.copyForm = Object.assign({}, _self.form);
+        } catch (e) {
+          console.error(e)
+        }
+      },
+      submitForm() {
+        const _self = this
+        if (_self.form.id) {
+          _self.editSave()
+        } else {
+          _self.addSave()
+        }
+      },
+      async addSave() {
+        const _self = this
+        _self.$refs['form'].validate(async valid => {
+          if (valid) {
+            try {
+              const form = {
+                ..._self.form
+              }
+              delete form.id
+              await payCompanyApi.add(form)
+              _self.fetchData()
+              _self.$refs['form'].resetFields()
+              _self.showDialog = false
+              _self.$message({
+                message: '保存成功',
+                type: 'success'
+              })
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('添加失败!!!')
             }
-            delete form.id
-            await payCompanyApi.add(form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('添加失败!!!')
+          } else {
+            return false
           }
-        } else {
-          return false
-        }
-      })
-    },
-    async editSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            await payCompanyApi.edit(_self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('编辑失败!!!')
+        })
+      },
+      async editSave() {
+        const _self = this
+        _self.$refs['form'].validate(async valid => {
+          if (valid) {
+            const form = {}
+            for (let [k, v] of Object.entries(_self.form)) {
+              if (_self.form[k] != _self.copyForm[k]) {
+                form[k] = v
+              }
+            }
+            try {
+              await payCompanyApi.edit(_self.form.id, form)
+              _self.fetchData()
+              _self.$refs['form'].resetFields()
+              _self.showDialog = false
+              _self.$message({
+                message: '编辑成功',
+                type: 'success'
+              })
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('编辑失败!!!')
+            }
+          } else {
+            return false
           }
-        } else {
-          return false
-        }
-      })
+        })
+      }
     }
   }
-}
 </script>

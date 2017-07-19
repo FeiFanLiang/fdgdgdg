@@ -1,23 +1,25 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPayMode/'
-import { hotelPayModeApi } from '../config-data'
+import {
+  hotelPayModeApi
+} from '../config-data'
 
 export default {
   getConfig: hotelPayModeApi.getConfig,
-  list (params) {
+  list(params) {
     return axios.get(base + 'All')
   },
-  detail (id) {
+  detail(id) {
     return axios.get(base + id)
   },
-  add (params) {
+  add(params) {
     return axios.post(base, params)
   },
-  edit (params) {
-    return axios.put(base + params.id, params)
+  edit(id, params) {
+    return axios.put(base + id, params)
   },
-  del (id) {
+  del(id) {
     return axios.delete(base + id)
   }
 }
