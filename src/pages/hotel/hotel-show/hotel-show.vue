@@ -3,7 +3,8 @@
         <el-row>
             <el-button type="primary" @click="hotelShowAdd">创建</el-button>
         </el-row>
-        <CustomTable :list="hotelShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+        <CustomTable :list="hotelShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
+      v-loading="loading">
           <el-table-column width="150" label="操作" fixed="right">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>
@@ -144,7 +145,7 @@ export default {
       dialogVisible: false,
       dialogImageUrl: '',
       hotelShowList: [],
-      loading: true,
+      loading: false,
       showDialog: false,
       form: {
         ID: '',

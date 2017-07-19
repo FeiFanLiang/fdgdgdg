@@ -13,7 +13,7 @@
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
             </el-form-item>
         </el-form>
-        <CustomTable :list="list" :configList="configList.listFields">
+        <CustomTable :list="list" :configList="configList.listFields" element-loading-text="拼命加载中" v-loading="loading">
           <el-table-column type="expand">
               <template scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">

@@ -6,10 +6,11 @@
     <el-row>
       <el-button type="primary" @click="hotelroomAdd">创建</el-button>
     </el-row>
-    <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border>
+    <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border element-loading-text="拼命加载中"
+      v-loading="loading">
         <el-table-column prop="RoomName" width="95" label="产品名称">
             <template scope="scope">
-        <el-popover trigger="hover" placement="top" >
+        <el-popover trigger="hover" placement="top">
           <p>房间ID: {{ scope.row.ID }}</p>
           <p>产品名称: {{ scope.row.RoomName }}</p>
           <p>房间编号: {{ scope.row.RoomCode }}</p>
@@ -23,7 +24,7 @@
     </el-table-column>
     <el-table-column label="子房型名称" width="110">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
      <td>
         <el-tooltip class="item" effect="dark" :content="item.SonRoomName" placement="top-start" :visible-arrow="false">
             <p class="mytoollip">{{ item.SonRoomName }}</p>   
@@ -34,7 +35,7 @@
     </el-table-column>
     <el-table-column label="房间编号" class="child-table" width="95">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
         <td>
             <el-tooltip class="item" effect="dark" :content="item.SonRoomCode" placement="top-start" :visible-arrow="false">
                 <p class="mytoollip">{{ item.SonRoomCode }}</p>   
@@ -45,7 +46,7 @@
     </el-table-column>
     <el-table-column label="早餐类型" width="95">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
         <td>
              <el-tooltip class="item" effect="dark" :content="transBreakfastTypes(item.BreakfastType)" placement="top-start" :visible-arrow="false">
                  <p class="mytoollip">{{transBreakfastTypes(item.BreakfastType)}}</p>   
@@ -56,7 +57,7 @@
     </el-table-column>
     <el-table-column label="状态" width="65">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
     <td>
         <i class="el-icon-circle-check" style="color:#13CE66" v-if="!item.IsStop"></i>
         <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
@@ -66,7 +67,7 @@
     </el-table-column>
     <el-table-column label="备注一">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
    <td>
        <el-tooltip class="item" effect="dark" :content="item.Remark" placement="top-start" :visible-arrow="false">
             <p class="mytoollip">{{ item.Remark }}</p>   
@@ -78,7 +79,7 @@
     </el-table-column>
     <el-table-column label="备注二">
       <template scope="scope">
-<tr v-for="item in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
     <td>
         <el-tooltip class="item" effect="dark" :content="item.Remark2" placement="top-start" :visible-arrow="false">
             <p class="mytoollip">{{ item.Remark2 }}</p>   
@@ -89,7 +90,7 @@
     </el-table-column>
     <el-table-column label="子房型操作" width="160" fixed="right">
       <template scope="scope">
-<tr v-for="(item,index) in scope.row.SonRooms" class="child-table">
+<tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
     <td>
         <el-button size="mini" @click="hotelSonRoomPlatEdit(index,scope.row)">平台</el-button>
         <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
@@ -137,21 +138,21 @@
             <el-input type="number" v-model="form.roomCount"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
-            <el-form-item label="备注">
-                <el-input v-model="form.remark" type="textarea"></el-input>
-            </el-form-item>
-        </el-col>
-      </el-row>
-      <!-- <el-row>
-         <el-col :span="11" :offset="1">
+        <el-col :span="11" :offset="1">
           <el-form-item label="床型">
-            <el-select v-model="form.Beds" placeholder="请选择床型" multiple >
+            <el-select v-model="bed" placeholder="请选择床型" multiple>
               <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-col> 
-      </el-row> -->
+      </el-row>
+      <el-row>
+         <el-col :span="24">
+            <el-form-item label="备注">
+                <el-input v-model="form.remark" type="textarea"></el-input>
+            </el-form-item>
+        </el-col>
+      </el-row> 
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -235,6 +236,7 @@ export default {
     },
     data() {
         return {
+            loading:false,
             roomId: '',
             sonRoomId: '',
             breakfastTypes: [{
@@ -259,6 +261,7 @@ export default {
                     name: '更多',
                     value: 6
             }],
+            bed:[],
             form: {
                 id: '',
                 hotelNum: '',
@@ -266,7 +269,8 @@ export default {
                 roomName: '',
                 roomCode: '',
                 roomCount: '',
-                remark: ''
+                remark: '',
+                Beds:[]
             },
             sonForm: {
                 id: '',
@@ -334,6 +338,9 @@ export default {
         },
         async handleSaveAndEdit() {
             const _self = this;
+            for(let item in _self.bed){
+                _self.form.Beds.push({ID:_self.bed[item]})
+            }
             _self.$refs['form'].validate(async valid => {
                 if (valid) {
                     try {
@@ -343,7 +350,6 @@ export default {
                             let form = { ..._self.form
                             }
                             delete form.id
-                            console.log(this.form)
                             await hotelRoomApi.add(form);
                         }
                         _self.fetchData();
@@ -391,8 +397,10 @@ export default {
             this.dialogVisible = true;
             this.form = {
                 roomCount : '',
-                hotelId : this.$route.params.ID
+                hotelId : this.$route.params.ID,
+                Beds:[]
             }
+            this.bed = []
         },
         hotelSonRoomAdd(row) {
             this.sonForm = {
@@ -474,12 +482,12 @@ export default {
             }).catch(() => {});
         },
         async fetchData() {
+            this.loading = true;
             if (!this.$route.params.ID) return;
             const res = await hotelRoomApi.list(this.$route.params.ID);
             this.hotelroomlist = res.data;
-            console.log(this.hotelroomlist)
             const res2 = await hotelRoomBedApi.list();
-            console.log(res2.data);
+            this.loading = false;
         },
         hotelroomDetail(row) {
             this.$router.push({

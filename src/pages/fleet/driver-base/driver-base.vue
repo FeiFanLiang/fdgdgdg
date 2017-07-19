@@ -3,6 +3,7 @@
         <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
         </CustomSearch>
+        <CustomTable :list="list" :configList="configList.listFields" element-loading-text="拼命加载中" v-loading="loading">
           <el-table-column label="操作" width="150" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>

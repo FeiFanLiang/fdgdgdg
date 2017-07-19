@@ -3,7 +3,8 @@
         <el-row>
             <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
         </el-row>
-        <CustomTable :list="hotelpolicy" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+        <CustomTable :list="hotelpolicy" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
+      v-loading="loading">
           <el-table-column type="expand" slot="left-one">
               <template scope="props">
                   <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
@@ -386,6 +387,7 @@ export default {
   },
   data() {
     return {
+      loading:false,
       uploadUrl: path.uploadUrl,
       dialogImageUrl: '',
       dialogVisible: false,
@@ -514,8 +516,10 @@ export default {
     async fetchData() {
       if (!this.$route.params.ID) return
       const hotelID = this.$route.params.ID
+      this.loading = true;
       const res = await hotelPolicyApi.listByHotelID(hotelID)
       this.hotelpolicy = res.data
+      this.loading = false;
       this.expandRowKeys.length = 0
       this.expandRowKeys.push(this.hotelpolicy[0].ID)
     },

@@ -3,36 +3,53 @@
     <el-row>
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
-    <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+    <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
+      v-loading="loading">
       <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
-            <a target="_blank" :href="scope.row.platUrl">{{scope.row.platUrl}}</a>
+            <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
         </template>
       </el-table-column>
       <el-table-column label="有效" width="70" align="center" slot="right-two">
         <template scope="scope">
-<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
-<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-</template>
+          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+        </template>
       </el-table-column>
 
-      <el-table-column  label="操作" width="120" fixed="right" slot="right-three">
+      <el-table-column  label="操作" width="150" fixed="right" slot="right-three">
         <template scope="scope">
-<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
-    编辑</el-button>
-      <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.id"></DeleteButton>
-</template>
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+        </template>
       </el-table-column>
-    </CustomTable>
-    <!-- <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
-        <el-table-column prop="platName" label="平台名称"></el-table-column>
-      <el-table-column prop="hotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="platHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="platHotelId" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="platHotelNameEn" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+    </CustomTable> -->
+     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+        <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
+      <el-table-column prop="Hotel.HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="PlatHotelID" label="平台酒店ID" width="110"></el-table-column>
+      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+      <el-table-column label="平台访问路径" show-overflow-tooltip>
+        <template scope="scope">
+            <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
+        </template>
+      </el-table-column>
+      <el-table-column label="有效" width="70" align="center">
+        <template scope="scope">
+          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+        </template>
+      </el-table-column>
 
-    </el-table> -->
+      <el-table-column  label="操作" width="150" fixed="right">
+        <template scope="scope">
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+        </template>
+      </el-table-column>
+    </el-table> 
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
         @current-change="handleCurrentChange"
@@ -41,7 +58,7 @@
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total">
-    </el-pagination>
+      </el-pagination>
     </div>
     <el-dialog :title="dialogTitle" v-model="showDialog" size="small" :modal-append-to-body="false" @close="resetForm('form')">
       <el-form :rules="rules" class="around" ref="form" :model="form">
@@ -111,7 +128,7 @@ export default {
       total: 0,
       currentPage: 1,
       platInfoList: [],
-      loading: true,
+      loading: false,
       showDialog: false,
       dialogTitle: '',
       dialogTag: '',
@@ -157,6 +174,7 @@ export default {
       _self.loading = true
       const res = await hotelPlatformApi.listByHotel(this.$route.params.ID)
       _self.list = res.data
+      console.log(_self.list)
       _self.total = _self.list.length
       _self.loading = false
     },
@@ -185,7 +203,7 @@ export default {
     async clickEditBtn($index, row) {
       const _self = this
       try {
-        const res = await hotelPlatformApi.detail(row.id)
+        const res = await hotelPlatformApi.detail(row.ID)
         _self.showDialog = true
         _self.dialogTag = 2
         _self.dialogTitle = '编辑平台映射信息'
@@ -263,22 +281,22 @@ export default {
 </script>
 <style lang="scss">
 #hotel-platform-info-page {
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
-    }
-    .around {
-        display: flex;
-        justify-content: space-around;
-    }
-    .el-form-item {
-        margin-bottom: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-    .w193 {
-        width: 193px;
-    }
+  .pagination-wrapper {
+    text-align: center;
+    padding: 30px;
+  }
+  .around {
+    display: flex;
+    justify-content: space-around;
+  }
+  .el-form-item {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .w193 {
+    width: 193px;
+  }
 }
 </style>

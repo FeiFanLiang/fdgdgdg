@@ -2,8 +2,10 @@
   <div>
     <el-row>
         <el-button type="primary" @click="roomShowAdd">创建</el-button>
+        <el-button @click="back">返回</el-button>
     </el-row>
-    <CustomTable :list="roomShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+    <CustomTable :list="roomShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
+      v-loading="loading">
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>
@@ -31,7 +33,7 @@
     </el-table> -->
 
     <el-dialog :title="form.ID?'编辑房间展示信息':'添加房间展示信息'" v-model="showDialog" size="" @close="resetForm('form')">
-        <el-form ref="form" :model="form" :rules="rules">
+        <el-form ref="form" :model="form">
             <el-row :gutter="24">
                 <el-col :span="12">
                     <el-form-item label="房间面积" prop="Acreage">
@@ -93,7 +95,7 @@ export default {
   data() {
     return {
       roomShowList: [],
-      loading: true,
+      loading: false,
       showDialog: false,
       showBargainsRoom: false,
       form: {
@@ -106,24 +108,13 @@ export default {
         NetWork: '',
         Smoke: '',
         Lable: ''
-      },
-      rules: {
-        Floor: [
-          {
-            required: true,
-            message: '请填写房间楼层'
-          }
-        ]
-        /*CheakInNum: [{
-                    required: true,
-                    message: '请填写入住人数',
-                    trigger: 'blur',
-                    type: 'number'
-                }]*/
       }
     }
   },
   methods: {
+    back(){
+            this.$router.go(-1)
+        },
     async fetchData() {
       const _self = this
       _self.loading = true
@@ -149,33 +140,27 @@ export default {
     },
     async submitEditAndAddForm(formName) {
       const _self = this
-      _self.$refs[formName].validate(async valid => {
-        if (valid) {
-          try {
-            if (_self.form.ID) {
-              await roomShowApi.edit(_self.form)
-            } else {
-              let form = {
-                ..._self.form
-              }
-              delete form.ID
-              await roomShowApi.add(form)
-            }
-            _self.fetchData()
-            _self.$refs[formName].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('保存失败!!!')
-          }
+      try {
+        if (_self.form.ID) {
+          await roomShowApi.edit(_self.form)
         } else {
-          return false
+          let form = {
+            ..._self.form
+          }
+          delete form.ID
+          await roomShowApi.add(form)
         }
-      })
+        _self.fetchData()
+        _self.$refs[formName].resetFields()
+        _self.showDialog = false
+        _self.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('保存失败!!!')
+      }
     },
     async clickEditBtn(row) {
       const _self = this

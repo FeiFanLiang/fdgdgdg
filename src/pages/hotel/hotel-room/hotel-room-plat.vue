@@ -3,9 +3,9 @@
     <el-dialog title="平台酒店信息编辑" size="large"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
       <el-row>
         <el-button  @click="add">添加</el-button>
-        <el-button @click="back">返回</el-button>
       </el-row>
-    <el-table :data="list" ref="table"  style="width: 100%;height:100%"  border row-key="ID">
+    <el-table :data="list" ref="table"  style="width: 100%;height:100%"  border row-key="ID" element-loading-text="拼命加载中"
+      v-loading="loading">
       <el-table-column  prop="PlatformID" label="平台ID"  show-overflow-tooltip></el-table-column>
       <el-table-column  prop="Platform.PlatName" label="平台名称"  show-overflow-tooltip></el-table-column>
       <el-table-column  prop="PlatHotelID" label="平台酒店ID"  show-overflow-tooltip></el-table-column>
@@ -150,6 +150,7 @@ export default {
     },
     data() {
         return {
+            loading:false,
             list: [],
             platInfoList: [],
             rules: {
@@ -169,11 +170,7 @@ export default {
                 sonRoomId: [{
                     required: true,
                     message: '请输入子房型ID'
-                }],
-                platRoomName: [{
-                    required: true,
-                    message: '请输入平台酒店名称'
-                }],
+                }]
 
             },
             isEdit :false,
@@ -210,9 +207,6 @@ export default {
         }
     },
     methods: {
-        back(){
-            this.$router.go(0)
-        },
         Cancel() {
             this.$emit('hide')
         },
@@ -283,10 +277,12 @@ export default {
             }
         },
         async getPlatformList() {
+            this.loading = true;
             const res = await hotelPlatformApi.listByHotel(this.hotelId);
             if (res && res.data && Array.isArray(res.data)) {
                 this.platInfoList = res.data;
             }
+            this.loading = false;
         },
         async handleSaveAndEdit() {
             const _self = this;

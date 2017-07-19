@@ -26,7 +26,7 @@
       </el-col >
     </el-row>
     <div class="eltable">
-      <CustomTable :list="hotelbase" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="getHotelbaseList">
+      <CustomTable :list="hotelbase" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="getHotelbaseList" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column   label="操作" width="180" fixed="right" slot="right-one">
           <template scope="scope">
             <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
@@ -93,6 +93,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       count: 0,
+      loading:false,
       filters: {
         ID: '',
         HotelName: '',
@@ -141,6 +142,7 @@ export default {
     },
     async getHotelbaseList(currentPage, pageSize) {
       const _self = this
+      this.loading = true;
       _self.currentPage = currentPage || _self.currentPage
       _self.pageSize = pageSize || _self.pageSize
       const options = {
@@ -174,6 +176,7 @@ export default {
         }
         _self.hotelbase = data
         _self.count = res.data.Count
+        this.loading = false;
       }
     },
     handleSizeChange(val) {
