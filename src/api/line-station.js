@@ -1,13 +1,8 @@
 import axios from 'axios'
 import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/Driver/'
-
-import {
-  driverBaseApi
-} from '../config-data'
+const base = path.apiBaseUrl + 'ParkSale/LineStation/'
 
 export default {
-  getConfig: driverBaseApi.getConfig,
   listByQuery(params) {
     return axios.get(base + 'list', {
       params: params

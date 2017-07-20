@@ -81,7 +81,10 @@ import CarArrange from './fleet/car-arrange/car-arrange'
 import CarUse from './fleet/car-use/car-use'
 import GasolineLog from './fleet/gasoline-log/gasoline-log'
 import DriverEvaluate from './fleet/driver-evaluate/driver-evaluate'
-const fleet = { CarBase, DriverBase, CarArrange, CarUse, GasolineLog, DriverEvaluate }
+import CarLine from './fleet/car-line/car-line'
+import LineStation from './fleet/line-station/line-station'
+import Station from './fleet/station/station'
+const fleet = { CarBase, DriverBase, CarArrange, CarUse, GasolineLog, DriverEvaluate, CarLine, LineStation, Station }
 
 export default {
     ...other,

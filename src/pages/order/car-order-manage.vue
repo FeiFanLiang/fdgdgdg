@@ -527,8 +527,8 @@ export default {
                     processorUserName: '',
                     auditorUserName: '',
                     otherPrice: '',
-                    roadBridgeFee: '',
-                    parkingFee: ''
+                    roadBridgeFee: 0,
+                    parkingFee: 0
                 },
                 sortList: [{
                     value: 'id',

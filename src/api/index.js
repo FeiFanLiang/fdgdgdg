@@ -34,6 +34,9 @@ import sonRoomPlatformApi from './son-room-platform'
 import sonRoomSalePriceApi from './son-room-sale-price'
 import userApi from './user'
 import weixinRedirectApi from './weixin-redirect'
+import carLineApi from './car-line'
+import lineStationApi from './line-station'
+import stationApi from './station'
 
 export {
     accountApi,
@@ -71,5 +74,8 @@ export {
     sonRoomPlatformApi,
     sonRoomSalePriceApi,
     userApi,
-    weixinRedirectApi
+    weixinRedirectApi,
+    carLineApi,
+    lineStationApi,
+    stationApi
 }

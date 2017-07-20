@@ -35,6 +35,21 @@ export default {
       path: 'driver-evaluate',
       name: '司机评价信息',
       component: Pages.DriverEvaluate
+    },
+    {
+      path: 'car-line',
+      name: '车辆运行线路',
+      component: Pages.CarLine
+    },
+    {
+      path: 'line-station',
+      name: '线路/站点映射',
+      component: Pages.LineStation
+    },
+    {
+      path: 'station',
+      name: '车辆停靠点',
+      component: Pages.Station
     }
   ]
 }
