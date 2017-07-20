@@ -13,7 +13,7 @@
           <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
          </template>
       </el-table-column>
-    </CustomTable> -->
+    </CustomTable>
        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         v-loading="loading"
         border

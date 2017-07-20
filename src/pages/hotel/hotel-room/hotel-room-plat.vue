@@ -36,12 +36,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="平台酒店ID" prop="platHotelId">
-              <el-input v-model="form.platHotelId" :disabled="isEdit"></el-input>
+              <el-input v-model="form.platHotelId"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="请选择平台" prop="platformId">
-              <el-select  v-model="form.platformId" placeholder="请选择平台" :disabled="isEdit">
+              <el-select  v-model="form.platformId" placeholder="请选择平台">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.Platform.PlatName"
                   :value="item.Platform.ID"
@@ -53,13 +53,19 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="房型ID" prop="roomId">
+            <!-- <el-form-item label="房型ID" prop="roomId">
               <el-input v-model="form.roomId" :disabled="isEdit"></el-input>
+            </el-form-item> -->
+            <el-form-item label="房型名称" prop="roomName">
+              <el-input v-model="form.roomName" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="子房型ID" prop="sonRoomId">
+            <!-- <el-form-item label="子房型ID" prop="sonRoomId">
               <el-input v-model="form.sonRoomId" :disabled="isEdit"></el-input>
+            </el-form-item> -->
+            <el-form-item label="子房型名称" prop="sonRoomName">
+              <el-input v-model="form.sonRoomName" :disabled="isEdit"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -123,7 +129,9 @@
 <script>
 import {
     sonRoomPlatformApi,
-    hotelPlatformApi
+    hotelPlatformApi,
+    sonRoomApi,
+    hotelRoomApi
 } from 'api';
 export default {
     props: {
@@ -188,7 +196,9 @@ export default {
                 isValid: true,
                 platRealRoomId: '',
                 platSaleRoomId: '',
-                platUrl: ''
+                platUrl: '',
+                sonRoomName:'',
+                roomName:''
             }
         }
     },
@@ -214,7 +224,11 @@ export default {
             this.getList();
             this.getPlatformList();
         },
-        add() {
+        async add() {
+            const res = await sonRoomApi.detailById(this.sonRoomId);
+            let a = res.data.SonRoomName
+            const res2 = await hotelRoomApi.details(this.roomId)
+            let b = res2.data.RoomName
             this.form = {
                 roomId : this.roomId ? this.roomId : '',
                 sonRoomId : this.sonRoomId ? this.sonRoomId : '',
@@ -228,10 +242,12 @@ export default {
                 isValid: true,
                 platRealRoomId: '',
                 platSaleRoomId: '',
-                platUrl: ''
+                platUrl: '',
+                sonRoomName: a,
+                roomName:b
             }
             this.platVisible = true;
-            this.isEdit = false;
+            this.isEdit = true;
         },
         edit(index, row) {
             const _self = this;
