@@ -250,7 +250,7 @@
               }
             }
             try {
-              await driverBaseApi.edit(_self.form.id, form)
+              await driverBaseApi.edit2(_self.form.id, form)
               _self.fetchData()
               _self.$refs['form'].resetFields()
               _self.showDialog = false

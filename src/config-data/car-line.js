@@ -4,7 +4,7 @@ import { carLineApi } from 'api'
 const listData = [
   ['名称', 'Name', true, true, 'string'],
   ['描述', 'Description', true, true, 'string'],
-  ['全程用时', 'TotalTime', true, true, 'TimeSpan']
+  ['全程用时', 'TotalTime', true, true, 'int']
 ]
 const searchData = [
   ['请输入线路名称', 'Name', 'input', '']

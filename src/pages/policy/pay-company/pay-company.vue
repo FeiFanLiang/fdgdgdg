@@ -14,7 +14,7 @@
          </template>
       </el-table-column>
     </CustomTable>
-       <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+       <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
         v-loading="loading"
         border
         row-key="ID"
@@ -30,7 +30,7 @@
   <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
         </el-table-column>
-      </el-table> 
+      </el-table>  -->
       <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form"  >
           <el-form-item label="账户名称" prop="accountName">
@@ -164,7 +164,7 @@
               }
             }
             try {
-              await payCompanyApi.edit(_self.form.id, form)
+              await payCompanyApi.edit(_self.form)
               _self.fetchData()
               _self.$refs['form'].resetFields()
               _self.showDialog = false

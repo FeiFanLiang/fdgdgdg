@@ -17,7 +17,7 @@
         :current-page="currentPage" :page-size="pageSize" :total="count">
         </el-pagination>
     </div>
-    <el-dialog :title="form.ID?'编辑车辆运行路线':'添加车辆运行路线'" v-model="showDialog" @close="resetForm('form')">
+    <el-dialog :title="form.ID?'编辑车辆停靠点':'添加车辆停靠点'" v-model="showDialog" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form" label-width="110px">
             <el-form-item label="名称" prop="Name">
                 <el-input v-model="form.Name"></el-input>
@@ -116,8 +116,8 @@ export default {
       },
       clickAddBtn(){
             const _self = this
-            _self.showDialog = true
             _self.form = {}
+            _self.showDialog = true
       },
       async clickEditBtn($index,row){
             const _self = this
@@ -166,9 +166,15 @@ export default {
       async editSave() {
             const _self = this
             _self.$refs['form'].validate(async valid => {
+                const form = {}
+                for (let [k, v] of Object.entries(_self.form)) {
+                    if (_self.form[k] != _self.copyForm[k]) {
+                    form[k] = v
+                    }
+                }
                 if (valid) {
                 try {
-                    await stationApi.edit(_self.form)
+                    await stationApi.edit2(_self.form.ID,form)
                     _self.$refs['form'].resetFields()
                     _self.showDialog = false
                     _self.fetchData()

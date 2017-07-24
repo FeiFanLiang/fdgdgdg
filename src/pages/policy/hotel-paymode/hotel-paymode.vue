@@ -13,8 +13,8 @@
             <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
           </template>
         </el-table-column>
-      </CustomTable> -->
-     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
+      </CustomTable>
+     <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中"
       v-loading="loading" border row-key="ID">
       <el-table-column sortable prop="ID" label="ID"  width="180" show-overflow-tooltip></el-table-column>
       <el-table-column sortable prop="ModeName" label="账户名称"  show-overflow-tooltip></el-table-column>
@@ -26,7 +26,7 @@
   <DeleteButton api="hotelPayModeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
       </el-table-column>
-    </el-table> 
+    </el-table>  -->
     <el-dialog :title="form.id?'编辑支付方式':'添加支付方式'" v-model="showDialog" size="tiny" @close="resetForm('form')">
       <el-form :rules="rules" ref="form" :model="form">
         <el-form-item label="账户名称" prop="modeName">
@@ -62,6 +62,7 @@ export default {
         modeName: '',
         remark: ''
       },
+      copyForm:{},
       rules: {
         modeName: [
           {
@@ -140,14 +141,15 @@ export default {
         const _self = this
         _self.$refs['form'].validate(async valid => {
           if (valid) {
-            const form = {}
+             const form = {}
             for (let [k, v] of Object.entries(_self.form)) {
               if (_self.form[k] != _self.copyForm[k]) {
                 form[k] = v
               }
-            }
+            } 
             try {
-              await hotelPayModeApi.edit( _self.form.id,form)
+              //console.log(form)
+              await hotelPayModeApi.edit(_self.form)
               _self.fetchData()
               _self.$refs['form'].resetFields()
               _self.showDialog = false

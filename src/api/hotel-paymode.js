@@ -16,7 +16,10 @@ export default {
   add(params) {
     return axios.post(base, params)
   },
-  edit(id, params) {
+  edit(params) {
+    return axios.put(base + params.id, params)
+  },
+  edit2(id,params) {
     return axios.put(base + id, params)
   },
   del(id) {

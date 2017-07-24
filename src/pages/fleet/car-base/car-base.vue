@@ -336,14 +336,14 @@ export default {
       const _self = this
       _self.$refs['form'].validate(async valid => {
         if (valid) {
-          //const form = {}
+          const form = {}
           for (let [k, v] of Object.entries(_self.form)) {
             if (_self.form[k] != _self.copyForm[k]) {
               form[k] = v
             }
           }
           try {
-            await carBaseApi.edit(_self.form)
+            await carBaseApi.edit2(_self.form.id,form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
             _self.showDialog = false

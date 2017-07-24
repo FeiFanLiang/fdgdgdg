@@ -61,9 +61,10 @@ export default {
                 ID:'',
                 Name:'',
                 Description:'',
-                TotalTime:''
+                TotalTime:0
                 /* new Date(2017, 7, 20, 0, 0) */
             },
+            copyForm:[],
             rules: {
                 Name: [{
                     required: true,
@@ -110,22 +111,22 @@ export default {
       },
       clickAddBtn(){
             const _self = this
-            _self.showDialog = true
             _self.form = {}
+            _self.showDialog = true
       },
       async clickEditBtn($index,row){
             const _self = this
             try {
-                //const res = await carLineApi.detail(row.ID)
-                _self.showDialog = true
-                _self.form.ID = row.ID
+                const res = await carLineApi.detail(row.ID)
+                 _self.showDialog = true
+                /*_self.form.ID = row.ID
                 _self.form.Name = row.Name
                 _self.form.Description = row.Description
-                _self.form.TotalTime = row.TotalTime
-                /* _self.form.ID = res.data.Data.ID
+                _self.form.TotalTime = row.TotalTime */
+                 _self.form.ID = res.data.Data.ID
                 _self.form.Name = res.data.Data.Name
                 _self.form.Description = res.data.Data.Description
-                _self.form.TotalTime = res.data.Data.TotalTime */
+                _self.form.TotalTime = res.data.Data.TotalTime 
             } catch (e) {
                 console.error(e)
             }
@@ -136,6 +137,7 @@ export default {
                 _self.editSave()
             } else {
                 _self.addSave()
+                _self.form = {}
             }
       },
       async addSave() {
@@ -163,9 +165,15 @@ export default {
       async editSave() {
             const _self = this
             _self.$refs['form'].validate(async valid => {
+                const form = {}
+                for (let [k, v] of Object.entries(_self.form)) {
+                    if (_self.form[k] != _self.copyForm[k]) {
+                    form[k] = v
+                    }
+                }
                 if (valid) {
                 try {
-                    await carLineApi.edit(_self.form)
+                    await carLineApi.edit2(_self.form.ID,form)
                     _self.$refs['form'].resetFields()
                     _self.showDialog = false
                     _self.fetchData()
