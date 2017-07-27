@@ -37,6 +37,8 @@ import weixinRedirectApi from './weixin-redirect'
 import carLineApi from './car-line'
 import lineStationApi from './line-station'
 import stationApi from './station'
+import airInformationApi from './air-informations'
+import dwzApi from './dwz'
 
 export {
     accountApi,
@@ -77,5 +79,7 @@ export {
     weixinRedirectApi,
     carLineApi,
     lineStationApi,
-    stationApi
+    stationApi,
+    airInformationApi,
+    dwzApi
 }

@@ -219,7 +219,7 @@
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
                 <template scope="scope">
@@ -242,6 +242,17 @@
             <el-table-column label="操作" width="90" fixed="right">
                 <template scope="scope">
                     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+                    <el-popover ref="popover" placement="top" width="200">
+                        <h5>航班动态</h5>
+                        <p>航班号：{{airInformationList.FlightNo}}</p>
+                        <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+                        <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+                        <p>状态：{{airInformationList.Stat}}</p>
+                        <p>前序航班状态：{{airInformationList.PreStat}}</p>
+                        <p>更新时间：{{airInformationList.UpdateTime}}</p>
+                        <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+                    </el-popover>
+                    <el-button size="small" v-popover:popover @click="showAirInformations(scope.row.CarriageNo,scope.row.UseTime)">查询航班</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -472,7 +483,8 @@
 <script>
 import {
     carOrderManageApi,
-    orderChannelApi
+    orderChannelApi,
+    airInformationApi
 } from 'api'
 
 export default {
@@ -486,9 +498,10 @@ export default {
         },
         data() {
             return {
+                airInformationList:[],
                 list: [],
                 currentPage: 1,
-                pageSize: 10,
+                pageSize: 100,
                 count: 0,
                 loading: false,
                 loading2: false,
@@ -717,6 +730,14 @@ export default {
             }
         },
         methods: {
+            async showAirInformations(CarriageNo,UseTime){
+                let option = {
+                    flightNo:CarriageNo,
+                    begin:UseTime
+                }
+              const res = await airInformationApi.listAll(option);
+              this.airInformationList = res.data;
+            },
             clear() {
                 this.filters = {
                     sortValue: 'id',

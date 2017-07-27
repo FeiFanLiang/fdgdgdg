@@ -30,5 +30,8 @@ export default {
         },
         del(id) {
             return axios.delete(base + id)
+        },
+        getDaypandect(){
+            return axios.get(base + 'DayPandect')
         }
 }

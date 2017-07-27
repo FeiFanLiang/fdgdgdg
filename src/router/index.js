@@ -9,6 +9,7 @@ import roleRoute from './role'
 import userRoute from './user'
 import fleetRoute from './fleet'
 import wechatRoute from './wechat'
+import dwz from './dwz'
 const children = [
   hotelRoute, // 酒店
   showRoute, // 展示信息
@@ -17,7 +18,8 @@ const children = [
   wechatRoute, // 微信
   policyRoute, // 政策
   roleRoute, // 角色
-  userRoute // 用户
+  userRoute, // 用户
+  dwz//短链接
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

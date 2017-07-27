@@ -1,6 +1,6 @@
 <template lang="html">
     <div id="car-arrange-page">
-        <el-row :gutter="20">
+        <el-row :gutter="24">
             <el-col :span="5">
                 <el-date-picker v-model="filters.beginTime" type="date" placeholder="选择起始日期" :picker-options="pickerOptions">
                 </el-date-picker>
@@ -11,6 +11,13 @@
             </el-col>
             <el-col :span="4">
                 <el-button type="primary" @click="fetchData">搜索</el-button>
+            </el-col>
+            <el-col :span="10" v-loading="dayloading">
+                <p style="margin:0px;">
+                    <el-button type="primary" @click="getDaypandect" size="mini">刷新</el-button>
+                </p>
+                <h3 style="display:inline;">当日订单概括:</h3>
+                <span style="color:red;">{{DayPandect}}</span>
             </el-col>
         </el-row>
         <!-- <CustomTable :list="unArrangeList" :configList="configList.listFields" :className="tableRowClassName">
@@ -47,6 +54,7 @@
 </template>
             </el-table-column>
             <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.ExternalOrderID" label="订单编号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
@@ -70,13 +78,32 @@
             </el-table-column>
             <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
+
+            <el-table-column label="详细地址" show-overflow-tooltip>
+                <template scope="scope">
+                    <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+                    <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
+                </template>
+            </el-table-column>
+
             <el-table-column prop="order.PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="order.PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="order.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
 <template scope="scope">
     <el-button size="small" @click="dispatch(scope.$index, scope.row,0)">
         派车</el-button>
+        <el-popover ref="popover" placement="top" width="200">
+            <h5>航班动态</h5>
+            <p>航班号：{{airInformationList.FlightNo}}</p>
+            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+            <p>状态：{{airInformationList.Stat}}</p>
+            <p>前序航班状态：{{airInformationList.PreStat}}</p>
+            <p>更新时间：{{airInformationList.UpdateTime}}</p>
+            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+        </el-popover>
+        <el-button size="small" v-popover:popover @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)">查询航班</el-button>
 </template>
             </el-table-column>
         </el-table>
@@ -94,6 +121,7 @@
 </template>
             </el-table-column>
             <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="order.ExternalOrderID" label="订单编号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
@@ -109,15 +137,26 @@
             </el-table-column>
             <el-table-column prop="arrange.Driver.Name" label="司机姓名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="arrange.Car.CarMode" label="车型" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" fixed="right">
 <template scope="scope">
     <el-button size="small" @click="dispatch(scope.$index, scope.row,1)">
         改派</el-button>
+        <el-popover ref="popover2" placement="top" width="200">
+            <h5>航班动态</h5>
+            <p>航班号：{{airInformationList.FlightNo}}</p>
+            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+            <p>状态：{{airInformationList.Stat}}</p>
+            <p>前序航班状态：{{airInformationList.PreStat}}</p>
+            <p>更新时间：{{airInformationList.UpdateTime}}</p>
+            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+        </el-popover>
+        <el-button size="small" v-popover:popover2 @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)">查询航班</el-button>
 </template>
             </el-table-column>
         </el-table>
@@ -245,21 +284,25 @@
     import {
         carBaseApi,
         driverBaseApi,
-        carArrangeApi
+        carArrangeApi,
+        carOrderManageApi,
+        airInformationApi
     } from 'api'
     // import * as moment from "moment";
     // import * as d3 from "d3";
     export default {
         mounted() {
-            this.filters.beginTime = new Date().Format('yyyy-MM-dd')
+             this.filters.beginTime = new Date().Format('yyyy-MM-dd')
             const now = new Date();
             now.setDate(now.getDate() + 1);
             this.filters.endTime = now.Format('yyyy-MM-dd');
             this.fetchData()
-            this.configList = carArrangeApi.getConfig()
+            this.configList = carArrangeApi.getConfig()  
         },
         data() {
             return {
+                airInformationList:[],
+                DayPandect:'',
                 unArrangeList: [],
                 arrangeList: [],
                 carList: [],
@@ -267,6 +310,7 @@
                 chartData: [],
                 loading: false,
                 loading2: false,
+                dayloading: false,
                 showDialog: false,
                 pickerOptions: {},
                 tag: '',
@@ -333,6 +377,27 @@
             }
         },
         methods: {
+            async showAirInformations(CarriageNo,UseTime){
+                let option = {
+                    flightNo:CarriageNo,
+                    begin:UseTime
+                }
+                console.log(option)
+              const res = await airInformationApi.listAll(option);
+              this.airInformationList = res.data;
+            },
+            async getDaypandect(){
+                 this.dayloading = true;
+                 try {
+                    const res = await carOrderManageApi.getDaypandect()
+                    this.DayPandect = res.data.Data
+                    this.dayloading = false;
+                } catch (e) {
+                    console.error(e)
+                    this.dayloading = false;
+                    this.$message.error('当日订单信息获取失败!!!')
+                }
+            },
             async fetchCarList() {
                 try {
                     const options = {
@@ -366,6 +431,7 @@
             async fetchData() {
                 const _self = this
                 _self.fetchUnArrangeData()
+                _self.getDaypandect()
             },
             async fetchUnArrangeData() {
                 const _self = this
@@ -376,6 +442,7 @@
                         endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
                     }
                     const res = await carArrangeApi.unArrangeOrderList(options)
+                    console.log(res.data)
                     if (res.data && res.data.length) {
                         _self.unArrangeList = res.data
                     }
@@ -540,7 +607,7 @@
                     }
                 }
                 _self.chartData = arr
-                console.log(_self.chartData)
+                //console.log(_self.chartData)
                 _self.chartData.length ? _self.createChart() : ''
             },
             createChart() {

@@ -86,6 +86,10 @@ import LineStation from './fleet/line-station/line-station'
 import Station from './fleet/station/station'
 const fleet = { CarBase, DriverBase, CarArrange, CarUse, GasolineLog, DriverEvaluate, CarLine, LineStation, Station }
 
+// dwz
+import Dwz from './dwz/dwz'
+const dwz = { Dwz }
+
 export default {
     ...other,
     ...auth,
@@ -96,5 +100,6 @@ export default {
     ...user,
     ...role,
     ...wechat,
-    ...fleet
+    ...fleet,
+    ...dwz
 }
