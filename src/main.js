@@ -11,6 +11,9 @@ import CustomTable from 'components/common/custom-table.vue'
 import CustomSearch from 'components/common/custom-search.vue'
 
 axios.defaults.withCredentials = true
+
+axios.defaults.timeout = 3*60*1000
+
 // const VueProgressBarOptions = {
 //   color: '#13ce66',
 //   failedColor: '#FF4949',
