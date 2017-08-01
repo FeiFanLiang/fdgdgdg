@@ -285,8 +285,8 @@ export default {
     async clickEditBtn($index, row) {
       const _self = this
       try {
-        const res = await carBaseApi.detail(row.ID)
         _self.showDialog = true
+        const res = await carBaseApi.detail(row.ID)
         _self.form.id = res.data.Data.ID
         _self.form.carClassify = res.data.Data.CarClassify
         _self.form.carMode = res.data.Data.CarMode

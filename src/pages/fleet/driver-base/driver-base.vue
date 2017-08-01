@@ -195,8 +195,8 @@
       async clickEditBtn($index, row) {
         const _self = this
         try {
-          const res = await driverBaseApi.detail(row.ID)
           _self.showDialog = true
+          const res = await driverBaseApi.detail(row.ID)
           _self.form.id = res.data.Data.ID
           _self.form.jobNnumber = res.data.Data.JobNnumber
           _self.form.codeNum = res.data.Data.CodeNum
