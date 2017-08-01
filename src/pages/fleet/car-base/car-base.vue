@@ -278,7 +278,9 @@ export default {
     clickAddBtn() {
       const _self = this
       _self.showDialog = true
-      _self.form = {}
+      _self.form = {
+        carClassify: ''
+      }
     },
     async clickEditBtn($index, row) {
       const _self = this

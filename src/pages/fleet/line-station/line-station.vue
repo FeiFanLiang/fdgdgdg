@@ -340,7 +340,7 @@ export default {
           this.stationList = await this.getStationList();
           this.copyStationList = this.stationList
           for(let i in a){
-            if(value == a[i].CarLineID){/* let j in this.copyStationList */
+            if(value == a[i].CarLineID){
                 for(let j=0;j<this.copyStationList.length;j++){
                     if(a[i].StationID == this.copyStationList[j].ID){
                         this.copyStationList.splice(j,1)
@@ -361,7 +361,6 @@ export default {
   },
    created() {
     this.fetchData();
-    this.carlineChange();
     this.getSelectData();
   }
 }
