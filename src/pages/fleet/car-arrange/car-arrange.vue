@@ -39,7 +39,7 @@
             <el-table-column prop="order.LinkName" label="联系人"></el-table-column>
             <el-table-column prop="order.LinkPhone" label="联系电话" width="125"></el-table-column>
             <el-table-column prop="order.UseTime" label="用车时间" width="110"></el-table-column>
-            <el-table-column label="接/送">
+            <el-table-column label="接/送" width="45">
                 <template scope="scope">
                     <span v-if="scope.row.order.CarTransportType === 0">接机</span>
                     <span v-if="scope.row.order.CarTransportType === 1">送机</span>
@@ -66,9 +66,11 @@
                 </template>
             </el-table-column> -->
 
-            <el-table-column label="地址详情" width="190">
+            <el-table-column label="地址详情" width="150">
                 <template scope="scope">
-                    <span style="color:blue;">{{scope.row.order.Origin}}</span>--<span style="color:red;">{{scope.row.order.Destination}}</span>
+                    <span style="color:blue;">{{scope.row.order.Origin}}</span>
+                    <br>
+                    <span style="color:red;">{{scope.row.order.Destination}}</span>
                     <p style="color:grey;font-size:10px;">
                         <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
                         <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span> 
@@ -77,6 +79,7 @@
             </el-table-column>
 
             <el-table-column prop="order.PreServiceMileage" label="里程" width="60"></el-table-column>
+            <el-table-column prop="order.ExternalOrderStete" label="状态"></el-table-column>
             <el-table-column label="操作" fixed="right" width="100">
             <template scope="scope">
                 <el-button size="small" @click="dispatch(scope.$index, scope.row,0)" style="margin:5px">派车</el-button>
@@ -448,6 +451,12 @@
                     console.log(res.data)
                     if (res.data && res.data.length) {
                         _self.unArrangeList = res.data
+                        var a = res.data
+                        console.log(_self.unArrangeList)
+                        for(let i in a){
+                            a[i].order.ExternalOrderStete = a[i].order.ExternalOrderStete.replace(/\s/g, "");
+                            console.log(a[i].order.ExternalOrderStete)
+                        } 
                     }
                     _self.loading = false
                     _self.fetchArrangeData()
