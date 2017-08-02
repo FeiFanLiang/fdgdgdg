@@ -34,7 +34,7 @@
              <div style="width:100%;overflow:auto;">
             <tr style="overflow:auto">
                 <td v-for="(item,index) in scope.row.Stations" :key="index" style="border:none;" id="td">
-                    <el-button type="text" @click="clickEditBtn(scope.row,item.StationID,item.ID,item.Order)">
+                    <el-button type="text" @click="clickEditBtn(scope.row,item.StationID,item.ID,item.Order,item.name)">
                         {{item.name}}
                     </el-button>
                     <i class="el-icon-delete" style="margin:5px;" @click="del(item.ID)"></i>
@@ -43,31 +43,24 @@
             </div>
           </template>
       </el-table-column>
-      <!-- <el-table-column label="操作" show-overflow-tooltip>
-         <template scope="scope">
-            <el-button type="text" @click="clickEditBtn2(scope.row)">
-                编辑
-            </el-button>
-          </template>
-      </el-table-column> -->
     </el-table>
     
     <el-dialog :title="dialogTitle" v-model="showAddDialog" size="tiny" @close="resetForm('form')">
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item label="路线名称" prop="CarLineID">
-            <el-select v-model="form.CarLineID" placeholder="请选择路线名称" style="width:70%" @change="carlineChange" id="mySelect"><!-- @visible-change="carlineChange" -->
+            <el-select v-model="form.CarLineID" placeholder="请选择路线名称" style="width:70%" @change="carlineChange" id="mySelect">
                 <el-option v-for="(item,index) in carlineList" :key="index" :label="item.Name" :value="item.ID"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="站点名称" prop="StationID">
-            <el-select v-model="form.StationID" clearable placeholder="请选择站点名称" style="width:70%" @visible-change="stationChange">
-                <el-option v-for="(item,index) in stationList" :key="index" :label="item.Name" :value="item.ID"
-                :disabled="item.disabled"></el-option>
+            <el-select v-model="form.StationID" clearable placeholder="请选择站点名称" style="width:70%" @visible-change="stationChange" :disabled="stationDisable">
+                <el-option v-for="(item,index) in stationList" :key="index" :label="item.Name" :value="item.ID"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="站点次序" prop="Order">
             <el-input type="number" placeholder="请输入第几站" v-model="form.Order" style="width:70%" auto-complete="off"></el-input>
         </el-form-item> 
+        <p style="color:lightgrey">{{addMessage}}</p>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showAddDialog = false">取 消</el-button>
@@ -80,20 +73,34 @@
 import { carLineApi, stationApi, lineStationApi } from 'api'
 export default {
   data() {
-      var validateOrder = (rule, value, callback) => {
+      var validateOrder = async (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入站点序列'));
         } else {
-            /* for(let i in this.list){
-              if(this.form.Order == this.list[i].Order){
-                  callback(new Error('站点序列重复'));
-              }
-          }   */
-          console.log("111111111111")
+          const options = {
+            pageSize: 100,
+            query:{
+                CarLineID:this.form.ID
+            }
+          }
+          const res = await lineStationApi.listByQuery(options);
+          let order = [];
+          order = res.data.Data; 
+          console.log(this.form.CarLineID)
+          if(this.form.CarLineID !='') {
+            for(let i in order){
+                if(this.form.Order==order[i].Order){
+                    callback(new Error('站点序列重复'));
+                }
+            }
+          }
           callback();
         }
       };
       return {
+        stationDisable:false,
+        addEdit:'',
+        addMessage:'',
         copyStationList:[],
         copyForm:{},
         carlineList:[],
@@ -132,14 +139,16 @@ export default {
   },
   methods: {
       async fetchData() {
-        const _self = this
-        _self.loading = true
-        const options = {
-          pageSize: 100,
-          query: {
-            
-          }
-        }
+         const _self = this
+         _self.loading = true
+         const options = {
+            pageSize: 100,
+            order: 'ID',
+            query: {
+                CarLineID: _self.filters.labelVal === '1' ? _self.filters.CarLineID : '',
+                StationID: _self.filters.labelVal === '2' ? _self.filters.StationID : ''
+            }
+         }
          try { 
           const res = await lineStationApi.listByQuery(options);
           var arr = res.data.Data;
@@ -191,20 +200,24 @@ export default {
           }
           return dest;
       },
-      carlineStationSearch(){
-
+      carlineStationSearch(filters){
+        this.filters = filters
+        this.fetchData()
       },
       async clickAddBtn(){
         const _self = this
         _self.dialogTitle='添加路线/站点映射'
+        _self.addMessage='注：先添加路线再添加站点！'
         _self.showAddDialog = true
         _self.form = {
             CarLineID:'',
             StationID:'',
             Order:0
         }
+        this.addEdit = 'add';
+        this.stationDisable = true;
       },
-      async clickEditBtn(row,StationID,ID,Order){
+      async clickEditBtn(row,StationID,ID,Order,name){
         const _self = this
         _self.dialogTitle='编辑路线/站点映射'
         try {
@@ -213,6 +226,7 @@ export default {
             _self.form.StationID = StationID
             _self.form.Order = Order
             _self.showAddDialog = true
+            this.addEdit = 'edit'
         } catch (e) {
             console.error(e)
         }
@@ -314,19 +328,20 @@ export default {
           _self.stationList = await _self.getStationList();
       },
        async carlineChange(value){
+           this.stationDisable = false;
           const options = {
             pageSize: 100,
           }
           const res = await lineStationApi.listByQuery(options);
           let a = res.data.Data
-           if(this.form.ID == ''){
-            this.form.StationID= ''
-          } 
+          if(this.addEdit == 'add' && this.form.CarLineID == ''){
+              this.form.StationID = ''
+          }
           this.stationList = await this.getStationList();
           this.copyStationList = this.stationList
           for(let i in a){
             if(value == a[i].CarLineID){
-                for(let j in this.copyStationList){
+                for(let j=0;j<this.copyStationList.length;j++){
                     if(a[i].StationID == this.copyStationList[j].ID){
                         this.copyStationList.splice(j,1)
                     }
@@ -335,24 +350,26 @@ export default {
           }
       }, 
       async stationChange(a){
-          console.log(this.form.CarLineID)
-          this.carlineChange(this.form.CarLineID)
-          if(a==true ){
-            this.stationList = this.copyStationList;
+          if(a==true){
+              if(this.addEdit == 'edit'){
+                this.carlineChange(this.form.CarLineID)
+              }
+              this.stationList = this.copyStationList;
           }
-      }
+      },
+      
   },
-  created() {
+   created() {
     this.fetchData();
     this.getSelectData();
   }
 }
 </script>
-<style lang="scss">
+ <style lang="scss">
 #lineStation{
     #td:hover{
         background-color: #dfe6ec;
     }
 }
 </style>
-
+ 

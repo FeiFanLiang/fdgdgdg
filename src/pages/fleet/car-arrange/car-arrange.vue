@@ -20,63 +20,43 @@
                 <span style="color:red;">{{DayPandect}}</span>
             </el-col>
         </el-row>
-        <!-- <CustomTable :list="unArrangeList" :configList="configList.listFields" :className="tableRowClassName">
-                    <el-table-column type="expand" slot="left-one">
-                        <template scope="props" v-if="props.row.CancelTime">
-                            <el-form label-position="left" inline class="demo-table-expand">
-                                <el-form-item>
-                                    <p>取消时间：{{props.row.CancelTime}}</p>
-                                    <p>取消单人员：{{props.row.CancelUserID}}</p>
-                                    <p>取消说明：{{props.row.CancelRemark}}</p>
-                                </el-form-item>
-                            </el-form>
-</template>
-            </el-table-column>
-            <el-table-column width="150" label="操作" fixed="right" slot="right-one">
-<template scope="scope">
-    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
-        编辑</el-button>
-    <DeleteButton size="small" api="carArrangeApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
-            </el-table-column>
-            </CustomTable> -->
         <h3>待派车订单</h3>
-        <el-table :data="unArrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
-            <el-table-column type="expand">
-<template scope="props" v-if="props.row.CancelTime">
-    <el-form label-position="left" inline class="demo-table-expand">
-        <el-form-item>
-            <p>取消时间：{{props.row.order.CancelTime}}</p>
-            <p>取消单人员：{{props.row.order.CancelUserID}}</p>
-            <p>取消说明：{{props.row.order.CancelRemark}}</p>
-        </el-form-item>
-    </el-form>
-</template>
+        <el-table :data="unArrangeList" ref="table" style="width: 100%;" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
+            <el-table-column type="expand" width="30">
+                <template scope="props" v-if="props.row.CancelTime">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item>
+                            <p>取消时间：{{props.row.order.CancelTime}}</p>
+                            <p>取消单人员：{{props.row.order.CancelUserID}}</p>
+                            <p>取消说明：{{props.row.order.CancelRemark}}</p>
+                        </el-form-item>
+                    </el-form>
+                </template>
             </el-table-column>
-            <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.ExternalOrderID" label="订单编号" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
-            <el-table-column label="产品类型" show-overflow-tooltip>
-<template scope="scope">
-    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-</template>
+            <el-table-column prop="order.Channel" label="订单渠道"></el-table-column>
+            <el-table-column prop="order.ExternalOrderID" label="订单编号" width="120"></el-table-column>
+            <el-table-column prop="order.CarriageNo" label="航班/车次" width="90"></el-table-column>
+            <el-table-column prop="order.LinkName" label="联系人"></el-table-column>
+            <el-table-column prop="order.LinkPhone" label="联系电话" width="125"></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" width="110"></el-table-column>
+            <el-table-column label="接/送" width="45">
+                <template scope="scope">
+                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
+                </template>
             </el-table-column>
-            <el-table-column label="车型类别" show-overflow-tooltip>
-<template scope="scope">
-    <span v-if="scope.row.order.CarClassify === 0">经济型</span>
-    <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
-    <span v-if="scope.row.order.CarClassify === 2">商务型</span>
-    <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
-</template>
+            <el-table-column label="车型">
+                <template scope="scope">
+                    <span v-if="scope.row.order.CarClassify === 0">经济型</span>
+                    <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
+                    <span v-if="scope.row.order.CarClassify === 2">商务型</span>
+                    <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
+                </template>
             </el-table-column>
-            <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
 
             <el-table-column label="详细地址" show-overflow-tooltip>
@@ -84,80 +64,106 @@
                     <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
                     <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
                 </template>
+            </el-table-column> -->
+
+            <el-table-column label="地址详情" width="150">
+                <template scope="scope">
+                    <span style="color:blue;">{{scope.row.order.Origin}}</span>
+                    <br>
+                    <span style="color:red;">{{scope.row.order.Destination}}</span>
+                    <p style="color:grey;font-size:10px;">
+                        <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span> 
+                    </p>
+                </template>
             </el-table-column>
 
-            <el-table-column prop="order.PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="order.PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="order.Remark" label="备注" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" fixed="right">
-<template scope="scope">
-    <el-button size="small" @click="dispatch(scope.$index, scope.row,0)">
-        派车</el-button>
-        <el-popover ref="popover" placement="top" width="200">
-            <h5>航班动态</h5>
-            <p>航班号：{{airInformationList.FlightNo}}</p>
-            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
-            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
-            <p>状态：{{airInformationList.Stat}}</p>
-            <p>前序航班状态：{{airInformationList.PreStat}}</p>
-            <p>更新时间：{{airInformationList.UpdateTime}}</p>
-            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
-        </el-popover>
-        <el-button size="small" v-popover:popover @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)">查询航班</el-button>
-</template>
+            <el-table-column prop="order.PreServiceMileage" label="里程" width="60"></el-table-column>
+            <el-table-column prop="order.ExternalOrderStete" label="状态"></el-table-column>
+            <el-table-column label="操作" fixed="right" width="100">
+            <template scope="scope">
+                <el-button size="small" @click="dispatch(scope.$index, scope.row,0)" style="margin:5px">派车</el-button>
+                <el-popover ref="popover2" placement="top" width="200">
+                    <p>{{scope.row.order.Remark}}</p>
+                </el-popover>
+                <el-button size="small" v-popover:popover2 style="margin:5px">备注</el-button>
+                <el-popover ref="popover" placement="top" width="200">
+                    <h5>航班动态</h5>
+                    <p>航班号：{{airInformationList.FlightNo}}</p>
+                    <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+                    <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+                    <p>状态：{{airInformationList.Stat}}</p>
+                    <p>前序航班状态：{{airInformationList.PreStat}}</p>
+                    <p>更新时间：{{airInformationList.UpdateTime}}</p>
+                    <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+                </el-popover>
+                <el-button size="small" v-popover:popover @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
+            </template>
             </el-table-column>
         </el-table>
         <h3>已派车订单</h3>
         <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
-            <el-table-column type="expand">
-<template scope="props" v-if="props.row.CancelTime">
-    <el-form label-position="left" inline class="demo-table-expand">
-        <el-form-item>
-            <p>取消时间：{{props.row.arrange.CancelTime}}</p>
-            <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
-            <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
-        </el-form-item>
-    </el-form>
-</template>
+            <el-table-column type="expand" width="30">
+            <template scope="props" v-if="props.row.CancelTime">
+                <el-form label-position="left" inline class="demo-table-expand">
+                    <el-form-item>
+                        <p>取消时间：{{props.row.arrange.CancelTime}}</p>
+                        <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
+                        <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
+                    </el-form-item>
+                </el-form>
+            </template>
             </el-table-column>
-            <el-table-column prop="order.Channel" label="订单渠道" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.ExternalOrderID" label="订单编号" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.LinkName" label="联系人" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="order.UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
-            <el-table-column label="产品类型" show-overflow-tooltip>
-<template scope="scope">
-    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-</template>
+            <el-table-column prop="order.Channel" label="订单渠道"></el-table-column>
+            <el-table-column prop="order.ExternalOrderID" label="订单编号" width="120"></el-table-column>
+            <el-table-column prop="order.CarriageNo" label="航班/车次" width="90"></el-table-column>
+            <el-table-column prop="order.LinkName" label="联系人"></el-table-column>
+            <el-table-column prop="order.LinkPhone" label="联系电话" width="125"></el-table-column>
+            <el-table-column prop="order.UseTime" label="用车时间" width="110"></el-table-column>
+            <el-table-column label="接/送">
+                <template scope="scope">
+                    <span v-if="scope.row.order.CarTransportType === 0">接机</span>
+                    <span v-if="scope.row.order.CarTransportType === 1">送机</span>
+                    <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+                    <span v-if="scope.row.order.CarTransportType === 3">接站</span>
+                    <span v-if="scope.row.order.CarTransportType === 4">送站</span>
+                </template>
             </el-table-column>
-            <el-table-column prop="arrange.Driver.Name" label="司机姓名" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="arrange.Car.CarMode" label="车型" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="arrange.Driver.Name" label="司机姓名"></el-table-column>
+            <el-table-column prop="arrange.Car.CarMode" label="车型"></el-table-column>
             <!-- <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column>
-            <el-table-column label="操作" fixed="right">
-<template scope="scope">
-    <el-button size="small" @click="dispatch(scope.$index, scope.row,1)">
-        改派</el-button>
-        <el-popover ref="popover2" placement="top" width="200">
-            <h5>航班动态</h5>
-            <p>航班号：{{airInformationList.FlightNo}}</p>
-            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
-            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
-            <p>状态：{{airInformationList.Stat}}</p>
-            <p>前序航班状态：{{airInformationList.PreStat}}</p>
-            <p>更新时间：{{airInformationList.UpdateTime}}</p>
-            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
-        </el-popover>
-        <el-button size="small" v-popover:popover2 @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)">查询航班</el-button>
-</template>
+             <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column> 
+            <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column> -->
+            <el-table-column label="地址详情" width="170">
+                <template scope="scope">
+                    <span style="color:blue;">{{scope.row.order.Origin}}</span><br><span style="color:red;">{{scope.row.order.Destination}}</span>
+                    <!-- <p style="color:grey;font-size:10px;">
+                        <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span> 
+                    </p> -->
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" fixed="right" width="100">
+            <template scope="scope">
+                <el-button size="small" @click="dispatch(scope.$index, scope.row,1)" style="margin:5px">改派</el-button>
+                    <el-popover ref="popover4" placement="top" width="200">
+                        <p>{{scope.row.order.Remark}}</p>
+                    </el-popover>
+                    <el-button size="small" v-popover:popover4 style="margin:5px">备注</el-button>
+                    <el-popover ref="popover3" placement="top" width="200">
+                        <h5>航班动态</h5>
+                        <p>航班号：{{airInformationList.FlightNo}}</p>
+                        <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+                        <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+                        <p>状态：{{airInformationList.Stat}}</p>
+                        <p>前序航班状态：{{airInformationList.PreStat}}</p>
+                        <p>更新时间：{{airInformationList.UpdateTime}}</p>
+                        <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+                    </el-popover>
+                    <el-button size="small" v-popover:popover3 @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
+            </template>
             </el-table-column>
         </el-table>
         <p id="chart"></p>
@@ -445,6 +451,12 @@
                     console.log(res.data)
                     if (res.data && res.data.length) {
                         _self.unArrangeList = res.data
+                        var a = res.data
+                        console.log(_self.unArrangeList)
+                        for(let i in a){
+                            a[i].order.ExternalOrderStete = a[i].order.ExternalOrderStete.replace(/\s/g, "");
+                            console.log(a[i].order.ExternalOrderStete)
+                        } 
                     }
                     _self.loading = false
                     _self.fetchArrangeData()
