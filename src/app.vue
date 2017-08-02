@@ -1,12 +1,16 @@
 <template>
 <section class="db">
     <template v-if="!$route.meta.alone">
-      <header class="db-header-left">
+      <header class="db-header-left" :style="{width:!isCollapse?'200px':'80px'}">
         <router-link class="logo" :to="{path: '/'}">美票</router-link>
       </header>
-      <header class="db-header-right">
+      <header class="db-header-right" :style="{left:!isCollapse?'200px':'80px'}">
+         <el-radio-group v-model="isCollapse" style="margin-right:20px;">
+           <el-radio-button :label="false"><i class="el-icon-menu"></i></el-radio-button>
+           <el-radio-button :label="true"><i class="el-icon-minus"></i></el-radio-button> 
+        </el-radio-group> 
         <db-breadcrumb></db-breadcrumb>
-        <div class="user-info" v-if="user.id">
+        <div class="user-info" v-if="user.id"  :style="{'padding-right':!isCollapse?'200px':'80px'}">
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
@@ -21,28 +25,34 @@
         </div>
       </header>
       <div class="db-body">
-        <aside class="db-menu-wrapper">
-          <el-menu :default-active="activeMenu" class="db-menu-bar" router  theme="dark">
+        <aside class="db-menu-wrapper" :style="{width:!isCollapse?'200px':'80px'}">
+          <!-- :default-active="activeMenu" class="db-menu-bar" router  theme="dark"  -->
+          <el-menu default-active="activeMenu" class="el-menu-vertical-demo" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children" >
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
-                  <template slot="title"><i :class="route.iconClass"></i>{{route.name}}
-</template>
-                  <el-menu-item v-if="!(cRoute.meta&&cRoute.meta.hidden)" :index="cRoute.name" v-for="(cRoute, cIndex) in route.children" :route="cRoute" :key="cIndex">{{cRoute.name}}</el-menu-item>
+                  <template slot="title"><i :class="route.iconClass"></i>
+                    <span slot="title">{{route.name}}</span>
+                  </template>
+                  <el-menu-item-group v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  :key="cIndex">
+                    <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
+                  </el-menu-item-group>
                 </el-submenu>
               </template>
               <template v-if="!route.children && route.name">
-<el-menu-item :index="route.name" :route="route">
-    <i :class="route.iconClass"></i>{{route.name}}</el-menu-item>
-</template>
+                  <el-menu-item :index="route.name" :route="route">
+                    <i :class="route.iconClass"></i>
+                    <span slot="title">{{route.name}}</span>
+                  </el-menu-item>
+              </template>
             </template>
           </el-menu>
         </aside>
-  <div class="db-content-wrapper">
-    <section class="db-content">
-      <router-view></router-view>
-    </section>
-  </div>
+        <div class="db-content-wrapper" :style="{'padding-left':!isCollapse?'200px':'80px'}">
+          <section class="db-content">
+            <router-view></router-view>
+          </section>
+        </div>
   </div>
   </template>
   <template v-else>
@@ -57,6 +67,7 @@ import { accountApi } from 'api'
 export default {
   data() {
     return {
+      isCollapse: false,
       hotelName: '',
       user: {
         id: '',
@@ -97,6 +108,12 @@ export default {
       } catch (e) {
         console.error(e)
       }
+    },
+    handleOpen(key, keyPath) {
+        console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+        console.log(key, keyPath);
     }
   }
 }
@@ -113,7 +130,7 @@ export default {
         width: 201px;
         height: 60px;
         background: #324057;
-        padding: 13px 20px;
+        padding: 13px 9px;
         box-sizing: border-box;
         color: #ffffff;
         z-index: 99;
@@ -128,7 +145,8 @@ export default {
 
     }
     .db-header-right {
-        width: calc(100% - 200px);
+        // width: calc(100% - 200px);
+        width:100%;
         height: 60px;
         background: #fff;
         padding: 0 20px;
@@ -158,11 +176,12 @@ export default {
 
         // menu
         .db-menu-wrapper {
+          width:200px;
             position: fixed;
             left: 0;
             top: 60px;
             height: 100%;
-            overflow: auto;
+            // overflow: auto;
             z-index: 98;
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.35);
             background-color: #324157;
