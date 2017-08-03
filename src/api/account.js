@@ -4,7 +4,7 @@ const base = path.apiBaseUrl + 'Account/'
 export default {
   login (params) {
     console.log(window.location.host)
-    return axios.post(window.location.host + '/Account/Login', JSON.stringify(params), {
+    return axios.post('http://'+window.location.host + '/Account/Login', JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json'
       }
