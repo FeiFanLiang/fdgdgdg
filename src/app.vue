@@ -27,7 +27,8 @@
       <div class="db-body">
         <aside class="db-menu-wrapper" :style="{width:!isCollapse?'200px':'80px'}">
           <!-- :default-active="activeMenu" class="db-menu-bar" router  theme="dark"  -->
-          <el-menu default-active="activeMenu" class="sidebar-container" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+
+          <el-menu default-active="activeMenu"  class="sidebar-container" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children" >
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
@@ -122,7 +123,8 @@ export default {
 }
 </script>
 
-<style lang="scss">@import './styles/_variables.scss';
+<style lang="scss">
+@import './styles/_variables.scss';
 
  .sidebar-container{
    transition: width .28s ease-out;

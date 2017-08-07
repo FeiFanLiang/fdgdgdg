@@ -49,7 +49,7 @@
           <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
         </template>
       </el-table-column>
-    </el-table> 
+    </el-table>
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
         @current-change="handleCurrentChange"
@@ -101,8 +101,8 @@
         </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog('form')">取 消</el-button>
-        <el-button type="primary" @click="submitForm('form')">确 定</el-button>
+        <el-button @click="closeDialog()">取 消</el-button>
+        <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -129,6 +129,7 @@ export default {
       currentPage: 1,
       platInfoList: [],
       loading: false,
+      isEditable: true,
       showDialog: false,
       dialogTitle: '',
       dialogTag: '',
@@ -220,25 +221,26 @@ export default {
         console.error(e)
       }
     },
-    closeDialog(a) {
+    closeDialog() {
       const _self = this
       _self.showDialog = false
-      _self.$refs[a].resetFields()
+      _self.$refs['form'].resetFields()
     },
-    submitForm(a) {
+    submitForm() {
       const _self = this
-      if (_self.dialogTag === 1) _self.addSave(a)
-      if (_self.dialogTag === 2) _self.editSave(a)
+      if (_self.dialogTag === 1) _self.addSave()
+      if (_self.dialogTag === 2) _self.editSave()
     },
-    async addSave(a) {
+    async addSave() {
       const _self = this
-      _self.$refs[a].validate(async valid => {
+      _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
             _self.form.platHotelName_En = _self.form.platHotelNameEn
+            _self.isEditable = false
             await hotelPlatformApi.add(_self.form)
             _self.fetchData()
-            _self.$refs[a].resetFields()
+            _self.$refs['form'].resetFields()
             _self.showDialog = false
             _self.$message({
               message: '保存成功',
@@ -247,21 +249,24 @@ export default {
           } catch (e) {
             console.error(e)
             _self.$message.error('添加失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
         }
       })
     },
-    async editSave(a) {
+    async editSave() {
       const _self = this
-      _self.$refs[a].validate(async valid => {
+      _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
             _self.form.platHotelName_En = _self.form.platHotelNameEn
+            _self.isEditable = false
             await hotelPlatformApi.edit(_self.form)
             _self.fetchData()
-            _self.$refs[a].resetFields()
+            _self.$refs['form'].resetFields()
             _self.showDialog = false
             _self.$message({
               message: '编辑成功',
@@ -270,6 +275,8 @@ export default {
           } catch (e) {
             console.error(e)
             _self.$message.error('编辑失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false

@@ -69,7 +69,7 @@
         </el-pagination>
       </div>
       <el-dialog title="创建酒店" v-model="dialogTableVisible">
-        <HotelBaseAdd @hide="dialogTableVisible=false"></HotelBaseAdd>
+        <HotelBaseAdd @hide="hotelAddHide"></HotelBaseAdd>
       </el-dialog>
   </div>
 </template>
@@ -93,7 +93,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       count: 0,
-      loading:false,
+      loading: false,
       filters: {
         ID: '',
         HotelName: '',
@@ -118,6 +118,10 @@ export default {
   },
 
   methods: {
+    hotelAddHide() {
+      this.dialogTableVisible = false
+      this.getHotelbaseList()
+    },
     /*addHotelShow(row) {
       this.$router.push({
         name: '添加酒店展示',
@@ -142,7 +146,7 @@ export default {
     },
     async getHotelbaseList(currentPage, pageSize) {
       const _self = this
-      this.loading = true;
+      this.loading = true
       _self.currentPage = currentPage || _self.currentPage
       _self.pageSize = pageSize || _self.pageSize
       const options = {
@@ -176,7 +180,7 @@ export default {
         }
         _self.hotelbase = data
         _self.count = res.data.Count
-        this.loading = false;
+        this.loading = false
       }
     },
     handleSizeChange(val) {

@@ -120,7 +120,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="submitEditForm('form')">确 定</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
         </span>
         </el-dialog>
         <el-dialog v-model="dialogVisible">
@@ -146,6 +146,7 @@ export default {
       dialogImageUrl: '',
       hotelShowList: [],
       loading: false,
+      isEditable: true,
       showDialog: false,
       form: {
         ID: '',
@@ -297,11 +298,12 @@ export default {
       _self.imageList = []
       _self.showDialog = true
     },
-    async submitEditForm() {
+    async submitForm() {
       const _self = this
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             if (_self.form.ID) {
               await hotelShowApi.edit(_self.form)
             } else {
@@ -321,6 +323,8 @@ export default {
           } catch (e) {
             console.error(e)
             _self.$message.error('保存失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false

@@ -20,16 +20,16 @@ import HotelShow from './hotel/hotel-show/hotel-show'
 import HotelShowAddAndEdit from './hotel/hotel-show/hotel-show-add-and-edit'
 import RoomShow from './hotel/room-show/room-show'
 const hotel = {
-    HotelBase,
-    HotelBaseAdd,
-    HotelBaseEdit,
-    HotelPlatform,
-    HotelPolicy,
-    HotelPrice,
-    HotelRoom,
-    HotelShow,
-    HotelShowAddAndEdit,
-    RoomShow
+  HotelBase,
+  HotelBaseAdd,
+  HotelBaseEdit,
+  HotelPlatform,
+  HotelPolicy,
+  HotelPrice,
+  HotelRoom,
+  HotelShow,
+  HotelShowAddAndEdit,
+  RoomShow
 }
 
 // show
@@ -64,14 +64,14 @@ import MembershipCard from './weichat/membership-card'
 import Verification from './weichat/verification'
 import Texts from './weichat/texts'
 const wechat = {
-    CustomMenu,
-    CustomService,
-    PayWeichat,
-    Card,
-    Datas,
-    MembershipCard,
-    Verification,
-    Texts
+  CustomMenu,
+  CustomService,
+  PayWeichat,
+  Card,
+  Datas,
+  MembershipCard,
+  Verification,
+  Texts
 }
 
 // fleet
@@ -84,22 +84,32 @@ import DriverEvaluate from './fleet/driver-evaluate/driver-evaluate'
 import CarLine from './fleet/car-line/car-line'
 import LineStation from './fleet/line-station/line-station'
 import Station from './fleet/station/station'
-const fleet = { CarBase, DriverBase, CarArrange, CarUse, GasolineLog, DriverEvaluate, CarLine, LineStation, Station }
+const fleet = {
+  CarBase,
+  DriverBase,
+  CarArrange,
+  CarUse,
+  GasolineLog,
+  DriverEvaluate,
+  CarLine,
+  LineStation,
+  Station
+}
 
 // dwz
 import Dwz from './dwz/dwz'
 const dwz = { Dwz }
 
 export default {
-    ...other,
-    ...auth,
-    ...hotel,
-    ...show,
-    ...policy,
-    ...order,
-    ...user,
-    ...role,
-    ...wechat,
-    ...fleet,
-    ...dwz,
+  ...other,
+  ...auth,
+  ...hotel,
+  ...show,
+  ...policy,
+  ...order,
+  ...user,
+  ...role,
+  ...wechat,
+  ...fleet,
+  ...dwz
 }
