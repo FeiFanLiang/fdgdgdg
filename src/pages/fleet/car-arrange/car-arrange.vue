@@ -73,7 +73,7 @@
                     <span style="color:red;">{{scope.row.order.Destination}}</span>
                     <p style="color:grey;font-size:10px;">
                         <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
-                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span> 
+                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
                     </p>
                 </template>
             </el-table-column>
@@ -134,14 +134,14 @@
             <!-- <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column> -->
             <!-- <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
-             <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column> 
+             <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column> -->
             <el-table-column label="地址详情" width="170">
                 <template scope="scope">
                     <span style="color:blue;">{{scope.row.order.Origin}}</span><br><span style="color:red;">{{scope.row.order.Destination}}</span>
                     <!-- <p style="color:grey;font-size:10px;">
                         <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
-                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span> 
+                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
                     </p> -->
                 </template>
             </el-table-column>
@@ -287,349 +287,383 @@
     </div>
 </template>
 <script>
-    import {
-        carBaseApi,
-        driverBaseApi,
-        carArrangeApi,
-        carOrderManageApi,
-        airInformationApi
-    } from 'api'
-    // import * as moment from "moment";
-    // import * as d3 from "d3";
-    export default {
-        mounted() {
-             this.filters.beginTime = new Date().Format('yyyy-MM-dd')
-            const now = new Date();
-            now.setDate(now.getDate() + 1);
-            this.filters.endTime = now.Format('yyyy-MM-dd');
-            this.fetchData()
-            this.configList = carArrangeApi.getConfig()  
+import {
+  carBaseApi,
+  driverBaseApi,
+  carArrangeApi,
+  carOrderManageApi,
+  airInformationApi
+} from 'api'
+// import * as moment from "moment";
+// import * as d3 from "d3";
+export default {
+  mounted() {
+    this.filters.beginTime = new Date().Format('yyyy-MM-dd')
+    const now = new Date()
+    now.setDate(now.getDate() + 1)
+    this.filters.endTime = now.Format('yyyy-MM-dd')
+    this.fetchData()
+    this.configList = carArrangeApi.getConfig()
+  },
+  data() {
+    return {
+      airInformationList: [],
+      DayPandect: '',
+      unArrangeList: [],
+      arrangeList: [],
+      carList: [],
+      driverList: [],
+      chartData: [],
+      loading: false,
+      loading2: false,
+      dayloading: false,
+      showDialog: false,
+      pickerOptions: {},
+      tag: '',
+      form: {
+        id: '',
+        channel: '',
+        orderId: '',
+        carId: '',
+        driverId: '',
+        carriageNo: '',
+        linkName: '',
+        linkPhone: '',
+        carTransportType: '',
+        carClassify: '',
+        origin: '',
+        destination: '',
+        preServiceMileage: '',
+        preServiceTime: '',
+        specReq: ''
+      },
+      carTransportTypeList: [
+        {
+          value: 0,
+          label: '接机'
         },
-        data() {
-            return {
-                airInformationList:[],
-                DayPandect:'',
-                unArrangeList: [],
-                arrangeList: [],
-                carList: [],
-                driverList: [],
-                chartData: [],
-                loading: false,
-                loading2: false,
-                dayloading: false,
-                showDialog: false,
-                pickerOptions: {},
-                tag: '',
-                form: {
-                    id: '',
-                    channel: '',
-                    orderId: '',
-                    carId: '',
-                    driverId: '',
-                    carriageNo: '',
-                    linkName: '',
-                    linkPhone: '',
-                    carTransportType: '',
-                    carClassify: '',
-                    origin: '',
-                    destination: '',
-                    preServiceMileage: '',
-                    preServiceTime: '',
-                    specReq: ''
-                },
-                carTransportTypeList: [{
-                    value: 0,
-                    label: '接机'
-                }, {
-                    value: 1,
-                    label: '送机'
-                }, {
-                    value: 2,
-                    label: '指定线路'
-                }, {
-                    value: 3,
-                    label: '接站'
-                }, {
-                    value: 4,
-                    label: '送站'
-                }],
-                carClassifyList: [{
-                    value: 0,
-                    label: '经济型'
-                }, {
-                    value: 1,
-                    label: '舒适型'
-                }, {
-                    value: 2,
-                    label: '商务型'
-                }, {
-                    value: 3,
-                    label: '豪华型'
-                }],
-                filters: {
-                    beginTime: '',
-                    endTime: ''
-                },
-                rules: {
-                    carId: [{
-                        required: true,
-                        message: '请选择车辆'
-                    }],
-                    driverId: [{
-                        required: true,
-                        message: '请选择司机'
-                    }]
-                }
-            }
+        {
+          value: 1,
+          label: '送机'
         },
-        methods: {
-            async showAirInformations(CarriageNo,UseTime){
-                let option = {
-                    flightNo:CarriageNo,
-                    begin:UseTime
-                }
-                console.log(option)
-              const res = await airInformationApi.listAll(option);
-              this.airInformationList = res.data;
-            },
-            async getDaypandect(){
-                 this.dayloading = true;
-                 try {
-                    const res = await carOrderManageApi.getDaypandect()
-                    this.DayPandect = res.data.Data
-                    this.dayloading = false;
-                } catch (e) {
-                    console.error(e)
-                    this.dayloading = false;
-                    this.$message.error('当日订单信息获取失败!!!')
-                }
-            },
-            async fetchCarList() {
-                try {
-                    const options = {
-                        pageIndex: '',
-                        pageSize: '',
-                        order: 'ID',
-                        query: {}
-                    }
-                    const res = await carBaseApi.listByQuery(options)
-                    this.carList = res.data.Data
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('车辆信息数据获取失败!!!')
-                }
-            },
-            async fetchDriverList() {
-                try {
-                    const options = {
-                        pageIndex: '',
-                        pageSize: '',
-                        order: 'ID',
-                        query: {}
-                    }
-                    const res = await driverBaseApi.listByQuery(options)
-                    this.driverList = res.data.Data
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('司机信息数据获取失败!!!')
-                }
-            },
-            async fetchData() {
-                const _self = this
-                _self.fetchUnArrangeData()
-                _self.getDaypandect()
-            },
-            async fetchUnArrangeData() {
-                const _self = this
-                try {
-                    _self.loading = true
-                    const options = {
-                        beginTime: _self.filters.beginTime ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
-                        endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
-                    }
-                    const res = await carArrangeApi.unArrangeOrderList(options)
-                    console.log(res.data)
-                    if (res.data && res.data.length) {
-                        _self.unArrangeList = res.data
-                        var a = res.data
-                        console.log(_self.unArrangeList)
-                        for(let i in a){
-                            a[i].order.ExternalOrderStete = a[i].order.ExternalOrderStete.replace(/\s/g, "");
-                            console.log(a[i].order.ExternalOrderStete)
-                        } 
-                    }
-                    _self.loading = false
-                    _self.fetchArrangeData()
-                } catch (e) {
-                    console.error(e)
-                    _self.loading = false
-                    _self.$message.error('未安排订单数据获取失败!!!')
-                }
-            },
-            async fetchArrangeData() {
-                const _self = this
-                _self.loading = true
-                const options = {
-                    beginTime: _self.filters.beginTime ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
-                    endTime: _self.filters.endTime ? new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
-                }
-                try {
-                    const res = await carArrangeApi.arrangeOrderList(options)
-                    if (res.data) {
-                        _self.chartData = res.data
-                        _self.arrangeList = []
-                        let data = Object.values(res.data)
-                        for (let [index1, elem1] of data.entries()) {
-                            for (let [index2, elem2] of data[index1].entries()) {
-                                _self.arrangeList.push(data[index1][index2])
-                            }
-                        }
-                    }
-                    _self.loading = false
-                    _self.driverList.length === 0 ? _self.fetchDriverList() : ''
-                    _self.handleChartData()
-                } catch (e) {
-                    console.error(e)
-                    _self.loading2 = false
-                    _self.$message.error('已安排订单数据获取失败!!!')
-                }
-            },
-            dispatch($index, row, a) {
-                const _self = this
-                _self.tag = a
-                _self.carList.length === 0 ? _self.fetchCarList() : ''
-                _self.showDialog = true
-                _self.form.id = row.order.ID
-                _self.form.channel = row.order.Channel
-                _self.form.carriageNo = row.order.CarriageNo
-                _self.form.linkName = row.order.LinkName
-                _self.form.linkPhone = row.order.LinkPhone
-                _self.form.specReq = row.order.SpecReq
-                _self.form.carTransportType = row.order.CarTransportType
-                _self.form.carClassify = row.order.CarClassify
-                _self.form.origin = row.order.Origin
-                _self.form.destination = row.order.Destination
-                _self.form.preServiceMileage = row.order.PreServiceMileage
-                _self.form.preServiceTime = row.order.PreServiceTime
-                if (_self.tag) {
-                    _self.form.carId = row.arrange.CarID
-                    _self.form.driverId = row.arrange.DriverID
-                    _self.form.remark = row.arrange.Remark
-                } else {
-                    _self.form.carId = ''
-                    _self.form.driverId = ''
-                    _self.form.remark = ''
-                }
-            },
-            submitForm() {
-                const _self = this
-                if (_self.tag) {
-                    _self.editSave()
-                } else {
-                    _self.addSave()
-                }
-            },
-            async addSave() {
-                const _self = this
-                const options = {
-                    orderId: _self.form.id,
-                    carId: _self.form.carId,
-                    driverId: _self.form.driverId,
-                    remark: _self.form.remark
-                }
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carArrangeApi.arrange(options)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '派单成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('派单失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            },
-            async editSave() {
-                const _self = this
-                const options = {
-                    orderId: _self.form.id,
-                    carId: _self.form.carId,
-                    driverId: _self.form.driverId,
-                    remark: _self.form.remark
-                }
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            await carArrangeApi.editArrange(options)
-                            _self.fetchData()
-                            _self.$refs['form'].resetFields()
-                            _self.showDialog = false
-                            _self.$message({
-                                message: '改派成功',
-                                type: 'success'
-                            })
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('改派失败!!!')
-                        }
-                    } else {
-                        return false
-                    }
-                })
-            },
-            formatTime(t) {
-                return new Date(+new Date(t * 1000) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(
-                    /\.[\d]{3}Z/, '');
-            },
-            increaseTime(date, second) {
-                var a = Math.round(new Date(date).getTime() / 1000);
-                return this.formatTime(Number(a) + Number(second || 0));
-            },
-            decreaseTime(date, second) {
-                var a = Math.round(new Date(date).getTime() / 1000);
-                return this.formatTime(Number(a) - Number(second || 0));
-            },
-            handleChartData() {
-                const _self = this
-                let arr = []
-                for (let [k, v] of Object.entries(_self.chartData)) {
-                    arr.push({
-                        'measure': k,
-                        'data': v
-                    })
-                }
-                for (let [index1, elem1] of arr.entries()) {
-                    let mm = []
-                    for (let [index2, elem2] of arr[index1].data.entries()) {
-                        // mm.push({
-                        //     'useTimg': elem2.arrange.UseTime,
-                        //     'predictTime': elem2.arrange.PredictTime,
-                        //     'endTime': _self.increaseTime(elem2.arrange.UseTime,elem2.arrange.PredictTime*60)
-                        // })
-                        mm.push([elem2.arrange.UseTime, 1, _self.increaseTime(elem2.arrange.UseTime, elem2.arrange.PredictTime * 60)])
-                        arr[index1].data = mm;
-                    }
-                }
-                _self.chartData = arr
-                //console.log(_self.chartData)
-                _self.chartData.length ? _self.createChart() : ''
-            },
-            createChart() {
-                let chart = visavailChart().width(800);
-                d3.select("#chart")
-                    .datum(this.chartData)
-                    .call(chart);
-            }
+        {
+          value: 2,
+          label: '指定线路'
+        },
+        {
+          value: 3,
+          label: '接站'
+        },
+        {
+          value: 4,
+          label: '送站'
         }
+      ],
+      carClassifyList: [
+        {
+          value: 0,
+          label: '经济型'
+        },
+        {
+          value: 1,
+          label: '舒适型'
+        },
+        {
+          value: 2,
+          label: '商务型'
+        },
+        {
+          value: 3,
+          label: '豪华型'
+        }
+      ],
+      filters: {
+        beginTime: '',
+        endTime: ''
+      },
+      rules: {
+        carId: [
+          {
+            required: true,
+            message: '请选择车辆'
+          }
+        ],
+        driverId: [
+          {
+            required: true,
+            message: '请选择司机'
+          }
+        ]
+      }
     }
+  },
+  methods: {
+    async showAirInformations(CarriageNo, UseTime) {
+      let option = {
+        flightNo: CarriageNo,
+        begin: UseTime
+      }
+      console.log(option)
+      const res = await airInformationApi.listAll(option)
+      this.airInformationList = res.data
+    },
+    async getDaypandect() {
+      this.dayloading = true
+      try {
+        const res = await carOrderManageApi.getDaypandect()
+        this.DayPandect = res.data.Data
+        this.dayloading = false
+      } catch (e) {
+        console.error(e)
+        this.dayloading = false
+        this.$message.error('当日订单信息获取失败!!!')
+      }
+    },
+    async fetchCarList() {
+      try {
+        const options = {
+          pageIndex: '',
+          pageSize: '',
+          order: 'ID',
+          query: {}
+        }
+        const res = await carBaseApi.listByQuery(options)
+        this.carList = res.data.Data
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('车辆信息数据获取失败!!!')
+      }
+    },
+    async fetchDriverList() {
+      try {
+        const options = {
+          pageIndex: '',
+          pageSize: '',
+          order: 'ID',
+          query: {}
+        }
+        const res = await driverBaseApi.listByQuery(options)
+        this.driverList = res.data.Data
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('司机信息数据获取失败!!!')
+      }
+    },
+    async fetchData() {
+      const _self = this
+      _self.fetchUnArrangeData()
+      _self.getDaypandect()
+    },
+    async fetchUnArrangeData() {
+      const _self = this
+      try {
+        _self.loading = true
+        const options = {
+          beginTime: _self.filters.beginTime
+            ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd')
+            : '',
+          endTime: _self.filters.endTime
+            ? new Date(_self.filters.endTime).Format('yyyy-MM-dd')
+            : ''
+        }
+        const res = await carArrangeApi.unArrangeOrderList(options)
+        console.log(res.data)
+        if (res.data && res.data.length) {
+          _self.unArrangeList = res.data
+          var a = res.data
+          console.log(_self.unArrangeList)
+          for (let i in a) {
+            a[i].order.ExternalOrderStete = a[
+              i
+            ].order.ExternalOrderStete.replace(/\s/g, '')
+            console.log(a[i].order.ExternalOrderStete)
+          }
+        }
+        _self.loading = false
+        _self.fetchArrangeData()
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+        _self.$message.error('未安排订单数据获取失败!!!')
+      }
+    },
+    async fetchArrangeData() {
+      const _self = this
+      _self.loading = true
+      const options = {
+        beginTime: _self.filters.beginTime
+          ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd')
+          : '',
+        endTime: _self.filters.endTime
+          ? new Date(_self.filters.endTime).Format('yyyy-MM-dd')
+          : ''
+      }
+      try {
+        const res = await carArrangeApi.arrangeOrderList(options)
+        if (res.data) {
+          _self.chartData = res.data
+          _self.arrangeList = []
+          let data = Object.values(res.data)
+          for (let [index1, elem1] of data.entries()) {
+            for (let [index2, elem2] of data[index1].entries()) {
+              _self.arrangeList.push(data[index1][index2])
+            }
+          }
+        }
+        _self.loading = false
+        _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+        _self.handleChartData()
+      } catch (e) {
+        console.error(e)
+        _self.loading2 = false
+        _self.$message.error('已安排订单数据获取失败!!!')
+      }
+    },
+    dispatch($index, row, a) {
+      const _self = this
+      _self.tag = a
+      _self.carList.length === 0 ? _self.fetchCarList() : ''
+      _self.showDialog = true
+      _self.form.id = row.order.ID
+      _self.form.channel = row.order.Channel
+      _self.form.carriageNo = row.order.CarriageNo
+      _self.form.linkName = row.order.LinkName
+      _self.form.linkPhone = row.order.LinkPhone
+      _self.form.specReq = row.order.SpecReq
+      _self.form.carTransportType = row.order.CarTransportType
+      _self.form.carClassify = row.order.CarClassify
+      _self.form.origin = row.order.Origin
+      _self.form.destination = row.order.Destination
+      _self.form.preServiceMileage = row.order.PreServiceMileage
+      _self.form.preServiceTime = row.order.PreServiceTime
+      if (_self.tag) {
+        _self.form.carId = row.arrange.CarID
+        _self.form.driverId = row.arrange.DriverID
+        _self.form.remark = row.arrange.Remark
+      } else {
+        _self.form.carId = ''
+        _self.form.driverId = ''
+        _self.form.remark = ''
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.tag) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      const options = {
+        orderId: _self.form.id,
+        carId: _self.form.carId,
+        driverId: _self.form.driverId,
+        remark: _self.form.remark
+      }
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carArrangeApi.arrange(options)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '派单成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('派单失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      const options = {
+        orderId: _self.form.id,
+        carId: _self.form.carId,
+        driverId: _self.form.driverId,
+        remark: _self.form.remark
+      }
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            await carArrangeApi.editArrange(options)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '改派成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('改派失败!!!')
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    formatTime(t) {
+      return new Date(+new Date(t * 1000) + 8 * 3600 * 1000)
+        .toISOString()
+        .replace(/T/g, ' ')
+        .replace(/\.[\d]{3}Z/, '')
+    },
+    increaseTime(date, second) {
+      var a = Math.round(new Date(date).getTime() / 1000)
+      return this.formatTime(Number(a) + Number(second || 0))
+    },
+    decreaseTime(date, second) {
+      var a = Math.round(new Date(date).getTime() / 1000)
+      return this.formatTime(Number(a) - Number(second || 0))
+    },
+    handleChartData() {
+      const _self = this
+      let arr = []
+      for (let [k, v] of Object.entries(_self.chartData)) {
+        arr.push({
+          measure: k,
+          data: v
+        })
+      }
+      for (let [index1, elem1] of arr.entries()) {
+        let mm = []
+        for (let [index2, elem2] of arr[index1].data.entries()) {
+          // mm.push({
+          //     'useTimg': elem2.arrange.UseTime,
+          //     'predictTime': elem2.arrange.PredictTime,
+          //     'endTime': _self.increaseTime(elem2.arrange.UseTime,elem2.arrange.PredictTime*60)
+          // })
+          mm.push([
+            elem2.arrange.UseTime,
+            1,
+            _self.increaseTime(
+              elem2.arrange.UseTime,
+              elem2.arrange.PredictTime * 60
+            )
+          ])
+          arr[index1].data = mm
+        }
+      }
+      _self.chartData = arr
+      //console.log(_self.chartData)
+      _self.chartData.length ? _self.createChart() : ''
+    },
+    createChart() {
+      let chart = visavailChart().width(800)
+      console.log('this.chartData')
+      console.log(this.chartData)
+      d3.select('#chart').datum(this.chartData).call(chart)
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
     #car-arrange-page {}
