@@ -38,7 +38,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
+        <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -56,118 +56,122 @@ export default {
     return {
       list: [],
       loading: false,
+      isEditable: true,
       showDialog: false,
       form: {
         id: '',
         modeName: '',
         remark: ''
       },
-      copyForm:{},
+      copyForm: {},
       rules: {
         modeName: [
           {
             required: true,
             message: '请输入账户名称'
-          }]
-        }
-      }
-    },
-    methods: {
-      async fetchData() {
-        const _self = this
-        _self.loading = true
-        try {
-          const res = await hotelPayModeApi.list()
-          _self.list = res.data
-          _self.loading = false
-        } catch (e) {
-          console.error(e)
-          _self.loading = false
-        }
-      },
-      clickAddBtn() {
-        const _self = this
-        _self.showDialog = true
-        _self.form = {}
-      },
-      async clickEditBtn($index, row) {
-        const _self = this
-        try {
-          const res = await hotelPayModeApi.detail(row.ID)
-          _self.showDialog = true
-          _self.form.id = res.data.Data.ID
-          _self.form.modeName = res.data.Data.ModeName
-          _self.form.remark = res.data.Data.Remark
-          _self.copyForm = Object.assign({}, _self.form);
-        } catch (e) {
-          console.error(e)
-        }
-      },
-      submitForm() {
-        const _self = this
-        if (_self.form.id) {
-          _self.editSave()
-        } else {
-          _self.addSave()
-        }
-      },
-      async addSave() {
-        const _self = this
-        _self.$refs['form'].validate(async valid => {
-          if (valid) {
-            try {
-              const form = {
-                ..._self.form
-              }
-              delete form.id
-              await hotelPayModeApi.add(form)
-              _self.fetchData()
-              _self.$refs['form'].resetFields()
-              _self.showDialog = false
-              _self.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-            } catch (e) {
-              console.error(e)
-              _self.$message.error('添加失败!!!')
-            }
-          } else {
-            return false
           }
-        })
-      },
-      async editSave() {
-        const _self = this
-        _self.$refs['form'].validate(async valid => {
-          if (valid) {
-             const form = {}
-            for (let [k, v] of Object.entries(_self.form)) {
-              if (_self.form[k] != _self.copyForm[k]) {
-                form[k] = v
-              }
-            } 
-            try {
-              //console.log(form)
-              await hotelPayModeApi.edit(_self.form)
-              _self.fetchData()
-              _self.$refs['form'].resetFields()
-              _self.showDialog = false
-              _self.$message({
-                message: '编辑成功',
-                type: 'success'
-              })
-            } catch (e) {
-              console.error(e)
-              _self.$message.error('编辑失败!!!')
-            }
-          } else {
-            return false
-          }
-        })
+        ]
       }
     }
+  },
+  methods: {
+    async fetchData() {
+      const _self = this
+      _self.loading = true
+      try {
+        const res = await hotelPayModeApi.list()
+        _self.list = res.data
+        _self.loading = false
+      } catch (e) {
+        _self.loading = false
+      }
+    },
+    clickAddBtn() {
+      const _self = this
+      _self.showDialog = true
+      _self.form = {}
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await hotelPayModeApi.detail(row.ID)
+        _self.showDialog = true
+        _self.form.id = res.data.Data.ID
+        _self.form.modeName = res.data.Data.ModeName
+        _self.form.remark = res.data.Data.Remark
+        _self.copyForm = Object.assign({}, _self.form)
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.id) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            const form = {
+              ..._self.form
+            }
+            delete form.id
+            _self.isEditable = false
+            await hotelPayModeApi.add(form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            _self.$message.error('添加失败!!!')
+          } finally {
+            _self.isEditable = true
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          const form = {}
+          for (let [k, v] of Object.entries(_self.form)) {
+            if (_self.form[k] != _self.copyForm[k]) {
+              form[k] = v
+            }
+          }
+          try {
+            _self.isEditable = false
+            await hotelPayModeApi.edit(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            _self.$message.error('编辑失败!!!')
+          } finally {
+            _self.isEditable = true
+          }
+        } else {
+          return false
+        }
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss">
