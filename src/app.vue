@@ -34,6 +34,9 @@
                   <template slot="title"><i :class="route.iconClass"></i>
                     <span slot="title">{{route.name}}</span>
                   </template>
+                    <!-- <template v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  >
+                        <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
+                        </template> -->
                   <el-menu-item-group v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  :key="cIndex">
                     <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
                   </el-menu-item-group>
@@ -123,7 +126,7 @@ export default {
 
  .sidebar-container{
    transition: width .28s ease-out;
-   height: 100%;
+   height: calc(100% - 60px);
    top: 0;
    bottom: 0;
    left: 0;

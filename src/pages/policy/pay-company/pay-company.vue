@@ -149,7 +149,6 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('添加失败!!!')
           } finally {
             _self.isEditable = true
@@ -180,7 +179,6 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('编辑失败!!!')
           } finally {
             _self.isEditable = true

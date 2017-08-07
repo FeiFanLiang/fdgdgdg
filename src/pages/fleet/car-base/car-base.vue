@@ -142,15 +142,13 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm()">确 定</el-button>
+            <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
-import {
-  carBaseApi
-} from 'api'
+import { carBaseApi } from 'api'
 export default {
   created() {
     this.fetchData()
@@ -163,6 +161,7 @@ export default {
       pageSize: 10,
       count: 0,
       loading: false,
+      isEditable: true,
       showDialog: false,
       pickerOptions: {},
       copyForm: {},
@@ -181,51 +180,66 @@ export default {
         remark: ''
       },
       rules: {
-        carClassify: [{
-          required: true,
-          message: '请输入车辆分类'
-        }],
-        carMode: [{
-          required: true,
-          message: '请输入车型'
-        }],
-        carNumber: [{
-          required: true,
-          message: '请输入车牌号'
-        }],
-        operationCity: [{
-          required: true,
-          message: '请输入运营城市'
-        }],
-        seatNum: [{
-          required: true,
-          message: '请输入座位数'
-        }],
-        seatingNum: [{
-          required: true,
-          message: '请输入最大载客人数'
-        }],
-        luggageNum: [{
-          required: true,
-          message: '请输入行李数'
-        }]
+        carClassify: [
+          {
+            required: true,
+            message: '请输入车辆分类'
+          }
+        ],
+        carMode: [
+          {
+            required: true,
+            message: '请输入车型'
+          }
+        ],
+        carNumber: [
+          {
+            required: true,
+            message: '请输入车牌号'
+          }
+        ],
+        operationCity: [
+          {
+            required: true,
+            message: '请输入运营城市'
+          }
+        ],
+        seatNum: [
+          {
+            required: true,
+            message: '请输入座位数'
+          }
+        ],
+        seatingNum: [
+          {
+            required: true,
+            message: '请输入最大载客人数'
+          }
+        ],
+        luggageNum: [
+          {
+            required: true,
+            message: '请输入行李数'
+          }
+        ]
       },
-      carClassifyList: [{
-        value: 0,
-        label: '经济型'
-      },
-      {
-        value: 1,
-        label: '舒适型'
-      },
-      {
-        value: 2,
-        label: '商务型'
-      },
-      {
-        value: 3,
-        label: '豪华型'
-      }
+      carClassifyList: [
+        {
+          value: 0,
+          label: '经济型'
+        },
+        {
+          value: 1,
+          label: '舒适型'
+        },
+        {
+          value: 2,
+          label: '商务型'
+        },
+        {
+          value: 3,
+          label: '豪华型'
+        }
       ],
       filters: {
         carMode: '',
@@ -299,7 +313,7 @@ export default {
         _self.form.seatNum = res.data.Data.SeatNum
         _self.form.seatingNum = res.data.Data.SeatingNum
         _self.form.remark = res.data.Data.Remark
-        _self.copyForm = Object.assign({}, _self.form);
+        _self.copyForm = Object.assign({}, _self.form)
       } catch (e) {
         console.error(e)
       }
@@ -317,6 +331,7 @@ export default {
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             await carBaseApi.add(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
@@ -326,8 +341,9 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('添加失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
@@ -345,7 +361,8 @@ export default {
             }
           }
           try {
-            await carBaseApi.edit2(_self.form.id,form)
+            _self.isEditable = false
+            await carBaseApi.edit2(_self.form.id, form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
             _self.showDialog = false
@@ -354,8 +371,9 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('编辑失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
