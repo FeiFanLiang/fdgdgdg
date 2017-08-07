@@ -75,7 +75,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -93,6 +93,7 @@ export default {
       userNameList: [],
       loading: true,
       loading2: false,
+      isEditable: true,
       inputVisible: false,
       showDialog: false,
       dialogTitle: '添加角色信息',
@@ -171,12 +172,10 @@ export default {
         }
       }
       try {
-        console.log(options)
         const res = await roleApi.list()
         _self.list = res.data
         _self.loading = false
       } catch (e) {
-        console.error(e)
         _self.loading = false
       }
     },
@@ -186,7 +185,6 @@ export default {
       let _index = 0
       try {
         const res = await userApi.list()
-        console.log(res)
         for (let [index, elem] of res.data.entries()) {
           if (!_self.userNameList.includes(elem.UserName)) {
             _self.userList.push({})
@@ -244,6 +242,7 @@ export default {
       _self.$refs['roleForm'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             await roleApi.add(_self.roleForm)
             _self.fetchData()
             _self.$refs['roleForm'].resetFields()
@@ -255,6 +254,8 @@ export default {
           } catch (e) {
             console.error(e)
             _self.$message.error('添加失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
@@ -266,6 +267,7 @@ export default {
       _self.$refs['roleForm'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             await roleApi.edit(_self.roleForm)
             _self.fetchData()
             _self.$refs['roleForm'].resetFields()
@@ -275,8 +277,9 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('编辑失败!!!')
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
@@ -300,7 +303,6 @@ export default {
           _self.inputVisible = false
           _self.loading2 = false
         } catch (e) {
-          console.error(e)
           _self.loading2 = false
           _self.$message.error('添加失败!!!')
         }
@@ -328,7 +330,6 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.loading2 = false
             _self.$message.error('删除失败!!!')
           }
