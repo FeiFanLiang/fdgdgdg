@@ -74,8 +74,8 @@
             </el-col>
             <el-col :span="10">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
-                <el-button type="primary" @click="syncList(0)">同步携程订单</el-button>
-                <el-button type="primary" @click="syncList(1)">同步订单里程信息</el-button>
+                <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
+                <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -809,23 +809,26 @@ export default {
         carClassify: ''
       }
     },
-    async syncList(a) {
+    async syncList(type) {
       const _self = this
       _self.list = []
       _self.count = 0
       _self.loading = true
-      if (a === 0) {
+      if (type === 'xiecheng') {
         try {
           const form = {
             begin: _self.filters.useTimeS
               ? new Date(_self.filters.useTimeS).Format('yyyy-MM-dd')
+              : '',
+            end: _self.filters.useTimeE
+              ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
               : ''
           }
           const res = await carOrderManageApi.syncList(form)
         } catch (e) {
           _self.$message.error('同步携程订单失败!!!')
         }
-      } else if (a === 1) {
+      } else if (type === 'mile') {
         try {
           const res = await carOrderManageApi.syncOrderOperDataList()
         } catch (e) {
