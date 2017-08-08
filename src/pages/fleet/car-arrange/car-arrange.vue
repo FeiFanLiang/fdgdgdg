@@ -188,6 +188,10 @@
      </el-table>
    </el-tab-pane>
  </el-tabs>
+        <div class="">
+          <p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:#377eb8;display:inline-block;">接机</p>
+<p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:#5cb85c;display:inline-block;">送机</p>
+        </div>
         <p id="chart"></p>
         <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="100px">
@@ -282,7 +286,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="派遣司机" prop="driverId">
-                            <el-select v-model="form.driverId" placeholder="请选择司机">
+                            <el-select v-model="form.driverId" placeholder="请选择司机" >
                                 <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID">
                                     <span style="float: left">{{ item.Name }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 1">正产在职</span>
@@ -697,9 +701,19 @@ export default {
     handleChartData() {
       const _self = this
       let arr = []
+      console.log('_self.chartData')
+      console.dir(_self.chartData)
       for (let [k, v] of Object.entries(_self.chartData)) {
         arr.push({
           measure: k,
+          categories: {
+            接机: {
+              color: '#377eb8'
+            },
+            送机: {
+              color: '#5cb85c'
+            }
+          },
           data: v
         })
       }
@@ -713,7 +727,7 @@ export default {
           // })
           mm.push([
             elem2.arrange.UseTime,
-            1,
+            elem2.order.CarTransportType ? '接机' : '送机',
             _self.increaseTime(
               elem2.arrange.UseTime,
               elem2.arrange.PredictTime * 60
@@ -736,5 +750,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    #car-arrange-page {}
+#car-arrange-page {}
 </style>
