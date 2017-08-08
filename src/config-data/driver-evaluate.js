@@ -6,6 +6,7 @@ const listData = [
   ['工号', 'Driver', true, false, 'string'],
   ['司机姓名', 'Openid', true, false, 'string'],
   ['关注人次', 'field3', true, false, 'string'],
+  ['取消人次', 'field2', true, false, 'string'],
   ['评论次数', 'field1', true, false, 'string'],
   ['总分', 'Rate', true, false, 'string']
 ]

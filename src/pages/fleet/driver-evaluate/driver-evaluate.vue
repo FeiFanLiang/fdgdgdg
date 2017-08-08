@@ -24,7 +24,7 @@
                   </el-form>
               </template>
           </el-table-column>
-          <el-table-column sortable prop="field2" label="平均分" width="195" slot="left-two">
+          <el-table-column sortable label="平均分" width="195" slot="left-two">
               <template scope="scope">
                   <el-rate v-model="field2[scope.$index]" disabled show-text text-color="#ff9900" text-template="{value}">
                   </el-rate>
