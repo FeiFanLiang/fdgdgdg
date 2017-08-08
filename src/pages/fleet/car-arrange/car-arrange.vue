@@ -24,7 +24,7 @@
         </el-row>
         <el-tabs v-model="activeTabName" @tab-click="tabClick">
    <el-tab-pane label="待派车订单" name="unArrange">
-     <el-table :data="unArrangeList" ref="table" style="width: 100%;" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
+     <el-table :data="unArrangeList" @row-dblclick="rowDblclick" ref="table" style="width: 100%;" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
          <el-table-column type="expand" width="30">
              <template scope="props" v-if="props.row.CancelTime">
                  <el-form label-position="left" inline class="demo-table-expand">
@@ -114,7 +114,7 @@
              <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 3">停职</span>
          </el-option>
      </el-select>
-     <el-table :data="arrangeList" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
+     <el-table :data="arrangeList"  ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
          <el-table-column type="expand" width="30">
          <template scope="props" v-if="props.row.CancelTime">
              <el-form label-position="left" inline class="demo-table-expand">
@@ -310,6 +310,24 @@
           <el-button type="primary" @click="submitForm">确 定</el-button>
         </span>
         </el-dialog>
+        <el-dialog title="添加派车" v-model="showSendCarDialog" size="tiny" @close="resetForm('form')">
+          <el-form  ref="form" >
+            <el-form-item label="派遣司机" prop="driverId">
+                <el-select v-model="sendCardriverId" placeholder="请选择司机" >
+                    <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID">
+                        <span style="float: left">{{ item.Name }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 1">正产在职</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 2">已离职</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 3">停职</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="showSendCarDialog = false">取 消</el-button>
+            <el-button type="primary" @click="sendCar()" :loading="!isSendCarEditable">{{isSendCarEditable?'确 定':'提交中'}}</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -333,8 +351,11 @@ export default {
   },
   data() {
     return {
+      d3Chart: {},
       activeTabName: 'unArrange',
       chosenDriver: '',
+      sendCardriverId: '',
+      sendCarChosenRow: {},
       airInformationList: [],
       DayPandect: '',
       unArrangeList: [],
@@ -344,8 +365,10 @@ export default {
       chartData: [],
       loading: false,
       loading2: false,
+      isSendCarEditable: true,
       dayloading: false,
       showDialog: false,
+      showSendCarDialog: false,
       pickerOptions: {},
       tag: '',
       form: {
@@ -429,6 +452,75 @@ export default {
   methods: {
     tabClick(tab, event) {
       // console.log(tab, event)
+    },
+    rowDblclick(row, event) {
+      this.sendCardriverId = ''
+      this.isSendCarEditable = true
+      this.showSendCarDialog = true
+      console.log(row)
+      this.sendCarChosenRow = row
+    },
+    dateFormat(number) {
+      const date = new Date()
+      const yy = date.getFullYear()
+      const MM = date.getMonth()
+      const dd = date.getDate()
+      let hh
+      let mm
+      const timeArray = ('' + number).split('.')
+      console.log(timeArray)
+      hh = timeArray[0]
+      if (timeArray.length === 1) {
+        mm = 0
+      } else if (timeArray.length === 2) {
+        mm = Number(String(Number(timeArray[1]) * 0.6).substring(0, 2))
+      }
+      console.log(yy, MM, dd, hh, mm)
+      return new Date(yy, MM, dd, hh, mm)
+    },
+    sendCar() {
+      if (!this.sendCardriverId) {
+        return
+      }
+      const driverInfo = this.driverList.find(
+        item => item.ID === this.sendCardriverId
+      )
+      const driverIndex = this.chartData.findIndex(
+        item => item.measure === driverInfo.Name
+      )
+      const chartInfoData = [
+        this.dateFormat(this.sendCarChosenRow.begintime),
+        this.sendCarChosenRow.order.CarTransportType ? '接机' : '送机',
+        this.dateFormat(this.sendCarChosenRow.endtime)
+      ]
+      console.log('chartInfoData')
+      console.log(chartInfoData)
+      if (driverIndex >= 0) {
+        let data = this.chartData[driverIndex].data
+        if (data && Array.isArray(data)) {
+          data.push()
+        } else {
+          data = []
+          data.push(chartInfoData)
+        }
+      } else {
+        this.chartData.push({
+          measure: driverInfo.Name,
+          categories: {
+            接机: {
+              color: '#377eb8'
+            },
+            送机: {
+              color: '#5cb85c'
+            }
+          },
+          data: [chartInfoData]
+        })
+      }
+      // this.createChart()
+      // this.d3Chart.datum(this.chartData)
+      this.isSendCarEditable = false
+      this.showSendCarDialog = false
     },
     chosenDriverChange(value) {
       // console.log(value)
@@ -744,7 +836,8 @@ export default {
       let chart = visavailChart().width(800)
       console.log('this.chartData')
       console.log(this.chartData)
-      d3.select('#chart').datum(this.chartData).call(chart)
+      this.d3Chart = d3.select('#chart').datum(this.chartData).call(chart)
+      console.log(this.d3Chart)
     }
   }
 }
