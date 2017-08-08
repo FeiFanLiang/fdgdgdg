@@ -26,7 +26,7 @@
           </el-table-column>
           <el-table-column sortable prop="field2" label="平均分" width="195" slot="left-two">
               <template scope="scope">
-                  <el-rate v-model="scope.row.field2" disabled show-text text-color="#ff9900" text-template="{value}">
+                  <el-rate v-model="field2[scope.$index]" disabled show-text text-color="#ff9900" text-template="{value}">
                   </el-rate>
               </template>
           </el-table-column>
@@ -72,6 +72,7 @@ export default {
   data() {
     return {
       list: [],
+      field2:[],
       searchForm: {
         startTime: '',
         endTime: ''
@@ -93,7 +94,7 @@ export default {
         const res = await driverEvaluateApi.listByQuery(_self.searchForm)
         _self.list = res.data.Data
         for (let [index, elem] of _self.list.entries()) {
-          _self.list[index].field2 = Number(_self.list[index].field2)
+          _self.field2[index] = Number(_self.list[index].Rate)/Number(_self.list[index].field1)
         }
         _self.loading = false
       } catch (e) {
