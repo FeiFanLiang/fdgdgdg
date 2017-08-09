@@ -138,12 +138,12 @@
                         <el-form-item label="时间" prop="DateTime">
                             <el-date-picker v-model="form.DateTime" type="datetime" placeholder="选择时间"></el-date-picker>
                         </el-form-item>
-                    </el-col> 
+                    </el-col>
                 </el-row> -->
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm()">确 定</el-button>
+            <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -158,7 +158,6 @@ import {
 export default {
     created() {
         this.imageUrl = path.imageUrl
-        console.log(this.imageUrl)
         this.fetchData()
         this.getList()
 
@@ -218,135 +217,141 @@ export default {
             carList: [],
             driverList: [],
             pickerOptions: {}
-        }
-    },
-    methods: {
-        gasolineSearch() {
-            this.fetchData()
-        },
-        async fetchData(currentPage, pageSize) {
-            const _self = this
-            _self.loading = true
-            _self.currentPage = currentPage || _self.currentPage
-            _self.pageSize = pageSize || _self.pageSize
-            const options = {
-                pageIndex: _self.currentPage,
-                pageSize: _self.pageSize,
-                order: 'ID',
-                query: {
-                    CarID: _self.filters.labelVal === '1' ? _self.filters.CarID : '',
-                    DriverID: _self.filters.labelVal === '2' ? _self.filters.DriverID : '',
-                }
-            }
-            try {
-                console.log(_self.filters.labelVal)
-                console.log(options)
-                const res = await gasolineLogApi.list(options)
-                _self.list = res.data.Data
-                console.log(res.data.Data)
-                _self.count = res.data.Count
-                _self.loading = false
-            } catch (e) {
-                console.error(e)
-                _self.loading = false
-            }
-        },
-        async getList() {
-            const res = await carBaseApi.listByQuery();
-            this.carList = res.data.Data;
-            const res2 = await driverBaseApi.listByQuery();
-            this.driverList = res2.data.Data;
-        },
-        handleSizeChange(val) {
-            this.pageSize = val
-            this.fetchData(this.pageSize)
-        },
-        handleCurrentChange(val) {
-            this.currentPage = val
-            this.fetchData(this.currentPage)
-        },
-        clickAddBtn() {
-            const _self = this
-            this.form = {
-                CarID: '',
-                DriverID: '',
-                Channel: 0,
-                DateTimeString: ''
-            }
-            _self.showDialog = true
-        },
-        async clickEditBtn($index, row) {
-            const _self = this
-            try {
-                const res = await gasolineLogApi.detail(row.ID)
-                _self.form = res.data.Data;
-                _self.showDialog = true
-            } catch (e) {
-                console.error(e)
-            }
-        },
-        submitForm() {
-            const _self = this
-            if (_self.form.ID) {
-                _self.editSave()
-            } else {
-                _self.addSave()
-            }
-        },
-        async addSave() {
-            const _self = this
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await gasolineLogApi.add(_self.form)
-                        _self.fetchData()
-                        _self.$refs['form'].resetFields()
-                        _self.showDialog = false
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        })
-                    } catch (e) {
-                        console.error(e)
-                        _self.$message.error('添加失败!!!')
-                    }
-                } else {
-                    return false
-                }
-            })
-        },
-        async editSave() {
-            const _self = this
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        await gasolineLogApi.edit(_self.form.ID, _self.form)
-                        _self.fetchData()
-                        _self.$refs['form'].resetFields()
-                        _self.showDialog = false
-                        _self.$message({
-                            message: '编辑成功',
-                            type: 'success'
-                        })
-                    } catch (e) {
-                        console.error(e)
-                        _self.$message.error('编辑失败!!!')
-                    }
-                } else {
-                    return false
-                }
-            })
-        },
-        channelChange() {
-            if (this.form.Channel == 0) {
-                this.disabled = false;
-            }
-            if (this.form.Channel == 1) {
-                this.disabled = true;
-                this.form.SerialNumber = ''
-            }
-        }
     }
+  },
+  methods: {
+    gasolineSearch() {
+      this.fetchData()
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: {
+          CarID: _self.filters.labelVal === '1' ? _self.filters.CarID : '',
+          DriverID: _self.filters.labelVal === '2' ? _self.filters.DriverID : ''
+        }
+      }
+      try {
+        console.log(_self.filters.labelVal)
+        console.log(options)
+        const res = await gasolineLogApi.list(options)
+        _self.list = res.data.Data
+        console.log(res.data.Data)
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    async getList() {
+      const res = await carBaseApi.listByQuery()
+      this.carList = res.data.Data
+      const res2 = await driverBaseApi.listByQuery()
+      this.driverList = res2.data.Data
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    clickAddBtn() {
+      const _self = this
+      this.form = {
+        CarID: '',
+        DriverID: '',
+        Channel: 0,
+        DateTimeString: ''
+      }
+      _self.showDialog = true
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        const res = await gasolineLogApi.detail(row.ID)
+        _self.form = res.data.Data
+        _self.showDialog = true
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.ID) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            _self.isEditable = false
+            await gasolineLogApi.add(_self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+          } finally {
+            _self.isEditable = true
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    async editSave() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            _self.isEditable = false
+            await gasolineLogApi.edit(_self.form.ID, _self.form)
+            _self.fetchData()
+            _self.$refs['form'].resetFields()
+            _self.showDialog = false
+            _self.$message({
+              message: '编辑成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+            _self.$message.error('编辑失败!!!')
+          } finally {
+            _self.isEditable = true
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    channelChange() {
+      if (this.form.Channel == 0) {
+        this.disabled = false
+      }
+      if (this.form.Channel == 1) {
+        this.disabled = true
+        this.form.SerialNumber = ''
+      }
+    }
+  }
 }
 </script>
 <style lang="scss">

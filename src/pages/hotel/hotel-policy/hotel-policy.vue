@@ -355,7 +355,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
       <el-button @click="createDialog = false">取 消</el-button>
-      <el-button type="primary" @click="handleSave()">确 定</el-button>
+      <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
     </span>
         </el-dialog>
     </div>
@@ -387,7 +387,8 @@ export default {
   },
   data() {
     return {
-      loading:false,
+      loading: false,
+      isEditable: true,
       uploadUrl: path.uploadUrl,
       dialogImageUrl: '',
       dialogVisible: false,
@@ -465,11 +466,12 @@ export default {
       const res = await secretTypeApi.list()
       this.secretTypeOptions = res.data
     },
-    async handleSave() {
+    async submitForm() {
       const _self = this
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             await hotelPolicyApi.add(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
@@ -481,6 +483,8 @@ export default {
             })
           } catch (e) {
             console.error(e)
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
@@ -516,10 +520,10 @@ export default {
     async fetchData() {
       if (!this.$route.params.ID) return
       const hotelID = this.$route.params.ID
-      this.loading = true;
+      this.loading = true
       const res = await hotelPolicyApi.listByHotelID(hotelID)
       this.hotelpolicy = res.data
-      this.loading = false;
+      this.loading = false
       this.expandRowKeys.length = 0
       this.expandRowKeys.push(this.hotelpolicy[0].ID)
     },

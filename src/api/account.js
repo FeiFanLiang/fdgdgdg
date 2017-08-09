@@ -1,10 +1,17 @@
 import axios from 'axios'
 import path from './api'
-const base = path.apiBaseUrl + 'Account/'
+const base = path.apiBaseUrl + 'Account/Login'
 export default {
   login (params) {
-    console.log(window.location.host)
-    return axios.post('http://'+window.location.host + '/Account/Login', JSON.stringify(params), {
+    // console.log(window.location.host)
+    // let url = ''
+    // if (window.location.host.indexOf('192.168') > -1) {
+    //   url = base
+    // } else {
+    //   url = 'http://' + window.location.host + '/Account/Login'
+    // }
+
+    return axios.post(base, JSON.stringify(params), {
       headers: {
         'Content-Type': 'application/json'
       }

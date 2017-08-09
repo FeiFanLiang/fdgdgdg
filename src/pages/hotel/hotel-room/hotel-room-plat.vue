@@ -120,7 +120,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
           <el-button @click="platVisible = false">取 消</el-button>
-          <el-button type="primary" @click="handleSaveAndEdit()">保 存</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
         </span>
     </el-dialog>
   </div>
@@ -128,205 +128,228 @@
 
 <script>
 import {
-    sonRoomPlatformApi,
-    hotelPlatformApi,
-    sonRoomApi,
-    hotelRoomApi
-} from 'api';
+  sonRoomPlatformApi,
+  hotelPlatformApi,
+  sonRoomApi,
+  hotelRoomApi
+} from 'api'
 export default {
-    props: {
-        hotelId: {
-            type: [String, Number],
-            required: true,
-            default: ''
-        },
-        roomId: {
-            type: [String, Number],
-            required: true,
-            default: ''
-        },
-        sonRoomId: {
-            type: [String, Number],
-            required: true,
-            default: ''
-        },
-        hotelRoomPlatVisible: {
-            type: Boolean,
-            required: true,
-            default: false
-        }
+  props: {
+    hotelId: {
+      type: [String, Number],
+      required: true,
+      default: ''
     },
-    data() {
-        return {
-            loading:false,
-            list: [],
-            platInfoList: [],
-            rules: {
-                platHotelId: [{
-                    required: true,
-                    message: '请输入平台酒店ID'
-                }],
-                platformId: [{
-                    required: true,
-                    message: '请选择平台',
-                    type: 'number'
-                }],
-               roomId: [{
-                    required: true,
-                    message: '请输入房型ID'
-                }],
-                sonRoomId: [{
-                    required: true,
-                    message: '请输入子房型ID'
-                }]
+    roomId: {
+      type: [String, Number],
+      required: true,
+      default: ''
+    },
+    sonRoomId: {
+      type: [String, Number],
+      required: true,
+      default: ''
+    },
+    hotelRoomPlatVisible: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
+  },
+  data() {
+    return {
+      loading: false,
+      isEditable: true,
+      list: [],
+      platInfoList: [],
+      rules: {
+        platHotelId: [
+          {
+            required: true,
+            message: '请输入平台酒店ID'
+          }
+        ],
+        platformId: [
+          {
+            required: true,
+            message: '请选择平台',
+            type: 'number'
+          }
+        ],
+        roomId: [
+          {
+            required: true,
+            message: '请输入房型ID'
+          }
+        ],
+        sonRoomId: [
+          {
+            required: true,
+            message: '请输入子房型ID'
+          }
+        ]
+      },
+      isEdit: false,
+      platVisible: false,
+      form: {
+        id: '',
+        roomId: '',
+        sonRoomId: '',
+        platformId: '',
+        platHotelId: '',
+        platRoomName: '',
+        platRoomCode: '',
+        platRoomName_En: '',
+        remark: '',
+        isValid: true,
+        platRealRoomId: '',
+        platSaleRoomId: '',
+        platUrl: '',
+        sonRoomName: '',
+        roomName: ''
+      }
+    }
+  },
+  computed: {
+    platHotelId() {
+      const _self = this
+      let platformId = ''
+      if (
+        _self.form.platformId &&
+        _self.platInfoList &&
+        Array.isArray(_self.platInfoList)
+      ) {
+        _self.platInfoList.forEach(item => {
+          if (
+            item &&
+            item.Platform &&
+            item.Platform.ID === _self.form.platformId
+          ) {
+            platformId = item.PlatHotelID
+          }
+        })
+      }
+      return platformId
+    }
+  },
+  methods: {
+    Cancel() {
+      this.$emit('hide')
+    },
+    dialogOpen() {
+      this.getList()
+      this.getPlatformList()
+    },
+    async add() {
+      const res = await sonRoomApi.detailById(this.sonRoomId)
+      let a = res.data.SonRoomName
+      const res2 = await hotelRoomApi.details(this.roomId)
+      let b = res2.data.RoomName
+      this.form = {
+        roomId: this.roomId ? this.roomId : '',
+        sonRoomId: this.sonRoomId ? this.sonRoomId : '',
+        platformId: this.PlatformID ? this.PlatformID : '',
+        id: '',
+        platHotelId: '',
+        platRoomName: '',
+        platRoomCode: '',
+        platRoomName_En: '',
+        remark: '',
+        isValid: true,
+        platRealRoomId: '',
+        platSaleRoomId: '',
+        platUrl: '',
+        sonRoomName: a,
+        roomName: b
+      }
+      this.platVisible = true
+      this.isEdit = true
+    },
+    edit(index, row) {
+      const _self = this
+      _self.form.id = row.ID
+      _self.form.roomId = row.RoomID
+      _self.form.sonRoomId = row.SonRoomID
+      _self.form.platformId = row.PlatformID
+      _self.form.platHotelId = row.PlatHotelID
+      _self.form.platRoomName = row.PlatRoomName
+      _self.form.platRoomCode = row.PlatRoomCode
+      _self.form.platRoomName_En = row.PlatRoomName_En
+      _self.form.remark = row.Remark
+      _self.form.isValid = row.IsValid
+      _self.form.platRealRoomId = row.PlatRealRoomID
+      _self.form.platSaleRoomId = row.PlatSaleRoomID
+      _self.form.platUrl = row.PlatURL
+      _self.platVisible = true
+      _self.isEdit = true
+    },
+    async del(index, row) {
+      const _self = this
+      _self
+        .$confirm(`是否删除${row.PlatRoomName}?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        .then(async () => {
+          try {
+            await sonRoomPlatformApi.del(row.ID)
+            _self.getList()
+            _self.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+          }
+        })
+        .catch(() => {})
+    },
+    async getList() {
+      const res = await sonRoomPlatformApi.listBySonRoom(this.sonRoomId)
+      if (res && res.data && Array.isArray(res.data)) {
+        this.list = res.data
+      }
+    },
+    async getPlatformList() {
+      this.loading = true
+      const res = await hotelPlatformApi.listByHotel(this.hotelId)
+      if (res && res.data && Array.isArray(res.data)) {
+        this.platInfoList = res.data
+      }
+      this.loading = false
+    },
+    async submitForm() {
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+        if (valid) {
+          try {
+            _self.isEditable = false
+            if (_self.form.id) {
+              await sonRoomPlatformApi.edit(_self.form.id, _self.form)
+            } else {
+              const form = {
+                ..._self.form
+              }
+              delete form.id
+              await sonRoomPlatformApi.add(form)
+            }
 
-            },
-            isEdit :false,
-            platVisible: false,
-            form: {
-                id: '',
-                roomId: '',
-                sonRoomId: '',
-                platformId: '',
-                platHotelId: '',
-                platRoomName: '',
-                platRoomCode: '',
-                platRoomName_En: '',
-                remark: '',
-                isValid: true,
-                platRealRoomId: '',
-                platSaleRoomId: '',
-                platUrl: '',
-                sonRoomName:'',
-                roomName:''
-            }
+            this.platVisible = false
+            this.isEdit = false
+            _self.getList()
+            _self.$message({
+              message: '保存成功',
+              type: 'success'
+            })
+          } catch (e) {
+            console.error(e)
+          } finally {
+            _self.isEditable = true
+          }
         }
-    },
-    computed: {
-        platHotelId() {
-            const _self = this;
-            let platformId = '';
-            if (_self.form.platformId && _self.platInfoList && Array.isArray(_self.platInfoList)) {
-                _self.platInfoList.forEach(item => {
-                    if (item && item.Platform && item.Platform.ID === _self.form.platformId) {
-                        platformId = item.PlatHotelID
-                    }
-                })
-            }
-            return platformId
-        }
-    },
-    methods: {
-        Cancel() {
-            this.$emit('hide')
-        },
-        dialogOpen() {
-            this.getList();
-            this.getPlatformList();
-        },
-        async add() {
-            const res = await sonRoomApi.detailById(this.sonRoomId);
-            let a = res.data.SonRoomName
-            const res2 = await hotelRoomApi.details(this.roomId)
-            let b = res2.data.RoomName
-            this.form = {
-                roomId : this.roomId ? this.roomId : '',
-                sonRoomId : this.sonRoomId ? this.sonRoomId : '',
-                platformId : this.PlatformID ? this.PlatformID : '',
-                id: '',
-                platHotelId: '',
-                platRoomName: '',
-                platRoomCode: '',
-                platRoomName_En: '',
-                remark: '',
-                isValid: true,
-                platRealRoomId: '',
-                platSaleRoomId: '',
-                platUrl: '',
-                sonRoomName: a,
-                roomName:b
-            }
-            this.platVisible = true;
-            this.isEdit = true;
-        },
-        edit(index, row) {
-            const _self = this;
-            _self.form.id = row.ID;
-            _self.form.roomId = row.RoomID;
-            _self.form.sonRoomId = row.SonRoomID;
-            _self.form.platformId = row.PlatformID;
-            _self.form.platHotelId = row.PlatHotelID;
-            _self.form.platRoomName = row.PlatRoomName;
-            _self.form.platRoomCode = row.PlatRoomCode;
-            _self.form.platRoomName_En = row.PlatRoomName_En;
-            _self.form.remark = row.Remark;
-            _self.form.isValid = row.IsValid;
-            _self.form.platRealRoomId = row.PlatRealRoomID;
-            _self.form.platSaleRoomId = row.PlatSaleRoomID;
-            _self.form.platUrl = row.PlatURL;
-            _self.platVisible = true;
-            _self.isEdit = true;
-        },
-        async del(index, row) {
-            const _self = this;
-            _self.$confirm(`是否删除${row.PlatRoomName}?`, '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async() => {
-                try {
-                    await sonRoomPlatformApi.del(row.ID);
-                    _self.getList();
-                    _self.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-            }).catch(() => {});
-        },
-        async getList() {
-            const res = await sonRoomPlatformApi.listBySonRoom(this.sonRoomId);
-            if (res && res.data && Array.isArray(res.data)) {
-                this.list = res.data;
-            }
-        },
-        async getPlatformList() {
-            this.loading = true;
-            const res = await hotelPlatformApi.listByHotel(this.hotelId);
-            if (res && res.data && Array.isArray(res.data)) {
-                this.platInfoList = res.data;
-            }
-            this.loading = false;
-        },
-        async handleSaveAndEdit() {
-            const _self = this;
-            _self.$refs['form'].validate(async valid => {
-              if (valid) {
-                try {
-                    if (_self.form.id) {
-                        await sonRoomPlatformApi.edit(_self.form.id, _self.form);
-                    } else {
-                        const form = { ..._self.form
-                        };
-                        delete form.id
-                        await sonRoomPlatformApi.add(form);
-                    }
-
-                    this.platVisible = false;
-                    this.isEdit = false;
-                    _self.getList()
-                    _self.$message({
-                        message: '保存成功',
-                        type: 'success'
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        });
-    },
+      })
+    }
   }
 }
 </script>

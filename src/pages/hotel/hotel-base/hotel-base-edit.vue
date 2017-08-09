@@ -66,7 +66,7 @@
                 <el-col :span="6" :offset="6">
                     <el-form-item>
                         <el-button @click="Cancel">取消</el-button>
-                        <el-button type="primary" @click="submit">保存</el-button>
+                        <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -78,7 +78,7 @@
       </el-col>
       <el-col :span="3">
         <el-form-item>
-          <el-button type="primary" @click="submit">保存</el-button>
+          <el-button type="primary" @click="submitForm">保存</el-button>
         </el-form-item>
       </el-col>
     </el-row> -->
@@ -141,6 +141,7 @@ export default {
         remark: ''
       },
       loading: false,
+      isEditable: true,
       list: [],
       areaOptions: [],
       starOptions: []
@@ -193,14 +194,19 @@ export default {
         _self.form.remark = data.Remark
       }
     },
-    async submit() {
+    async submitForm() {
+      const _self = this
       try {
-        await hotelBaseApi.edit(this.form)
-        this.$message({
+        _self.isEditable = false
+        await hotelBaseApi.edit(_self.form)
+        _self.$message({
           message: '保存成功',
           type: 'success'
         })
-      } catch (e) {}
+      } catch (e) {
+      } finally {
+        _self.isEditable = true
+      }
     },
     Cancel() {
       this.$router.go(-1)

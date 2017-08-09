@@ -1,6 +1,6 @@
 <template lang="html">
     <div id="HotelbaseAdd">
-        <el-form ref="form" :model="form" :label-position="labelPosition" :rules="rules" @close="resetForm('form')">
+        <el-form ref="form" :model="form" :label-position="labelPosition" :rules="rules" @close="resetForm()">
             <el-row :gutter="20">
                 <el-col :span="8">
                     <el-form-item label="酒店编号" prop="HotelNum">
@@ -67,10 +67,10 @@
                 </el-col>
             </el-row>
             <el-row :gutter="18">
-                <el-col :span="3" :offset="18">
-                    <el-button @click="resetForm('form')">取消</el-button>
+                <el-col :span="3" :offset="17">
+                    <el-button @click="resetForm()">取消</el-button>
                 </el-col>
-                <el-col :span="3" <el-button type="primary" @click="onSubmit('form')">创建</el-button>
+                <el-col :span="4"   <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
                 </el-col>
             </el-row>
         </el-form>
@@ -95,6 +95,7 @@ export default {
         Remark: ''
       },
       loading: false,
+      isEditable: true,
       list: [],
       rules: {
         HotelName: [
@@ -148,39 +149,35 @@ export default {
         console.error(e)
       }
     },
-    onSubmit(formName) {
+    submitForm() {
       const _self = this
-      _self.$refs[formName].validate(async valid => {
+      _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
+            _self.isEditable = false
             const data = await hotelBaseApi.add(_self.form)
             _self.$route.params.form
             // _self.form = {};
             this.$emit('hide')
-            _self.$refs[formName].resetFields()
+            _self.$refs['form'].resetFields()
             _self.$message({
               message: '保存成功',
               type: 'success'
             })
-            this.$router.go(0)
           } catch (e) {
             console.error(e)
+          } finally {
+            _self.isEditable = true
           }
         } else {
           return false
         }
       })
     },
-    /*Cancel() {
-              this.$emit('hide');
-            },*/
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    resetForm() {
+      this.$refs['form'].resetFields()
       this.$emit('hide')
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-#HotelbaseAdd {}
-</style>

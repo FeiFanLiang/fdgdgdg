@@ -7,8 +7,8 @@
       <header class="db-header-right" :style="{left:!isCollapse?'200px':'80px'}">
          <el-radio-group v-model="isCollapse" style="margin-right:20px;">
            <el-radio-button :label="false"><i class="el-icon-menu"></i></el-radio-button>
-           <el-radio-button :label="true"><i class="el-icon-minus"></i></el-radio-button> 
-        </el-radio-group> 
+           <el-radio-button :label="true"><i class="el-icon-minus"></i></el-radio-button>
+        </el-radio-group>
         <db-breadcrumb></db-breadcrumb>
         <div class="user-info" v-if="user.id"  :style="{'padding-right':!isCollapse?'200px':'80px'}">
           <span v-text="user.username"></span>
@@ -27,13 +27,17 @@
       <div class="db-body">
         <aside class="db-menu-wrapper" :style="{width:!isCollapse?'200px':'80px'}">
           <!-- :default-active="activeMenu" class="db-menu-bar" router  theme="dark"  -->
-          <el-menu default-active="activeMenu" class="el-menu-vertical-demo" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+
+          <el-menu default-active="activeMenu"  class="sidebar-container" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children" >
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
                   <template slot="title"><i :class="route.iconClass"></i>
                     <span slot="title">{{route.name}}</span>
                   </template>
+                    <!-- <template v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  >
+                        <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
+                        </template> -->
                   <el-menu-item-group v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  :key="cIndex">
                     <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
                   </el-menu-item-group>
@@ -110,17 +114,30 @@ export default {
       }
     },
     handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+      console.log(key, keyPath)
     },
     handleClose(key, keyPath) {
-        console.log(key, keyPath);
+      console.log(key, keyPath)
     }
   }
 }
 </script>
 
-<style lang="scss">@import './styles/_variables.scss';
+<style lang="scss">
+@import './styles/_variables.scss';
 
+ .sidebar-container{
+   transition: width .28s ease-out;
+   height: calc(100% - 60px);
+   top: 0;
+   bottom: 0;
+   left: 0;
+   z-index: 1001;
+   overflow-y: auto;
+ }
+ .sidebar-container::-webkit-scrollbar {
+    display: none;
+}
 .db {
     .el-dropdown-menu {
         margin-top: 20px;

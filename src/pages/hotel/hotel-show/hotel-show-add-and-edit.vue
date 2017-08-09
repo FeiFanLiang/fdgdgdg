@@ -97,7 +97,7 @@
             </el-col>
             <el-col :span="3">
               <el-form-item>
-                <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+                <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
               </el-form-item>
             </el-col>
         </el-row>
@@ -106,39 +106,42 @@
 </template>
 
 <script>
-import { hotelShowApi } from 'api';
+import { hotelShowApi } from 'api'
 export default {
-  data(){
+  data() {
     return {
-      form:{
-
-      }
+      isEditable: true,
+      form: {}
     }
   },
   methods: {
     async getHotelShowList(ID) {
-      const _self = this;
-      ID = _self.ID;
-      const res = await hotelShowApi.detail(ID);
-      _self.form = res.data;
+      const _self = this
+      ID = _self.ID
+      const res = await hotelShowApi.detail(ID)
+      _self.form = res.data
     },
-    async onSubmit() {
+    async submitForm() {
       try {
-       await hotelShowApi.edit(this.form);
+        _self.isEditable = false
+        await hotelShowApi.edit(this.form)
         this.$message({
           message: '保存成功',
           type: 'success'
-        });
-      } catch (e) {}
+        })
+      } catch (e) {
+      } finally {
+        _self.isEditable = true
+      }
     },
     Cancel() {
-      this.$router.go(-1);
+      this.$router.go(-1)
     }
   },
-  mounted () {
-    this.ID = this.$route.params.hotelShowID;
+  mounted() {
+    this.ID = this.$route.params.hotelShowID
     console.log(this.ID)
-    this.getHotelShowList(this.ID);
+    this.getHotelShowList(this.ID)
   }
 }
 </script>

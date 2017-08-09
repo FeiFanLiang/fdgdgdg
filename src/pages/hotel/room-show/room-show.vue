@@ -75,7 +75,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
-          <el-button type="primary" @click="submitEditAndAddForm('form')">确 定</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
         </span>
     </el-dialog>
 
@@ -96,6 +96,7 @@ export default {
     return {
       roomShowList: [],
       loading: false,
+      isEditable: true,
       showDialog: false,
       showBargainsRoom: false,
       form: {
@@ -112,9 +113,9 @@ export default {
     }
   },
   methods: {
-    back(){
-            this.$router.go(-1)
-        },
+    back() {
+      this.$router.go(-1)
+    },
     async fetchData() {
       const _self = this
       _self.loading = true
@@ -138,9 +139,10 @@ export default {
       }
       _self.showDialog = true
     },
-    async submitEditAndAddForm(formName) {
+    async submitForm() {
       const _self = this
       try {
+        _self.isEditable = false
         if (_self.form.ID) {
           await roomShowApi.edit(_self.form)
         } else {
@@ -151,7 +153,7 @@ export default {
           await roomShowApi.add(form)
         }
         _self.fetchData()
-        _self.$refs[formName].resetFields()
+        _self.$refs['form'].resetFields()
         _self.showDialog = false
         _self.$message({
           message: '保存成功',
@@ -160,6 +162,8 @@ export default {
       } catch (e) {
         console.error(e)
         _self.$message.error('保存失败!!!')
+      } finally {
+        _self.isEditable = true
       }
     },
     async clickEditBtn(row) {

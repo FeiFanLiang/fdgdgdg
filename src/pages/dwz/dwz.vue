@@ -52,126 +52,132 @@
         </el-form-item>
         <el-form-item label="备注" prop="Remark">
             <el-input type="textarea" v-model="form.Remark"></el-input>
-        </el-form-item> 
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()">确 定</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
     </el-dialog>
 </div>
 </template>
 <script>
 import { dwzApi } from 'api'
-export default{
-    data(){
-        return{
-            dwzList:[],
-            loading:false,
-            showDialog:false,
-            dialogTitle:'',
-            form:{
-                Title:'',
-                Surl:'',
-                Lurl:'',
-                Remark:''
-            },
-            copyForm:{},
-            filters:{
-                Surl:''
-            }
-        }
-    },
-    created () {
-      this.fetchData();  
-    },
-    methods: {
-      carlineStationSearch(filters){
-        const options = {
-            query: {
-                Surl: filters.Surl
-            }
-        }
-        this.fetchData(options);
+export default {
+  data() {
+    return {
+      dwzList: [],
+      loading: false,
+      isEditable: true,
+      showDialog: false,
+      dialogTitle: '',
+      form: {
+        Title: '',
+        Surl: '',
+        Lurl: '',
+        Remark: ''
       },
-      async fetchData(option) {
-        const _self = this
-        _self.loading = true
-         try { 
-          const res = await dwzApi.listByQuery(option);
-          console.log(res)
-          this.dwzList = res.data.Data;
-          _self.loading = false
-        } catch (e) {
-          console.error(e)
-          _self.loading = false
-        } 
-      },
-      async clickAddBtn(){
-        const _self = this
-        _self.dialogTitle='添加短链接信息'
-        _self.showDialog = true
-        _self.form = {}
-      },
-      async clickEditBtn($index,row){
-        const _self = this
-        _self.dialogTitle='编辑短链接信息'
-        try {
-            _self.form.ID = row.ID
-            _self.form.Title = row.Title
-            _self.form.Surl = row.Surl
-            _self.form.Lurl = row.Lurl
-            _self.form.Remark = row.Remark
-            _self.showDialog = true
-        } catch (e) {
-            console.error(e)
-        }
-      },
-      submitForm(){
-        const _self = this
-         if (_self.form.ID) {
-            _self.editSave()
-        } else { 
-            _self.addSave()
-        }
-      },
-      async addSave() {
-        const _self = this
-            try {
-                await dwzApi.add(_self.form)
-                _self.fetchData()
-                _self.showDialog = false
-                _self.$message({
-                    message: '保存成功',
-                    type: 'success'
-                })
-            } catch (e) {
-                console.error(e)
-                _self.$message.error('添加失败!!!')
-            }
-      },
-      async editSave() {
-            const _self = this
-                const form = {}
-                for (let [k, v] of Object.entries(_self.form)) {
-                    if (_self.form[k] != _self.copyForm[k]) {
-                        form[k] = v
-                    }
-                }  
-                try {
-                    console.log(_self.form)
-                    await dwzApi.edit(_self.form.ID,form)
-                    _self.showDialog = false
-                    _self.fetchData()
-                    _self.$message({
-                    message: '编辑成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    console.error(e)
-                    _self.$message.error('编辑失败!!!')
-                }
-      },
+      copyForm: {},
+      filters: {
+        Surl: ''
+      }
     }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    carlineStationSearch(filters) {
+      const options = {
+        query: {
+          Surl: filters.Surl
+        }
+      }
+      this.fetchData(options)
+    },
+    async fetchData(option) {
+      const _self = this
+      _self.loading = true
+      try {
+        const res = await dwzApi.listByQuery(option)
+        console.log(res)
+        this.dwzList = res.data.Data
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+    },
+    async clickAddBtn() {
+      const _self = this
+      _self.dialogTitle = '添加短链接信息'
+      _self.showDialog = true
+      _self.form = {}
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      _self.dialogTitle = '编辑短链接信息'
+      try {
+        _self.form.ID = row.ID
+        _self.form.Title = row.Title
+        _self.form.Surl = row.Surl
+        _self.form.Lurl = row.Lurl
+        _self.form.Remark = row.Remark
+        _self.showDialog = true
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.ID) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      try {
+        _self.isEditable = false
+        await dwzApi.add(_self.form)
+        _self.fetchData()
+        _self.showDialog = false
+        _self.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('添加失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
+    },
+    async editSave() {
+      const _self = this
+      const form = {}
+      for (let [k, v] of Object.entries(_self.form)) {
+        if (_self.form[k] != _self.copyForm[k]) {
+          form[k] = v
+        }
+      }
+      try {
+        _self.isEditable = false
+        await dwzApi.edit(_self.form.ID, form)
+        _self.showDialog = false
+        _self.fetchData()
+        _self.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('编辑失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
+    }
+  }
 }
 </script>
