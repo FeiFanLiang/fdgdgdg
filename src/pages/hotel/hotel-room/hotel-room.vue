@@ -156,7 +156,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSaveAndEdit()">确 定</el-button>
+        <el-button type="primary" @click="handleSaveAndEdit()" :loading="!isEditRoom">{{isEditRoom?'确 定':'提交中'}}</el-button>
       </span>
   </el-dialog>
   <el-dialog :title="sonForm.id?'编辑子房间信息':'添加子房间信息'" v-model="sonFormDialogVisible" size="small" @close="dialogClose">
@@ -212,7 +212,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="sonFormDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleSonRoomSaveAndEdit()">确 定</el-button>
+        <el-button type="primary" @click="handleSonRoomSaveAndEdit()" :loading="!isEditSonRoom">{{isEditSonRoom?'确 定':'提交中'}}</el-button>
       </span>
   </el-dialog>
   <HotelRoomPlat :hotel-id="form.hotelId" :room-id="roomId" :son-room-id="sonRoomId" :hotel-room-plat-visible="hotelRoomPlatVisible" @hide="hotelRoomPlatVisible=false"></HotelRoomPlat>
@@ -236,6 +236,8 @@ export default {
     },
     data() {
         return {
+            isEditRoom: true,
+            isEditSonRoom: true,
             loading:false,
             roomId: '',
             sonRoomId: '',
@@ -344,6 +346,7 @@ export default {
             _self.$refs['form'].validate(async valid => {
                 if (valid) {
                     try {
+                        _self.isEditRoom = false
                         if (_self.form.id) {
                             await hotelRoomApi.edit(_self.form.id, _self.form);
                         } else {
@@ -360,6 +363,8 @@ export default {
                         });
                     } catch (e) {
                         console.error(e);
+                    } finally {
+                        _self.isEditRoom = true
                     }
                 } else {
                     return false;
@@ -371,6 +376,7 @@ export default {
             _self.$refs['sonForm'].validate(async valid => {
                 if (valid) {
                     try {
+                        _self.isEditSonRoom = false
                         if (_self.sonForm.id) {
                             await sonRoomApi.edit(_self.sonForm.id, _self.sonForm);
                         } else {
@@ -387,6 +393,8 @@ export default {
                         _self.fetchData();
                     } catch (e) {
                         console.error(e);
+                    } finally {
+                        _self.isEditSonRoom = true
                     }
                 } else {
                     return false;
