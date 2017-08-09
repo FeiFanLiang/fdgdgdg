@@ -27,6 +27,15 @@
             </el-col >
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
+            <el-table-column type="expand">
+                <template scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item>
+                             <img v-if="props.row.ImagePath" :src="imageUrl+ props.row.ImagePath" style="width: 200px;"> 
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="CarID" label="汽车ID"></el-table-column>
             <el-table-column prop="DriverID" label="司机ID"></el-table-column>
@@ -140,6 +149,7 @@
     </div>
 </template>
 <script>
+import path from '../../../api/api.js'
 import {
     gasolineLogApi,
     carBaseApi,
@@ -147,8 +157,11 @@ import {
 } from 'api'
 export default {
     created() {
+        this.imageUrl = path.imageUrl
+        console.log(this.imageUrl)
         this.fetchData()
         this.getList()
+
     },
     data() {
         return {
@@ -178,6 +191,7 @@ export default {
                 label: '司机姓名'
                 }
             ],
+            imageUrl:'',
             list: [],
             currentPage: 1,
             pageSize: 10,
@@ -340,6 +354,12 @@ export default {
     .pagination-wrapper {
         text-align: center;
         padding: 30px;
+    }
+    .el-table__expanded-cell {
+        padding: 20px 15px 20px 66px !important;
+    }
+    .demo-table-expand {
+        padding: 0 0 10px 16px !important;
     }
 }
 </style>
