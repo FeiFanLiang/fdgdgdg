@@ -286,14 +286,21 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="派遣司机" prop="driverId">
-                            <el-select v-model="form.driverId" placeholder="请选择司机" >
-                                <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID">
+                            <el-select v-model="form.driverId" placeholder="请选择司机" @change="selectDriverChange">
+                                <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID" >
                                     <span style="float: left">{{ item.Name }}</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 1">正产在职</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 2">已离职</span>
                                     <span style="float: right; color: #8492a6; font-size: 13px" v-if="item.JobStatus === 3">停职</span>
                                 </el-option>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="司机电话">
+                            <el-input v-model="form.phone" ></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -377,6 +384,7 @@ export default {
         orderId: '',
         carId: '',
         driverId: '',
+        phone: '',
         carriageNo: '',
         linkName: '',
         linkPhone: '',
@@ -450,6 +458,9 @@ export default {
     }
   },
   methods: {
+    selectDriverChange(driverId) {
+      this.form.phone = this.driverList.find(item => item.ID === driverId).Phone
+    },
     tabClick(tab, event) {
       // console.log(tab, event)
     },
@@ -517,7 +528,7 @@ export default {
           data: [chartInfoData]
         })
       }
-      // this.createChart()
+      this.createChart()
       // this.d3Chart.datum(this.chartData)
       this.isSendCarEditable = false
       this.showSendCarDialog = false
@@ -686,6 +697,7 @@ export default {
       }
     },
     dispatch($index, row, a) {
+      console.dir(row)
       const _self = this
       _self.tag = a
       _self.carList.length === 0 ? _self.fetchCarList() : ''
