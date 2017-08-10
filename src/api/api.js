@@ -4,7 +4,6 @@ const outsideBase = 'http://http://60.209.152.178:8500/'
 // const base='http://weixinredirect.qdjp.cn/' //对外
 // const base='http://liukai.iok.la/'
 
-
 console.log(window.location.host)
 let url = ''
 if (window.location.host.indexOf('192.168') > -1) {
@@ -12,7 +11,6 @@ if (window.location.host.indexOf('192.168') > -1) {
 } else {
   url = outsideBase
 }
-
 
 export default {
   apiBaseUrl: url,
