@@ -193,33 +193,64 @@
                 <span style="line-height: 36px;">车辆列表</span>
               </div>
               <div v-if="carList.length==0" class="text item">暂无数据</div>
-              <div v-for="(a,index) in carList" :key="index" class="text item">
+              <div v-for="(a,index) in carList" :key="index" class="text item" @click="clickCar(a.CarNumber)">
                 {{a.CarNumber}}
               </div>
             </el-card>
-            <el-tabs class="carinfo-right" v-model="activeName2" type="card" @tab-click="handleClick">
-              <el-tab-pane label="订单一" name="first">
-                <el-card class="carinfo-rightcard">
-                  <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-              </el-tab-pane>
-              <el-tab-pane label="订单二" name="second">
-                <el-card class="carinfo-rightcard">
-                  <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-              </el-tab-pane>
-              <el-tab-pane label="订单三" name="third">
-                <el-card class="carinfo-rightcard">
-                  <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-              </el-tab-pane>
-            </el-tabs>
+            <el-card class="carinfo-rightcard">
+              <div slot="header" class="clearfix">
+                <span style="line-height: 36px;">订单信息</span>
+              </div>
+              <div v-if="carOrderList.length==0" class="text item">暂无数据</div>
+              <div v-for="(a,index) in carOrderList" :key="index" class="text">
+                <i class="el-icon-star-on" style="width: 5%;margin-top: 10px;"></i>
+                <el-form label-position="left" inline label-width="80px" class="demo-table-expand width-85">
+                        <el-form-item label="订单渠道">
+                            <span>{{ a.order.Channel }}</span>
+                        </el-form-item>
+                        <el-form-item label="订单编号">
+                            <span>{{ a.order.ExternalOrderID }}</span>
+                        </el-form-item>
+                        <el-form-item label="航班/车次">
+                            <span>{{ a.order.CarriageNo }}</span>
+                        </el-form-item>
+                        <el-form-item label="联系人">
+                            <span>{{ a.order.LinkName }}</span>
+                        </el-form-item>
+                        <el-form-item label="联系电话">
+                            <span>{{ a.order.LinkPhone }}</span>
+                        </el-form-item>
+                        <el-form-item label="车牌号">
+                            <span>{{ a.arrange.Car.CarNumber }}</span>
+                        </el-form-item>
+                         <el-form-item label="接/送">
+                            <span v-if="a.order.CarTransportType === 0">接机</span>
+                            <span v-if="a.order.CarTransportType === 1">送机</span>
+                            <span v-if="a.order.CarTransportType === 2">指定线路</span>
+                            <span v-if="a.order.CarTransportType === 3">接站</span>
+                            <span v-if="a.order.CarTransportType === 4">送站</span>
+                        </el-form-item> 
+                        <el-form-item label="用车时间">
+                            <span>{{ a.order.UseTime }}</span>
+                        </el-form-item>
+                        <el-form-item label="地址详情" style="width:90%">
+                            <span style="color:blue;">{{a.order.Origin}}</span>-<span style="color:red;">{{a.order.Destination}}</span>
+                        </el-form-item>
+                    </el-form>
+                      <el-popover ref="popover5" placement="top" width="200">
+                            <h5>航班动态</h5>
+                            <p>航班号：{{airInformationList.FlightNo}}</p>
+                            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+                            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+                            <p>状态：{{airInformationList.Stat}}</p>
+                            <p>前序航班状态：{{airInformationList.PreStat}}</p>
+                            <p>更新时间：{{airInformationList.UpdateTime}}</p>
+                            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+                     </el-popover> 
+                     <el-button style="height: 30px;" size="small" v-popover:popover5 @click="showAirInformations(a.order.CarriageNo,a.order.UseTime)">查询航班</el-button>  
+
+              </div>
+            </el-card>
           </el-tab-pane>
 
         </el-tabs>
@@ -395,9 +426,9 @@ export default {
   },
   data() {
     return {
+      carOrderList:[],
       d3Chart: {},
       activeTabName: 'unArrange',
-      activeName2:'first',
       chosenDriver: '',
       sendCardriverId: '',
       sendCarChosenRow: {},
@@ -501,9 +532,6 @@ export default {
     },
     tabClick(tab, event) {
       // console.log(tab, event)
-    },
-    handleClick(tab, event) {
-        // console.log(tab, event);
     },
     rowDblclick(row, event) {
       this.sendCardriverId = ''
@@ -891,9 +919,34 @@ export default {
       console.log(this.chartData)
       this.d3Chart = d3.select('#chart').datum(this.chartData).call(chart)
       console.log(this.d3Chart)
+    },
+    compare(property){
+      return function(a,b){
+        let value1 = a[property];
+        let value2 = b[property];
+        return value1 - value2;
+      }
+    },
+    clickCar(a){
+        const _self = this
+        const now = new Date()
+        const list = []
+        for (let [key, value] of Object.entries(_self.arrangeList)) {
+            if(value.arrange.Car.CarNumber===a){
+              if(new Date(value.order.UseTime) > now){
+                  value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
+              }else{
+                  value.order.tag = Math.abs(now - new Date(value.order.UseTime))
+              }
+              list.push(value)
+            }
+          }
+          _self.carOrderList = list.sort(_self.compare('order.tag')).slice(0, 3)
+          console.dir(_self.carOrderList)
     }
   }
 }
+
 </script>
 <style lang="scss" scoped>
 #car-arrange-page {
@@ -916,9 +969,6 @@ export default {
    }
   }
 
-  .carinfo-right{
-      width: 70%;
-  }
 
   .carinfo{
       display: flex;
@@ -926,16 +976,24 @@ export default {
   }
   
   .carinfo-rightcard{
-      width:100;
-
+      width:70%;
+      .width-85{
+        width:85%;
+      }
       .text {
+        margin-top:10px;
         font-size: 14px;
+        display: flex;
+        justify-content: space-between;
       }
-
-      .item {
-        padding: 18px 0;
+      .el-form--inline .el-form-item {
+        width: 45%;
       }
+      .el-form-item {
+        margin-bottom: 0px;
+    }
   }
+ 
   
 }
 </style>
