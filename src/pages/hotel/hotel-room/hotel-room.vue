@@ -22,7 +22,7 @@
         </el-popover>
 </template>
     </el-table-column>
-    <el-table-column label="子房型名称" width="110">
+    <el-table-column label="子房型名称" width="150">
       <template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
      <td>
@@ -164,7 +164,7 @@
       <el-row>
         <el-col :span="11">
           <el-form-item label="早餐类型">
-            <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型">
+            <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型" @change="changeBreakfastType">
               <el-option v-for="(item,index) in breakfastTypes " :label="item.name" :value="item.value" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -213,7 +213,7 @@
     <span slot="footer" class="dialog-footer">
         <el-button @click="sonFormDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleSonRoomSaveAndEdit()" :loading="!isEditSonRoom">{{isEditSonRoom?'确 定':'提交中'}}</el-button>
-      </span>
+    </span>
   </el-dialog>
   <HotelRoomPlat :hotel-id="form.hotelId" :room-id="roomId" :son-room-id="sonRoomId" :hotel-room-plat-visible="hotelRoomPlatVisible" @hide="hotelRoomPlatVisible=false"></HotelRoomPlat>
 </div>
@@ -243,25 +243,25 @@ export default {
             sonRoomId: '',
             breakfastTypes: [{
                     name: '未定',
-                    value: 0
+                    value: '未定'
                 }, {
                     name: '无早',
-                    value: 1
+                    value: '无早'
                 }, {
                     name: '一餐',
-                    value: 2
+                    value: '一餐'
                 }, {
                     name: '两餐',
-                    value: 3
+                    value: '两餐'
                 }, {
                     name: '三餐',
-                    value: 4
+                    value: '三餐'
                 }, {
                     name: '四餐',
-                    value: 5
+                    value: '四餐'
                 }, {
                     name: '更多',
-                    value: 6
+                    value: '更多'
             }],
             bed:[],
             form: {
@@ -279,6 +279,7 @@ export default {
                 roomID: '',
                 sonRoomName: '',
                 sonRoomCode: '',
+                roomCount:'',
                 remark: '',
                 remark2: '',
                 breakfastType: '',
@@ -307,7 +308,8 @@ export default {
             sonFormDialogVisible: false,
             bedsOptions: [],
             hotelroomlist: [],
-            hotelRoomPlatVisible: false
+            hotelRoomPlatVisible: false,
+            breakfastTypesName:''
         }
     },
     mounted() {
@@ -315,6 +317,14 @@ export default {
         this.fetchData();
         this.bedsList();
         //this.show();
+    },
+    watch: {
+        breakfastTypesName: function (row) {
+            console.log("11111111111")
+            console.log(row)
+            console.log(this.breakfastTypesName)
+            this.sonForm.sonRoomName = this.breakfastTypesName
+        }
     },
     methods: {
         async bedsList(){
@@ -410,12 +420,15 @@ export default {
             }
             this.bed = []
         },
+        changeBreakfastType(value){
+            this.breakfastTypesName = value
+        },
         hotelSonRoomAdd(row) {
             this.sonForm = {
                 roomID : row.ID,
                 breakfastType : this.breakfastTypes.name,
                 isStop: false,
-                sonRoomName: '房型名称[早餐类型]',
+                sonRoomName: row.RoomName+'['+this.breakfastTypesName+']',
             }
             this.sonFormDialogVisible = true;
         },
@@ -426,6 +439,7 @@ export default {
             _self.form.roomName = row.RoomName;
             _self.form.roomCount = row.RoomCount + ''; // 返回的是数字类型,表单验证会存在问题
             _self.form.roomCode = row.RoomCode;
+            //_self.form.Beds = row.Beds;
             _self.form.remark = row.Remark;
             _self.dialogVisible = true;
         },
@@ -438,6 +452,7 @@ export default {
             _self.sonForm.roomID = sonRooms.RoomID;
             _self.sonForm.sonRoomName = sonRooms.SonRoomName;
             _self.sonForm.sonRoomCode = sonRooms.SonRoomCode;
+            _self.sonForm.roomCount = sonRooms.RoomCount;
             _self.sonForm.remark = sonRooms.Remark;
             _self.sonForm.remark2 = sonRooms.Remark2;
             _self.sonForm.breakfastType = sonRooms.BreakfastType;
