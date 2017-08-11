@@ -267,9 +267,11 @@ export default {
     },
     edit(index, row) {
       const _self = this
+      _self.form.roomId = _self.roomId ? _self.roomId : '',
+      _self.form.sonRoomId = _self.sonRoomId ? _self.sonRoomId : '',
       _self.form.id = row.ID
-      _self.form.roomId = row.RoomID
-      _self.form.sonRoomId = row.SonRoomID
+      //_self.form.roomId = row.RoomID
+      //_self.form.sonRoomId = row.SonRoomID
       _self.form.platformId = row.PlatformID
       _self.form.platHotelId = row.PlatHotelID
       _self.form.platRoomName = row.PlatRoomName
@@ -317,6 +319,8 @@ export default {
       if (res && res.data && Array.isArray(res.data)) {
         this.platInfoList = res.data
       }
+      console.log("aaaaaaaaaa")
+      console.log(this.platInfoList)
       this.loading = false
     },
     async submitForm() {
