@@ -34,7 +34,7 @@ import './style.scss'
 // import 'plugins/'
 import 'mixin/'
 
-import store from './store/'
+// import store from './store/'
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 
@@ -102,8 +102,8 @@ axios.interceptors.response.use(
 
 new Vue({
   render: h => h(App),
-  router,
-  store
+  router
+  // store
 }).$mount('#app')
 
 /**
