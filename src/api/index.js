@@ -39,53 +39,7 @@ import lineStationApi from './line-station'
 import stationApi from './station'
 import airInformationApi from './air-informations'
 import dwzApi from './dwz'
-<<<<<<< HEAD
-//import menuApi from './menu'
 
-export {
-    accountApi,
-    airlineApi,
-    bargainsRoomApi,
-    carArrangeApi,
-    carBaseApi,
-    carOrderApi,
-    carOrderManageApi,
-    orderChannelApi,
-    carUseApi,
-    gasolineLogApi,
-    driverBaseApi,
-    driverEvaluateApi,
-    hotelAreaApi,
-    hotelBaseApi,
-    hotelImageApi,
-    hotelPayModeApi,
-    hotelPlatformApi,
-    hotelPolicyApi,
-    hotelPolicyImageApi,
-    hotelRoomApi,
-    hotelRoomBedApi,
-    hotelShowApi,
-    hotelStarApi,
-    hotelThreePlatInfoApi,
-    orderApi,
-    payCompanyApi,
-    roleApi,
-    roomShowApi,
-    roomStateApi,
-    rserveModeApi,
-    secretTypeApi,
-    sonRoomApi,
-    sonRoomPlatformApi,
-    sonRoomSalePriceApi,
-    userApi,
-    weixinRedirectApi,
-    carLineApi,
-    lineStationApi,
-    stationApi,
-    airInformationApi,
-    dwzApi,
-    //menuApi
-=======
 // import menuApi from './menu'
 
 export {
@@ -131,5 +85,4 @@ export {
   airInformationApi,
   dwzApi
   // menuApi
->>>>>>> 0be9a3c7e613142b6161eeeb71131fed44b435d0
 }
