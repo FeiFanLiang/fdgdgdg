@@ -945,12 +945,8 @@ export default {
       const list = []
       for (let [key, value] of Object.entries(_self.arrangeList)) {
         if (value.arrange.Car.CarNumber === a) {
-          if (new Date(value.order.UseTime) > now) {
             value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
-          } else {
-            value.order.tag = Math.abs(now - new Date(value.order.UseTime))
-          }
-          list.push(value)
+            list.push(value)
         }
       }
       _self.carOrderList = list.sort(_self.compare('order.tag')).slice(0, 3)
