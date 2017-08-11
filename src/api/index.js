@@ -39,10 +39,6 @@ import lineStationApi from './line-station'
 import stationApi from './station'
 import airInformationApi from './air-informations'
 import dwzApi from './dwz'
-<<<<<<< HEAD
-=======
-
->>>>>>> c55a656c57d57dae205d561f5f46c19458697958
 // import menuApi from './menu'
 
 export {
