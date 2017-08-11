@@ -229,7 +229,7 @@
                             <span v-if="a.order.CarTransportType === 2">指定线路</span>
                             <span v-if="a.order.CarTransportType === 3">接站</span>
                             <span v-if="a.order.CarTransportType === 4">送站</span>
-                        </el-form-item> 
+                        </el-form-item>
                         <el-form-item label="用车时间">
                             <span>{{ a.order.UseTime }}</span>
                         </el-form-item>
@@ -237,7 +237,7 @@
                             <span style="color:blue;">{{a.order.Origin}}</span>-<span style="color:red;">{{a.order.Destination}}</span>
                         </el-form-item>
                     </el-form>
-                      <el-popover ref="popover5" placement="top" width="200">
+                      <!-- <el-popover :ref="'popoverhh'+index" placement="top" width="200">
                             <h5>航班动态</h5>
                             <p>航班号：{{airInformationList.FlightNo}}</p>
                             <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
@@ -246,9 +246,21 @@
                             <p>前序航班状态：{{airInformationList.PreStat}}</p>
                             <p>更新时间：{{airInformationList.UpdateTime}}</p>
                             <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
-                     </el-popover> 
-                     <el-button style="height: 30px;" size="small" v-popover:popover5 @click="showAirInformations(a.order.CarriageNo,a.order.UseTime)">查询航班</el-button>  
-
+                     </el-popover>
+                     <el-button style="height: 30px;" size="small" v-popover:"'popoverhh'+index" @click="showAirInformations(a.order.CarriageNo,a.order.UseTime)">查询航班</el-button>   -->
+                     <el-popover placement="top" width="200">
+                       <div class="">
+                         <h5>航班动态</h5>
+                         <p>航班号：{{airInformationList.FlightNo}}</p>
+                         <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+                         <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+                         <p>状态：{{airInformationList.Stat}}</p>
+                         <p>前序航班状态：{{airInformationList.PreStat}}</p>
+                         <p>更新时间：{{airInformationList.UpdateTime}}</p>
+                         <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+                       </div>
+                          <el-button style="height: 30px;" slot="reference" size="small"  @click="showAirInformations(a.order.CarriageNo,a.order.UseTime)">查询航班</el-button>
+                     </el-popover>
               </div>
             </el-card>
           </el-tab-pane>
@@ -422,11 +434,10 @@ export default {
     this.fetchData()
     this.fetchCarList()
     this.configList = carArrangeApi.getConfig()
-    
   },
   data() {
     return {
-      carOrderList:[],
+      carOrderList: [],
       d3Chart: {},
       activeTabName: 'unArrange',
       chosenDriver: '',
@@ -608,6 +619,7 @@ export default {
       this.fetchArrangeData(false)
     },
     async showAirInformations(CarriageNo, UseTime) {
+      // alert(1)
       let option = {
         flightNo: CarriageNo,
         begin: UseTime
@@ -920,33 +932,28 @@ export default {
       this.d3Chart = d3.select('#chart').datum(this.chartData).call(chart)
       console.log(this.d3Chart)
     },
-    compare(property){
-      return function(a,b){
-        let value1 = a[property];
-        let value2 = b[property];
-        return value1 - value2;
+    compare(property) {
+      return function(a, b) {
+        let value1 = a[property]
+        let value2 = b[property]
+        return value1 - value2
       }
     },
-    clickCar(a){
-        const _self = this
-        const now = new Date()
-        const list = []
-        for (let [key, value] of Object.entries(_self.arrangeList)) {
-            if(value.arrange.Car.CarNumber===a){
-              if(new Date(value.order.UseTime) > now){
-                  value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
-              }else{
-                  value.order.tag = Math.abs(now - new Date(value.order.UseTime))
-              }
-              list.push(value)
-            }
-          }
-          _self.carOrderList = list.sort(_self.compare('order.tag')).slice(0, 3)
-          console.dir(_self.carOrderList)
+    clickCar(a) {
+      const _self = this
+      const now = new Date()
+      const list = []
+      for (let [key, value] of Object.entries(_self.arrangeList)) {
+        if (value.arrange.Car.CarNumber === a) {
+            value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
+            list.push(value)
+        }
+      }
+      _self.carOrderList = list.sort(_self.compare('order.tag')).slice(0, 3)
+      console.dir(_self.carOrderList)
     }
   }
 }
-
 </script>
 <style lang="scss" scoped>
 #car-arrange-page {
@@ -974,7 +981,7 @@ export default {
       display: flex;
       justify-content: space-between;
   }
-  
+
   .carinfo-rightcard{
       width:70%;
       .width-85{
@@ -993,7 +1000,7 @@ export default {
         margin-bottom: 0px;
     }
   }
- 
-  
+
+
 }
 </style>
