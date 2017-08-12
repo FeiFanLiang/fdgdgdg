@@ -7,8 +7,8 @@ export default {
       params: params
     })
   },
-  details (id) {
-    return axios.get(base + id)
+  details (roomid) {
+    return axios.get(base + roomid)
   },
   add (params) {
     return axios.post(base, params)

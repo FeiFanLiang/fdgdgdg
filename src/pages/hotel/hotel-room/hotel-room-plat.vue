@@ -36,12 +36,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="平台酒店ID" prop="platHotelId">
-              <el-input v-model="form.platHotelId"></el-input>
+              <el-input v-model="form.platHotelId" disabled="disabled"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="请选择平台" prop="platformId">
-              <el-select  v-model="form.platformId" placeholder="请选择平台">
+              <el-select  v-model="form.platformId" placeholder="请选择平台" @change="platformChange">
                 <el-option v-for="(item,index) in platInfoList"
                   :label="item.Platform.PlatName"
                   :value="item.Platform.ID"
@@ -163,12 +163,12 @@ export default {
       list: [],
       platInfoList: [],
       rules: {
-        platHotelId: [
+       /*  platHotelId: [
           {
             required: true,
             message: '请输入平台酒店ID'
           }
-        ],
+        ], */
         platformId: [
           {
             required: true,
@@ -207,7 +207,8 @@ export default {
         platUrl: '',
         sonRoomName: '',
         roomName: ''
-      }
+      },
+      platHotelId:''
     }
   },
   computed: {
@@ -232,7 +233,16 @@ export default {
       return platformId
     }
   },
+  watch: {
+      platHotelId: function () {
+          this.form.platHotelId = this.platHotelId
+      }
+  },
   methods: {
+    async platformChange(value){
+      const res = await hotelPlatformApi.detail(value);
+      this.platHotelId = res.data.PlatHotelID;
+    },
     Cancel() {
       this.$emit('hide')
     },
@@ -319,8 +329,6 @@ export default {
       if (res && res.data && Array.isArray(res.data)) {
         this.platInfoList = res.data
       }
-      console.log("aaaaaaaaaa")
-      console.log(this.platInfoList)
       this.loading = false
     },
     async submitForm() {
