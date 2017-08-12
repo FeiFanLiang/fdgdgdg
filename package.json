@@ -7,12 +7,14 @@
   "scripts": {
     "dev": "node build/dev-server.js",
     "start": "node build/dev-server.js",
-    "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src"
+    "build": "node build/build.js && npm run copy",
+    "lint": "eslint --ext .js,.vue src",
+    "copy": " copy web.config meipiao"
   },
   "dependencies": {
     "axios": "^0.15.3",
     "babel-polyfill": "*",
+    "copy": "^0.3.0",
     "core-js": "^2.4.1",
     "d3": "^4.9.1",
     "element-ui": "^1.4.1",
