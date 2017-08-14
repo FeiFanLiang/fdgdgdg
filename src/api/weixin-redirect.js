@@ -10,5 +10,8 @@ export default {
   },
   del () {
     return axios.post(base + `DeleteMenu`)
+  },
+  url(code){
+    return axios.get(base + `GetQrWithArg/` + code,code)
   }
 }
