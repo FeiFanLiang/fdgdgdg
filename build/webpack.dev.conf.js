@@ -1,5 +1,6 @@
 var utils = require('./utils')
 var webpack = require('webpack')
+// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
@@ -32,5 +33,6 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin()
+      // ,new BundleAnalyzerPlugin()
   ]
 })
