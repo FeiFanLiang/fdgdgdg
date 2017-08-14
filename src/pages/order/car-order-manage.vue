@@ -35,16 +35,6 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="4">
-                <el-date-picker v-model="filters.useTimeS" type="date" placeholder="选择起始用车日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-                <el-date-picker v-model="filters.useTimeE" type="date" placeholder="选择终止用车日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
             <el-col :span="3">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
@@ -55,6 +45,20 @@
                 <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
                 <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
+            <el-col :span="4">
+                <el-date-picker v-model="filters.useTimeS" type="date" placeholder="选择起始用车日期" :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-col>
+            <el-col :span="4">
+                <el-date-picker v-model="filters.useTimeE" type="date" placeholder="选择终止用车日期" :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-col>
+            <el-col :span="4">
+                <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择预定日期" :picker-options="pickerOptions">
+                </el-date-picker>
             </el-col>
             <el-col :span="5">
                 <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
@@ -72,6 +76,8 @@
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
+        </el-row>
+        <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
             <el-col :span="10">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
@@ -263,29 +269,28 @@
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
                 <el-row :gutter="24" v-if="form.id">
-                    <el-col :span="4" :offset="12">
+                  <el-col :span="12">
+                      <el-form-item label="订单渠道" prop="channel">
+                          <el-select v-model="form.channel" placeholder="请选择订单渠道">
+                              <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
+                                  <span style="float: left">{{ item.ChannelName }}</span>
+                              </el-option>
+                          </el-select>
+                      </el-form-item>
+                  </el-col>
+                    <el-col :span="12" >
                         <el-form-item>
                             <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="24">
-                    <el-col :span="12">
-                        <el-form-item label="订单渠道" prop="channel">
-                            <el-select v-model="form.channel" placeholder="请选择订单渠道">
-                                <el-option v-for="(item,index) in channelList" :key="index" :label="item.ChannelName" :value="item.ChannelName">
-                                    <span style="float: left">{{ item.ChannelName }}</span>
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+
                     <el-col :span="12">
                         <el-form-item label="外部订单号" prop="externalOrderID">
                             <el-input placeholder="请输入外部订单号" v-model="form.externalOrderID"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="产品类型" prop="carTransportType">
                             <el-select v-model="form.carTransportType" placeholder="请选择产品类型">
@@ -293,6 +298,14 @@
                                     <span style="float: left">{{ item.label }}</span>
                                 </el-option>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item label="预定时间" >
+                            <el-date-picker v-model="form.bookTime" type="datetime" :disabled="true">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -530,6 +543,7 @@ export default {
         preServiceMileage: 0,
         preServiceTime: '00:00:00',
         useTime: '',
+        bookTime: '',
         isAppointment: true,
         carriageNo: '',
         staffUserId: '',
@@ -655,6 +669,7 @@ export default {
         isCancel: false,
         useTimeS: '',
         useTimeE: '',
+        bookTime: '',
         labelVal: 1,
         linkName: '',
         linkPhone: '',
@@ -801,6 +816,7 @@ export default {
         isCancel: '',
         useTimeS: '',
         useTimeE: '',
+        bookTime: '',
         labelVal: 1,
         linkName: '',
         linkPhone: '',
@@ -878,6 +894,7 @@ export default {
           'useTime<': _self.filters.useTimeE
             ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
             : '',
+          bookTime: _self.filters.bookTime,
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
             _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
@@ -935,6 +952,7 @@ export default {
         preServiceMileage: 0,
         preServiceTime: '00:00:00',
         useTime: '',
+        bookTime: '',
         isAppointment: true,
         carriageNo: '',
         staffUserId: '',
@@ -977,6 +995,7 @@ export default {
         _self.form.preServiceMileage = res.data.Data.PreServiceMileage
         _self.form.preServiceTime = res.data.Data.PreServiceTime
         _self.form.useTime = res.data.Data.UseTime
+        _self.form.bookTime = res.data.Data.BookTime
         _self.form.isAppointment = res.data.Data.IsAppointment
         _self.form.carriageNo = res.data.Data.CarriageNo
         // staffUserId
