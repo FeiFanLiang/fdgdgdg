@@ -232,7 +232,8 @@ import HotelRoomPlat from './hotel-room-plat';
 export default {
     components: {
         HotelTopMenu,
-        HotelRoomPlat
+        HotelRoomPlat,
+        hotelRoomBedApi
     },
     data() {
         return {
@@ -309,7 +310,8 @@ export default {
             bedsOptions: [],
             hotelroomlist: [],
             hotelRoomPlatVisible: false,
-            breakfastTypesName:''
+            breakfastTypesName:'',
+            roomName:''
         }
     },
     mounted() {
@@ -320,10 +322,7 @@ export default {
     },
     watch: {
         breakfastTypesName: function (row) {
-            console.log("11111111111")
-            console.log(row)
-            console.log(this.breakfastTypesName)
-            this.sonForm.sonRoomName = this.breakfastTypesName
+            this.sonForm.sonRoomName = this.roomName + '['+this.breakfastTypesName+']'
         }
     },
     methods: {
@@ -424,16 +423,18 @@ export default {
             this.breakfastTypesName = value
         },
         hotelSonRoomAdd(row) {
+            this.roomName= row.RoomName
             this.sonForm = {
                 roomID : row.ID,
                 breakfastType : this.breakfastTypes.name,
                 isStop: false,
-                sonRoomName: row.RoomName+'['+this.breakfastTypesName+']',
+                sonRoomName: this.roomName +'['+this.breakfastTypesName+']',
             }
             this.sonFormDialogVisible = true;
         },
         hotelroomEdit(row) {
             const _self = this;
+            console.log(row)
             _self.form.id = row.ID;
             _self.form.hotelId = row.HotelID;
             _self.form.roomName = row.RoomName;
