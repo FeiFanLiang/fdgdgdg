@@ -171,7 +171,7 @@
         </el-col>
         <el-col :span="11" :offset="1">
           <el-form-item label="子房间名称" prop="roomName">
-            <el-input v-model="sonForm.sonRoomName"></el-input>
+            <el-input v-model="sonForm.sonRoomName" disabled="disabled"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -182,19 +182,13 @@
           </el-form-item>
         </el-col>
         <el-col :span="11" :offset="1">
-          <el-form-item label="数量">
-            <el-input v-model="sonForm.roomCount"></el-input>
-          </el-form-item>
-        </el-col>
-        
-      </el-row>
-      <el-row>
-        <el-col :span="11">
           <el-form-item label="备注一">
             <el-input v-model="sonForm.remark" type="textarea"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="11" :offset="1">
+      </el-row>
+      <el-row>
+        <el-col :span="11">
           <el-form-item label="备注二">
             <el-input v-model="sonForm.remark2" type="textarea"></el-input>
           </el-form-item>
@@ -434,29 +428,32 @@ export default {
         },
         hotelroomEdit(row) {
             const _self = this;
-            console.log(row)
             _self.form.id = row.ID;
             _self.form.hotelId = row.HotelID;
             _self.form.roomName = row.RoomName;
             _self.form.roomCount = row.RoomCount + ''; // 返回的是数字类型,表单验证会存在问题
             _self.form.roomCode = row.RoomCode;
-            //_self.form.Beds = row.Beds;
+            _self.form.Beds = row.Beds;
             _self.form.remark = row.Remark;
             _self.dialogVisible = true;
         },
-        hotelSonRoomEdit(index, row) {
+        async hotelSonRoomEdit(index, row) {
             if (!row || !row.SonRooms) retrun;
             const sonRooms = row.SonRooms[index];
             const _self = this;
+            const res = await hotelRoomBedApi.details(sonRooms.BreakfastType);
+            let bedName = res.data.BedName;
+            _self.roomName = row.RoomName
+            _self.breakfastTypesName = bedName
             _self.sonFormDialogVisible = true;
             _self.sonForm.id = sonRooms.ID;
             _self.sonForm.roomID = sonRooms.RoomID;
-            _self.sonForm.sonRoomName = sonRooms.SonRoomName;
+           // _self.sonForm.sonRoomName = sonRooms.SonRoomName;
+           _self.sonForm.sonRoomName = this.roomName +'['+_self.breakfastTypesName+']';
             _self.sonForm.sonRoomCode = sonRooms.SonRoomCode;
-            _self.sonForm.roomCount = sonRooms.RoomCount;
             _self.sonForm.remark = sonRooms.Remark;
             _self.sonForm.remark2 = sonRooms.Remark2;
-            _self.sonForm.breakfastType = sonRooms.BreakfastType;
+            _self.sonForm.breakfastType = bedName;
             _self.sonForm.isStop = sonRooms.IsStop;
         },
         hotelSonRoomPlatEdit(index, row) {

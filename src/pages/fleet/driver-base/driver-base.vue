@@ -4,10 +4,25 @@
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
         </CustomSearch>
         <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中" v-loading="loading">
-          <el-table-column label="操作" width="150" slot="right-two">
+          <el-table-column label="操作" width="200" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                   <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                  <el-popover
+                    ref="popover"
+                    placement="top"
+                    width="300"
+                    trigger="click">
+                    <p>{{urls}}</p>
+                  </el-popover>
+                  <!-- <el-popover ref="popover5" placement="top" width="160" v-model="visible2">
+                    <p>这是一段内容这是一段内容确定删除吗？</p>
+                    <div style="text-align: right; margin: 0">
+                      <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
+                      <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
+                    </div>
+                  </el-popover> -->
+                  <el-button v-popover:popover size="small" @click="showUrl(scope.row)">二维码</el-button>
               </template>
           </el-table-column>
         </CustomTable>
@@ -65,7 +80,7 @@
     </div>
 </template>
 <script>
-import { driverBaseApi } from 'api'
+import { driverBaseApi, weixinRedirectApi } from 'api'
 export default {
   created() {
     this.fetchData()
@@ -73,6 +88,7 @@ export default {
   },
   data() {
     return {
+      urls:'',
       list: [],
       currentPage: 1,
       pageSize: 10,
@@ -155,6 +171,11 @@ export default {
     }
   },
   methods: {
+    async showUrl(row){
+      this.urls = ''
+      const res = await weixinRedirectApi.url(row.JobNnumber);
+      this.urls = res.data
+    },
     searchCallback(filters) {
       this.filters = filters
       this.fetchData()

@@ -275,8 +275,13 @@ export default {
       this.platVisible = true
       this.isEdit = true
     },
-    edit(index, row) {
+    async edit(index, row) {
       const _self = this
+      _self.form.platHotelId = ''
+      const res = await sonRoomApi.detailById(this.sonRoomId)
+      let a = res.data.SonRoomName
+      const res2 = await hotelRoomApi.details(this.roomId)
+      let b = res2.data.RoomName
       _self.form.roomId = _self.roomId ? _self.roomId : '',
       _self.form.sonRoomId = _self.sonRoomId ? _self.sonRoomId : '',
       _self.form.id = row.ID
@@ -294,6 +299,8 @@ export default {
       _self.form.platUrl = row.PlatURL
       _self.platVisible = true
       _self.isEdit = true
+      _self.form.sonRoomName = a
+      _self.form.roomName = b
     },
     async del(index, row) {
       const _self = this
