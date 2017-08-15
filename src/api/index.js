@@ -39,6 +39,8 @@ import lineStationApi from './line-station'
 import stationApi from './station'
 import airInformationApi from './air-informations'
 import dwzApi from './dwz'
+import roomStatPriceApi from './room-stat-price'
+
 // import menuApi from './menu'
 
 export {
@@ -82,6 +84,7 @@ export {
   lineStationApi,
   stationApi,
   airInformationApi,
-  dwzApi
+  dwzApi,
+  roomStatPriceApi
   // menuApi
 }
