@@ -3,7 +3,7 @@
         <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
         </CustomSearch>
-        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中" v-loading="loading">
+        <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData"  >
           <el-table-column label="操作" width="200" slot="right-two">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -88,7 +88,7 @@ export default {
   },
   data() {
     return {
-      urls:'',
+      urls: '',
       list: [],
       currentPage: 1,
       pageSize: 10,
@@ -171,9 +171,9 @@ export default {
     }
   },
   methods: {
-    async showUrl(row){
+    async showUrl(row) {
       this.urls = ''
-      const res = await weixinRedirectApi.url(row.JobNnumber);
+      const res = await weixinRedirectApi.url(row.JobNnumber)
       this.urls = res.data
     },
     searchCallback(filters) {
@@ -210,10 +210,11 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.fetchData(this.pageSize)
+      this.fetchData(1, this.pageSize)
     },
     handleCurrentChange(val) {
       this.currentPage = val
+
       this.fetchData(this.currentPage)
     },
     clickAddBtn() {

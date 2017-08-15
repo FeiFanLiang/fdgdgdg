@@ -14,7 +14,7 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-form-item>
         </el-form>
-        <CustomTable :list="list" :configList="configList.listFields" element-loading-text="拼命加载中" v-loading="loading">
+        <CustomTable :list="list" :loading="loading" :configList="configList.listFields"  >
           <el-table-column label="操作" fixed="right" slot="right-one">
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>

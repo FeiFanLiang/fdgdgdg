@@ -4,8 +4,7 @@
         <el-button type="primary" @click="roomShowAdd">创建</el-button>
         <el-button @click="back">返回</el-button>
     </el-row>
-    <CustomTable :list="roomShowList" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
-      v-loading="loading">
+    <CustomTable :list="roomShowList" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" >
       <el-table-column  width="150"  label="操作" fixed="right">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.row)">编辑</el-button>

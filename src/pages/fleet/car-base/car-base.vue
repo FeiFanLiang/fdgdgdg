@@ -21,7 +21,7 @@
         <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
             <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
         </CustomSearch>
-        <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中" v-loading="loading">
+        <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" >
           <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
               <template scope="scope">
                   <p v-if="scope.row.CarClassify === 0">经济型</p>
@@ -283,7 +283,7 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val
-      this.fetchData(this.pageSize)
+      this.fetchData(1, this.pageSize)
     },
     handleCurrentChange(val) {
       this.currentPage = val

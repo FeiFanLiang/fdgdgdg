@@ -268,7 +268,7 @@
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-                <el-row :gutter="24" v-if="form.id">
+                <el-row :gutter="24" >
                   <el-col :span="12">
                       <el-form-item label="订单渠道" prop="channel">
                           <el-select v-model="form.channel" placeholder="请选择订单渠道">
@@ -278,7 +278,7 @@
                           </el-select>
                       </el-form-item>
                   </el-col>
-                    <el-col :span="12" >
+                    <el-col :span="12" v-if="form.id">
                         <el-form-item>
                             <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
                         </el-form-item>
