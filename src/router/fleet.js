@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '车队管理',
   redirect: '/fleet/car-base',
-  iconClass: 'el-icon-setting',
+  iconClass: 'chedui',
   children: [
     {
       path: 'car-base',

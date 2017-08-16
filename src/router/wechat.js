@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '微信',
   redirect: '/wechat/CustomMenu',
-  iconClass: 'el-icon-picture',
+  iconClass: 'weixin',
   children: [
     {
       path: 'CustomMenu',
@@ -41,6 +41,6 @@ export default {
       meta: {
         hidden: true
       }
-    },
+    }
   ]
 }

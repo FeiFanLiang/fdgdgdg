@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '酒店',
   redirect: '/hotel/HotelBase',
-  iconClass: 'el-icon-setting',
+  iconClass: 'jiudian',
   children: [
     {
       path: 'HotelBase',

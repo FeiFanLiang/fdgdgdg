@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '订单',
   redirect: '/order/CarOrderManage',
-  iconClass: 'el-icon-setting',
+  iconClass: 'dingdan',
   children: [
     {
       path: 'CarOrderManage',

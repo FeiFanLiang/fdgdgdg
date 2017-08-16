@@ -28,11 +28,15 @@
         <aside class="db-menu-wrapper" :style="{width:!isCollapse?'200px':'80px'}">
           <!-- :default-active="activeMenu" class="db-menu-bar" router  theme="dark"  -->
 
-          <el-menu default-active="activeMenu"  class="sidebar-container" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+          <el-menu default-active="activeMenu" :class="[!isCollapse ? 'sidebar-container' : '']" class="" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children" >
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
-                  <template slot="title"><i :class="route.iconClass"></i>
+                  <template slot="title">
+                    <!-- <i :class="route.iconClass"></i> -->
+                    <svg class="icon" aria-hidden="true">
+  <use :xlink:href="iconName(route.iconClass)"></use>
+</svg>
                     <span slot="title">{{route.name}}</span>
                   </template>
                     <!-- <template v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  >
@@ -45,7 +49,10 @@
               </template>
               <template v-if="!route.children && route.name">
                   <el-menu-item :index="route.name" :route="route">
-                    <i :class="route.iconClass"></i>
+                    <!-- <i :class="route.iconClass"></i> -->
+                    <svg class="icon" aria-hidden="true">
+  <use :xlink:href="iconName(route.iconClass)"></use>
+</svg>
                     <span slot="title">{{route.name}}</span>
                   </el-menu-item>
               </template>
@@ -68,6 +75,7 @@
 
 <script>
 import { accountApi } from 'api'
+import 'assets/fonts/iconfont'
 export default {
   data() {
     return {
@@ -81,6 +89,7 @@ export default {
       activeMenu: ''
     }
   },
+  computed: {},
   created() {
     const _self = this
     _self.activeMenu = _self.$route.name
@@ -96,6 +105,9 @@ export default {
     }
   },
   methods: {
+    iconName(name) {
+      return '#icon-' + name
+    },
     async logout() {
       try {
         await this.$confirm('确定要注销吗?', '提示', {
