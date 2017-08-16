@@ -24,9 +24,6 @@ axios.defaults.timeout = 3 * 60 * 1000
 // Vue.use(VueProgressBar, VueProgressBarOptions);
 // Vue.use(VueAxiosProgressBarInterceptor);
 
-// import Mock from './mock';
-// Mock.bootstrap();
-
 import App from './app.vue'
 import routes from './router'
 import './style.scss'
