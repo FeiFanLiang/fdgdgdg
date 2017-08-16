@@ -29,7 +29,8 @@ module.exports = {
       config: resolve( 'src/config'),
       api: resolve( 'src/api'),
       plugins: resolve( 'src/plugins'),
-      mixin: resolve( 'src/mixin')
+      mixin: resolve( 'src/mixin'),
+        utils: resolve( 'src/utils')
     }
   },
   module: {

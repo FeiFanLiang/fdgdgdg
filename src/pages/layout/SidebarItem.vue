@@ -24,14 +24,14 @@
 </template>
 
 <script>
-    export default {
-      name: 'SidebarItem',
-      props: {
-        routes: {
-          type: Array
-        }
-      }
+export default {
+  name: 'SidebarItem',
+  props: {
+    routes: {
+      type: Array
     }
+  }
+}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -43,4 +43,3 @@
         text-indent: 10px;
     }
 </style>
-

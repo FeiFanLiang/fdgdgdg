@@ -26,7 +26,8 @@ axios.defaults.timeout = 3 * 60 * 1000
 
 import App from './app.vue'
 import routes from './router'
-import './style.scss'
+
+import './styles/index.scss'
 
 // import 'plugins/'
 import 'mixin/'

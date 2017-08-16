@@ -120,8 +120,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import './styles/_variables.scss';
-
  .sidebar-container{
    transition: width .28s ease-out;
    height: calc(100% - 60px);
