@@ -103,7 +103,7 @@
                 <el-col :span="12"><b>到达时间:</b>{{list.ArrivalTime}}</el-col>
                 <el-col :span="12"><b>到达坐标:</b>{{list.ArrivalCoordinates}}</el-col>
             </el-row>
-            
+
             <el-row :gutter="24">
                 <el-col :span="12"><b>用车日期:</b>{{list.UseTime}}</el-col>
                 <el-col :span="12"><b>客人要求:</b>{{list.SpecReq}}</el-col>
@@ -161,7 +161,6 @@ export default {
                        _self.carList = res.data;
 
                        for(let i=0;i<_self.carList.length;i++){
-                        //console.log(_self.carList);
                         _self.carList[i].UseTime = _self.carList[i].UseTime.substring(5,10)+"  "+_self.carList[i].UseTime.substring(11,16);
                         _self.carList[i].BookTime = _self.carList[i].BookTime.substring(5,10)+"  "+_self.carList[i].BookTime.substring(11,16);
                        }

@@ -34,7 +34,6 @@ export default {
   components: {
   },
   created: function () {
-    console.log('created:' + this.$route.fullPath)
     this.id = this.$route.params.id
     this.getModel(this.id)
   },
@@ -45,8 +44,6 @@ export default {
     },
     SumitModel: async function () {
       const data = await SumitModel(this.model)
-      console.log('SumitModel:')
-      console.log(data)
     },
     goback: function () {
       this.$router.go(-1)

@@ -86,351 +86,354 @@
 </div>
 </template>
 <script>
-import {weixinRedirectApi} from 'api'
-  export default {
-    data() {
-      var checkUrl = (rule, value, callback) => {
-        let a= /^((http|ftp|https)?:\/\/)|((http|ftp|https)?:\/\/)+\w{1,}$/;
-        if (!value) {
-            return callback(new Error('链接不能为空'));
-        }
-        else if (!a.test(value)) {
-            return callback(new Error('链接形式必须为http://'));
-        }
-        else{
-            callback();
-        }
-      };
-      return {
-        activeIndex: '1',
-        imageUrl: '',
-        radio:'跳转网页',
-        showChose1:true,
-        showChose2:false,
-        del22:false,
-        dialogVisible: false,
-        disabled:false,
-        disabled2:false,
-        addORedit:'',
-        form:{
-          name:'',
-          url:''
-        },
-        titles:'',
-        index:'',
-        index2:'',
-        rules: {
-          name: [
-            { required: true, message: '请输入菜单名称', trigger: 'blur' },
-            { min: 1, max: 4, message: '长度在 1 到 4 个字符', trigger: 'blur' }
-          ],
-          url: [
-              { validator: checkUrl, trigger: 'blur' }
-          ]
-        },
-        menuData: []
+import { weixinRedirectApi } from 'api'
+export default {
+  data() {
+    var checkUrl = (rule, value, callback) => {
+      let a = /^((http|ftp|https)?:\/\/)|((http|ftp|https)?:\/\/)+\w{1,}$/
+      if (!value) {
+        return callback(new Error('链接不能为空'))
+      } else if (!a.test(value)) {
+        return callback(new Error('链接形式必须为http://'))
+      } else {
+        callback()
+      }
+    }
+    return {
+      activeIndex: '1',
+      imageUrl: '',
+      radio: '跳转网页',
+      showChose1: true,
+      showChose2: false,
+      del22: false,
+      dialogVisible: false,
+      disabled: false,
+      disabled2: false,
+      addORedit: '',
+      form: {
+        name: '',
+        url: ''
+      },
+      titles: '',
+      index: '',
+      index2: '',
+      rules: {
+        name: [
+          { required: true, message: '请输入菜单名称', trigger: 'blur' },
+          { min: 1, max: 4, message: '长度在 1 到 4 个字符', trigger: 'blur' }
+        ],
+        url: [{ validator: checkUrl, trigger: 'blur' }]
+      },
+      menuData: []
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  methods: {
+    chowChose() {
+      if (this.radio == '跳转网页') {
+        this.showChose1 = true
+        this.showChose2 = false
+      }
+      if (this.radio == '发送消息') {
+        this.showChose1 = false
+        this.showChose2 = true
       }
     },
-    created () {
-      this.fetchData();  
+    async fetchData() {
+      const res = await weixinRedirectApi.list()
+      if (res.data == '') {
+        this.menuData = []
+      } else {
+        this.menuData = res.data.menu.button
+      }
     },
-    methods: {
-        chowChose(){
-            if(this.radio=='跳转网页'){
-                this.showChose1 = true;
-                this.showChose2 = false;
-            }
-            if(this.radio=='发送消息'){
-                this.showChose1 = false;
-                this.showChose2 = true;
-            }
-        },
-        async fetchData(){
-           const res = await weixinRedirectApi.list();
-           if(res.data==""){
-               this.menuData=[];
-           }else{
-               this.menuData = res.data.menu.button;
-           }  
-        },
-        async addOneMenu(){
-            this.addORedit = 'addOne';
-            this.titles = '一级菜单添加'
-            const res = await weixinRedirectApi.list();
-            if(res.data=='' || res.data.menu.button.length<3){
-                this.dialogVisible = true;
-            }else{
-                alert("一级菜单数量最多不超过3个!")
-            }
-        },
-        async addTwoMenu($index){
-            this.index = $index;
-            this.addORedit = 'addTwo';
-            this.titles = '二级菜单添加'
-            const res = await weixinRedirectApi.list();
-            if(res.data.menu.button[$index].sub_button==undefined || res.data.menu.button[$index].sub_button.length<5){
-                this.dialogVisible = true;
-            }else{
-                alert("二级菜单数量最多不超过5个!")
-            }
-        },
-        async editMenu($index, row) {
-            const _self = this
-            _self.dialogVisible = true
-            _self.form.name = row.name
-            this.index = $index;
-            const res = await weixinRedirectApi.list();
-            if(res.data.menu.button[$index].sub_button==undefined){
-                this.disabled = false;
-                this.disabled2 = false;
-            }else{
-                this.disabled = true;
-                this.disabled2 = true;
-            }
-            this.addORedit = 'editOne';
-            this.titles = '一级菜单编辑'
-        },
-        editMenu2($index, $index2,row){
-            const _self = this
-            _self.dialogVisible = true
-            _self.form.name = row.name
-            _self.form.url = row.url
-            this.index = $index;
-            this.index2 = $index2;
-            this.disabled = false;
-            this.disabled2 = false;
-            this.addORedit = 'editTwo';
-            this.titles = '二级菜单编辑'
-        },
-        async deleteMenu($index,row){
-            this.index = $index;
-            this.$confirm('此操作将永久删除该菜单, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.del(),
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
-        },
-        async del(){
-            if(!this.del22){
-                try {
-                    const res = await weixinRedirectApi.list();
-                    if(res.data.menu.button.length==1){
-                        await weixinRedirectApi.del();
-                    }else{
-                        res.data.menu.button[this.index] = {};
-                        let newData = {
-                                "menu":{
-                                    "button":res.data.menu.button
-                                }
-                            }
-                        await weixinRedirectApi.add(newData)
-                    }
-                    this.fetchData();
-                    this.visible=false;
-                } catch (e) {
-                    console.error(e);
-                }             
-            }else{
-                this.del2();
-            }
-        },
-        deleteAll(){
-            this.$confirm('是否要删除全部菜单?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                weixinRedirectApi.del(),
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });          
-            });
-        },
-        async deleteMenu2($index,$index2, row){
-            this.deleteMenu();
-            this.index2 = $index2;  
-            this.index = $index;
-            this.del22 = true;
-        },
-        async del2(){
-           const res = await weixinRedirectApi.list();
-           if(res.data.menu.button[this.index2].sub_button.length==1){
-                 res.data.menu.button[this.index2] = {
-                     "name":res.data.menu.button[this.index2].name,
-                     "type":"view",
-                     "url":"http://"
-                 };
-           }else{
-                 res.data.menu.button[this.index2].sub_button[this.index]={};
-           }
+    async addOneMenu() {
+      this.addORedit = 'addOne'
+      this.titles = '一级菜单添加'
+      const res = await weixinRedirectApi.list()
+      if (res.data == '' || res.data.menu.button.length < 3) {
+        this.dialogVisible = true
+      } else {
+        alert('一级菜单数量最多不超过3个!')
+      }
+    },
+    async addTwoMenu($index) {
+      this.index = $index
+      this.addORedit = 'addTwo'
+      this.titles = '二级菜单添加'
+      const res = await weixinRedirectApi.list()
+      if (
+        res.data.menu.button[$index].sub_button == undefined ||
+        res.data.menu.button[$index].sub_button.length < 5
+      ) {
+        this.dialogVisible = true
+      } else {
+        alert('二级菜单数量最多不超过5个!')
+      }
+    },
+    async editMenu($index, row) {
+      const _self = this
+      _self.dialogVisible = true
+      _self.form.name = row.name
+      this.index = $index
+      const res = await weixinRedirectApi.list()
+      if (res.data.menu.button[$index].sub_button == undefined) {
+        this.disabled = false
+        this.disabled2 = false
+      } else {
+        this.disabled = true
+        this.disabled2 = true
+      }
+      this.addORedit = 'editOne'
+      this.titles = '一级菜单编辑'
+    },
+    editMenu2($index, $index2, row) {
+      const _self = this
+      _self.dialogVisible = true
+      _self.form.name = row.name
+      _self.form.url = row.url
+      this.index = $index
+      this.index2 = $index2
+      this.disabled = false
+      this.disabled2 = false
+      this.addORedit = 'editTwo'
+      this.titles = '二级菜单编辑'
+    },
+    async deleteMenu($index, row) {
+      this.index = $index
+      this.$confirm('此操作将永久删除该菜单, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.del(), this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    async del() {
+      if (!this.del22) {
+        try {
+          const res = await weixinRedirectApi.list()
+          if (res.data.menu.button.length == 1) {
+            await weixinRedirectApi.del()
+          } else {
+            res.data.menu.button[this.index] = {}
             let newData = {
-                "menu":{
-                    "button":res.data.menu.button
-                }
+              menu: {
+                button: res.data.menu.button
+              }
             }
             await weixinRedirectApi.add(newData)
-            this.fetchData();
-            this.visible=false;
-        },
-        async submitForm() {
-            if (this.addORedit == 'addOne' || this.addORedit == 'addTwo') {
-                this.addSave()
-            }else{
-                this.editSave()
-            }
-        },
-        async addSave() {
-            const _self = this
-            if(this.addORedit == 'addOne'){
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            const res = await weixinRedirectApi.list();
-                            if(res.data==''){
-                                let newData={
-                                    "menu": {
-                                        "button": [
-                                            {
-                                                "type": "view",
-                                                "name": this.form.name,
-                                                "url": this.form.url
-                                            }
-                                        ]
-                                    }
-                                }
-                                await weixinRedirectApi.add(newData)
-                            }else{
-                                res.data.menu.button.push({
-                                    "type": "view",
-                                    "name": this.form.name,
-                                    "url": this.form.url
-                                });
-                                let newData ={
-                                    "menu":{
-                                        "button":res.data.menu.button
-                                    }
-                                }
-                                await weixinRedirectApi.add(newData)
-                            }
-                            this.dialogVisible = false;
-                            this.form = {};
-                            this.fetchData();
-                        
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('添加失败!!!')
-                        }
-                        
-                    }
+          }
+          this.fetchData()
+          this.visible = false
+        } catch (e) {
+          console.error(e)
+        }
+      } else {
+        this.del2()
+      }
+    },
+    deleteAll() {
+      this.$confirm('是否要删除全部菜单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          weixinRedirectApi.del(), this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    async deleteMenu2($index, $index2, row) {
+      this.deleteMenu()
+      this.index2 = $index2
+      this.index = $index
+      this.del22 = true
+    },
+    async del2() {
+      const res = await weixinRedirectApi.list()
+      if (res.data.menu.button[this.index2].sub_button.length == 1) {
+        res.data.menu.button[this.index2] = {
+          name: res.data.menu.button[this.index2].name,
+          type: 'view',
+          url: 'http://'
+        }
+      } else {
+        res.data.menu.button[this.index2].sub_button[this.index] = {}
+      }
+      let newData = {
+        menu: {
+          button: res.data.menu.button
+        }
+      }
+      await weixinRedirectApi.add(newData)
+      this.fetchData()
+      this.visible = false
+    },
+    async submitForm() {
+      if (this.addORedit == 'addOne' || this.addORedit == 'addTwo') {
+        this.addSave()
+      } else {
+        this.editSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      if (this.addORedit == 'addOne') {
+        _self.$refs['form'].validate(async valid => {
+          if (valid) {
+            try {
+              const res = await weixinRedirectApi.list()
+              if (res.data == '') {
+                let newData = {
+                  menu: {
+                    button: [
+                      {
+                        type: 'view',
+                        name: this.form.name,
+                        url: this.form.url
+                      }
+                    ]
+                  }
+                }
+                await weixinRedirectApi.add(newData)
+              } else {
+                res.data.menu.button.push({
+                  type: 'view',
+                  name: this.form.name,
+                  url: this.form.url
                 })
+                let newData = {
+                  menu: {
+                    button: res.data.menu.button
+                  }
+                }
+                await weixinRedirectApi.add(newData)
+              }
+              this.dialogVisible = false
+              this.form = {}
+              this.fetchData()
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('添加失败!!!')
             }
-            if(this.addORedit == 'addTwo'){
-                _self.$refs['form'].validate(async valid => {
-                    if (valid) {
-                        try {
-                            const res = await weixinRedirectApi.list();
-                            res.data.menu.button[this.index].url = ''
-                            if(res.data.menu.button[this.index].sub_button==undefined){
-                                res.data.menu.button[this.index].sub_button = []
-                            }
-                            res.data.menu.button[this.index].sub_button.push({
-                                "type": "view",
-                                "name": this.form.name,
-                                "url": this.form.url
-                            });
-                            let newData = {
-                                "menu":{
-                                    "button":res.data.menu.button
-                                }
-                            }
-                            await weixinRedirectApi.add(newData);
-                            this.form = {};
-                            this.dialogVisible = false;
-                            this.fetchData();
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('添加失败!!!')
-                        } 
-                    }
-                }) 
-            }else {
-                    return false
+          }
+        })
+      }
+      if (this.addORedit == 'addTwo') {
+        _self.$refs['form'].validate(async valid => {
+          if (valid) {
+            try {
+              const res = await weixinRedirectApi.list()
+              res.data.menu.button[this.index].url = ''
+              if (res.data.menu.button[this.index].sub_button == undefined) {
+                res.data.menu.button[this.index].sub_button = []
+              }
+              res.data.menu.button[this.index].sub_button.push({
+                type: 'view',
+                name: this.form.name,
+                url: this.form.url
+              })
+              let newData = {
+                menu: {
+                  button: res.data.menu.button
                 }
-        },
-        async editSave(){
-            if(this.addORedit=='editOne'){this.rules.url=[];}
-            this.$refs['form'].validate(async valid => {
-                if (valid) {
-                    if(this.addORedit=='editOne'){
-                        this.rules.url=[];
-                        try {
-                            const res = await weixinRedirectApi.list();
-                            res.data.menu.button[this.index].name=this.form.name;
-                            let newData = {
-                                    "menu":{
-                                        "button":res.data.menu.button
-                                    }
-                                }
-                            await weixinRedirectApi.add(newData)
-                            this.dialogVisible = false;
-                            this.form = {};
-                            this.fetchData();
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('编辑失败!!!')
-                        } 
-                    }                  
-                    if(this.addORedit=='editTwo'){
-                        try {
-                            const res = await weixinRedirectApi.list();
-                            res.data.menu.button[this.index2].sub_button[this.index].name=this.form.name;
-                            res.data.menu.button[this.index2].sub_button[this.index].url=this.form.url;
-                            let newData = {
-                                "menu":{
-                                    "button":res.data.menu.button
-                                }
-                            }
-                            await weixinRedirectApi.add(newData);
-                            this.form = {};
-                            this.dialogVisible = false;
-                            this.fetchData();
-                        } catch (e) {
-                            console.error(e)
-                            _self.$message.error('编辑失败!!!')
-                        } 
-                    }
+              }
+              await weixinRedirectApi.add(newData)
+              this.form = {}
+              this.dialogVisible = false
+              this.fetchData()
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('添加失败!!!')
+            }
+          }
+        })
+      } else {
+        return false
+      }
+    },
+    async editSave() {
+      if (this.addORedit == 'editOne') {
+        this.rules.url = []
+      }
+      this.$refs['form'].validate(async valid => {
+        if (valid) {
+          if (this.addORedit == 'editOne') {
+            this.rules.url = []
+            try {
+              const res = await weixinRedirectApi.list()
+              res.data.menu.button[this.index].name = this.form.name
+              let newData = {
+                menu: {
+                  button: res.data.menu.button
                 }
-            })
-        },
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath)
-        },
-        handleAvatarSuccess(res, file) {
-            this.imageUrl = URL.createObjectURL(file.raw)
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg'
-            const isLt2M = file.size / 1024 / 1024 < 2
-        },
+              }
+              await weixinRedirectApi.add(newData)
+              this.dialogVisible = false
+              this.form = {}
+              this.fetchData()
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('编辑失败!!!')
+            }
+          }
+          if (this.addORedit == 'editTwo') {
+            try {
+              const res = await weixinRedirectApi.list()
+              res.data.menu.button[this.index2].sub_button[
+                this.index
+              ].name = this.form.name
+              res.data.menu.button[this.index2].sub_button[
+                this.index
+              ].url = this.form.url
+              let newData = {
+                menu: {
+                  button: res.data.menu.button
+                }
+              }
+              await weixinRedirectApi.add(newData)
+              this.form = {}
+              this.dialogVisible = false
+              this.fetchData()
+            } catch (e) {
+              console.error(e)
+              _self.$message.error('编辑失败!!!')
+            }
+          }
+        }
+      })
+    },
+    handleSelect(key, keyPath) {},
+    handleAvatarSuccess(res, file) {
+      this.imageUrl = URL.createObjectURL(file.raw)
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
     }
   }
+}
 </script>
 <style lang="scss">
 #customMenu {

@@ -31,7 +31,7 @@
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item>
-                             <img v-if="props.row.ImagePath" :src="imageUrl+ props.row.ImagePath" style="width: 200px;"> 
+                             <img v-if="props.row.ImagePath" :src="imageUrl+ props.row.ImagePath" style="width: 200px;">
                         </el-form-item>
                     </el-form>
                 </template>
@@ -150,73 +150,63 @@
 </template>
 <script>
 import path from '../../../api/api.js'
-import {
-    gasolineLogApi,
-    carBaseApi,
-    driverBaseApi
-} from 'api'
+import { gasolineLogApi, carBaseApi, driverBaseApi } from 'api'
 export default {
-    created() {
-        this.imageUrl = path.imageUrl
-        this.fetchData()
-        this.getList()
-
-    },
-    data() {
-        return {
-            rules: {
-                Channel: [
-                    { required: true, message: '请选择渠道信息' },
-                ],
-                CarID: [
-                    { required: true, message: '请选择车辆信息' }
-                ],
-                DriverID: [
-                    { required: true, message: '请选择司机信息' }
-                ]
-            },
-            filters: {
-                CarID:'',
-                DriverID:'',
-                labelVal: '1'
-            },
-            selectedOptions: [
-                {
-                value: '1',
-                label: '车牌号'
-                },
-                {
-                value: '2',
-                label: '司机姓名'
-                }
-            ],
-            imageUrl:'',
-            list: [],
-            currentPage: 1,
-            pageSize: 10,
-            count: 0,
-            loading: false,
-            showDialog: false,
-            disabled: false,
-            form: {
-                CarID: '',
-                DriverID: '',
-                Channel: 0,
-                DateTimeString: ''
-            },
-            Channel: '',
-            channelList: [{
-                label: '加油卡',
-                value: 0
-            },
-            {
-                label: '其他',
-                value: 1
-            }
-            ],
-            carList: [],
-            driverList: [],
-            pickerOptions: {}
+  created() {
+    this.imageUrl = path.imageUrl
+    this.fetchData()
+    this.getList()
+  },
+  data() {
+    return {
+      rules: {
+        Channel: [{ required: true, message: '请选择渠道信息' }],
+        CarID: [{ required: true, message: '请选择车辆信息' }],
+        DriverID: [{ required: true, message: '请选择司机信息' }]
+      },
+      filters: {
+        CarID: '',
+        DriverID: '',
+        labelVal: '1'
+      },
+      selectedOptions: [
+        {
+          value: '1',
+          label: '车牌号'
+        },
+        {
+          value: '2',
+          label: '司机姓名'
+        }
+      ],
+      imageUrl: '',
+      list: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      loading: false,
+      showDialog: false,
+      disabled: false,
+      form: {
+        CarID: '',
+        DriverID: '',
+        Channel: 0,
+        DateTimeString: ''
+      },
+      Channel: '',
+      channelList: [
+        {
+          label: '加油卡',
+          value: 0
+        },
+        {
+          label: '其他',
+          value: 1
+        }
+      ],
+      carList: [],
+      driverList: [],
+      pickerOptions: {}
     }
   },
   methods: {
@@ -238,11 +228,9 @@ export default {
         }
       }
       try {
-        console.log(_self.filters.labelVal)
-        console.log(options)
         const res = await gasolineLogApi.list(options)
         _self.list = res.data.Data
-        console.log(res.data.Data)
+
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {

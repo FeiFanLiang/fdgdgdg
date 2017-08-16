@@ -241,257 +241,262 @@
 </template>
 
 <script>
-  import {
-    roomStatPriceApi
-  } from 'api'
-  import chunk from 'lodash/chunk'
-  import {
+import { roomStatPriceApi } from 'api'
+import chunk from 'lodash/chunk'
+import { HotelTopMenu } from 'components'
+const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+export default {
+  components: {
     HotelTopMenu
-  } from 'components'
-  const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-  export default {
-     components: {
-      HotelTopMenu
-    },
-    created() {
-      console.log('2222')
-      this.expandRowKeys.push(this.list[0].id)
-      this.chosenDate = Date.now()
-      this.fetchData()
-    },
-    data() {
-      return {
-        status: '1',
-        input3: '',
-        tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }
-        ],
-        chosenDate: '',
-        expandRowKeys: [],
-        list: [{
-            id: '1',
-            name: '单人间',
-            isExpand: false
-          },
-          {
-            id: '2',
-            name: '双人(Double)',
-            isExpand: false
-          }
-        ],
-        cycle: ['one'],
-        priceChangeForOne: false,
-        priceChangeForMore: false,
-        value7: '',
-        checkAll: true,
-        checkedCities: cityOptions,
-        cities: cityOptions,
-        homeType: ['标准房', '单人房'],
-        isIndeterminate: true,
-        radio2: 3,
-        chosenDelete: '',
-        periodType: 'month',
-        options3: [{
-            label: '售卖价',
-            options: [{
+  },
+  created() {
+    this.expandRowKeys.push(this.list[0].id)
+    this.chosenDate = Date.now()
+    this.fetchData()
+  },
+  data() {
+    return {
+      status: '1',
+      input3: '',
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
+      ],
+      chosenDate: '',
+      expandRowKeys: [],
+      list: [
+        {
+          id: '1',
+          name: '单人间',
+          isExpand: false
+        },
+        {
+          id: '2',
+          name: '双人(Double)',
+          isExpand: false
+        }
+      ],
+      cycle: ['one'],
+      priceChangeForOne: false,
+      priceChangeForMore: false,
+      value7: '',
+      checkAll: true,
+      checkedCities: cityOptions,
+      cities: cityOptions,
+      homeType: ['标准房', '单人房'],
+      isIndeterminate: true,
+      radio2: 3,
+      chosenDelete: '',
+      periodType: 'month',
+      options3: [
+        {
+          label: '售卖价',
+          options: [
+            {
               value: 'Shanghai',
               label: '售卖价'
-            }]
-          },
-          {
-            label: '渠道价',
-            options: [{
-                value: 'Chengdu',
-                label: '去哪儿B'
-              },
-              {
-                value: 'Shenzhen',
-                label: '去哪儿C'
-              }
-            ]
-          },
-          {
-            label: '采购价',
-            options: [{
+            }
+          ]
+        },
+        {
+          label: '渠道价',
+          options: [
+            {
+              value: 'Chengdu',
+              label: '去哪儿B'
+            },
+            {
+              value: 'Shenzhen',
+              label: '去哪儿C'
+            }
+          ]
+        },
+        {
+          label: '采购价',
+          options: [
+            {
               value: 'Beijing',
               label: '采购价'
-            }]
-          }
-        ]
-      }
-    },
-    computed: {
-      calendar() {
-        if (!this.chosenDate) return
-        let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
-        let arry = time1.split('-')
-        return {
-          curYear: arry[0],
-          curMonth: arry[1],
-          curDay: arry[2]
+            }
+          ]
         }
-      },
-      monthList() {
-        if (!this.calendar) return
-        let firstDay = new Date(
-          this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
-        )
-        let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
-        let item,
-          status,
-          tempArr = [],
-          tempItem
-        for (let i = 0; i < 42; i++) {
-          item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
-          if (this.calendar.curMonth === item.getMonth()) {
-            status = 1
-          } else {
-            status = 0
-          }
-          tempItem = {
-            // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
-            date: item.toLocaleDateString(),
-            status: status,
-            CNY: '100',
-            odd: '3'
-          }
-          // this.events.forEach(event => {
-          //   if (isEqualDateStr(event.date, tempItem.date)) {
-          //     tempItem.title = event.title;
-          //     tempItem.desc = event.desc || '';
-          //   }
-          // });
-          tempArr.push(tempItem)
-        }
-        return chunk(tempArr, 7)
-      },
-      weekList() {
-        const weekList = []
-        const now = new Date(this.chosenDate)
-        const nowTime = now.getTime()
-        const day = now.getDay()
-        const oneDayTime = 24 * 60 * 60 * 1000
-        const SundayTime = nowTime + (6 - day) * oneDayTime
-        new Array(7).fill(1).forEach((item, index) => {
-          weekList.unshift({
-            date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
-            status: false,
-            CNY: '100',
-            odd: '3'
-          })
-        })
-        return weekList
-      }
-    },
-    methods: {
-      async fetchData() {
-        console.log('222222222222222222222222222222222222222222222222222')
-        debugger
-        const form = {
-          "SonRooms": [
-            3590
-          ],
-          "BeginDate": "2017-08-10",
-          "EndDate": "2017-08-15"
-        }
-        const res = await roomStatPriceApi.getPriceList(form)
-      },
-      expand(item) {
-        item.isExpand = !item.isExpand
-      },
-      pre() {
-        let nowdays = new Date(this.chosenDate)
-        if (this.periodType === 'week') {
-          const oneDayTime = 24 * 60 * 60 * 1000
-          this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
-        }
-        if (this.periodType === 'month') {
-          let year = nowdays.getFullYear()
-          let month = nowdays.getMonth()
-          if (month == 0) {
-            month = 12
-            year = year - 1
-          }
-          if (month < 10) {
-            month = '0' + month
-          }
-          this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
-        }
-      },
-      next() {
-        let nowdays = new Date(this.chosenDate)
-        if (this.periodType === 'week') {
-          const oneDayTime = 24 * 60 * 60 * 1000
-          this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
-        }
-        if (this.periodType === 'month') {
-          let year = nowdays.getFullYear()
-          let month = nowdays.getMonth()
-          if (month == 11) {
-            month = -1
-            year = year + 1
-          }
-          month += 2
-          if (month < 10) {
-            month = '0' + month
-          }
-          this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
-        }
-      },
-      showDelete(item) {
-        this.chosenDelete = item
-      },
-      addCycle() {
-        this.cycle.push(Math.random().toString(36).substr(2))
-      },
-      deleteCycle(item, index) {
-        this.cycle.splice(index, 1)
-      },
-      priceOne(date) {
-        this.priceChangeForOne = true
-        this.value7 = [new Date(date), new Date(date)]
-      },
-      priceMore() {
-        this.priceChangeForMore = true
-      },
-      handleCheckAllChange(event) {
-        this.checkedCities = event.target.checked ? cityOptions : []
-        this.isIndeterminate = false
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length
-        this.checkAll = checkedCount === this.cities.length
-        this.isIndeterminate =
-          checkedCount > 0 && checkedCount < this.cities.length
-      }
-    },
-    components: {
-      HotelTopMenu
-    },
-    created() {
-      // 组件创建完后获取数据，
-      // 此时 data 已经被 observed 了
-      console.dir(this.$route.params)
+      ]
     }
+  },
+  computed: {
+    calendar() {
+      if (!this.chosenDate) return
+      let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
+      let arry = time1.split('-')
+      return {
+        curYear: arry[0],
+        curMonth: arry[1],
+        curDay: arry[2]
+      }
+    },
+    monthList() {
+      if (!this.calendar) return
+      let firstDay = new Date(
+        this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
+      )
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
+      let item,
+        status,
+        tempArr = [],
+        tempItem
+      for (let i = 0; i < 42; i++) {
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
+        if (this.calendar.curMonth === item.getMonth()) {
+          status = 1
+        } else {
+          status = 0
+        }
+        tempItem = {
+          // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          date: item.toLocaleDateString(),
+          status: status,
+          CNY: '100',
+          odd: '3'
+        }
+        // this.events.forEach(event => {
+        //   if (isEqualDateStr(event.date, tempItem.date)) {
+        //     tempItem.title = event.title;
+        //     tempItem.desc = event.desc || '';
+        //   }
+        // });
+        tempArr.push(tempItem)
+      }
+      return chunk(tempArr, 7)
+    },
+    weekList() {
+      const weekList = []
+      const now = new Date(this.chosenDate)
+      const nowTime = now.getTime()
+      const day = now.getDay()
+      const oneDayTime = 24 * 60 * 60 * 1000
+      const SundayTime = nowTime + (6 - day) * oneDayTime
+      new Array(7).fill(1).forEach((item, index) => {
+        weekList.unshift({
+          date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
+          status: false,
+          CNY: '100',
+          odd: '3'
+        })
+      })
+      return weekList
+    }
+  },
+  methods: {
+    async fetchData() {
+      console.log('222222222222222222222222222222222222222222222222222')
+      debugger
+      const form = {
+        SonRooms: [3590],
+        BeginDate: '2017-08-10',
+        EndDate: '2017-08-15'
+      }
+      const res = await roomStatPriceApi.getPriceList(form)
+    },
+    expand(item) {
+      item.isExpand = !item.isExpand
+    },
+    pre() {
+      let nowdays = new Date(this.chosenDate)
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000
+        this.chosenDate = new Date(
+          +nowdays - 7 * oneDayTime
+        ).toLocaleDateString()
+      }
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear()
+        let month = nowdays.getMonth()
+        if (month == 0) {
+          month = 12
+          year = year - 1
+        }
+        if (month < 10) {
+          month = '0' + month
+        }
+        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
+      }
+    },
+    next() {
+      let nowdays = new Date(this.chosenDate)
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000
+        this.chosenDate = new Date(
+          +nowdays + 7 * oneDayTime
+        ).toLocaleDateString()
+      }
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear()
+        let month = nowdays.getMonth()
+        if (month == 11) {
+          month = -1
+          year = year + 1
+        }
+        month += 2
+        if (month < 10) {
+          month = '0' + month
+        }
+        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
+      }
+    },
+    showDelete(item) {
+      this.chosenDelete = item
+    },
+    addCycle() {
+      this.cycle.push(Math.random().toString(36).substr(2))
+    },
+    deleteCycle(item, index) {
+      this.cycle.splice(index, 1)
+    },
+    priceOne(date) {
+      this.priceChangeForOne = true
+      this.value7 = [new Date(date), new Date(date)]
+    },
+    priceMore() {
+      this.priceChangeForMore = true
+    },
+    handleCheckAllChange(event) {
+      this.checkedCities = event.target.checked ? cityOptions : []
+      this.isIndeterminate = false
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.cities.length
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.cities.length
+    }
+  },
+  components: {
+    HotelTopMenu
+  },
+  created() {
+    // 组件创建完后获取数据，
+    // 此时 data 已经被 observed 了
+    console.dir(this.$route.params)
   }
+}
 </script>
 
 <style lang="css">

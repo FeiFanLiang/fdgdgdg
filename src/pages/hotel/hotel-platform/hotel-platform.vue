@@ -3,7 +3,7 @@
     <el-row>
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
-    <!-- <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" 
+    <!-- <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData"
     >
       <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
@@ -176,7 +176,6 @@ export default {
       _self.loading = true
       const res = await hotelPlatformApi.listByHotel(this.$route.params.ID)
       _self.list = res.data
-      console.log(_self.list)
       _self.total = _self.list.length
       _self.loading = false
     },

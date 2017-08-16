@@ -277,7 +277,6 @@ export default {
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
-        console.error(e)
         _self.loading = false
       }
     },

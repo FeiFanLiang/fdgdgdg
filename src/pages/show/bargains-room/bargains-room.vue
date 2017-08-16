@@ -342,7 +342,6 @@ export default {
       this.currentPage = val
     },
     handleChange(value) {
-      console.log(value)
       this.bargainsForm.sonRoomId = value[1]
       this.roomId = value[0]
     },

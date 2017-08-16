@@ -100,11 +100,10 @@ export default {
       _self.loading = true
       try {
         const res = await dwzApi.listByQuery(option)
-        console.log(res)
+
         this.dwzList = res.data.Data
         _self.loading = false
       } catch (e) {
-        console.error(e)
         _self.loading = false
       }
     },

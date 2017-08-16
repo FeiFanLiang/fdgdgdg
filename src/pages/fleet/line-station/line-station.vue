@@ -86,7 +86,7 @@ export default {
         const res = await lineStationApi.listByQuery(options)
         let order = []
         order = res.data.Data
-        console.log(this.form.CarLineID)
+
         if (this.form.CarLineID != '') {
           for (let i in order) {
             if (this.form.Order == order[i].Order) {

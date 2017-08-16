@@ -140,7 +140,6 @@ export default {
   },
   mounted() {
     this.ID = this.$route.params.hotelShowID
-    console.log(this.ID)
     this.getHotelShowList(this.ID)
   }
 }
