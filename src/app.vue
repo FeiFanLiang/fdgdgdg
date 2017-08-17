@@ -14,7 +14,7 @@
           <span v-text="user.username"></span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
-              <img src="./assets/images/common/hh.png">
+              <img src="~assets/images/common/hh.png">
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人信息</el-dropdown-item>

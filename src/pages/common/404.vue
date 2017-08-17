@@ -20,7 +20,7 @@
             	Don't worry! I'm on it!
             </p>
             <p class="dog-bubble">
-            	I wish I had a cookie<br /><img style="margin-top:8px" src="../../assets/images/404/cookie.png" alt="cookie" />
+            	I wish I had a cookie<br /><img style="margin-top:8px" src="~assets/images/404/cookie.png" alt="cookie" />
             </p>
             <p class="dog-bubble">
             	<br />
@@ -38,7 +38,7 @@
                 OK, I'm officially lost now...
             </p>
             <p class="dog-bubble">
-            	I think I saw a <br /><img style="margin-top:8px" src="../../assets/images/404/cat.png" alt="cat" />
+            	I think I saw a <br /><img style="margin-top:8px" src="~assets/images/404/cat.png" alt="cat" />
             </p>
             <p class="dog-bubble">
             	What are we supposed to be looking for, anyway? @_@
@@ -147,7 +147,7 @@ export default {
 	margin:0px auto;
 	position:relative;
 	height:100%;
-	background:url(../../assets/images/404/sky-shine.jpg) top left no-repeat;
+	background:url(~assets/images/404/sky-shine.jpg) top left no-repeat;
 
 }
 
@@ -175,7 +175,7 @@ div.graphic{
 	position:absolute;
 	top:80px;
 	left:0px;
-	background:url(../../assets/images/404/404.png) top left no-repeat;
+	background:url(~assets/images/404/404.png) top left no-repeat;
 	width:494px;
 	height:331px;
 
@@ -187,7 +187,7 @@ div.planet{
 	bottom:-1100px;
 	margin:0px auto;
 	width:980px;
-	background:url(../../assets/images/404/planet.png) center no-repeat;
+	background:url(~assets/images/404/planet.png) center no-repeat;
 	height:1920px;
 	z-index:0;
 
@@ -209,7 +209,7 @@ div.dog{
 	width:80px;
 	height:80px;
 	z-index:999;
-	background:url(../../assets/images/404/dog.png) 0px 0px no-repeat;
+	background:url(~assets/images/404/dog.png) 0px 0px no-repeat;
 
 }
 
