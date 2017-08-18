@@ -39,6 +39,7 @@ import lineStationApi from './line-station'
 import stationApi from './station'
 import airInformationApi from './air-informations'
 import dwzApi from './dwz'
+import weixinScanCodeApi from './weixin-scan-code'
 // import menuApi from './menu'
 
 export {
@@ -82,6 +83,7 @@ export {
   lineStationApi,
   stationApi,
   airInformationApi,
-  dwzApi
+  dwzApi,
+  weixinScanCodeApi
   // menuApi
 }

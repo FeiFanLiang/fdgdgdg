@@ -80,7 +80,6 @@ import DriverBase from './fleet/driver-base/driver-base'
 import CarArrange from './fleet/car-arrange/car-arrange'
 import CarUse from './fleet/car-use/car-use'
 import GasolineLog from './fleet/gasoline-log/gasoline-log'
-import DriverEvaluate from './fleet/driver-evaluate/driver-evaluate'
 import CarLine from './fleet/car-line/car-line'
 import LineStation from './fleet/line-station/line-station'
 import Station from './fleet/station/station'
@@ -90,7 +89,6 @@ const fleet = {
   CarArrange,
   CarUse,
   GasolineLog,
-  DriverEvaluate,
   CarLine,
   LineStation,
   Station
@@ -99,6 +97,11 @@ const fleet = {
 // dwz
 import Dwz from './dwz/dwz'
 const dwz = { Dwz }
+
+// evaluate-scan
+import DriverEvaluate from './fleet/evaluate-scan/driver-evaluate'
+import WeixinScanCode from './fleet/evaluate-scan/weixin-scan-code'
+const evaluateScan = {  DriverEvaluate,WeixinScanCode }
 
 export default {
   ...other,
@@ -111,5 +114,6 @@ export default {
   ...role,
   ...wechat,
   ...fleet,
-  ...dwz
+  ...dwz,
+  ...evaluateScan
 }

@@ -32,11 +32,6 @@ export default {
       component: Pages.GasolineLog
     },
     {
-      path: 'driver-evaluate',
-      name: '司机评价信息',
-      component: Pages.DriverEvaluate
-    },
-    {
       path: 'car-line',
       name: '车辆运行线路',
       component: Pages.CarLine
