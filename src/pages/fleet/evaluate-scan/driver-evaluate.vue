@@ -13,7 +13,7 @@
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
             </el-form-item>
         </el-form>
-        <CustomTable :list="list" :configList="configList.listFields" element-loading-text="拼命加载中" v-loading="loading">
+        <CustomTable :list="list" :loading="loading" :configList="configList.listFields" >
           <el-table-column type="expand" slot="left-one">
               <template scope="props">
                   <el-form label-position="left" inline class="demo-table-expand">
@@ -72,7 +72,7 @@ export default {
   data() {
     return {
       list: [],
-      field2:[],
+      field2: [],
       searchForm: {
         startTime: '',
         endTime: ''
@@ -94,7 +94,8 @@ export default {
         const res = await driverEvaluateApi.listByQuery(_self.searchForm)
         _self.list = res.data.Data
         for (let [index, elem] of _self.list.entries()) {
-          _self.field2[index] = Number(_self.list[index].Rate)/Number(_self.list[index].field1)
+          _self.field2[index] =
+            Number(_self.list[index].Rate) / Number(_self.list[index].field1)
         }
         _self.loading = false
       } catch (e) {

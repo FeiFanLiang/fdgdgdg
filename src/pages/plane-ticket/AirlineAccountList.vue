@@ -26,12 +26,10 @@ div.content
 <script>
 // router-link(:to="{ path: 'edit', params: {id: 2}}") 编辑
 import pagination from 'components/common/pagination.vue'
-import {
-  GetList
-} from 'api/airline/airlines'
+import { GetList } from 'api/airline/airlines'
 export default {
   name: 'AirlineAccountList',
-  data () {
+  data() {
     return {
       List: [],
       page: 1,
@@ -44,12 +42,11 @@ export default {
   components: {
     pagination
   },
-  created: function () {
-    console.log('ready')
+  created() {
     this.UPList()
   },
   methods: {
-    UPList: async function () {
+    UPList: async function() {
       const data = await GetList(this.page, this.limit, this.order, this.query)
       this.List = data.list
       this.page = data.page
@@ -59,7 +56,7 @@ export default {
       this.countpage = data.countpage
       this.query = data.query
     },
-    pages (index) {
+    pages(index) {
       this.page = index
       // this.loading = true
 
@@ -69,7 +66,6 @@ export default {
       //   this.loading = false
       // }, 300)
     }
-
   }
 }
 </script>

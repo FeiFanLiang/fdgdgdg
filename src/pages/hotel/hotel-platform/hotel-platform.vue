@@ -3,8 +3,8 @@
     <el-row>
       <el-button type="primary" @click="clickAddBtn()">创建</el-button>
     </el-row>
-    <!-- <CustomTable :list="list" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
-      v-loading="loading">
+    <!-- <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData"
+    >
       <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
             <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
@@ -40,7 +40,7 @@
         <template scope="scope">
           <!-- {{scope.row.IsValid}} -->
            <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i> 
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
         </template>
       </el-table-column>
 
@@ -176,7 +176,6 @@ export default {
       _self.loading = true
       const res = await hotelPlatformApi.listByHotel(this.$route.params.ID)
       _self.list = res.data
-      console.log(_self.list)
       _self.total = _self.list.length
       _self.loading = false
     },

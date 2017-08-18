@@ -3,7 +3,6 @@ import path from './api'
 const base = path.apiBaseUrl + 'Account/Login'
 export default {
   login (params) {
-    // console.log(window.location.host)
     // let url = ''
     // if (window.location.host.indexOf('192.168') > -1) {
     //   url = base

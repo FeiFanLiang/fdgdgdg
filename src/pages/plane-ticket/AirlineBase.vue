@@ -44,8 +44,7 @@ export default {
   components: {
     pagination
   },
-  created: function () {
-    console.log('ready')
+  created () {
     this.UPList()
   },
   methods: {

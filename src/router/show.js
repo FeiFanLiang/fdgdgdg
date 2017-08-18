@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '展示信息',
   redirect: '/show/bargains-room',
-  iconClass: 'el-icon-setting',
+  iconClass: 'zhanshi',
   children: [
     {
       path: 'bargains-room',

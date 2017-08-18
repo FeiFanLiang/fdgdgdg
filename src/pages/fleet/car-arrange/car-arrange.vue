@@ -541,14 +541,11 @@ export default {
     selectDriverChange(driverId) {
       this.form.phone = this.driverList.find(item => item.ID === driverId).Phone
     },
-    tabClick(tab, event) {
-      // console.log(tab, event)
-    },
+    tabClick(tab, event) {},
     rowDblclick(row, event) {
       this.sendCardriverId = ''
       this.isSendCarEditable = true
       this.showSendCarDialog = true
-      console.log(row)
       this.sendCarChosenRow = row
     },
     dateFormat(number) {
@@ -559,14 +556,12 @@ export default {
       let hh
       let mm
       const timeArray = ('' + number).split('.')
-      console.log(timeArray)
       hh = timeArray[0]
       if (timeArray.length === 1) {
         mm = 0
       } else if (timeArray.length === 2) {
         mm = Number(String(Number(timeArray[1]) * 0.6).substring(0, 2))
       }
-      console.log(yy, MM, dd, hh, mm)
       return new Date(yy, MM, dd, hh, mm)
     },
     sendCar() {
@@ -584,8 +579,6 @@ export default {
         this.sendCarChosenRow.order.CarTransportType ? '接机' : '送机',
         this.dateFormat(this.sendCarChosenRow.endtime)
       ]
-      console.log('chartInfoData')
-      console.log(chartInfoData)
       if (driverIndex >= 0) {
         let data = this.chartData[driverIndex].data
         if (data && Array.isArray(data)) {
@@ -614,7 +607,6 @@ export default {
       this.showSendCarDialog = false
     },
     chosenDriverChange(value) {
-      // console.log(value)
       this.filters.driverid = value
       this.fetchArrangeData(false)
     },
@@ -624,7 +616,6 @@ export default {
         flightNo: CarriageNo,
         begin: UseTime
       }
-      console.log(option)
       const res = await airInformationApi.listAll(option)
       this.airInformationList = res.data
     },
@@ -639,7 +630,6 @@ export default {
         this.DayPandect = res.data.Data
         this.dayloading = false
       } catch (e) {
-        console.error(e)
         this.dayloading = false
         this.$message.error('当日订单信息获取失败!!!')
       }
@@ -683,22 +673,14 @@ export default {
         const res = await carBaseApi.listByQuery(options)
         this.carList = res.data.Data
       } catch (e) {
-        console.error(e)
         _self.$message.error('车辆信息数据获取失败!!!')
       }
     },
     async fetchDriverList() {
       try {
-        const options = {
-          pageIndex: '',
-          pageSize: '',
-          order: 'ID',
-          query: {}
-        }
-        const res = await driverBaseApi.listByQuery(options)
-        this.driverList = res.data.Data
+        const res = await driverBaseApi.all()
+        this.driverList = res.data
       } catch (e) {
-        console.error(e)
         _self.$message.error('司机信息数据获取失败!!!')
       }
     },
@@ -721,22 +703,18 @@ export default {
           driverid: _self.filters.driverid
         }
         const res = await carArrangeApi.unArrangeOrderList(options)
-        console.log(res.data)
         if (res.data && res.data.length) {
           _self.unArrangeList = res.data
           var a = res.data
-          console.log(_self.unArrangeList)
           for (let i in a) {
             a[i].order.ExternalOrderStete = a[
               i
             ].order.ExternalOrderStete.replace(/\s/g, '')
-            console.log(a[i].order.ExternalOrderStete)
           }
         }
         _self.loading = false
         _self.fetchArrangeData()
       } catch (e) {
-        console.error(e)
         _self.loading = false
         _self.$message.error('未安排订单数据获取失败!!!')
       }
@@ -764,7 +742,6 @@ export default {
               _self.arrangeList.push(data[index1][index2])
             }
           }
-          console.dir(_self.arrangeList)
         }
         _self.loading = false
         _self.driverList.length === 0 ? _self.fetchDriverList() : ''
@@ -772,13 +749,11 @@ export default {
           _self.handleChartData()
         }
       } catch (e) {
-        console.error(e)
         _self.loading2 = false
         _self.$message.error('已安排订单数据获取失败!!!')
       }
     },
     dispatch($index, row, a) {
-      console.dir(row)
       const _self = this
       _self.tag = a
       // _self.carList.length === 0 ? _self.fetchCarList() : ''
@@ -833,7 +808,6 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('派单失败!!!')
           }
         } else {
@@ -861,7 +835,6 @@ export default {
               type: 'success'
             })
           } catch (e) {
-            console.error(e)
             _self.$message.error('改派失败!!!')
           }
         } else {
@@ -886,8 +859,6 @@ export default {
     handleChartData() {
       const _self = this
       let arr = []
-      console.log('_self.chartData')
-      console.dir(_self.chartData)
       for (let [k, v] of Object.entries(_self.chartData)) {
         arr.push({
           measure: k,
@@ -922,15 +893,11 @@ export default {
         }
       }
       _self.chartData = arr
-      //console.log(_self.chartData)
       _self.chartData.length ? _self.createChart() : ''
     },
     createChart() {
       let chart = visavailChart().width(800)
-      console.log('this.chartData')
-      console.log(this.chartData)
       this.d3Chart = d3.select('#chart').datum(this.chartData).call(chart)
-      console.log(this.d3Chart)
     },
     compare(property) {
       return function(a, b) {
@@ -945,12 +912,11 @@ export default {
       const list = []
       for (let [key, value] of Object.entries(_self.arrangeList)) {
         if (value.arrange.Car.CarNumber === a) {
-            value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
-            list.push(value)
+          value.order.tag = Math.abs(new Date(value.order.UseTime) - now)
+          list.push(value)
         }
       }
       _self.carOrderList = list.sort(_self.compare('order.tag')).slice(0, 3)
-      console.dir(_self.carOrderList)
     }
   }
 }

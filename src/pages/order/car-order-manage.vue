@@ -57,7 +57,7 @@
                 </el-date-picker>
             </el-col>
             <el-col :span="4">
-                <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择预定日期" :picker-options="pickerOptions">
+                <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
             <el-col :span="5">
@@ -268,7 +268,7 @@
         </div>
         <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-                <el-row :gutter="24" v-if="form.id">
+                <el-row :gutter="24" >
                   <el-col :span="12">
                       <el-form-item label="订单渠道" prop="channel">
                           <el-select v-model="form.channel" placeholder="请选择订单渠道">
@@ -278,7 +278,7 @@
                           </el-select>
                       </el-form-item>
                   </el-col>
-                    <el-col :span="12" >
+                    <el-col :span="12" v-if="form.id">
                         <el-form-item>
                             <el-button type="primary" @click="syncOrderOperData()" :loading="loading2">查询订单里程信息</el-button>
                         </el-form-item>
@@ -303,8 +303,8 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
-                        <el-form-item label="预定时间" >
-                            <el-date-picker v-model="form.bookTime" type="datetime" :disabled="true">
+                        <el-form-item label="提单时间" prop="bookTime">
+                            <el-date-picker v-model="form.bookTime" type="datetime" placeholder="请选择提单时间">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -724,6 +724,12 @@ export default {
             message: '请选择预约用车时间'
           }
         ],
+        bookTime: [
+          {
+            required: true,
+            message: '请选择提单时间'
+          }
+        ],
         origin: [
           {
             required: true,
@@ -894,7 +900,9 @@ export default {
           'useTime<': _self.filters.useTimeE
             ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
             : '',
-          bookTime: _self.filters.bookTime,
+          bookTime: _self.filters.bookTime
+            ? new Date(_self.filters.bookTime).Format('yyyy-MM-dd')
+            : '',
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
             _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
@@ -952,7 +960,7 @@ export default {
         preServiceMileage: 0,
         preServiceTime: '00:00:00',
         useTime: '',
-        bookTime: '',
+        bookTime: new Date().Format('yyyy-MM-dd hh:mm:ss'),
         isAppointment: true,
         carriageNo: '',
         staffUserId: '',
@@ -1026,6 +1034,9 @@ export default {
             _self.form.useTime = new Date(_self.form.useTime).Format(
               'yyyy-MM-dd hh:mm:ss'
             )
+            _self.form.bookTime = new Date(_self.form.bookTime).Format(
+              'yyyy-MM-dd hh:mm:ss'
+            )
             _self.isEditable = false
             await carOrderManageApi.add(_self.form)
             _self.fetchData()
@@ -1058,6 +1069,11 @@ export default {
             }
             form.useTime
               ? (form.useTime = new Date(_self.form.useTime).Format(
+                  'yyyy-MM-dd hh:mm:ss'
+                ))
+              : ''
+            form.bookTime
+              ? (form.bookTime = new Date(_self.form.bookTime).Format(
                   'yyyy-MM-dd hh:mm:ss'
                 ))
               : ''

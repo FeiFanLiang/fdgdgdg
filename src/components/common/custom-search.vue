@@ -2,7 +2,7 @@
   <el-row :gutter="20" class="align-center">
       <template v-for="(item,index) in configList" >
         <el-col :span="4" v-if="item.type==='select'">
-          <el-select  v-model="filters[item.name]" clearable placeholder="车辆分类" style="width:100%" @change="search">
+          <el-select  v-model="filters[item.name]" clearable  style="width:100%" @change="search">
               <el-option :label="item.label" value="">{{item.label}}</el-option>
               <el-option v-for="(n,oindex) in item.data" :key="oindex" :label="n.label" :value="n.value"></el-option>
           </el-select>

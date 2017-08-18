@@ -27,94 +27,91 @@
     </div>
 </template>
 <script>
-import {
-    accountApi
-} from 'api';
-import Particle from 'zhihu-particle';
+import { accountApi } from 'api'
+import Particle from 'zhihu-particle'
 export default {
-    mounted() {
-            new Particle(document.getElementById('login-page'), {
-                interactive: true,
-                density: 'low'
-            });
-        },
-        data() {
-            return {
-                username: '',
-                password: '',
-                rememberMe: false,
-                isBtnLoading: false
-            };
-        },
-        computed: {
-            btnText() {
-                if (this.isBtnLoading) return '登录中...';
-                return '登录';
-            }
-        },
-        methods: {
-            async login() {
-                const _self = this;
-                if (!_self.username) {
-                    _self.$message.error('请填写用户名！！！');
-                    return;
-                }
-                if (!_self.password) {
-                    _self.$message.error('请填写密码');
-                    return;
-                }
+  mounted() {
+    new Particle(document.getElementById('login-page'), {
+      interactive: true,
+      density: 'low'
+    })
+  },
+  data() {
+    return {
+      username: '',
+      password: '',
+      rememberMe: false,
+      isBtnLoading: false
+    }
+  },
+  computed: {
+    btnText() {
+      if (this.isBtnLoading) return '登录中...'
+      return '登录'
+    }
+  },
+  methods: {
+    async login() {
+      const _self = this
+      if (!_self.username) {
+        _self.$message.error('请填写用户名！！！')
+        return
+      }
+      if (!_self.password) {
+        _self.$message.error('请填写密码')
+        return
+      }
 
-                const loginParams = {
-                    username: _self.username,
-                    password: _self.password
-                };
-                _self.isBtnLoading = true;
-                try {
-                    console.log(loginParams)
-                    const data = await accountApi.login(loginParams);
-                    _self.isBtnLoading = false;
-                    const user = {
-                        id: '1',
-                        username: _self.username,
-                        avatar: ''
-                    };
-                    // const { msg, code, user } = data;
-
-                    // if (code !== 200) {
-                    // _self.$message.error(msg);
-                    // } else {
-                    localStorage.setItem('user', JSON.stringify(user));
-                    if (_self.$route.query.redirect) {
-                        _self.$router.push({
-                            path: _self.$route.query.redirect
-                        });
-                    } else {
-                        _self.$router.push({
-                            path: '/'
-                        });
-                    }
-
-                    // }
-                } catch (e) {
-                    _self.$message.error(e);
-                }
-                if (_self.$route.query.redirect) {
-                    _self.$router.push({
-                        path: _self.$route.query.redirect
-                    });
-                } else {
-                    _self.$router.push({
-                        path: '/'
-                    });
-                }
-            },
-            async register() {
-                this.$router.push({
-                    path: 'register'
-                });
-            }
+      const loginParams = {
+        username: _self.username,
+        password: _self.password
+      }
+      _self.isBtnLoading = true
+      try {
+        const data = await accountApi.login(loginParams)
+        _self.isBtnLoading = false
+        const user = {
+          id: '1',
+          username: _self.username,
+          avatar: ''
         }
-};
+        // const { msg, code, user } = data;
+
+        // if (code !== 200) {
+        // _self.$message.error(msg);
+        // } else {
+        localStorage.setItem('user', JSON.stringify(user))
+        if (_self.$route.query.redirect) {
+          _self.$router.push({
+            path: _self.$route.query.redirect
+          })
+        } else {
+          _self.$router.push({
+            path: '/'
+          })
+        }
+
+        // }
+      } catch (e) {
+        _self.$message.error(e)
+      }
+      if (_self.$route.query.redirect) {
+        _self.$router.push({
+          path: _self.$route.query.redirect
+        })
+      } else {
+        _self.$router.push({
+          path: '/'
+        })
+      }
+    },
+    async register() {
+      this.$router.push({
+        path: 'register'
+      })
+    }
+  }
+}
 </script>
 <style lang="scss" scoped>
 #login-page {

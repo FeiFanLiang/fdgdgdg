@@ -4,7 +4,7 @@ export default {
   component: Pages.Abstract,
   name: '扫码&统计',
   redirect: '/evaluate-scan/driver-evaluate',
-  iconClass: 'el-icon-setting',
+  iconClass: 'zhanshi',
   children: [
     {
       path: 'driver-evaluate',

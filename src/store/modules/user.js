@@ -17,34 +17,34 @@ const user = {
   },
 
   mutations: {
-    SET_CODE: (state, code) => {
+    SET_CODE (state, code) {
       state.code = code
     },
-    SET_TOKEN: (state, token) => {
+    SET_TOKEN (state, token) {
       state.token = token
     },
-    SET_INTRODUCTION: (state, introduction) => {
+    SET_INTRODUCTION (state, introduction) {
       state.introduction = introduction
     },
-    SET_SETTING: (state, setting) => {
+    SET_SETTING (state, setting) {
       state.setting = setting
     },
-    SET_STATUS: (state, status) => {
+    SET_STATUS (state, status) {
       state.status = status
     },
-    SET_NAME: (state, name) => {
+    SET_NAME (state, name) {
       state.name = name
     },
-    SET_AVATAR: (state, avatar) => {
+    SET_AVATAR (state, avatar) {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
+    SET_ROLES (state, roles) {
       state.roles = roles
     },
-    LOGIN_SUCCESS: () => {
+    LOGIN_SUCCESS () {
       console.log('login success')
     },
-    LOGOUT_USER: state => {
+    LOGOUT_USER (state) {
       state.user = ''
     }
   },
@@ -78,22 +78,6 @@ const user = {
             commit('SET_AVATAR', data.avatar)
             commit('SET_INTRODUCTION', data.introduction)
             resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
-
-    // 第三方验证登录
-    LoginByThirdparty ({ commit, state }, code) {
-      return new Promise((resolve, reject) => {
-        commit('SET_CODE', code)
-        loginByThirdparty(state.status, state.email, state.code)
-          .then(response => {
-            commit('SET_TOKEN', response.data.token)
-            setToken(response.data.token)
-            resolve()
           })
           .catch(error => {
             reject(error)

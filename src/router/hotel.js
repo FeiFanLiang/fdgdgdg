@@ -4,12 +4,17 @@ export default {
   component: Pages.Abstract,
   name: '酒店',
   redirect: '/hotel/HotelBase',
-  iconClass: 'el-icon-setting',
+  iconClass: 'jiudian',
   children: [
     {
       path: 'HotelBase',
       component: Pages.HotelBase,
       name: '酒店基础信息'
+    },
+    {
+      path: 'HotelPrice',
+      component: Pages.HotelPrice,
+      name: '酒店价格-building'
     },
     {
       path: 'HotelBaseAdd',

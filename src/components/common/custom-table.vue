@@ -42,13 +42,15 @@ export default {
         return []
       }
     },
+    loading: {
+      type: Boolean,
+      default: false
+    },
     className: '',
     editMethod: ''
   },
   data() {
-    return {
-      loading: false
-    }
+    return {}
   },
   methods: {
     successCallBack() {

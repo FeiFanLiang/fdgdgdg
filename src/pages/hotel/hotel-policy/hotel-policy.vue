@@ -3,8 +3,7 @@
         <el-row>
             <el-button type="primary" @click="hotelpolicyAdd">创建</el-button>
         </el-row>
-        <CustomTable :list="hotelpolicy" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" element-loading-text="拼命加载中"
-      v-loading="loading">
+        <CustomTable :list="hotelpolicy" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" >
           <el-table-column type="expand" slot="left-one">
               <template scope="props">
                   <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
