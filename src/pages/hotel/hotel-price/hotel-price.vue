@@ -54,17 +54,19 @@
     <el-table :data="roomList" row-key="id" :expand-row-keys="expandRowKeys" style="width: 100%">
       <el-table-column type="expand" label="周日">
         <template scope="props">
-              <tr v-for="(week,index) in props.row.SonRooms" style="float: right;" v-if="periodType==='month'">
+              <tr v-for="(month,index) in props.row.SonRooms" style="float: right;" v-if="periodType==='month'">
                   <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
-                      <div style="margin-left: 30px;">{{week.SonRoomName}}
+                      <div style="margin-left: 30px;">{{month.SonRoomName}}
                           <span class="gray" style="display: none;">(无效)</span>
                       </div>
                   </td>
-                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
-                      <div class="dayname">{{day.date}}</div>
-                      <div class="price">CNY{{day.CNY}}</div>
-                      <div class="remain">余{{day.odd}}</div>
-                  </td>
+                  <!-- <div  v-for="(week,index) in month.timeDate"> -->
+                    <td class="ui-table-col-center w100 current mytd" v-for="(day,index) in month.timeDate"  @click="priceOne(day.date)">
+                        <div class="dayname">{{day.date}}</div>
+                        <div class="price">CNY{{day.CNY}}</div>
+                        <div class="remain">余{{day.Count}}</div>
+                    </td>
+                  <!-- </div> -->
               </tr>
               <!-- <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
                   <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
@@ -427,22 +429,26 @@ export default {
       // this.roomInfoList = []
       const res = await roomStatPriceApi.getPriceList(form)
       this.roomInfoList = res.data
+      
       // for(let i in res.data.Sonrooms){
       //   console.warn(i,res.data.Sonrooms[i])
       // }
       this.roomList[0].SonRooms.forEach((item, index) => {
-        console.warn(typeof item.SonRoomID)
-        console.dir(this.roomInfoList.Sonrooms[1])
-        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)]
+        item.timeDate = []
+        for(let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes){
+          this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
+          item.timeDate.push(this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i])
+        }
+        // item.timeDate = chunk(item.timeDate, 7)
       })
     }
   },
   methods: {
     async fetchData() {
       const _self = this
-      const res = await roomStatPriceApi.GetSonRoomList('2')
+      const res = await roomStatPriceApi.getSonRoomList('2')
       _self.roomList = res.data
-      console.dir(_self.roomList)
+      console.dir(_self.roomList[0].SonRooms)
     },
     expand(item) {
       item.isExpand = !item.isExpand
