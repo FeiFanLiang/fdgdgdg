@@ -51,71 +51,76 @@
         <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
       </el-col>
     </el-row>
-    <el-table :data="list" row-key="id" :expand-row-keys="expandRowKeys" style="width: 100%">
+    <el-table :data="roomList" row-key="id" :expand-row-keys="expandRowKeys" style="width: 100%">
       <el-table-column type="expand" label="周日">
         <template scope="props">
-              <!-- <tr v-for="(week,index) in monthList" style="float: right;">
-                  <td class="ui-table-col-center w100 current " v-for="day in week" @click="priceOne(day.date)">
+              <tr v-for="(week,index) in props.row.SonRooms" style="float: right;" v-if="periodType==='month'">
+                  <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
+                      <div style="margin-left: 30px;">{{week.SonRoomName}}
+                          <span class="gray" style="display: none;">(无效)</span>
+                      </div>
+                  </td>
+                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
+                      <div class="dayname">{{day.date}}</div>
+                      <div class="price">CNY{{day.CNY}}</div>
+                      <div class="remain">余{{day.odd}}</div>
+                  </td>
+              </tr>
+              <!-- <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
+                  <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
+                      <div style="margin-left: 30px;">
+                          标准房-预付无早（双床双人入住）
+                          <span class="gray" style="display: none;">(无效)</span>
+                      </div>
+                  </td>
+                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
+                      <div class="dayname">{{day.date}}</div>
+                      <div class="price">CNY{{day.CNY}}</div>
+                      <div class="remain">余{{day.odd}}</div>
+                  </td>
+              </tr>
+              <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
+                  <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
+                      <div style="margin-left: 30px;">
+                          标准房-预付有早（双床双人入住）
+                          <span class="gray" style="display: none;">(无效)</span>
+                      </div>
+                  </td>
+                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
+                      <div class="dayname">{{day.date}}</div>
+                      <div class="price">CNY{{day.CNY}}</div>
+                      <div class="remain">余{{day.odd}}</div>
+                  </td>
+              </tr>
+              <tr  style="float: right;" v-if="periodType==='week'">
+                  <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                      <div style="margin-left: 30px;">
+                          标准房-预付无早（双床双人入住）
+                          <span class="gray" style="display: none;">(无效)</span>
+                      </div>
+                  </td>
+                  <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date)">
+                      <div class="dayname">{{day.date}}</div>
+                      <div class="price">CNY{{day.CNY}}</div>
+                      <div class="remain">余{{day.odd}}</div>
+                  </td>
+              </tr>
+              <tr  style="float: right;" v-if="periodType==='week'">
+                  <td class="ui-table-col-left" colspan="1" rowspan="6" >
+                      <div style="margin-left: 30px;">
+                          标准房-预付有早（双床双人入住）
+                          <span class="gray" style="display: none;">(无效)</span>
+                      </div>
+                  </td>
+                  <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date)">
                       <div class="dayname">{{day.date}}</div>
                       <div class="price">CNY{{day.CNY}}</div>
                       <div class="remain">余{{day.odd}}</div>
                   </td>
               </tr> -->
-              <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
-                  <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
-                      <div style="margin-left: 30px;">
-                          标准房-预付无早（双床双人入住）
-                          <span class="gray" style="display: none;">(无效)</span>
-                      </div>
-                  </td>
-                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
-                      <div class="dayname">{{day.date}}</div>
-                      <div class="price">CNY{{day.CNY}}</div>
-                      <div class="remain">余{{day.odd}}</div>
-                  </td>
-              </tr>
-              <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
-                  <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
-                      <div style="margin-left: 30px;">
-                          标准房-预付有早（双床双人入住）
-                          <span class="gray" style="display: none;">(无效)</span>
-                      </div>
-                  </td>
-                  <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date)">
-                      <div class="dayname">{{day.date}}</div>
-                      <div class="price">CNY{{day.CNY}}</div>
-                      <div class="remain">余{{day.odd}}</div>
-                  </td>
-              </tr>
-              <tr  style="float: right;" v-if="periodType==='week'">
-                  <td class="ui-table-col-left" colspan="1" rowspan="6" >
-                      <div style="margin-left: 30px;">
-                          标准房-预付无早（双床双人入住）
-                          <span class="gray" style="display: none;">(无效)</span>
-                      </div>
-                  </td>
-                  <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date)">
-                      <div class="dayname">{{day.date}}</div>
-                      <div class="price">CNY{{day.CNY}}</div>
-                      <div class="remain">余{{day.odd}}</div>
-                  </td>
-              </tr>
-              <tr  style="float: right;" v-if="periodType==='week'">
-                  <td class="ui-table-col-left" colspan="1" rowspan="6" >
-                      <div style="margin-left: 30px;">
-                          标准房-预付有早（双床双人入住）
-                          <span class="gray" style="display: none;">(无效)</span>
-                      </div>
-                  </td>
-                  <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date)">
-                      <div class="dayname">{{day.date}}</div>
-                      <div class="price">CNY{{day.CNY}}</div>
-                      <div class="remain">余{{day.odd}}</div>
-                  </td>
-              </tr>
 </template>
     </el-table-column>
-    <el-table-column label="房型" prop="name" min-width="400"></el-table-column>
+    <el-table-column label="房型" prop="RoomName" min-width="400"></el-table-column>
     <el-table-column label="周日" width="100"></el-table-column>
     <el-table-column label="周一" width="100"></el-table-column>
     <el-table-column label="周二" width="100"></el-table-column>
@@ -266,6 +271,8 @@ export default {
   },
   data() {
     return {
+      roomList:[],
+      roomInfoList:[],
       status: '1',
       input3: '',
       tableData: [{
@@ -406,14 +413,32 @@ export default {
       return weekList
     }
   },
+  watch: {
+      chosenDate: async function () {
+          const form = {
+            SonRooms: [1],
+            BeginDate: '2017-07-01',
+            EndDate: '2017-07-31'
+          }
+          // this.roomInfoList = []
+          const res = await roomStatPriceApi.getPriceList(form)
+          this.roomInfoList = res.data
+          // for(let i in res.data.Sonrooms){
+          //   console.warn(i,res.data.Sonrooms[i])
+          // } 
+          this.roomList[0].SonRooms.forEach((item,index)=>{
+            console.warn(item.SonRoomID)
+            console.warn(this.roomInfoList.Sonrooms)
+            item.timeDate=this.roomInfoList.SonRooms[item.SonRoomID]
+          })
+      }
+  },
   methods: {
     async fetchData() {
-      const form = {
-        SonRooms: [3590],
-        BeginDate: '2017-08-10',
-        EndDate: '2017-08-15'
-      }
-      const res = await roomStatPriceApi.getPriceList(form)
+      const _self = this
+      const res = await roomStatPriceApi.GetSonRoomList('2')
+      _self.roomList = res.data
+      console.dir(_self.roomList)
     },
     expand(item) {
       item.isExpand = !item.isExpand
@@ -426,7 +451,7 @@ export default {
       }
       if (this.periodType === 'month') {
         let year = nowdays.getFullYear()
-        let month = nowdays.getMonth()
+        let month = b.getMonth()
         if (month == 0) {
           month = 12
           year = year - 1
