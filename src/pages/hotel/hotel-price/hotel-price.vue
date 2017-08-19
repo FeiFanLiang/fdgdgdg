@@ -180,7 +180,7 @@
 <el-dialog title="批量修改售卖价" v-model="priceChangeForMore" >
   <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
     <el-row>
-        <el-col :span="23" :offset="1">生效时间  
+        <el-col :span="23" :offset="1">生效时间
           <el-date-picker
                 v-model="value7"
                 type="daterange"
@@ -249,13 +249,9 @@
 </template>
 
 <script>
-import {
-  roomStatPriceApi
-} from 'api'
+import { roomStatPriceApi } from 'api'
 import chunk from 'lodash/chunk'
-import {
-  HotelTopMenu
-} from 'components'
+import { HotelTopMenu } from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -271,43 +267,45 @@ export default {
   },
   data() {
     return {
-      roomList:[],
-      roomInfoList:[],
+      roomList: [],
+      roomInfoList: [],
       status: '1',
       input3: '',
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      },
-      {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
       ],
       chosenDate: '',
       expandRowKeys: [],
-      list: [{
-        id: '1',
-        name: '单人间',
-        isExpand: false
-      },
-      {
-        id: '2',
-        name: '双人(Double)',
-        isExpand: false
-      }
+      list: [
+        {
+          id: '1',
+          name: '单人间',
+          isExpand: false
+        },
+        {
+          id: '2',
+          name: '双人(Double)',
+          isExpand: false
+        }
       ],
       cycle: ['one'],
       priceChangeForOne: false,
@@ -321,32 +319,38 @@ export default {
       radio2: 3,
       chosenDelete: '',
       periodType: 'month',
-      options3: [{
-        label: '售卖价',
-        options: [{
-          value: 'Shanghai',
-          label: '售卖价'
-        }]
-      },
-      {
-        label: '渠道价',
-        options: [{
-          value: 'Chengdu',
-          label: '去哪儿B'
+      options3: [
+        {
+          label: '售卖价',
+          options: [
+            {
+              value: 'Shanghai',
+              label: '售卖价'
+            }
+          ]
         },
         {
-          value: 'Shenzhen',
-          label: '去哪儿C'
+          label: '渠道价',
+          options: [
+            {
+              value: 'Chengdu',
+              label: '去哪儿B'
+            },
+            {
+              value: 'Shenzhen',
+              label: '去哪儿C'
+            }
+          ]
+        },
+        {
+          label: '采购价',
+          options: [
+            {
+              value: 'Beijing',
+              label: '采购价'
+            }
+          ]
         }
-        ]
-      },
-      {
-        label: '采购价',
-        options: [{
-          value: 'Beijing',
-          label: '采购价'
-        }]
-      }
       ]
     }
   },
@@ -414,24 +418,24 @@ export default {
     }
   },
   watch: {
-      chosenDate: async function () {
-          const form = {
-            SonRooms: [1],
-            BeginDate: '2017-07-01',
-            EndDate: '2017-07-31'
-          }
-          // this.roomInfoList = []
-          const res = await roomStatPriceApi.getPriceList(form)
-          this.roomInfoList = res.data
-          // for(let i in res.data.Sonrooms){
-          //   console.warn(i,res.data.Sonrooms[i])
-          // } 
-          this.roomList[0].SonRooms.forEach((item,index)=>{
-            console.warn(item.SonRoomID)
-            console.warn(this.roomInfoList.Sonrooms)
-            item.timeDate=this.roomInfoList.SonRooms[item.SonRoomID]
-          })
+    chosenDate: async function() {
+      const form = {
+        SonRooms: [1],
+        BeginDate: '2017-07-01',
+        EndDate: '2017-07-31'
       }
+      // this.roomInfoList = []
+      const res = await roomStatPriceApi.getPriceList(form)
+      this.roomInfoList = res.data
+      // for(let i in res.data.Sonrooms){
+      //   console.warn(i,res.data.Sonrooms[i])
+      // }
+      this.roomList[0].SonRooms.forEach((item, index) => {
+        console.warn(typeof item.SonRoomID)
+        console.dir(this.roomInfoList.Sonrooms[1])
+        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)]
+      })
+    }
   },
   methods: {
     async fetchData() {
@@ -447,7 +451,9 @@ export default {
       let nowdays = new Date(this.chosenDate)
       if (this.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
+        this.chosenDate = new Date(
+          +nowdays - 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (this.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -466,7 +472,9 @@ export default {
       let nowdays = new Date(this.chosenDate)
       if (this.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
+        this.chosenDate = new Date(
+          +nowdays + 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (this.periodType === 'month') {
         let year = nowdays.getFullYear()
