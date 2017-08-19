@@ -8,13 +8,6 @@
               <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                   <DeleteButton api="driverBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-                  <el-popover
-                    ref="popover"
-                    placement="top"
-                    width="300"
-                    trigger="click">
-                    <p>{{urls}}</p>
-                  </el-popover>
                   <!-- <el-popover ref="popover5" placement="top" width="160" v-model="visible2">
                     <p>这是一段内容这是一段内容确定删除吗？</p>
                     <div style="text-align: right; margin: 0">
@@ -22,7 +15,6 @@
                       <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
                     </div>
                   </el-popover> -->
-                  <el-button v-popover:popover size="small" @click="showUrl(scope.row)">二维码</el-button>
               </template>
           </el-table-column>
         </CustomTable>
@@ -80,7 +72,7 @@
     </div>
 </template>
 <script>
-import { driverBaseApi, weixinRedirectApi } from 'api'
+import { driverBaseApi } from 'api'
 export default {
   created() {
     this.fetchData()
@@ -88,7 +80,6 @@ export default {
   },
   data() {
     return {
-      urls: '',
       list: [],
       currentPage: 1,
       pageSize: 10,
@@ -171,11 +162,6 @@ export default {
     }
   },
   methods: {
-    async showUrl(row) {
-      this.urls = ''
-      const res = await weixinRedirectApi.url(row.JobNnumber)
-      this.urls = res.data
-    },
     searchCallback(filters) {
       this.filters = filters
       this.fetchData()
