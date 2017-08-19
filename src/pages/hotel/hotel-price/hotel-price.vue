@@ -54,21 +54,21 @@
     <el-table :data="roomList" row-key="id" :expand-row-keys="expandRowKeys" style="width: 100%">
       <el-table-column type="expand" label="周日">
         <template scope="props">
-              <!-- <tr v-for="(month,index) in props.row.SonRooms" style="float: right;" v-if="periodType==='month'">
+              <tr v-for="(month,index) in props.row.SonRooms" style="float: right;" v-if="periodType==='month'">
                   <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                       <div style="margin-left: 30px;">{{month.SonRoomName}}
                           <span class="gray" style="display: none;">(无效)</span>
                       </div>
                   </td>
-                  <div  v-for="(week,index) in month.timeDate">
+                  <!-- <div  v-for="(week,index) in month.timeDate"> -->
                     <td class="ui-table-col-center w100 current mytd" v-for="(day,index) in month.timeDate"  @click="priceOne(day.date)">
                         <div class="dayname">{{day.date}}</div>
                         <div class="price">CNY{{day.CNY}}</div>
                         <div class="remain">余{{day.Count}}</div>
                     </td>
-                  </div>
-              </tr> -->
-              <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
+                  <!-- </div> -->
+              </tr>
+              <!-- <tr v-for="(week,index) in monthList" style="float: right;" v-if="periodType==='month'">
                   <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
                       <div style="margin-left: 30px;">
                           标准房-预付无早（双床双人入住）
@@ -119,7 +119,7 @@
                       <div class="price">CNY{{day.CNY}}</div>
                       <div class="remain">余{{day.odd}}</div>
                   </td>
-              </tr>
+              </tr> -->
 </template>
     </el-table-column>
     <el-table-column label="房型" prop="RoomName" min-width="400"></el-table-column>
@@ -434,16 +434,16 @@ export default {
       //   console.warn(i,res.data.Sonrooms[i])
       // }
       this.roomList[0].SonRooms.forEach((item, index) => {
-        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
-        // item.timeDate = []
-        // for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
-        //   .STSes) {
-        //   this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
-        //   item.timeDate.push(
-        //     this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i]
-        //   )
-        // }
-        // item.timeDate = chunk(item.timeDate, 7)
+        // item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
+        item.timeDate = []
+        for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
+          .STSes) {
+          this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
+          item.timeDate.push(
+            this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i]
+          )
+        }
+        item.timeDate = chunk(item.timeDate, 7)
       })
     }
   },
