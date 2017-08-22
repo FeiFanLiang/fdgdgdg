@@ -51,50 +51,54 @@
         <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
       </el-col>
     </el-row>
-    <el-table :data="roomList" row-key="id" :expand-row-keys="expandRowKeys" style="width: 100%">
+    <el-table :data="roomList" row-key="id" :default-expand-all="true" :expand-row-keys="expandRowKeys" style="width: 100%">
       <el-table-column type="expand" label="周日">
-        <template scope="props" v-for="n in 2">
+      <template scope="props" >
       <template  v-for="sonRoom in props.row.SonRooms" >
-        <tr v-for="(week,index) in monthListChunk" style="float: right;" v-if="periodType==='month'">
-        <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0">
-        <div style="margin-left: 30px;">
-        {{sonRoom.SonRoomName}}
-        <span class="gray" style="display: none;">(无效)</span>
-        </div>
-        </td>
-        <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
-        <div class="dayname">{{day.date}}</div>
-        <div class="price">飞猪￥{{price(sonRoom.timeDate[day.date])}}</div>
-        <div class="price">去哪￥{{price(sonRoom.timeDate[day.date])}}</div>
-        <div class="price">携程￥{{price(sonRoom.timeDate[day.date])}}</div>
-        <div class="price">全日空ANA￥{{price(sonRoom.timeDate[day.date])}}</div>
-        <div class="remain">余{{count(sonRoom.timeDate[day.date])}}</div>
-        </td>
-        </tr>
-        <tr style="float: right;" v-if="periodType==='week'">
-        <td class="ui-table-col-left" colspan="1" rowspan="6" >
-        <div style="margin-left: 30px;">
+        <table style="width: 100%;">
+          <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
+          <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
+          <div style="margin-left: 30px;">
           {{sonRoom.SonRoomName}}
-        <span class="gray" style="display: none;">(无效)</span>
-        </div>
-        </td>
-        <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
+          <!-- <span class="gray" style="display: none;">(无效)</span> -->
+          </div>
+          </td>
+          <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
           <div class="dayname">{{day.date}}</div>
-          <div class="price">￥{{price(sonRoom.timeDate[day.date])}}</div>
-          <div class="remain">余{{count(sonRoom.timeDate[day.date])}}</div>
-        </td>
-        </tr>
-</template>
-  </template>
+          <div class="price">飞猪￥{{price(sonRoom,day.date)}}</div>
+          <div class="price">去哪￥{{price(sonRoom,day.date)}}</div>
+          <div class="price">携程￥{{price(sonRoom,day.date)}}</div>
+          <div class="price">全日空￥{{price(sonRoom,day.date)}}</div>
+          <div class="remain">余{{count(sonRoom,day.date)}}</div>
+          </td>
+          </tr>
+        </table>
+        <table style="width: 100%;">
+            <tr class="column_tr" v-if="periodType==='week'">
+            <td class="ui-table-col-left" colspan="1" rowspan="6" style="width:12%;">
+            <div style="margin-left: 30px;">
+              {{sonRoom.SonRoomName}}
+            <!-- <span class="gray" style="display: none;">(无效)</span> -->
+            </div>
+            </td>
+            <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
+              <div class="dayname">{{day.date}}</div>
+              <div class="price">￥{{price(sonRoom,day.date)}}</div>
+              <div class="remain">余{{count(sonRoom,day.date)}}</div>
+            </td>
+            </tr>
+        </table >
+      </template>
+      </template>
       </el-table-column>
-      <el-table-column label="房型" prop="RoomName" min-width="400"></el-table-column>
-      <el-table-column label="周日" width="100"></el-table-column>
-      <el-table-column label="周一" width="100"></el-table-column>
-      <el-table-column label="周二" width="100"></el-table-column>
-      <el-table-column label="周三" width="100"></el-table-column>
-      <el-table-column label="周四" width="100"></el-table-column>
-      <el-table-column label="周五" width="100"></el-table-column>
-      <el-table-column label="周六" width="100"></el-table-column>
+      <el-table-column label="房型" prop="RoomName" min-width="300"></el-table-column>
+      <el-table-column label="周日" width="120"></el-table-column>
+      <el-table-column label="周一" width="120"></el-table-column>
+      <el-table-column label="周二" width="120"></el-table-column>
+      <el-table-column label="周三" width="120"></el-table-column>
+      <el-table-column label="周四" width="120"></el-table-column>
+      <el-table-column label="周五" width="120"></el-table-column>
+      <el-table-column label="周六" width="120"></el-table-column>
     </el-table>
     <el-dialog title="修改售卖价" v-model="priceChangeForOne">
       <el-row>
@@ -233,14 +237,9 @@
 </template>
 
 <script>
-import {
-  roomStatPriceApi,
-  hotelThreePlatInfoApi
-} from 'api'
+import { roomStatPriceApi, hotelThreePlatInfoApi } from 'api'
 import chunk from 'lodash/chunk'
-import {
-  HotelTopMenu
-} from 'components'
+import { HotelTopMenu } from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -250,58 +249,48 @@ export default {
     // 组件创建完后获取数据，
     // 此时 data 已经被 observed 了
     console.dir(this.$route.params)
-    this.expandRowKeys.push(this.list[0].id)
+    // this.expandRowKeys.push(this.list[0].id)
     this.chosenDate = Date.now()
     this.fetchData()
     this.getHotelThreePlatInfoList()
   },
   data() {
     return {
-      platInfoList:[],
+      platInfoList: [],
       roomList: [],
       roomInfoList: [],
-      updateForm:{
-        time:'',
-        purchasePrice:'',
-        threePlatId:''
+      updateForm: {
+        time: '',
+        purchasePrice: '',
+        threePlatId: ''
       },
       status: '1',
       input3: '',
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      },
-      {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      },
-      {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      },
-      {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        },
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
       ],
       chosenDate: '',
-      expandRowKeys: [],
-      list: [{
-        id: '1',
-        name: '单人间',
-        isExpand: false
-      },
-      {
-        id: '2',
-        name: '双人(Double)',
-        isExpand: false
-      }
-      ],
-      value7:'',
+      expandRowKeys: [0],
+      value7: '',
       cycle: ['one'],
       priceChangeForOne: false,
       priceChangeForMore: false,
@@ -313,32 +302,38 @@ export default {
       radio2: 3,
       chosenDelete: '',
       periodType: 'month',
-      options3: [{
-        label: '售卖价',
-        options: [{
-          value: 'Shanghai',
-          label: '售卖价'
-        }]
-      },
-      {
-        label: '渠道价',
-        options: [{
-          value: 'Chengdu',
-          label: '去哪儿B'
+      options3: [
+        {
+          label: '售卖价',
+          options: [
+            {
+              value: 'Shanghai',
+              label: '售卖价'
+            }
+          ]
         },
         {
-          value: 'Shenzhen',
-          label: '去哪儿C'
+          label: '渠道价',
+          options: [
+            {
+              value: 'Chengdu',
+              label: '去哪儿B'
+            },
+            {
+              value: 'Shenzhen',
+              label: '去哪儿C'
+            }
+          ]
+        },
+        {
+          label: '采购价',
+          options: [
+            {
+              value: 'Beijing',
+              label: '采购价'
+            }
+          ]
         }
-        ]
-      },
-      {
-        label: '采购价',
-        options: [{
-          value: 'Beijing',
-          label: '采购价'
-        }]
-      }
       ]
     }
   },
@@ -408,7 +403,8 @@ export default {
       return weekList
     },
     startAndEndDay() {
-      if (!this.monthList ||
+      if (
+        !this.monthList ||
         !this.monthList.length ||
         !this.weekList ||
         !this.weekList.length
@@ -456,15 +452,27 @@ export default {
     }
   },
   methods: {
-    price(item) {
-      if (item && item.hasOwnProperty('SonRoomPurchasePrice') && item.SonRoomPurchasePrice.hasOwnProperty('Price')) {
-        return item.SonRoomPurchasePrice.Price
+    price(item, date) {
+      // .timeDate[day.date]
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
+        item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
+      ) {
+        return item.timeDate[date].SonRoomPurchasePrice.Price
       }
       return ''
     },
-    count(item) {
-      if (item && item.hasOwnProperty('Count')) {
-        return item.Count
+    count(item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('Count')
+      ) {
+        return item.timeDate[date].Count
       }
       return ''
     },
@@ -481,7 +489,9 @@ export default {
       let nowdays = new Date(this.chosenDate)
       if (this.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
+        this.chosenDate = new Date(
+          +nowdays - 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (this.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -500,7 +510,9 @@ export default {
       let nowdays = new Date(this.chosenDate)
       if (this.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
+        this.chosenDate = new Date(
+          +nowdays + 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (this.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -525,8 +537,8 @@ export default {
     deleteCycle(item, index) {
       this.cycle.splice(index, 1)
     },
-    priceOne(date,day) {
-      console.warn(day,this.updateForm)
+    priceOne(date, day) {
+      console.warn(day, this.updateForm)
       this.priceChangeForOne = true
       this.updateForm = {}
       this.updateForm.time = [new Date(date), new Date(date)]
@@ -535,14 +547,16 @@ export default {
     priceMore() {
       this.priceChangeForMore = true
     },
-    async submit(){
-      const _self = this;
+    async submit() {
+      const _self = this
       console.log(_self.updateForm.time)
-      const form = [{
-        "SonRoomID": 1,
-        "Price": _self.updateForm.purchasePrice,
-        "UseTime": _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss')
-      }]
+      const form = [
+        {
+          SonRoomID: 1,
+          Price: _self.updateForm.purchasePrice,
+          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss')
+        }
+      ]
       const res = await roomStatPriceApi.updateRoomPurchasePrice(form)
       console.dir(res)
       _self.fetchData()
@@ -558,7 +572,7 @@ export default {
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.cities.length
     },
-    async refreshData(){
+    async refreshData() {
       if (!this.startAndEndDay || !this.startAndEndDay.length) {
         return
       }
@@ -567,7 +581,7 @@ export default {
         BeginDate: this.startAndEndDay[0].date,
         EndDate: this.startAndEndDay[1].date
       }
-      console.log(111,form)
+      console.log(111, form)
       const res = await roomStatPriceApi.getPriceList(form)
       this.roomInfoList = res.data
       this.roomList[0].SonRooms.forEach((item, index) => {
@@ -604,9 +618,15 @@ export default {
 }
 
 .mytd {
-  width: 100px;
+  width: 12%;
   height: 100px;
   background-color: #c8e4ec;
   padding: 10px;
+}
+.column_tr{
+  width:100%;
+}
+.column_tr:after{
+  clear: both;
 }
 </style>
