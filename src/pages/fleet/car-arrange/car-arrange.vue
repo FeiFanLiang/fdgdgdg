@@ -423,8 +423,7 @@ import {
   carOrderManageApi,
   airInformationApi
 } from 'api'
-// import * as moment from "moment";
-// import * as d3 from "d3";
+
 export default {
   mounted() {
     this.filters.beginTime = new Date().Format('yyyy-MM-dd')
@@ -568,10 +567,12 @@ export default {
       if (!this.sendCardriverId) {
         return
       }
+      let chartData = [...this.chartData]
       const driverInfo = this.driverList.find(
         item => item.ID === this.sendCardriverId
       )
-      const driverIndex = this.chartData.findIndex(
+
+      const driverIndex = chartData.findIndex(
         item => item.measure === driverInfo.Name
       )
       const chartInfoData = [
@@ -580,15 +581,20 @@ export default {
         this.dateFormat(this.sendCarChosenRow.endtime)
       ]
       if (driverIndex >= 0) {
-        let data = this.chartData[driverIndex].data
+        let data = chartData[driverIndex].data
+        let disp_data = chartData[driverIndex].disp_data
+
         if (data && Array.isArray(data)) {
-          data.push()
+          data.push(chartInfoData)
+          disp_data.push(chartInfoData)
         } else {
           data = []
+          disp_data = []
           data.push(chartInfoData)
+          disp_data.push(chartInfoData)
         }
       } else {
-        this.chartData.push({
+        chartData.push({
           measure: driverInfo.Name,
           categories: {
             接机: {
@@ -601,6 +607,8 @@ export default {
           data: [chartInfoData]
         })
       }
+      this.chartData = chartData
+      console.log(JSON.stringify(this.chartData))
       this.createChart()
       // this.d3Chart.datum(this.chartData)
       this.isSendCarEditable = false
@@ -896,8 +904,10 @@ export default {
       _self.chartData.length ? _self.createChart() : ''
     },
     createChart() {
+      const chartData = [...this.chartData]
+      $('#chart').empty()
       let chart = visavailChart().width(800)
-      this.d3Chart = d3.select('#chart').datum(this.chartData).call(chart)
+      this.d3Chart = d3.select('#chart').datum(chartData).call(chart)
     },
     compare(property) {
       return function(a, b) {
