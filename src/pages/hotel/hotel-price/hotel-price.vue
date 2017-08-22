@@ -66,10 +66,10 @@
             <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
             <div class="dayname">{{day.date}}</div>
             <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
-            <div class="price">飞猪￥{{fzPrice(sonRoom,day.date)}}</div>
-            <div class="price">去哪￥{{price(sonRoom,day.date)}}</div>
-            <div class="price">携程￥{{price(sonRoom,day.date)}}</div>
-            <div class="price">全日空￥{{price(sonRoom,day.date)}}</div>
+            <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+            <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
+            <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
+            <div class="price">全日空￥{{otherPrice('全日空',sonRoom,day.date)}}</div>
             <div class="remain">余{{count(sonRoom,day.date)}}</div>
             </td>
             </tr>
@@ -84,6 +84,7 @@
               </td>
               <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
                 <div class="dayname">{{day.date}}</div>
+
                 <div class="price">￥{{price(sonRoom,day.date)}}</div>
                 <div class="remain">余{{count(sonRoom,day.date)}}</div>
               </td>
@@ -250,439 +251,426 @@
 </template>
 
 <script>
-  import {
-    roomStatPriceApi,
-    hotelThreePlatInfoApi
-  } from 'api'
-  import chunk from 'lodash/chunk'
-  import {
+import { roomStatPriceApi, hotelThreePlatInfoApi } from 'api'
+import chunk from 'lodash/chunk'
+import { HotelTopMenu } from 'components'
+const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+export default {
+  components: {
     HotelTopMenu
-  } from 'components'
-  const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-  export default {
-    components: {
-      HotelTopMenu
-    },
-    created() {
-      // 组件创建完后获取数据，
-      // 此时 data 已经被 observed 了
-      console.dir(this.$route.params)
-      // this.expandRowKeys.push(this.list[0].id)
-      this.chosenDate = Date.now()
-      this.fetchData()
-      this.getHotelThreePlatInfoList()
-    },
-    data() {
-      return {
-        platInfoList: [],
-        roomList: [],
-        roomInfoList: [],
-        updateForm: {
-          time: '',
-          purchasePrice: '',
-          fzSalePrice: '',
-          qnSalePrice: '',
-          xcSalePrice: '',
-          qrkSalePrice: ''
+  },
+  created() {
+    // 组件创建完后获取数据，
+    // 此时 data 已经被 observed 了
+    console.dir(this.$route.params)
+    // this.expandRowKeys.push(this.list[0].id)
+    this.chosenDate = Date.now()
+    this.fetchData()
+    this.getHotelThreePlatInfoList()
+  },
+  data() {
+    return {
+      platInfoList: {},
+      roomList: [],
+      roomInfoList: [],
+      updateForm: {
+        time: '',
+        purchasePrice: '',
+        fzSalePrice: '',
+        qnSalePrice: '',
+        xcSalePrice: '',
+        qrkSalePrice: ''
+      },
+      status: '1',
+      input3: '',
+      tableData: [
+        {
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         },
-        status: '1',
-        input3: '',
-        tableData: [{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-          {
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄'
-          },
-          {
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄'
-          },
-          {
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄'
-          }
-        ],
-        chosenDate: '',
-        expandRowKeys: [0],
-        value7: '',
-        cycle: ['one'],
-        priceChangeForOne: false,
-        priceChangeForMore: false,
-        checkAll: true,
-        checkedCities: cityOptions,
-        cities: cityOptions,
-        homeType: ['标准房', '单人房'],
-        isIndeterminate: true,
-        radio2: 3,
-        chosenDelete: '',
-        periodType: 'month',
-        options3: [{
-            label: '售卖价',
-            options: [{
+        {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1517 弄'
+        },
+        {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1519 弄'
+        },
+        {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1516 弄'
+        }
+      ],
+      chosenDate: '',
+      expandRowKeys: [0],
+      value7: '',
+      cycle: ['one'],
+      priceChangeForOne: false,
+      priceChangeForMore: false,
+      checkAll: true,
+      checkedCities: cityOptions,
+      cities: cityOptions,
+      homeType: ['标准房', '单人房'],
+      isIndeterminate: true,
+      radio2: 3,
+      chosenDelete: '',
+      periodType: 'month',
+
+      options3: [
+        {
+          label: '售卖价',
+          options: [
+            {
               value: 'Shanghai',
               label: '售卖价'
-            }]
-          },
-          {
-            label: '渠道价',
-            options: [{
-                value: 'Chengdu',
-                label: '去哪儿B'
-              },
-              {
-                value: 'Shenzhen',
-                label: '去哪儿C'
-              }
-            ]
-          },
-          {
-            label: '采购价',
-            options: [{
+            }
+          ]
+        },
+        {
+          label: '渠道价',
+          options: [
+            {
+              value: 'Chengdu',
+              label: '去哪儿B'
+            },
+            {
+              value: 'Shenzhen',
+              label: '去哪儿C'
+            }
+          ]
+        },
+        {
+          label: '采购价',
+          options: [
+            {
               value: 'Beijing',
               label: '采购价'
-            }]
-          }
-        ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  computed: {
+    calendar() {
+      if (!this.chosenDate) return
+      let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
+      let arry = time1.split('-')
+      return {
+        curYear: arry[0],
+        curMonth: arry[1],
+        curDay: arry[2]
       }
     },
-    computed: {
-      calendar() {
-        if (!this.chosenDate) return
-        let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
-        let arry = time1.split('-')
-        return {
-          curYear: arry[0],
-          curMonth: arry[1],
-          curDay: arry[2]
+    monthList() {
+      if (!this.calendar) return
+      let firstDay = new Date(
+        this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
+      )
+      let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
+      let item,
+        status,
+        tempArr = [],
+        tempItem
+      for (let i = 0; i < 42; i++) {
+        item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
+        if (this.calendar.curMonth === item.getMonth()) {
+          status = 1
+        } else {
+          status = 0
         }
-      },
-      monthList() {
-        if (!this.calendar) return
-        let firstDay = new Date(
-          this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
+        tempItem = {
+          // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
+          date: item.toLocaleDateString(),
+          status: status,
+          CNY: '100',
+          odd: '3'
+        }
+        // this.events.forEach(event => {
+        // if (isEqualDateStr(event.date, tempItem.date)) {
+        // tempItem.title = event.title;
+        // tempItem.desc = event.desc || '';
+        // }
+        // });
+        tempArr.push(tempItem)
+      }
+      return tempArr
+    },
+    monthListChunk() {
+      return chunk(this.monthList, 7)
+    },
+    weekList() {
+      const weekList = []
+      const now = new Date(this.chosenDate)
+      const nowTime = now.getTime()
+      const day = now.getDay()
+      const oneDayTime = 24 * 60 * 60 * 1000
+      const SundayTime = nowTime + (6 - day) * oneDayTime
+      new Array(7).fill(1).forEach((item, index) => {
+        weekList.unshift({
+          date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
+          status: false,
+          CNY: '100',
+          odd: '3'
+        })
+      })
+      return weekList
+    },
+    startAndEndDay() {
+      if (
+        !this.monthList ||
+        !this.monthList.length ||
+        !this.weekList ||
+        !this.weekList.length
+      ) {
+        return
+      }
+      let list = []
+      if (this.periodType === 'month') {
+        list = this.monthList
+      }
+      if (this.periodType === 'week') {
+        list = this.weekList
+      }
+      return [list[0], list[list.length - 1]]
+    }
+  },
+  watch: {
+    async startAndEndDay() {
+      if (!this.startAndEndDay || !this.startAndEndDay.length) {
+        return
+      }
+      const form = {
+        SonRooms: [1],
+        BeginDate: this.startAndEndDay[0].date,
+        EndDate: this.startAndEndDay[1].date
+      }
+      // this.roomInfoList = []
+      const res = await roomStatPriceApi.getPriceList(form)
+      this.roomInfoList = res.data
+      // for(let i in res.data.Sonrooms){
+      // console.warn(i,res.data.Sonrooms[i])
+      // }
+      const roomList = [...this.roomList]
+      roomList[0].SonRooms.forEach((item, index) => {
+        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
+        // item.timeDate = []
+        // for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
+        // .STSes) {
+        // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
+        // item.timeDate.push(
+        // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i]
+        // )
+        // }
+        // item.timeDate = chunk(item.timeDate, 7)
+      })
+      // console.log(SonRooms)
+      this.roomList = roomList
+    }
+  },
+  methods: {
+    price(item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
+        item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
+      ) {
+        return item.timeDate[date].SonRoomPurchasePrice.Price
+      }
+
+      return ''
+    },
+    otherPrice(type, item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('salePrice') &&
+        Array.isArray(item.timeDate[date].salePrice) &&
+        item.timeDate[date].salePrice.length > 0
+      ) {
+        let value = item.timeDate[date].salePrice.find(
+          item => item.ThreePlatId === this.platInfoList[type]
         )
-        let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
-        let item,
-          status,
-          tempArr = [],
-          tempItem
-        for (let i = 0; i < 42; i++) {
-          item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
-          if (this.calendar.curMonth === item.getMonth()) {
-            status = 1
-          } else {
-            status = 0
-          }
-          tempItem = {
-            // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
-            date: item.toLocaleDateString(),
-            status: status,
-            CNY: '100',
-            odd: '3'
-          }
-          // this.events.forEach(event => {
-          // if (isEqualDateStr(event.date, tempItem.date)) {
-          // tempItem.title = event.title;
-          // tempItem.desc = event.desc || '';
-          // }
-          // });
-          tempArr.push(tempItem)
-        }
-        return tempArr
-      },
-      monthListChunk() {
-        return chunk(this.monthList, 7)
-      },
-      weekList() {
-        const weekList = []
-        const now = new Date(this.chosenDate)
-        const nowTime = now.getTime()
-        const day = now.getDay()
+        return value ? value.Price : ''
+      }
+
+      return ''
+    },
+    count(item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('Count')
+      ) {
+        return item.timeDate[date].Count
+      }
+      return ''
+    },
+    async fetchData() {
+      const _self = this
+      const res = await roomStatPriceApi.getSonRoomList('2')
+      _self.roomList = res.data
+      console.dir(_self.roomList[0].SonRooms)
+    },
+    expand(item) {
+      item.isExpand = !item.isExpand
+    },
+    pre() {
+      let nowdays = new Date(this.chosenDate)
+      if (this.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        const SundayTime = nowTime + (6 - day) * oneDayTime
-        new Array(7).fill(1).forEach((item, index) => {
-          weekList.unshift({
-            date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
-            status: false,
-            CNY: '100',
-            odd: '3'
-          })
-        })
-        return weekList
-      },
-      startAndEndDay() {
-        if (!this.monthList ||
-          !this.monthList.length ||
-          !this.weekList ||
-          !this.weekList.length
-        ) {
-          return
+        this.chosenDate = new Date(
+          +nowdays - 7 * oneDayTime
+        ).toLocaleDateString()
+      }
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear()
+        let month = b.getMonth()
+        if (month == 0) {
+          month = 12
+          year = year - 1
         }
-        let list = []
-        if (this.periodType === 'month') {
-          list = this.monthList
+        if (month < 10) {
+          month = '0' + month
         }
-        if (this.periodType === 'week') {
-          list = this.weekList
-        }
-        return [list[0], list[list.length - 1]]
+        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
       }
     },
-    watch: {
-      async startAndEndDay() {
-        if (!this.startAndEndDay || !this.startAndEndDay.length) {
-          return
+    next() {
+      let nowdays = new Date(this.chosenDate)
+      if (this.periodType === 'week') {
+        const oneDayTime = 24 * 60 * 60 * 1000
+        this.chosenDate = new Date(
+          +nowdays + 7 * oneDayTime
+        ).toLocaleDateString()
+      }
+      if (this.periodType === 'month') {
+        let year = nowdays.getFullYear()
+        let month = nowdays.getMonth()
+        if (month == 11) {
+          month = -1
+          year = year + 1
         }
-        const form = {
-          SonRooms: [1],
-          BeginDate: this.startAndEndDay[0].date,
-          EndDate: this.startAndEndDay[1].date
+        month += 2
+        if (month < 10) {
+          month = '0' + month
         }
-        // this.roomInfoList = []
-        const res = await roomStatPriceApi.getPriceList(form)
-        this.roomInfoList = res.data
-        // for(let i in res.data.Sonrooms){
-        // console.warn(i,res.data.Sonrooms[i])
-        // }
-        this.roomList[0].SonRooms.forEach((item, index) => {
-          debugger
-          item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
-          // item.timeDate = []
-          // for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
-          // .STSes) {
-          // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
-          // item.timeDate.push(
-          // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i]
-          // )
-          // }
-          // item.timeDate = chunk(item.timeDate, 7)
-        })
+        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
       }
     },
-    methods: {
-      price(item, date) {
-        // .timeDate[day.date]
-        if (
-          item &&
-          item.timeDate &&
-          item.timeDate[date] &&
-          item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
-          item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
-        ) {
-          return item.timeDate[date].SonRoomPurchasePrice.Price
-        }
-        return ''
-      },
-      fzPrice(item, date) {
-        debugger
-        if (
-          item &&
-          item.timeDate &&
-          item.timeDate[date] &&
-          item.timeDate[date].salePrice
-          ){
-            console.log(item.timeDate[date].salePrice[0].Price)
-            return item.timeDate[date].salePrice[0].Price
-          }
-          return ''
-      },
-      qnPrice(item, date) {
-        // if (
-        //   item &&
-        //   item.timeDate &&
-        //   item.timeDate[date] &&
-        //   item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
-        //   item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
-        // ) {
-        //   return item.timeDate[date].SonRoomPurchasePrice.Price
-        // }
-        return ''
-      },
-      xcPrice(item, date) {
-        // if (
-        //   item &&
-        //   item.timeDate &&
-        //   item.timeDate[date] &&
-        //   item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
-        //   item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
-        // ) {
-        //   return item.timeDate[date].SonRoomPurchasePrice.Price
-        // }
-        return ''
-      },
-      qrkPrice(item, date) {
-        // if (
-        //   item &&
-        //   item.timeDate &&
-        //   item.timeDate[date] &&
-        //   item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
-        //   item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
-        // ) {
-        //   return item.timeDate[date].SonRoomPurchasePrice.Price
-        // }
-        return ''
-      },
-      count(item, date) {
-        if (
-          item &&
-          item.timeDate &&
-          item.timeDate[date] &&
-          item.timeDate[date].hasOwnProperty('Count')
-        ) {
-          return item.timeDate[date].Count
-        }
-        return ''
-      },
-      async fetchData() {
-        const _self = this
-        const res = await roomStatPriceApi.getSonRoomList('2')
-        _self.roomList = res.data
-        console.dir(_self.roomList[0].SonRooms)
-      },
-      expand(item) {
-        item.isExpand = !item.isExpand
-      },
-      pre() {
-        let nowdays = new Date(this.chosenDate)
-        if (this.periodType === 'week') {
-          const oneDayTime = 24 * 60 * 60 * 1000
-          this.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
-        }
-        if (this.periodType === 'month') {
-          let year = nowdays.getFullYear()
-          let month = b.getMonth()
-          if (month == 0) {
-            month = 12
-            year = year - 1
-          }
-          if (month < 10) {
-            month = '0' + month
-          }
-          this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
-        }
-      },
-      next() {
-        let nowdays = new Date(this.chosenDate)
-        if (this.periodType === 'week') {
-          const oneDayTime = 24 * 60 * 60 * 1000
-          this.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
-        }
-        if (this.periodType === 'month') {
-          let year = nowdays.getFullYear()
-          let month = nowdays.getMonth()
-          if (month == 11) {
-            month = -1
-            year = year + 1
-          }
-          month += 2
-          if (month < 10) {
-            month = '0' + month
-          }
-          this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
-        }
-      },
-      showDelete(item) {
-        this.chosenDelete = item
-      },
-      addCycle() {
-        this.cycle.push(Math.random().toString(36).substr(2))
-      },
-      deleteCycle(item, index) {
-        this.cycle.splice(index, 1)
-      },
-      priceOne(date, day) {
-        console.warn(day, this.updateForm)
-        this.priceChangeForOne = true
-        this.updateForm = {}
-        this.updateForm.time = [new Date(date), new Date(date)]
-        this.updateForm.purchasePrice = day.SonRoomPurchasePrice.Price
-      },
-      priceMore() {
-        this.priceChangeForMore = true
-      },
-      async submit() {
-        const _self = this
-        console.log(_self.updateForm.time)
-        const form = [{
+    showDelete(item) {
+      this.chosenDelete = item
+    },
+    addCycle() {
+      this.cycle.push(Math.random().toString(36).substr(2))
+    },
+    deleteCycle(item, index) {
+      this.cycle.splice(index, 1)
+    },
+    priceOne(date, day) {
+      console.warn(day, this.updateForm)
+      this.priceChangeForOne = true
+      this.updateForm = {}
+      this.updateForm.time = [new Date(date), new Date(date)]
+      this.updateForm.purchasePrice = day.SonRoomPurchasePrice.Price
+    },
+    priceMore() {
+      this.priceChangeForMore = true
+    },
+    async submit() {
+      const _self = this
+      console.log(_self.updateForm.time)
+      const form = [
+        {
           SonRoomID: 1,
           Price: _self.updateForm.purchasePrice,
           UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss')
-        }]
-        const res = await roomStatPriceApi.updateRoomPurchasePrice(form)
-        _self.updateRoomSalePrice()
-      },
-      async updateRoomSalePrice() {
-        const _self = this
-        const form = []
-        form.push({
+        }
+      ]
+      const res = await roomStatPriceApi.updateRoomPurchasePrice(form)
+      _self.updateRoomSalePrice()
+    },
+    async updateRoomSalePrice() {
+      const _self = this
+      const form = []
+      form.push(
+        {
           SonRoomID: 1,
           Price: _self.updateForm.fzSalePrice,
           UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
           ThreePlatId: 1,
           Stat: 0
-        }, {
+        },
+        {
           SonRoomID: 1,
           Price: _self.updateForm.qnSalePrice,
           UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
           ThreePlatId: 2,
           Stat: 0
-        }, {
+        },
+        {
           SonRoomID: 1,
           Price: _self.updateForm.xcSalePrice,
           UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
           ThreePlatId: 3,
           Stat: 0
-        }, {
+        },
+        {
           SonRoomID: 1,
           Price: _self.updateForm.qrkSalePrice,
           UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
           ThreePlatId: 4,
           Stat: 0
-        })
-        const res = await roomStatPriceApi.updateRoomSalePrice(form)
-        console.dir(res)
-        _self.fetchData()
-        _self.priceChangeForOne = false
-      },
-      handleCheckAllChange(event) {
-        this.checkedCities = event.target.checked ? cityOptions : []
-        this.isIndeterminate = false
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length
-        this.checkAll = checkedCount === this.cities.length
-        this.isIndeterminate =
-          checkedCount > 0 && checkedCount < this.cities.length
-      },
-      async refreshData() {
-        if (!this.startAndEndDay || !this.startAndEndDay.length) {
-          return
         }
-        const form = {
-          SonRooms: [1],
-          BeginDate: this.startAndEndDay[0].date,
-          EndDate: this.startAndEndDay[1].date
-        }
-        console.log(111, form)
-        const res = await roomStatPriceApi.getPriceList(form)
-        this.roomInfoList = res.data
-        this.roomList[0].SonRooms.forEach((item, index) => {
-          item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
-        })
-      },
-      async getHotelThreePlatInfoList() {
-        const _self = this
-        const res = await hotelThreePlatInfoApi.getList()
-        _self.platInfoList = res.data
+      )
+      const res = await roomStatPriceApi.updateRoomSalePrice(form)
+      console.dir(res)
+      _self.fetchData()
+      _self.priceChangeForOne = false
+    },
+    handleCheckAllChange(event) {
+      this.checkedCities = event.target.checked ? cityOptions : []
+      this.isIndeterminate = false
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length
+      this.checkAll = checkedCount === this.cities.length
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.cities.length
+    },
+    async refreshData() {
+      if (!this.startAndEndDay || !this.startAndEndDay.length) {
+        return
+      }
+      const form = {
+        SonRooms: [1],
+        BeginDate: this.startAndEndDay[0].date,
+        EndDate: this.startAndEndDay[1].date
+      }
+      console.log(111, form)
+      const res = await roomStatPriceApi.getPriceList(form)
+      this.roomInfoList = res.data
+      this.roomList[0].SonRooms.forEach((item, index) => {
+        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
+      })
+    },
+    async getHotelThreePlatInfoList() {
+      const _self = this
+      const res = await hotelThreePlatInfoApi.getList()
+      if (res && res.data && Array.isArray(res.data)) {
+        res.data.forEach(item => (_self.platInfoList[item.PlatName] = item.ID))
       }
     }
   }
+}
 </script>
 
 <style lang="css" scoped>
