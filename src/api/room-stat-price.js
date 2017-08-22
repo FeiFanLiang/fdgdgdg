@@ -10,5 +10,8 @@ export default {
   },
   updateRoomPurchasePrice(params){
     return axios.post(base + 'UpdateRoomPurchasePrice', params)
+  },
+  updateRoomSalePrice(params){
+    return axios.post(base + 'UpdateRoomSalePrice', params)
   }
 }
