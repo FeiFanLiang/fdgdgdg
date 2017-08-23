@@ -1,19 +1,14 @@
 <template lang="html">
   <div>
     <!-- <HotelTopMenu path="price"></HotelTopMenu > -->
-    <el-row>
-      <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#FF4949"></dt>
+    <el-row :gutter="20" style="display:flex;align-items: center;">
+      <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#c8e4ec"></dt>
+        <dd>开房</dd>
+      </el-col>
+      <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#e4e8f1"></dt>
         <dd>关房</dd>
       </el-col>
-      <el-col :span="2"><dt class="legend"><i class="el-icon-caret-top" style="color:#13CE66"></i></dt>
-        <dd>允许超售</dd>
-      </el-col>
-      <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#D3DCE6"></dt>
-        <dd>不可售</dd>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="3">
+      <!-- <el-col :span="3">
         <el-select v-model="value7" placeholder="请选择">
           <el-option-group v-for="(group,gIndex) in options3" :key="group.label" :label="group.label">
             <el-option v-for="(item,index) in group.options" :key="item.value" :label="item.label" :value="item.value">
@@ -26,8 +21,8 @@
           <el-option v-for="item in [{value:'0',label:'全部'},{value:'1',label:'有效'},{value:'2',label:'无效'}]" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-      </el-col>
-      <el-col :span="3" :offset="2">
+      </el-col> -->
+      <el-col :span="4" :offset="6">
         <el-select v-model="periodType" placeholder="请选择">
           <el-option v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
@@ -54,7 +49,7 @@
             <!-- <span class="gray" style="display: none;">(无效)</span> -->
             </div>
             </td>
-            <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(sonRoom,day.date)">
+            <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in week" @click="priceOne(sonRoom,day.date)">
             <div class="dayname">{{day.date}}</div>
             <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
             <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
@@ -73,7 +68,7 @@
               <!-- <span class="gray" style="display: none;">(无效)</span> -->
               </div>
               </td>
-              <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
+              <td class="ui-table-col-center w100 current" v-bind:class="{'close':!day.IsOpen,'open':day.IsOpen}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
                 <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
@@ -133,7 +128,7 @@
         </el-date-picker>
       </el-col>
     </el-form-item>
-    <el-form-item label="和否开房">
+    <el-form-item label="是否开房">
       <el-radio-group v-model="stateForm.isOpen">
         <el-radio-button :label="true">开房</el-radio-button>
         <el-radio-button :label="false">关房</el-radio-button>
@@ -228,7 +223,7 @@ export default {
             stat: 0
           },
           {
-            title: '全日空',
+            title: '全日空ANA',
             id: 3,
             price: '',
             stat: 0
@@ -407,6 +402,17 @@ export default {
       _self.chosenRoom.SonRooms = SonRooms
       _self.loading = false
     },
+    isOpen(item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('IsOpen')
+      ) {
+        return item.timeDate[date].IsOpen
+      }
+      return ''
+    },
     price(item, date) {
       if (
         item &&
@@ -536,7 +542,7 @@ export default {
       _self.priceForm.sonRoomId = item.SonRoomID
       _self.priceForm.time = [new Date(date), new Date(date)]
       _self.priceForm.price[0].price = _self.price(item, date)
-      ;['飞猪', '去哪', '携程', '全日空'].forEach((i, index) => {
+      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
       })
       _self.stateForm.count = item.timeDate[date].Count
@@ -649,10 +655,16 @@ export default {
     vertical-align: top;
     border: 1px solid #ececec;
   }
-  .mytd {
+  .open {
     width: 12%;
     height: 100px;
     background-color: #c8e4ec;
+    padding: 10px;
+  }
+  .close {
+    width: 12%;
+    height: 100px;
+    background-color: #e4e8f1;
     padding: 10px;
   }
   .column_tr {
