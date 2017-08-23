@@ -40,7 +40,7 @@
         <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
       </el-col>
     </el-row>
-    <el-table :data="roomList" row-key="id" :default-expand-all="true" :expand-row-keys="expandRowKeys" style="width: 100%">
+    <el-table :data="roomList" row-key="id" :default-expand-all="true" :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
       <el-table-column type="expand" label="周日">
         <template scope="props">
         <template  v-for="sonRoom in props.row.SonRooms" >
@@ -157,7 +157,7 @@
   </el-tabs>
   <div slot="footer" class="dialog-footer">
     <el-button @click="priceChangeForOne = false">取 消</el-button>
-    <el-button type="primary" @click="submit()">确 定</el-button>
+    <el-button type="primary" :loading="!isEditable" @click="submit()">{{isEditable?'确 定':'提交中'}}</el-button>
   </div>
     </el-dialog>
   </div>
@@ -183,6 +183,8 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      isEditable: true,
       activeName: 'price',
       platInfoList: {},
       roomList: [],
@@ -377,6 +379,7 @@ export default {
       if (!_self.startAndEndDay || !_self.startAndEndDay.length) {
         return
       }
+      _self.loading = true
       const form = {
         SonRooms: [1],
         BeginDate: _self.startAndEndDay[0].date,
@@ -404,6 +407,7 @@ export default {
       })
       // console.log(SonRooms)
       this.roomList = roomList
+      _self.loading = false
     },
     price(item, date) {
       if (
@@ -546,6 +550,7 @@ export default {
     },
     async priceSubmit() {
       const _self = this
+      _self.isEditable = false
       let priceForm = []
       let otherPriceForm = []
       let timeList = _self.dateScope(
@@ -579,9 +584,11 @@ export default {
       )
       _self.getPriceList()
       _self.priceChangeForOne = false
+      _self.isEditable = true
     },
     async stateSubmit() {
       const _self = this
+      _self.isEditable = false
       let stateForm = []
       console.log(_self.stateForm.date[0], _self.stateForm.date[1])
 
@@ -605,6 +612,7 @@ export default {
       const res = await roomStatPriceApi.UpdateRoomState(stateForm)
       _self.getPriceList()
       _self.priceChangeForOne = false
+      _self.isEditable = true
     },
     submit() {
       const _self = this
