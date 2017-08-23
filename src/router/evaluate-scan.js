@@ -15,6 +15,6 @@ export default {
       path: 'weixin-scan-code',
       name: '扫码链接',
       component: Pages.WeixinScanCode
-    },
+    }
   ]
 }
