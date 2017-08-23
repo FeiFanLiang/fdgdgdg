@@ -40,7 +40,7 @@
         <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
       </el-col>
     </el-row>
-    <el-table :data="roomList" row-key="id" :default-expand-all="true" :expand-row-keys="expandRowKeys" style="width: 100%">
+    <el-table :data="roomList" row-key="RoomID" @expand="handleExpand"  :expand-row-keys="expandRowKeys" style="width: 100%">
       <el-table-column type="expand" label="周日">
         <template scope="props">
         <template  v-for="sonRoom in props.row.SonRooms" >
@@ -172,7 +172,6 @@ export default {
   components: {
     HotelTopMenu
   },
-
   created() {
     const _self = this
     _self.stateForm.hotelId = _self.$route.params.ID
@@ -186,8 +185,7 @@ export default {
       activeName: 'price',
       platInfoList: {},
       roomList: [],
-      roomInfoList: [],
-      roomId: '',
+      chosenRoom: {},
       stateForm: {
         hotelId: '',
         roomId: '',
@@ -369,6 +367,14 @@ export default {
     }
   },
   methods: {
+    handleExpand(row, expanded) {
+      this.chosenRoom = row
+      if (expanded) {
+        this.getPriceList()
+        this.expandRowKeys.length = 0
+        this.expandRowKeys.push(row.RoomID)
+      }
+    },
     handleTabClick(tab) {
       this.activeName = tab.name
     },
@@ -377,33 +383,20 @@ export default {
       if (!_self.startAndEndDay || !_self.startAndEndDay.length) {
         return
       }
+      if (!_self.roomList.length) {
+        return
+      }
       const form = {
-        SonRooms: [1],
+        SonRooms: _self.chosenRoom.SonRooms.map(item => item.SonRoomID),
         BeginDate: _self.startAndEndDay[0].date,
         EndDate: _self.startAndEndDay[1].date
       }
-      // _self.roomInfoList = []
       const res = await roomStatPriceApi.getPriceList(form)
-      _self.roomInfoList = res.data
-      // for(let i in res.data.Sonrooms){
-      // console.warn(i,res.data.Sonrooms[i])
-      // }
-      const roomList = [..._self.roomList]
-      roomList[0].SonRooms.forEach((item, index) => {
-        item.timeDate =
-          _self.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
-        // item.timeDate = []
-        // for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
-        // .STSes) {
-        // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i].date = i
-        // item.timeDate.push(
-        // this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes[i]
-        // )
-        // }
-        // item.timeDate = chunk(item.timeDate, 7)
+      let SonRooms = [..._self.chosenRoom.SonRooms]
+      SonRooms.forEach((item, index) => {
+        item.timeDate = res.data.Sonrooms[String(item.SonRoomID)].STSes
       })
-      // console.log(SonRooms)
-      this.roomList = roomList
+      _self.chosenRoom.SonRooms = SonRooms
     },
     price(item, date) {
       if (
@@ -522,9 +515,7 @@ export default {
       let unixDb = db.getTime()
       let unixDe = de.getTime()
       for (let k = unixDb; k <= unixDe; ) {
-        console.log(format(new Date(parseInt(k))))
         arry.push(format(new Date(parseInt(k))))
-
         k = k + 24 * 60 * 60 * 1000
       }
       return arry
@@ -583,17 +574,14 @@ export default {
     async stateSubmit() {
       const _self = this
       let stateForm = []
-      console.log(_self.stateForm.date[0], _self.stateForm.date[1])
-
       let timeList = _self.dateScope(
         _self.stateForm.date[0],
         _self.stateForm.date[1]
       )
-
       timeList.forEach(time => {
         stateForm.push({
           hotelId: _self.stateForm.hotelId,
-          roomId: _self.roomList[0].roomId,
+          roomId: _self.chosenRoom.roomId,
           sonRoomId: _self.stateForm.sonRoomId,
           roomType: 1,
           date: time,
