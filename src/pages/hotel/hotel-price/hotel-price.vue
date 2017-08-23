@@ -205,7 +205,7 @@ export default {
       roomInfoList: [],
 
       updateForm: {
-        soonRoomId: '',
+        sonRoomId: '',
         time: '',
         price: [
           {
@@ -539,7 +539,7 @@ export default {
     priceOne(item, date) {
       console.log(item)
       this.priceChangeForOne = true
-      this.updateForm.sonRoomID = item.SonRoomID
+      this.updateForm.sonRoomId = item.SonRoomID
       this.updateForm.time = [new Date(date), new Date(date)]
       this.updateForm.price[0].price = this.price(item, date)
       ;['飞猪', '去哪', '携程', '全日空'].forEach((i, index) => {
@@ -562,7 +562,7 @@ export default {
         _self.updateForm.price.forEach(item => {
           if (item.id === -1) {
             otherPriceForm.push({
-              soonRoomId: _self.updateForm.soonRoomId,
+              sonRoomId: _self.updateForm.sonRoomId,
               price: item.price,
               useTime: time,
               threePlatId: item.id,
@@ -570,7 +570,7 @@ export default {
             })
           } else {
             priceForm.push({
-              soonRoomId: _self.updateForm.soonRoomId,
+              sonRoomId: _self.updateForm.sonRoomId,
               price: item.price,
               useTime: time
             })
@@ -583,45 +583,47 @@ export default {
         otherPriceForm
       )
       const priceFormRes = await roomStatPriceApi.updateRoomSalePrice(priceForm)
-    },
-    async updateRoomSalePrice() {
-      const _self = this
-      const form = []
-      form.push(
-        {
-          SonRoomID: 1,
-          Price: _self.updateForm.fzSalePrice,
-          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-          ThreePlatId: 1,
-          Stat: 0
-        },
-        {
-          SonRoomID: 1,
-          Price: _self.updateForm.qnSalePrice,
-          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-          ThreePlatId: 2,
-          Stat: 0
-        },
-        {
-          SonRoomID: 1,
-          Price: _self.updateForm.xcSalePrice,
-          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-          ThreePlatId: 3,
-          Stat: 0
-        },
-        {
-          SonRoomID: 1,
-          Price: _self.updateForm.qrkSalePrice,
-          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-          ThreePlatId: 4,
-          Stat: 0
-        }
-      )
-      const res = await roomStatPriceApi.updateRoomSalePrice(form)
-      console.dir(res)
       _self.fetchData()
       _self.priceChangeForOne = false
     },
+    // async updateRoomSalePrice() {
+    //   const _self = this
+    //   const form = []
+    //   form.push(
+    //     {
+    //       SonRoomID: 1,
+    //       Price: _self.updateForm.fzSalePrice,
+    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
+    //       ThreePlatId: 1,
+    //       Stat: 0
+    //     },
+    //     {
+    //       SonRoomID: 1,
+    //       Price: _self.updateForm.qnSalePrice,
+    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
+    //       ThreePlatId: 2,
+    //       Stat: 0
+    //     },
+    //     {
+    //       SonRoomID: 1,
+    //       Price: _self.updateForm.xcSalePrice,
+    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
+    //       ThreePlatId: 3,
+    //       Stat: 0
+    //     },
+    //     {
+    //       SonRoomID: 1,
+    //       Price: _self.updateForm.qrkSalePrice,
+    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
+    //       ThreePlatId: 4,
+    //       Stat: 0
+    //     }
+    //   )
+    //   const res = await roomStatPriceApi.updateRoomSalePrice(form)
+    //   console.dir(res)
+    //   _self.fetchData()
+    //   _self.priceChangeForOne = false
+    // },
     handleCheckAllChange(event) {
       this.checkedCities = event.target.checked ? cityOptions : []
       this.isIndeterminate = false
