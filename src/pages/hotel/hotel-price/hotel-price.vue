@@ -170,7 +170,6 @@ export default {
   created() {
     const _self = this
     _self.stateForm.hotelId = _self.$route.params.ID
-    _self.stateForm.hotelId = 2
     _self.chosenDate = Date.now()
     _self.fetchData()
     _self.getHotelThreePlatInfoList()
@@ -204,25 +203,25 @@ export default {
           },
           {
             title: '飞猪',
-            id: 0,
-            price: '',
-            stat: 0
-          },
-          {
-            title: '携程',
             id: 1,
             price: '',
             stat: 0
           },
           {
-            title: '去哪',
+            title: '携程',
             id: 2,
             price: '',
             stat: 0
           },
           {
-            title: '全日空ANA',
+            title: '去哪',
             id: 3,
+            price: '',
+            stat: 0
+          },
+          {
+            title: '全日空ANA',
+            id: 4,
             price: '',
             stat: 0
           }
