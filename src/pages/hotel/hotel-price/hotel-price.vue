@@ -58,7 +58,7 @@
             <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
             <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
             <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
-            <div class="price">全日空￥{{otherPrice('全日空',sonRoom,day.date)}}</div>
+            <div class="price">全日空￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
             <div class="remain">余{{count(sonRoom,day.date)}}</div>
             </td>
             </tr>
@@ -73,8 +73,11 @@
               </td>
               <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{day.date}}</div>
-
-                <div class="price">￥{{price(sonRoom,day.date)}}</div>
+                <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
+                <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+                <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
+                <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
+                <div class="price">全日空￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
                 <div class="remain">余{{count(sonRoom,day.date)}}</div>
               </td>
               </tr>
