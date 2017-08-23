@@ -8,10 +8,10 @@ export default {
   getPriceList (params) {
     return axios.post(base + 'GetPriceList', params)
   },
-  updateRoomPurchasePrice(params){
+  updateRoomPurchasePrice (params) {
     return axios.post(base + 'UpdateRoomPurchasePrice', params)
   },
-  updateRoomSalePrice(params){
+  updateRoomSalePrice (params) {
     return axios.post(base + 'UpdateRoomSalePrice', params)
   }
 }

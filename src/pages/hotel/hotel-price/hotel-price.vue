@@ -13,7 +13,7 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <el-col :span="3">
+      <!-- <el-col :span="3">
         <el-dropdown trigger="click" @command="priceMore('2017-01-01')">
           <el-button>批量修改价格
             <i class="el-icon-caret-bottom el-icon--right"></i>
@@ -23,7 +23,7 @@
             <el-dropdown-item command="批量修改采购价">批量修改采购价</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-      </el-col>
+      </el-col> -->
       <el-col :span="3">
         <el-select v-model="value7" placeholder="请选择">
           <el-option-group v-for="(group,gIndex) in options3" :key="group.label" :label="group.label">
@@ -63,7 +63,7 @@
             <!-- <span class="gray" style="display: none;">(无效)</span> -->
             </div>
             </td>
-            <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
+            <td class="ui-table-col-center w100 current mytd" v-for="day in week" @click="priceOne(sonRoom,day.date)">
             <div class="dayname">{{day.date}}</div>
             <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
             <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
@@ -82,7 +82,7 @@
               <!-- <span class="gray" style="display: none;">(无效)</span> -->
               </div>
               </td>
-              <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(day.date,sonRoom.timeDate[day.date])">
+              <td class="ui-table-col-center w100 current mytd" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{day.date}}</div>
 
                 <div class="price">￥{{price(sonRoom,day.date)}}</div>
@@ -104,74 +104,17 @@
     </el-table>
     <el-dialog title="修改售卖价" v-model="priceChangeForOne">
       <el-row>
+        {{updateForm.time}}
         <el-col :span="23" :offset="1">生效时间
-          <el-date-picker v-model="updateForm.time" type="daterange" align="left" placeholder="选择日期范围" disabled>
+          <el-date-picker v-model="updateForm.time" type="daterange" align="left" placeholder="选择日期范围" >
           </el-date-picker>
         </el-col>
       </el-row>
-      <!-- <el-row style="margin-top:20px;">
-        <el-col :span="2" :offset="1">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-        </el-col>
-        <el-col :span="21">
-          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox v-for="(city,index) in cities" :key="index" :label="city">{{city}}</el-checkbox>
-          </el-checkbox-group>
-        </el-col>
-      </el-row> -->
-      <el-row style="margin-top:20px;">
+      <el-row style="margin-top:20px;" v-for="(item,index) in updateForm.price" :key="index">
         <el-col :span="12" :offset="1">
-          <el-input placeholder="最高采购价" v-model="updateForm.purchasePrice">
+          <el-input placeholder="售卖价" v-model="updateForm.price[index].price">
 <template slot="prepend">
-   最高采购价
-</template>
-<template slot="append">
-   ￥
-</template>
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top:20px;">
-        <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="updateForm.fzSalePrice">
-<template slot="prepend">
-   飞猪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</template>
-<template slot="append">
-   ￥
-</template>
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top:20px;">
-        <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="updateForm.qnSalePrice">
-<template slot="prepend">
-   去哪&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</template>
-<template slot="append">
-   ￥
-</template>
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top:20px;">
-        <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="updateForm.xcSalePrice">
-<template slot="prepend">
-   携程&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</template>
-<template slot="append">
-   ￥
-</template>
-          </el-input>
-        </el-col>
-      </el-row>
-      <el-row style="margin-top:20px;">
-        <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="updateForm.qrkSalePrice">
-<template slot="prepend">
-   全日空&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+   {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </template>
 <template slot="append">
    ￥
@@ -193,7 +136,7 @@
         <el-button type="primary" @click="submit()">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="批量修改售卖价" v-model="priceChangeForMore">
+    <!-- <el-dialog title="批量修改售卖价" v-model="priceChangeForMore">
       <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
         <el-row>
           <el-col :span="23" :offset="1">生效时间value7
@@ -230,23 +173,11 @@
           </el-checkbox-group>
         </el-col>
       </el-row>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column show-overflow-tooltip prop="date" label="房型名称">
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="name" label="产品名称">
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="address" label="早餐">
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="address" label="最高采购价">
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="address" label="售卖价">
-        </el-table-column>
-      </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="priceChangeForMore = false">取 消</el-button>
         <el-button type="primary" @click="priceChangeForMore = false">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -262,7 +193,6 @@ export default {
   created() {
     // 组件创建完后获取数据，
     // 此时 data 已经被 observed 了
-    console.dir(this.$route.params)
     // this.expandRowKeys.push(this.list[0].id)
     this.chosenDate = Date.now()
     this.fetchData()
@@ -273,44 +203,46 @@ export default {
       platInfoList: {},
       roomList: [],
       roomInfoList: [],
+
       updateForm: {
+        soonRoomId: '',
         time: '',
-        purchasePrice: '',
-        fzSalePrice: '',
-        qnSalePrice: '',
-        xcSalePrice: '',
-        qrkSalePrice: ''
+        price: [
+          {
+            title: '最高采购价',
+            id: -1,
+            price: ''
+          },
+          {
+            title: '飞猪',
+            id: 0,
+            price: ''
+          },
+          {
+            title: '携程',
+            id: 1,
+            price: ''
+          },
+          {
+            title: '去哪',
+            id: 2,
+            price: ''
+          },
+          {
+            title: '全日空',
+            id: 3,
+            price: ''
+          }
+        ]
       },
       status: '1',
       input3: '',
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
       chosenDate: '',
       expandRowKeys: [0],
       value7: '',
       cycle: ['one'],
       priceChangeForOne: false,
-      priceChangeForMore: false,
+      // priceChangeForMore: false,
       checkAll: true,
       checkedCities: cityOptions,
       cities: cityOptions,
@@ -575,28 +507,82 @@ export default {
     deleteCycle(item, index) {
       this.cycle.splice(index, 1)
     },
-    priceOne(date, day) {
-      console.warn(day, this.updateForm)
+    dataScope(value1, value2) {
+      let date1 = new Date(value1)
+      let date2 = new Date(value2)
+      if (date1 > date2) {
+        ;[date1, date2] = [date2, date1]
+      }
+      date1.setDate(date1.getDate())
+      let dateArr = []
+      let i = 0
+      while (
+        !(
+          date1.getFullYear() === date2.getFullYear() &&
+          date1.getMonth() === date2.getMonth() &&
+          date1.getDate() === date2.getDate() + 1
+        )
+      ) {
+        dateArr[i] =
+          date1.getFullYear() +
+          '-' +
+          (date1.getMonth() + 1 < 10
+            ? '0' + (date1.getMonth() + 1)
+            : date1.getMonth() + 1) +
+          '-' +
+          (date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate())
+        i++
+        date1.setDate(date1.getDate() + 1)
+      }
+      return dateArr
+    },
+    priceOne(item, date) {
+      console.log(item)
       this.priceChangeForOne = true
-      this.updateForm = {}
+      this.updateForm.sonRoomID = item.SonRoomID
       this.updateForm.time = [new Date(date), new Date(date)]
-      this.updateForm.purchasePrice = day.SonRoomPurchasePrice.Price
+      this.updateForm.price[0].price = this.price(item, date)
+      ;['飞猪', '去哪', '携程', '全日空'].forEach((i, index) => {
+        this.updateForm.price[index + 1].price = this.otherPrice(i, item, date)
+      })
     },
-    priceMore() {
-      this.priceChangeForMore = true
-    },
+    // priceMore() {
+    //   this.priceChangeForMore = true
+    // },
     async submit() {
       const _self = this
-      console.log(_self.updateForm.time)
-      const form = [
-        {
-          SonRoomID: 1,
-          Price: _self.updateForm.purchasePrice,
-          UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss')
-        }
-      ]
-      const res = await roomStatPriceApi.updateRoomPurchasePrice(form)
-      _self.updateRoomSalePrice()
+      console.log(_self.updateForm)
+      let priceForm = []
+      let otherPriceForm = []
+      let timeList = this.dataScope(
+        this.updateForm.time[0],
+        this.updateForm.time[1]
+      )
+      timeList.forEach(time => {
+        _self.updateForm.price.forEach(item => {
+          if (item.id === -1) {
+            otherPriceForm.push({
+              soonRoomId: _self.updateForm.soonRoomId,
+              price: item.price,
+              useTime: time,
+              threePlatId: item.id,
+              stat: 0
+            })
+          } else {
+            priceForm.push({
+              soonRoomId: _self.updateForm.soonRoomId,
+              price: item.price,
+              useTime: time
+            })
+          }
+        })
+      })
+      console.log(priceForm)
+      console.log(otherPriceForm)
+      const otherPriceFormRes = await roomStatPriceApi.updateRoomPurchasePrice(
+        otherPriceForm
+      )
+      const priceFormRes = await roomStatPriceApi.updateRoomSalePrice(priceForm)
     },
     async updateRoomSalePrice() {
       const _self = this
