@@ -668,4 +668,13 @@ export default {
   .column_tr:after {
     clear: both;
   }
+  .dayname{
+    color: #13ce66;
+  }
+  .price{
+    color:#48576a;
+  }
+  .remain{
+    color:#50bfff;
+  }
 </style>
