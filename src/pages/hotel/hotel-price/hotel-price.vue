@@ -55,7 +55,7 @@
             <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
             <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
             <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
-            <div class="price">全日空￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+            <div class="price">全日空ANA￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
             <div class="remain">余{{count(sonRoom,day.date)}}</div>
             </td>
             </tr>
@@ -74,7 +74,7 @@
                 <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
                 <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
                 <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
-                <div class="price">全日空￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+                <div class="price">全日空ANA￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
                 <div class="remain">余{{count(sonRoom,day.date)}}</div>
               </td>
               </tr>
@@ -93,7 +93,6 @@
     </el-table>
     <el-dialog title="" v-model="priceChangeForOne">
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
-
     <el-tab-pane label="修改售卖价" name="price">
       <el-row>
         <el-col :span="23" :offset="1">生效时间
@@ -118,7 +117,6 @@
           <el-radio class="radio" v-model="priceForm.price[index].stat" :label="2">关房</el-radio>
         </el-col>
       </el-row>
-
     </el-tab-pane>
     <el-tab-pane label="修改房间状态" name="state">
       <el-form ref="form" :model="stateForm" label-width="80px">
@@ -306,17 +304,9 @@ export default {
           status = 0
         }
         tempItem = {
-          // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
           date: item.toLocaleDateString(),
-          status: status,
-          odd: '3'
+          status: status
         }
-        // this.events.forEach(event => {
-        // if (isEqualDateStr(event.date, tempItem.date)) {
-        // tempItem.title = event.title;
-        // tempItem.desc = event.desc || '';
-        // }
-        // });
         tempArr.push(tempItem)
       }
       return tempArr
@@ -334,8 +324,7 @@ export default {
       new Array(7).fill(1).forEach((item, index) => {
         weekList.unshift({
           date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
-          status: false,
-          odd: '3'
+          status: false
         })
       })
       return weekList
@@ -382,12 +371,10 @@ export default {
       if (!_self.startAndEndDay || !_self.startAndEndDay.length) {
         return
       }
-
       if (!_self.roomList.length) {
         return
       }
       _self.loading = true
-
       const form = {
         SonRooms: _self.chosenRoom.SonRooms.map(item => item.SonRoomID),
         BeginDate: _self.startAndEndDay[0].date,
@@ -398,7 +385,6 @@ export default {
       SonRooms.forEach((item, index) => {
         item.timeDate = res.data.Sonrooms[String(item.SonRoomID)].STSes
       })
-
       _self.chosenRoom.SonRooms = SonRooms
       _self.loading = false
     },
@@ -423,7 +409,6 @@ export default {
       ) {
         return item.timeDate[date].SonRoomPurchasePrice.Price
       }
-
       return ''
     },
     otherPrice(type, item, date) {
@@ -440,7 +425,6 @@ export default {
         )
         return value ? value.Price : ''
       }
-
       return ''
     },
     count(item, date) {
@@ -545,6 +529,7 @@ export default {
       ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
       })
+      console.log(_self.priceForm.price)
       _self.stateForm.count = item.timeDate[date].Count
       _self.stateForm.isOpen = item.timeDate[date].IsOpen
       _self.stateForm.sonRoomId = item.SonRoomID
