@@ -93,16 +93,17 @@
     </el-table>
     <el-dialog title="" v-model="priceChangeForOne">
       <el-tabs v-model="activeName" @tab-click="handleTabClick">
+
     <el-tab-pane label="修改售卖价" name="price">
       <el-row>
         <el-col :span="23" :offset="1">生效时间
-          <el-date-picker v-model="updateForm.time" type="daterange" align="left" placeholder="选择日期范围">
+          <el-date-picker v-model="priceForm.time" type="daterange" align="left" placeholder="选择日期范围">
           </el-date-picker>
         </el-col>
       </el-row>
-      <el-row style="margin-top:20px;" v-for="(item,index) in updateForm.price" :key="index">
+      <el-row style="margin-top:20px;" v-for="(item,index) in priceForm.price" :key="index">
         <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="updateForm.price[index].price">
+          <el-input placeholder="售卖价" v-model="priceForm.price[index].price">
             <template slot="prepend">
                {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             </template>
@@ -112,32 +113,43 @@
           </el-input>
         </el-col>
         <el-col :span="10" :offset="1" v-if="index!==0">
-          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="0">自动更新</el-radio>
-          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="1">人工维护</el-radio>
-          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="2">关房</el-radio>
+          <el-radio class="radio" v-model="priceForm.price[index].stat" :label="0">自动更新</el-radio>
+          <el-radio class="radio" v-model="priceForm.price[index].stat" :label="1">人工维护</el-radio>
+          <el-radio class="radio" v-model="priceForm.price[index].stat" :label="2">关房</el-radio>
         </el-col>
       </el-row>
 
     </el-tab-pane>
     <el-tab-pane label="修改房间状态" name="state">
-      <el-row style="margin-top:20px;">
-        <el-col :span="23" :offset="1">
-          <el-radio-group v-model="radio2">
-            <el-radio :label="6">开房</el-radio>
-            <el-radio :label="9">关房</el-radio>
-          </el-radio-group>
-        </el-col>
-        <el-col :span="23" :offset="1">
-         <el-input-number v-model="num1" @change="handleChange" :min="1" :max="10"></el-input-number>
-        </el-col>
-        <el-col :span="23" :offset="1">
-
-        </el-col>
-        <el-col :span="23" :offset="1">
-
-        </el-col>
-
-      </el-row>
+      <el-form ref="form" :model="stateForm" label-width="80px">
+        <el-form-item label="生效时间">
+      <el-col >
+        <el-date-picker v-model="stateForm.date" type="daterange" align="left" placeholder="选择日期范围">
+        </el-date-picker>
+      </el-col>
+    </el-form-item>
+    <el-form-item label="和否开房">
+      <el-radio-group v-model="stateForm.isOpen">
+        <el-radio-button :label="true">开房</el-radio-button>
+        <el-radio-button :label="false">关房</el-radio-button>
+      </el-radio-group>
+  </el-form-item>
+  <!-- <el-form-item label="房间类型">
+    <el-radio-group v-model="stateForm.roomType">
+      <el-radio-button :label="0">物理房型</el-radio-button>
+      <el-radio-button :label="1">子房型</el-radio-button>
+    </el-radio-group>
+  </el-form-item> -->
+  <!-- <el-form-item label="获取渠道">
+    <el-radio-group v-model="stateForm.updateChannel">
+      <el-radio-button :label="0">机器抓取</el-radio-button>
+      <el-radio-button :label="1">人工更改</el-radio-button>
+    </el-radio-group>
+  </el-form-item> -->
+  <el-form-item label="剩余数量">
+     <el-input-number v-model="stateForm.count"  :min="1" ></el-input-number>
+  </el-form-item>
+        </el-form>
     </el-tab-pane>
   </el-tabs>
   <div slot="footer" class="dialog-footer">
@@ -157,10 +169,14 @@ export default {
   components: {
     HotelTopMenu
   },
+
   created() {
-    this.chosenDate = Date.now()
-    this.fetchData()
-    this.getHotelThreePlatInfoList()
+    const _self = this
+    _self.stateForm.hotelId = _self.$route.params.ID
+    _self.stateForm.hotelId = 2
+    _self.chosenDate = Date.now()
+    _self.fetchData()
+    _self.getHotelThreePlatInfoList()
   },
   data() {
     return {
@@ -168,7 +184,18 @@ export default {
       platInfoList: {},
       roomList: [],
       roomInfoList: [],
-      updateForm: {
+      roomId: '',
+      stateForm: {
+        hotelId: '',
+        roomId: '',
+        sonRoomId: '',
+        roomType: 1,
+        date: '',
+        count: '',
+        isOpen: '',
+        updateChannel: 0
+      },
+      priceForm: {
         sonRoomId: '',
         time: '',
         price: [
@@ -261,9 +288,10 @@ export default {
       }
     },
     monthList() {
-      if (!this.calendar) return
+      const _self = this
+      if (!_self.calendar) return
       let firstDay = new Date(
-        this.calendar.curYear + '/' + this.calendar.curMonth + '/01'
+        _self.calendar.curYear + '/' + _self.calendar.curMonth + '/01'
       )
       let startTimestamp = firstDay - 1000 * 60 * 60 * 24 * firstDay.getDay()
       let item,
@@ -272,7 +300,7 @@ export default {
         tempItem
       for (let i = 0; i < 42; i++) {
         item = new Date(startTimestamp + i * 1000 * 60 * 60 * 24)
-        if (this.calendar.curMonth === item.getMonth()) {
+        if (_self.calendar.curMonth === item.getMonth()) {
           status = 1
         } else {
           status = 0
@@ -281,7 +309,6 @@ export default {
           // date: `${item.getFullYear()}/${item.getMonth() + 1}/${item.getDate()}`,
           date: item.toLocaleDateString(),
           status: status,
-          CNY: '100',
           odd: '3'
         }
         // this.events.forEach(event => {
@@ -308,27 +335,27 @@ export default {
         weekList.unshift({
           date: new Date(SundayTime - index * oneDayTime).toLocaleDateString(),
           status: false,
-          CNY: '100',
           odd: '3'
         })
       })
       return weekList
     },
     startAndEndDay() {
+      const _self = this
       if (
-        !this.monthList ||
-        !this.monthList.length ||
-        !this.weekList ||
-        !this.weekList.length
+        !_self.monthList ||
+        !_self.monthList.length ||
+        !_self.weekList ||
+        !_self.weekList.length
       ) {
         return
       }
       let list = []
-      if (this.periodType === 'month') {
-        list = this.monthList
+      if (_self.periodType === 'month') {
+        list = _self.monthList
       }
-      if (this.periodType === 'week') {
-        list = this.weekList
+      if (_self.periodType === 'week') {
+        list = _self.weekList
       }
       return [list[0], list[list.length - 1]]
     }
@@ -343,23 +370,25 @@ export default {
       this.activeName = tab.name
     },
     async getPriceList() {
-      if (!this.startAndEndDay || !this.startAndEndDay.length) {
+      const _self = this
+      if (!_self.startAndEndDay || !_self.startAndEndDay.length) {
         return
       }
       const form = {
         SonRooms: [1],
-        BeginDate: this.startAndEndDay[0].date,
-        EndDate: this.startAndEndDay[1].date
+        BeginDate: _self.startAndEndDay[0].date,
+        EndDate: _self.startAndEndDay[1].date
       }
-      // this.roomInfoList = []
+      // _self.roomInfoList = []
       const res = await roomStatPriceApi.getPriceList(form)
-      this.roomInfoList = res.data
+      _self.roomInfoList = res.data
       // for(let i in res.data.Sonrooms){
       // console.warn(i,res.data.Sonrooms[i])
       // }
-      const roomList = [...this.roomList]
+      const roomList = [..._self.roomList]
       roomList[0].SonRooms.forEach((item, index) => {
-        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
+        item.timeDate =
+          _self.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
         // item.timeDate = []
         // for (let i in this.roomInfoList.Sonrooms[String(item.SonRoomID)]
         // .STSes) {
@@ -415,23 +444,22 @@ export default {
       return ''
     },
     async fetchData() {
-      const _self = this
-      const res = await roomStatPriceApi.getSonRoomList('2')
-      _self.roomList = res.data
-      console.dir(_self.roomList[0].SonRooms)
+      const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
+      this.roomList = res.data
     },
     expand(item) {
       item.isExpand = !item.isExpand
     },
     pre() {
-      let nowdays = new Date(this.chosenDate)
-      if (this.periodType === 'week') {
+      const _self = this
+      let nowdays = new Date(_self.chosenDate)
+      if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(
+        _self.chosenDate = new Date(
           +nowdays - 7 * oneDayTime
         ).toLocaleDateString()
       }
-      if (this.periodType === 'month') {
+      if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
         let month = b.getMonth()
         if (month == 0) {
@@ -441,18 +469,19 @@ export default {
         if (month < 10) {
           month = '0' + month
         }
-        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
+        _self.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
       }
     },
     next() {
-      let nowdays = new Date(this.chosenDate)
-      if (this.periodType === 'week') {
+      const _self = this
+      let nowdays = new Date(_self.chosenDate)
+      if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        this.chosenDate = new Date(
+        _self.chosenDate = new Date(
           +nowdays + 7 * oneDayTime
         ).toLocaleDateString()
       }
-      if (this.periodType === 'month') {
+      if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
         let month = nowdays.getMonth()
         if (month == 11) {
@@ -463,68 +492,74 @@ export default {
         if (month < 10) {
           month = '0' + month
         }
-        this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
+        _self.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
       }
     },
+    dateScope(begin, end) {
+      function format(dateIn) {
+        let date = new Date(dateIn)
+        let s = ''
+        let mouth =
+          date.getMonth() + 1 >= 10
+            ? date.getMonth() + 1
+            : '0' + (date.getMonth() + 1)
+        let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
+        s += date.getFullYear() + '-' // 获取年份。
+        s += mouth + '-' // 获取月份。
+        s += day // 获取日。
+        return s // 返回日期。
+      }
+      let arry = []
+      let ab = format(begin).split('-')
+      let ae = format(end).split('-')
+      let db = new Date()
+      db.setUTCFullYear(ab[0], ab[1] - 1, ab[2])
+      let de = new Date()
+      de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
+      let unixDb = db.getTime()
+      let unixDe = de.getTime()
+      for (let k = unixDb; k <= unixDe; ) {
+        console.log(format(new Date(parseInt(k))))
+        arry.push(format(new Date(parseInt(k))))
 
-    dataScope(value1, value2) {
-      let date1 = new Date(value1)
-      let date2 = new Date(value2)
-      if (date1 > date2) {
-        ;[date1, date2] = [date2, date1]
+        k = k + 24 * 60 * 60 * 1000
       }
-      date1.setDate(date1.getDate())
-      let dateArr = []
-      let i = 0
-      while (
-        !(
-          date1.getFullYear() === date2.getFullYear() &&
-          date1.getMonth() === date2.getMonth() &&
-          date1.getDate() === date2.getDate() + 1
-        )
-      ) {
-        dateArr[i] =
-          date1.getFullYear() +
-          '-' +
-          (date1.getMonth() + 1 < 10
-            ? '0' + (date1.getMonth() + 1)
-            : date1.getMonth() + 1) +
-          '-' +
-          (date1.getDate() < 10 ? '0' + date1.getDate() : date1.getDate())
-        i++
-        date1.setDate(date1.getDate() + 1)
-      }
-      return dateArr
+      return arry
     },
     priceOne(item, date) {
-      console.log(item)
-      this.priceChangeForOne = true
-      this.updateForm.sonRoomId = item.SonRoomID
-      this.updateForm.time = [new Date(date), new Date(date)]
-      this.updateForm.price[0].price = this.price(item, date)
+      const _self = this
+
+      _self.priceChangeForOne = true
+      _self.priceForm.sonRoomId = item.SonRoomID
+      _self.priceForm.time = [new Date(date), new Date(date)]
+      _self.priceForm.price[0].price = _self.price(item, date)
       ;['飞猪', '去哪', '携程', '全日空'].forEach((i, index) => {
-        this.updateForm.price[index + 1].price = this.otherPrice(i, item, date)
+        _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
       })
+      _self.stateForm.count = item.timeDate[date].Count
+      _self.stateForm.isOpen = item.timeDate[date].IsOpen
+      _self.stateForm.sonRoomId = item.SonRoomID
+      _self.stateForm.date = [new Date(date), new Date(date)]
     },
-    async submit() {
+    async priceSubmit() {
       const _self = this
       let priceForm = []
       let otherPriceForm = []
-      let timeList = this.dataScope(
-        this.updateForm.time[0],
-        this.updateForm.time[1]
+      let timeList = _self.dateScope(
+        _self.priceForm.time[0],
+        _self.priceForm.time[1]
       )
       timeList.forEach(time => {
-        _self.updateForm.price.forEach(item => {
+        _self.priceForm.price.forEach(item => {
           if (item.id === -1) {
             priceForm.push({
-              sonRoomId: _self.updateForm.sonRoomId,
+              sonRoomId: _self.priceForm.sonRoomId,
               price: item.price,
               useTime: time
             })
           } else {
             otherPriceForm.push({
-              sonRoomId: _self.updateForm.sonRoomId,
+              sonRoomId: _self.priceForm.sonRoomId,
               price: item.price,
               useTime: time,
               threePlatId: item.id,
@@ -542,36 +577,50 @@ export default {
       _self.getPriceList()
       _self.priceChangeForOne = false
     },
+    async stateSubmit() {
+      const _self = this
+      let stateForm = []
+      console.log(_self.stateForm.date[0], _self.stateForm.date[1])
+
+      let timeList = _self.dateScope(
+        _self.stateForm.date[0],
+        _self.stateForm.date[1]
+      )
+
+      timeList.forEach(time => {
+        stateForm.push({
+          hotelId: _self.stateForm.hotelId,
+          roomId: _self.roomList[0].roomId,
+          sonRoomId: _self.stateForm.sonRoomId,
+          roomType: 1,
+          date: time,
+          count: _self.stateForm.count,
+          isOpen: _self.stateForm.isOpen,
+          updateChannel: 0
+        })
+      })
+      const res = await roomStatPriceApi.UpdateRoomState(stateForm)
+      _self.getPriceList()
+      _self.priceChangeForOne = false
+    },
+    submit() {
+      const _self = this
+      if (_self.activeName === 'price') {
+        _self.priceSubmit()
+        return
+      }
+      if (_self.activeName === 'state') {
+        _self.stateSubmit()
+      }
+    },
     handleCheckAllChange(event) {
       this.checkedCities = event.target.checked ? cityOptions : []
       this.isIndeterminate = false
     },
-    handleCheckedCitiesChange(value) {
-      let checkedCount = value.length
-      this.checkAll = checkedCount === this.cities.length
-      this.isIndeterminate =
-        checkedCount > 0 && checkedCount < this.cities.length
-    },
-    async refreshData() {
-      if (!this.startAndEndDay || !this.startAndEndDay.length) {
-        return
-      }
-      const form = {
-        SonRooms: [1],
-        BeginDate: this.startAndEndDay[0].date,
-        EndDate: this.startAndEndDay[1].date
-      }
-      const res = await roomStatPriceApi.getPriceList(form)
-      this.roomInfoList = res.data
-      this.roomList[0].SonRooms.forEach((item, index) => {
-        item.timeDate = this.roomInfoList.Sonrooms[String(item.SonRoomID)].STSes
-      })
-    },
     async getHotelThreePlatInfoList() {
-      const _self = this
       const res = await hotelThreePlatInfoApi.getList()
       if (res && res.data && Array.isArray(res.data)) {
-        res.data.forEach(item => (_self.platInfoList[item.PlatName] = item.ID))
+        res.data.forEach(item => (this.platInfoList[item.PlatName] = item.ID))
       }
     }
   }
