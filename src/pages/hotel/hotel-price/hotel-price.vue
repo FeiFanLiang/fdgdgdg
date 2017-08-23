@@ -13,17 +13,6 @@
       </el-col>
     </el-row>
     <el-row :gutter="20">
-      <!-- <el-col :span="3">
-        <el-dropdown trigger="click" @command="priceMore('2017-01-01')">
-          <el-button>批量修改价格
-            <i class="el-icon-caret-bottom el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="批量修改售卖价">批量修改售卖价</el-dropdown-item>
-            <el-dropdown-item command="批量修改采购价">批量修改采购价</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-col> -->
       <el-col :span="3">
         <el-select v-model="value7" placeholder="请选择">
           <el-option-group v-for="(group,gIndex) in options3" :key="group.label" :label="group.label">
@@ -90,8 +79,8 @@
               </td>
               </tr>
           </table >
-</template>
-      </template>
+        </template>
+        </template>
       </el-table-column>
       <el-table-column label="房型" prop="RoomName" min-width="300"></el-table-column>
       <el-table-column label="周日" width="120"></el-table-column>
@@ -102,82 +91,60 @@
       <el-table-column label="周五" width="120"></el-table-column>
       <el-table-column label="周六" width="120"></el-table-column>
     </el-table>
-    <el-dialog title="修改售卖价" v-model="priceChangeForOne">
+    <el-dialog title="" v-model="priceChangeForOne">
+      <el-tabs v-model="activeName" @tab-click="handleTabClick">
+    <el-tab-pane label="修改售卖价" name="price">
       <el-row>
-        {{updateForm.time}}
         <el-col :span="23" :offset="1">生效时间
-          <el-date-picker v-model="updateForm.time" type="daterange" align="left" placeholder="选择日期范围" >
+          <el-date-picker v-model="updateForm.time" type="daterange" align="left" placeholder="选择日期范围">
           </el-date-picker>
         </el-col>
       </el-row>
       <el-row style="margin-top:20px;" v-for="(item,index) in updateForm.price" :key="index">
         <el-col :span="12" :offset="1">
           <el-input placeholder="售卖价" v-model="updateForm.price[index].price">
-<template slot="prepend">
-   {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</template>
-<template slot="append">
-   ￥
-</template>
+            <template slot="prepend">
+               {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </template>
+            <template slot="append">
+               ￥
+            </template>
           </el-input>
         </el-col>
+        <el-col :span="10" :offset="1" v-if="index!==0">
+          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="0">自动更新</el-radio>
+          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="1">人工维护</el-radio>
+          <el-radio class="radio" v-model="updateForm.price[index].stat" :label="2">关房</el-radio>
+        </el-col>
       </el-row>
+
+    </el-tab-pane>
+    <el-tab-pane label="修改房间状态" name="state">
       <el-row style="margin-top:20px;">
         <el-col :span="23" :offset="1">
           <el-radio-group v-model="radio2">
-            <el-radio :label="3">不变</el-radio>
             <el-radio :label="6">开房</el-radio>
             <el-radio :label="9">关房</el-radio>
           </el-radio-group>
         </el-col>
-      </el-row>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="priceChangeForOne = false">取 消</el-button>
-        <el-button type="primary" @click="submit()">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- <el-dialog title="批量修改售卖价" v-model="priceChangeForMore">
-      <div v-for="n in cycle" style="position: relative;" @mouseover="showDelete(n)">
-        <el-row>
-          <el-col :span="23" :offset="1">生效时间value7
-            <el-date-picker v-model="value7" type="daterange" align="left" placeholder="选择日期范围">
-            </el-date-picker>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="2" :offset="1">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-          </el-col>
-          <el-col :span="21">
-            <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-              <el-checkbox v-for="(city,index) in cities" :key="index" :label="city">{{city}}</el-checkbox>
-            </el-checkbox-group>
-          </el-col>
-        </el-row>
-        <i class="el-icon-delete" style=" position: absolute;
-  top: 50%;
-  right: 0;" @click="deleteCycle(n,index)" v-show="chosenDelete===n&&cycle.length>1"></i>
-      </div>
-      <el-row>
         <el-col :span="23" :offset="1">
-          <el-button type="text" @click="addCycle">添加周期</el-button>
+         <el-input-number v-model="num1" @change="handleChange" :min="1" :max="10"></el-input-number>
         </el-col>
+        <el-col :span="23" :offset="1">
+
+        </el-col>
+        <el-col :span="23" :offset="1">
+
+        </el-col>
+
       </el-row>
-      <el-row>
-        <el-col :span="2" :offset="1">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-        </el-col>
-        <el-col :span="21">
-          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox v-for="(type,index) in homeType" :key="index" :label="type">{{type}}</el-checkbox>
-          </el-checkbox-group>
-        </el-col>
-      </el-row>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="priceChangeForMore = false">取 消</el-button>
-        <el-button type="primary" @click="priceChangeForMore = false">确 定</el-button>
-      </div>
-    </el-dialog> -->
+    </el-tab-pane>
+  </el-tabs>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="priceChangeForOne = false">取 消</el-button>
+    <el-button type="primary" @click="submit()">确 定</el-button>
+  </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -191,19 +158,16 @@ export default {
     HotelTopMenu
   },
   created() {
-    // 组件创建完后获取数据，
-    // 此时 data 已经被 observed 了
-    // this.expandRowKeys.push(this.list[0].id)
     this.chosenDate = Date.now()
     this.fetchData()
     this.getHotelThreePlatInfoList()
   },
   data() {
     return {
+      activeName: 'price',
       platInfoList: {},
       roomList: [],
       roomInfoList: [],
-
       updateForm: {
         sonRoomId: '',
         time: '',
@@ -216,42 +180,40 @@ export default {
           {
             title: '飞猪',
             id: 0,
-            price: ''
+            price: '',
+            stat: 0
           },
           {
             title: '携程',
             id: 1,
-            price: ''
+            price: '',
+            stat: 0
           },
           {
             title: '去哪',
             id: 2,
-            price: ''
+            price: '',
+            stat: 0
           },
           {
             title: '全日空',
             id: 3,
-            price: ''
+            price: '',
+            stat: 0
           }
         ]
       },
       status: '1',
-      input3: '',
       chosenDate: '',
       expandRowKeys: [0],
       value7: '',
-      cycle: ['one'],
       priceChangeForOne: false,
-      // priceChangeForMore: false,
       checkAll: true,
       checkedCities: cityOptions,
       cities: cityOptions,
-      homeType: ['标准房', '单人房'],
       isIndeterminate: true,
       radio2: 3,
-      chosenDelete: '',
       periodType: 'month',
-
       options3: [
         {
           label: '售卖价',
@@ -372,7 +334,15 @@ export default {
     }
   },
   watch: {
-    async startAndEndDay() {
+    startAndEndDay() {
+      this.getPriceList()
+    }
+  },
+  methods: {
+    handleTabClick(tab) {
+      this.activeName = tab.name
+    },
+    async getPriceList() {
       if (!this.startAndEndDay || !this.startAndEndDay.length) {
         return
       }
@@ -402,9 +372,7 @@ export default {
       })
       // console.log(SonRooms)
       this.roomList = roomList
-    }
-  },
-  methods: {
+    },
     price(item, date) {
       if (
         item &&
@@ -498,15 +466,7 @@ export default {
         this.chosenDate = year + '-' + month + '-' + '01' // 上个月的第一天
       }
     },
-    showDelete(item) {
-      this.chosenDelete = item
-    },
-    addCycle() {
-      this.cycle.push(Math.random().toString(36).substr(2))
-    },
-    deleteCycle(item, index) {
-      this.cycle.splice(index, 1)
-    },
+
     dataScope(value1, value2) {
       let date1 = new Date(value1)
       let date2 = new Date(value2)
@@ -546,12 +506,8 @@ export default {
         this.updateForm.price[index + 1].price = this.otherPrice(i, item, date)
       })
     },
-    // priceMore() {
-    //   this.priceChangeForMore = true
-    // },
     async submit() {
       const _self = this
-      console.log(_self.updateForm)
       let priceForm = []
       let otherPriceForm = []
       let timeList = this.dataScope(
@@ -561,69 +517,31 @@ export default {
       timeList.forEach(time => {
         _self.updateForm.price.forEach(item => {
           if (item.id === -1) {
-            otherPriceForm.push({
-              sonRoomId: _self.updateForm.sonRoomId,
-              price: item.price,
-              useTime: time,
-              threePlatId: item.id,
-              stat: 0
-            })
-          } else {
             priceForm.push({
               sonRoomId: _self.updateForm.sonRoomId,
               price: item.price,
               useTime: time
             })
+          } else {
+            otherPriceForm.push({
+              sonRoomId: _self.updateForm.sonRoomId,
+              price: item.price,
+              useTime: time,
+              threePlatId: item.id,
+              stat: item.stat
+            })
           }
         })
       })
-      console.log(priceForm)
-      console.log(otherPriceForm)
-      const otherPriceFormRes = await roomStatPriceApi.updateRoomPurchasePrice(
+      const otherPriceFormRes = await roomStatPriceApi.updateRoomSalePrice(
         otherPriceForm
       )
-      const priceFormRes = await roomStatPriceApi.updateRoomSalePrice(priceForm)
-      _self.fetchData()
+      const priceFormRes = await roomStatPriceApi.updateRoomPurchasePrice(
+        priceForm
+      )
+      _self.getPriceList()
       _self.priceChangeForOne = false
     },
-    // async updateRoomSalePrice() {
-    //   const _self = this
-    //   const form = []
-    //   form.push(
-    //     {
-    //       SonRoomID: 1,
-    //       Price: _self.updateForm.fzSalePrice,
-    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-    //       ThreePlatId: 1,
-    //       Stat: 0
-    //     },
-    //     {
-    //       SonRoomID: 1,
-    //       Price: _self.updateForm.qnSalePrice,
-    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-    //       ThreePlatId: 2,
-    //       Stat: 0
-    //     },
-    //     {
-    //       SonRoomID: 1,
-    //       Price: _self.updateForm.xcSalePrice,
-    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-    //       ThreePlatId: 3,
-    //       Stat: 0
-    //     },
-    //     {
-    //       SonRoomID: 1,
-    //       Price: _self.updateForm.qrkSalePrice,
-    //       UseTime: _self.updateForm.time[0].Format('yyyy-MM-dd hh:mm:ss'),
-    //       ThreePlatId: 4,
-    //       Stat: 0
-    //     }
-    //   )
-    //   const res = await roomStatPriceApi.updateRoomSalePrice(form)
-    //   console.dir(res)
-    //   _self.fetchData()
-    //   _self.priceChangeForOne = false
-    // },
     handleCheckAllChange(event) {
       this.checkedCities = event.target.checked ? cityOptions : []
       this.isIndeterminate = false
@@ -643,7 +561,6 @@ export default {
         BeginDate: this.startAndEndDay[0].date,
         EndDate: this.startAndEndDay[1].date
       }
-      console.log(111, form)
       const res = await roomStatPriceApi.getPriceList(form)
       this.roomInfoList = res.data
       this.roomList[0].SonRooms.forEach((item, index) => {
