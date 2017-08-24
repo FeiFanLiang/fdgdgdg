@@ -68,7 +68,7 @@
               <!-- <span class="gray" style="display: none;">(无效)</span> -->
               </div>
               </td>
-              <td class="ui-table-col-center w100 current" v-bind:class="{'close':!day.IsOpen,'open':day.IsOpen}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
+              <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{day.date}}</div>
                 <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
                 <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
@@ -170,7 +170,6 @@ export default {
   created() {
     const _self = this
     _self.stateForm.hotelId = _self.$route.params.ID
-    _self.stateForm.hotelId = 2
     _self.chosenDate = Date.now()
     _self.fetchData()
     _self.getHotelThreePlatInfoList()
@@ -204,25 +203,25 @@ export default {
           },
           {
             title: '飞猪',
-            id: 0,
-            price: '',
-            stat: 0
-          },
-          {
-            title: '携程',
             id: 1,
             price: '',
             stat: 0
           },
           {
-            title: '去哪',
+            title: '携程',
             id: 2,
             price: '',
             stat: 0
           },
           {
-            title: '全日空ANA',
+            title: '去哪',
             id: 3,
+            price: '',
+            stat: 0
+          },
+          {
+            title: '全日空ANA',
+            id: 4,
             price: '',
             stat: 0
           }
