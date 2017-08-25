@@ -44,7 +44,8 @@ const policy = { PayCompany, HotelPayMode }
 // order
 import CarOrderManage from './order/car-order-manage'
 import HotelOrder from './order/hotel-order'
-const order = { CarOrderManage, HotelOrder }
+import HotelsOrder from './order/hotels-order'
+const order = { CarOrderManage, HotelOrder, HotelsOrder }
 
 // user
 import User from './user/user'

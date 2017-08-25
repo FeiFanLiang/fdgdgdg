@@ -15,6 +15,11 @@ export default {
       path: 'HotelOrder',
       component: Pages.HotelOrder,
       name: '特价房订单'
+    },
+    {
+      path: 'HotelsOrder',
+      component: Pages.HotelsOrder,
+      name: '酒店订单'
     }
   ]
 }
