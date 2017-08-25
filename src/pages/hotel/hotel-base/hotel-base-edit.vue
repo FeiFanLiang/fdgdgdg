@@ -115,11 +115,16 @@
 <script>
 import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api'
 import { HotelTopMenu } from 'components'
-import HotelRoomPage from '../hotel-room/hotel-room'
-import HotelPlatformPage from '../hotel-platform/hotel-platform'
-import HotelPolicyPage from '../hotel-policy/hotel-policy'
-import HotelPricePage from '../hotel-price/hotel-price'
-import HotelShowPage from '../hotel-show/hotel-show'
+const HotelRoomPage = () => import('../hotel-room/hotel-room.vue')
+const HotelPlatformPage = () => import('../hotel-platform/hotel-platform.vue')
+const HotelPolicyPage = () => import('../hotel-policy/hotel-policy.vue')
+const HotelPricePage = () => import('../hotel-price/hotel-price.vue')
+const HotelShowPage = () => import('../hotel-show/hotel-show.vue')
+// import HotelRoomPage from '../hotel-room/hotel-room'
+// import HotelPlatformPage from '../hotel-platform/hotel-platform'
+// import HotelPolicyPage from '../hotel-policy/hotel-policy'
+// import HotelPricePage from '../hotel-price/hotel-price'
+// import HotelShowPage from '../hotel-show/hotel-show'
 
 export default {
   components: {

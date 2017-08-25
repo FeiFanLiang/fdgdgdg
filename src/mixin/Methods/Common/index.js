@@ -1,4 +1,4 @@
-import ListData from './ListData'
+import listData from './list-data'
 export default {
-  ListData
+  listData
 }
