@@ -3,7 +3,6 @@
     <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
         <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
     </CustomSearch>
-    <!-- <CustomTableCopy :list="hotelsOrder" :loading="loading" :configList="configList.listFields" @expand="expand" @successCallBack="fetchData"> -->
     <el-table :data="hotelsOrder" :loading="loading" @expand="expand" border row-key="ID" :expand-row-keys="expandRowKeys">
         <el-table-column type="expand">
             <template scope="props">
@@ -67,9 +66,13 @@
               </div>
               <div>
                 <el-card class="box-card2">
-                     <img :src="imageUrl" width="100px" height="100px"/> 
-                    <!-- <img :src="props.row.Screenshot" width="100px" height="100px"/> -->
-                    <el-upload
+                    <img :src="imageUrl" width="132px" height="132px" style="display:inline-block" v-if="imageUrl"/>
+                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                        :show-file-list="false" :on-success="handleSuccess" :before-upload="beforeAvatarUpload" style="display:inline-block">
+                        <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                    <!-- <el-upload
                         class="upload-demo"
                         ref="upload"
                         :action="action"
@@ -81,7 +84,7 @@
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                    </el-upload>
+                    </el-upload> -->
                 </el-card>
               </div>
             </template>
@@ -107,7 +110,6 @@
             </template>
         </el-table-column>
     </el-table>
-    <!-- </CustomTableCopy> -->
     <div class="pagination-wrapper">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
@@ -238,6 +240,7 @@ import { hotelsOrderApi } from 'api'
     data() {
       return {
         imageUrl:'',
+        imageUrl2:'',
         action:'',
         fileList: [],
         currentPage: 1,
@@ -295,9 +298,13 @@ import { hotelsOrderApi } from 'api'
         expand(row,expanded){
             const _self = this
             _self.active = 0
+            _self.imageUrl = ''
             if(expanded){
                 _self.action = "http://liukai.iok.la/Hotel/HotelOrder/UploadPic/" + row.OrderID
-                _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
+                if(row.Screenshot){
+                    _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
+                }
+                console.log(_self.imageUrl)
                 _self.expandRowKeys.length = 0
                 _self.expandRowKeys.push(row.ID)
                 _self.ID = row.ID
@@ -359,11 +366,6 @@ import { hotelsOrderApi } from 'api'
             try {
                 const res = await hotelsOrderApi.listByQuery(options)
                 _self.hotelsOrder = res.data.Data
-/*                 for(let i in _self.hotelsOrder){
-                    if(_self.hotelsOrder[i].Screenshot){
-                        _self.hotelsOrder[i].Screenshot = 'http://liukai.iok.la/Upload/hotelorder/' + _self.hotelsOrder[i].Screenshot
-                    }
-                } */
                 _self.active = 0
                 _self.count = res.data.Count
                 _self.loading = false
@@ -472,8 +474,18 @@ import { hotelsOrderApi } from 'api'
                 _self.isEditable = true
             }
         },
-        //////////////////////////////////////////////////
-        submitUpload() {
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
+        /* submitUpload() {
             this.$refs.upload.submit();
         },
         handleRemove(file, fileList) {
@@ -481,11 +493,11 @@ import { hotelsOrderApi } from 'api'
         },
         handlePreview(file) {
             console.log(file);
-        },
+        }, */
         async handleSuccess(response, file, fileList) {
             console.log(file)
-        },
-        /////////////////////////////////////////////
+            this.imageUrl2 = URL.createObjectURL(file.raw);
+        }
 
     }
   }
@@ -512,6 +524,29 @@ import { hotelsOrderApi } from 'api'
     .span-text{
         margin-left:20px;
         color:orange;
+    }
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    .avatar-uploader .el-upload:hover {
+        border-color: #20a0ff;
+    }
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 132px;
+        height: 132px;
+        line-height: 132px;
+        text-align: center;
+    }
+    .avatar {
+        width: 132px;
+        height: 132px;
+        display: block;
     }
 }
 </style>
