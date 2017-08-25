@@ -35,16 +35,17 @@
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="4">
                 <el-select v-model="filters.labelVal" placeholder="请选择">
                     <el-option v-for="(item,index) in selectedOptions" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-col>
-            <el-col :span="3">
+            <el-col :span="5">
                 <el-input placeholder="请输入姓名" v-model="filters.linkName" v-show="filters.labelVal == 1"></el-input>
                 <el-input placeholder="请输入电话" v-model="filters.linkPhone" v-show="filters.labelVal == 2"></el-input>
-                <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 3"></el-input>
+                <el-input placeholder="请输入OrderKey" v-model="filters.orderKey" v-show="filters.labelVal == 3"></el-input>
+                <el-input placeholder="请输入外部订单号" v-model="filters.externalOrderID" v-show="filters.labelVal == 4"></el-input>
             </el-col>
         </el-row>
         <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
@@ -60,7 +61,7 @@
                 <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="6" offset="1">
                 <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
                     <el-radio label="">全部</el-radio>
                     <el-radio :label="true">已支付</el-radio>
@@ -72,13 +73,13 @@
                     <el-radio :label="false">未取消</el-radio>
                 </el-radio-group>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
                 <el-button type="primary" @click="fetchData()">搜索</el-button>
                 <el-button type="primary" @click="clear">清除</el-button>
             </el-col>
         </el-row>
         <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
-            <el-col :span="10">
+            <el-col :span="12">
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
                 <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
@@ -198,6 +199,7 @@
                     </el-form>
                 </template>
             </el-table-column>
+            <el-table-column prop="OrderKey" label="OrderKey" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Channel" label="渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
@@ -673,6 +675,7 @@ export default {
         labelVal: 1,
         linkName: '',
         linkPhone: '',
+        orderKey:'',
         externalOrderID: '',
         carTransportType: '',
         carClassify: ''
@@ -688,6 +691,10 @@ export default {
         },
         {
           value: 3,
+          label: 'orderKey'
+        },
+        {
+          value: 4,
           label: '外部订单号'
         }
       ],
@@ -826,6 +833,7 @@ export default {
         labelVal: 1,
         linkName: '',
         linkPhone: '',
+        orderKey:'',
         externalOrderID: '',
         carTransportType: '',
         carClassify: ''
@@ -906,8 +914,10 @@ export default {
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
             _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
+          orderKey:
+            _self.filters.labelVal === 3 ? _self.filters.orderKey : '',
           externalOrderID:
-            _self.filters.labelVal === 3 ? _self.filters.externalOrderID : '',
+            _self.filters.labelVal === 4 ? _self.filters.externalOrderID : '',
           externalOrderStete: _self.filters.externalOrderStete,
           carTransportType: _self.filters.carTransportType,
           carClassify: _self.filters.carClassify
