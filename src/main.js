@@ -8,6 +8,7 @@ import './libs/date'
 import { Breadcrumb } from 'components'
 import DeleteButton from 'components/common/delete-button.vue'
 import CustomTable from 'components/common/custom-table.vue'
+import CustomTableCopy from 'components/common/custom-table-copy.vue'
 import CustomSearch from 'components/common/custom-search.vue'
 
 axios.defaults.withCredentials = true
@@ -41,6 +42,7 @@ import NProgress from 'nprogress'
 Vue.component('db-breadcrumb', Breadcrumb)
 Vue.component('DeleteButton', DeleteButton)
 Vue.component('CustomTable', CustomTable)
+Vue.component('CustomTableCopy', CustomTableCopy)
 Vue.component('CustomSearch', CustomSearch)
 
 export const router = new VueRouter({
