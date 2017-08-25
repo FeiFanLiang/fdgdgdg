@@ -1,3 +1,4 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
 
 const beforeEnter = (to, from, next) => {
@@ -21,7 +22,7 @@ export default {
   children: [
     {
       path: 'role',
-      component: Pages.Role,
+      component: _import('role/role'),
       beforeEnter,
       name: '角色管理'
     }

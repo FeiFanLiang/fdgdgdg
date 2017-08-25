@@ -1,3 +1,4 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
 export default {
   path: 'show',
@@ -8,7 +9,7 @@ export default {
   children: [
     {
       path: 'bargains-room',
-      component: Pages.BargainsRoom,
+      component: _import('show/bargains-room/bargains-room'),
       name: '特价房型展示'
     }
   ]
