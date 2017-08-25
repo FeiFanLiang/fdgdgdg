@@ -16,12 +16,12 @@ const children = [
   showRoute, // 展示信息
   orderRoute, // 订单
   fleetRoute, // 车队
-  evaluateScanRoute, //扫码 链接
+  evaluateScanRoute, // 扫码 链接
   wechatRoute, // 微信
   policyRoute, // 政策
   roleRoute, // 角色
   userRoute, // 用户
-  dwz, // 短链接
+  dwz // 短链接
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

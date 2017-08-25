@@ -1,4 +1,6 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
+
 export default {
   path: 'hotel',
   component: Pages.Abstract,
@@ -8,12 +10,12 @@ export default {
   children: [
     {
       path: 'HotelBase',
-      component: Pages.HotelBase,
+      component: _import('hotel/hotel-base/hotel-base'),
       name: '酒店基础信息'
     },
     {
       path: 'HotelBaseAdd',
-      component: Pages.HotelBaseAdd,
+      component: _import('hotel/hotel-base/hotel-base-add'),
       name: '添加酒店',
       meta: {
         hidden: true
@@ -27,22 +29,22 @@ export default {
       children: [
         {
           path: 'base',
-          component: Pages.HotelBaseEdit,
+          component: _import('hotel/hotel-base/hotel-base-edit'),
           name: '酒店基础信息编辑'
         },
         {
           path: 'policy',
-          component: Pages.HotelPolicy,
+          component: _import('hotel/hotel-policy/hotel-policy'),
           name: '酒店政策信息编辑'
         },
         {
           path: 'room',
-          component: Pages.HotelRoom,
+          component: _import('hotel/hotel-room/hotel-room'),
           name: '酒店房间信息编辑'
         },
         {
           path: 'room-show/:hotelId/:RoomID',
-          component: Pages.RoomShow,
+          component: _import('hotel/room-show/room-show'),
           name: '房型展示信息',
           meta: {
             hidden: true
@@ -50,17 +52,17 @@ export default {
         },
         {
           path: 'platform',
-          component: Pages.HotelPlatform,
+          component: _import('hotel/hotel-platform/hotel-platform'),
           name: '酒店平台信息编辑'
         },
         {
           path: 'price',
-          component: Pages.HotelPrice,
+          component: _import('hotel/hotel-price/hotel-price'),
           name: '酒店价格信息编辑'
         },
         {
           path: 'hotelShow',
-          component: Pages.HotelShow,
+          component: _import('hotel/hotel-show/hotel-show'),
           name: '酒店展示信息'
         }
       ],

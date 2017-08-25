@@ -25,6 +25,7 @@ import roomShowApi from './room-show'
 // import sonRoomPlatformApi from './son-room-platform'
 // import sonRoomSalePriceApi from './son-room-sale-price'
 // import userApi from './user'
+import hotelsOrderApi from './hotels-order'
 
 export {
   bargainsRoomApi,
@@ -49,9 +50,10 @@ export {
   // orderApi,
   payCompanyApi,
   roleApi,
-  roomShowApi
+  roomShowApi,
   // sonRoomApi,
   // sonRoomPlatformApi,
   // sonRoomSalePriceApi,
   // userApi,
+  hotelsOrderApi
 }

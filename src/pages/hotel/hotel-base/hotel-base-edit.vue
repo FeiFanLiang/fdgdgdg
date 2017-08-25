@@ -86,7 +86,14 @@
         <!-- <div class="line">
 
   </div> -->
-        <el-collapse v-model="activeNames" @change="handleChange" accordion>
+  <el-tabs v-model="activeName" @tab-click="handleChange">
+    <el-tab-pane label="房型信息" name="room"><HotelRoomPage></HotelRoomPage></el-tab-pane>
+    <el-tab-pane label="政策信息" name="policy">  <HotelPolicyPage></HotelPolicyPage></el-tab-pane>
+    <el-tab-pane label="价格信息" name="price">  <HotelPricePage></HotelPricePage></el-tab-pane>
+    <el-tab-pane label="平台映射" name="platform"><HotelPlatformPage></HotelPlatformPage></el-tab-pane>
+    <el-tab-pane label="展示信息" name="show">  <HotelShowPage></HotelShowPage></el-tab-pane>
+  </el-tabs>
+        <!-- <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <el-collapse-item title="房型信息" name="room">
                 <HotelRoomPage></HotelRoomPage>
             </el-collapse-item>
@@ -102,17 +109,22 @@
             <el-collapse-item title="展示信息" name="show">
                 <HotelShowPage></HotelShowPage>
             </el-collapse-item>
-        </el-collapse>
+        </el-collapse> -->
     </div>
 </template>
 <script>
 import { hotelPayModeApi, hotelBaseApi, hotelStarApi, hotelAreaApi } from 'api'
 import { HotelTopMenu } from 'components'
-import HotelRoomPage from '../hotel-room/hotel-room'
-import HotelPlatformPage from '../hotel-platform/hotel-platform'
-import HotelPolicyPage from '../hotel-policy/hotel-policy'
-import HotelPricePage from '../hotel-price/hotel-price'
-import HotelShowPage from '../hotel-show/hotel-show'
+const HotelRoomPage = () => import('../hotel-room/hotel-room.vue')
+const HotelPlatformPage = () => import('../hotel-platform/hotel-platform.vue')
+const HotelPolicyPage = () => import('../hotel-policy/hotel-policy.vue')
+const HotelPricePage = () => import('../hotel-price/hotel-price.vue')
+const HotelShowPage = () => import('../hotel-show/hotel-show.vue')
+// import HotelRoomPage from '../hotel-room/hotel-room'
+// import HotelPlatformPage from '../hotel-platform/hotel-platform'
+// import HotelPolicyPage from '../hotel-policy/hotel-policy'
+// import HotelPricePage from '../hotel-price/hotel-price'
+// import HotelShowPage from '../hotel-show/hotel-show'
 
 export default {
   components: {
@@ -125,7 +137,7 @@ export default {
   },
   data() {
     return {
-      activeNames: ['room'],
+      activeName: 'room',
       id: '',
       hotelName: '',
       form: {

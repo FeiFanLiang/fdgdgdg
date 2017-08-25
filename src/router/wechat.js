@@ -1,4 +1,6 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
+
 export default {
   path: 'wechat',
   component: Pages.Abstract,
@@ -8,27 +10,27 @@ export default {
   children: [
     {
       path: 'CustomMenu',
-      component: Pages.CustomMenu,
+      component: _import('weichat/custom-menu'),
       name: '自定义菜单'
     },
     {
       path: 'CustomService',
-      component: Pages.CustomService,
+      component: _import('weichat/custom-service'),
       name: '客服消息'
     },
     {
       path: 'PayWeichat',
-      component: Pages.PayWeichat,
+      component: _import('weichat/pay-weichat'),
       name: '微信支付'
     },
     {
       path: 'Card',
-      component: Pages.Card,
+      component: _import('weichat/card'),
       name: '卡卷功能'
     },
     {
       path: 'Datas',
-      component: Pages.Datas,
+      component: _import('weichat/datas'),
       name: '数据与对账',
       meta: {
         hidden: true
@@ -36,7 +38,7 @@ export default {
     },
     {
       path: 'Texts',
-      component: Pages.Texts,
+      component: _import('weichat/texts'),
       name: '编辑器',
       meta: {
         hidden: true

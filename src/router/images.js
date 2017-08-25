@@ -1,3 +1,4 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
 export default {
   path: 'images',
@@ -8,12 +9,12 @@ export default {
   children: [
     {
       path: 'imagesInfo',
-      component: Pages.ImagesInfo,
+      component: _import('dwz'),
       name: '截图信息'
     },
     {
       path: 'imagesInfoAdd',
-      component: Pages.ImagesInfoAdd,
+      component: _import('dwz'),
       name: 'imagesInfoAdd',
       meta: {
         hidden: true
@@ -21,7 +22,7 @@ export default {
     },
     {
       path: 'imagesInfoEdit/:id',
-      component: Pages.ImagesInfoEdit,
+      component: _import('dwz'),
       name: 'imagesInfoEdit',
       meta: {
         hidden: true
@@ -29,7 +30,7 @@ export default {
     },
     {
       path: 'imagesInfoList/:id',
-      component: Pages.ImagesInfoList,
+      component: _import('dwz'),
       name: 'imagesInfoList',
       meta: {
         hidden: true

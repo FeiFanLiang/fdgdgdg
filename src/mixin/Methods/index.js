@@ -1,4 +1,4 @@
-import Common from './Common'
+import common from './common'
 export default {
-  Common
+  common
 }
