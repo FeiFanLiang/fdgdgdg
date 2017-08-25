@@ -61,7 +61,7 @@
                 <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions">
                 </el-date-picker>
             </el-col>
-            <el-col :span="6" offset="1">
+            <el-col :span="6" :offset="1">
                 <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
                     <el-radio label="">全部</el-radio>
                     <el-radio :label="true">已支付</el-radio>
