@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="">
-    <el-dialog title="平台酒店信息编辑" size="large"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  @close="Cancel" @open="dialogOpen">
+    <el-dialog title="平台酒店信息编辑" size="large"  v-model="hotelRoomPlatVisible" :modal-append-to-body="false"  :before-close="Cancel" @open="dialogOpen">
       <el-row>
         <el-button  @click="add">添加</el-button>
       </el-row>
@@ -208,7 +208,7 @@ export default {
         sonRoomName: '',
         roomName: ''
       },
-      platHotelId:''
+      // platHotelId:''
     }
   },
   computed: {

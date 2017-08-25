@@ -12,11 +12,6 @@ export default {
       name: '酒店基础信息'
     },
     {
-      path: 'HotelPrice',
-      component: Pages.HotelPrice,
-      name: '酒店价格-building'
-    },
-    {
       path: 'HotelBaseAdd',
       component: Pages.HotelBaseAdd,
       name: '添加酒店',

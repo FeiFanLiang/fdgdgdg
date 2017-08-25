@@ -3,7 +3,7 @@ import path from './api'
 const base = path.apiBaseUrl + 'Hotel/SecretType/'
 export default {
   list (params) {
-    return axios.get(base, {
+    return axios.get(base+'list', {
       params: params
     })
   }

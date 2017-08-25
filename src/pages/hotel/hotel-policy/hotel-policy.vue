@@ -524,7 +524,9 @@ export default {
       this.hotelpolicy = res.data
       this.loading = false
       this.expandRowKeys.length = 0
-      this.expandRowKeys.push(this.hotelpolicy[0].ID)
+      if(this.hotelpolicy && this.hotelpolicy[0] && this.hotelpolicy[0].ID){
+        this.expandRowKeys.push(this.hotelpolicy[0].ID)
+      }
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
