@@ -24,13 +24,14 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
       src: resolve( 'src'),
+      pages: resolve( 'src/pages'),
       assets: resolve( 'src/assets'),
       components: resolve( 'src/components'),
       config: resolve( 'src/config'),
       api: resolve( 'src/api'),
       plugins: resolve( 'src/plugins'),
       mixin: resolve( 'src/mixin'),
-        utils: resolve( 'src/utils')
+      utils: resolve( 'src/utils')
     }
   },
   module: {

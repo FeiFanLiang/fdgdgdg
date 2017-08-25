@@ -1,4 +1,6 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
+
 export default {
   path: 'order',
   component: Pages.Abstract,
@@ -8,17 +10,17 @@ export default {
   children: [
     {
       path: 'CarOrderManage',
-      component: Pages.CarOrderManage,
+      component: _import('order/car-order-manage'),
       name: '专车订单'
     },
     {
       path: 'HotelOrder',
-      component: Pages.HotelOrder,
+      component: _import('order/hotel-order'),
       name: '特价房订单'
     },
     {
       path: 'HotelsOrder',
-      component: Pages.HotelsOrder,
+      component: _import('order/hotels-order'),
       name: '酒店订单'
     }
   ]

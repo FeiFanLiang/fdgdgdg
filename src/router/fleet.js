@@ -1,4 +1,6 @@
+const _import = require('./_import_' + process.env.NODE_ENV)
 import Pages from '../pages'
+
 export default {
   path: 'fleet',
   component: Pages.Abstract,
@@ -9,42 +11,42 @@ export default {
     {
       path: 'car-base',
       name: '车辆基础信息',
-      component: Pages.CarBase
+      component: _import('fleet/car-base/car-base')
     },
     {
       path: 'driver-base',
       name: '司机基础信息',
-      component: Pages.DriverBase
+      component: _import('fleet/driver-base/driver-base')
     },
     {
       path: 'car-arrange',
       name: '车辆派车记录',
-      component: Pages.CarArrange
+      component: _import('fleet/car-arrange/car-arrange')
     },
     {
       path: 'car-use',
       name: '车辆使用情况',
-      component: Pages.CarUse
+      component: _import('fleet/car-use/car-use')
     },
     {
       path: 'gasoline-log',
       name: '加油记录',
-      component: Pages.GasolineLog
+      component: _import('fleet/gasoline-log/gasoline-log')
     },
     {
       path: 'car-line',
       name: '车辆运行线路',
-      component: Pages.CarLine
+      component: _import('fleet/car-line/car-line')
     },
     {
       path: 'line-station',
       name: '线路/站点映射',
-      component: Pages.LineStation
+      component: _import('fleet/line-station/line-station')
     },
     {
       path: 'station',
       name: '车辆停靠点',
-      component: Pages.Station
+      component: _import('fleet/station/station')
     }
   ]
 }
