@@ -98,7 +98,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
-        ,new BundleAnalyzerPlugin()
+        // ,new BundleAnalyzerPlugin()
   ]
 })
 
