@@ -8,7 +8,7 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
-
+var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var env = config.build.env
 
 function resolveApp(relativePath) {
@@ -29,7 +29,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
   },
   plugins: [
-      new webpack.ProvidePlugin({$: "jquery", jQuery: "jquery", 'window.jQuery': 'jquery', 'window.jquery': 'jquery', jquery: 'jquery'}),
+      // new webpack.ProvidePlugin({$: "jquery", jQuery: "jquery", 'window.jQuery': 'jquery', 'window.jquery': 'jquery', jquery: 'jquery'}),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
@@ -98,6 +98,7 @@ var webpackConfig = merge(baseWebpackConfig, {
         ignore: ['.*']
       }
     ])
+        ,new BundleAnalyzerPlugin()
   ]
 })
 
