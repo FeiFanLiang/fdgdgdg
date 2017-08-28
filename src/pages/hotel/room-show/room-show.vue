@@ -31,7 +31,7 @@
         </el-table-column>
     </el-table> -->
 
-    <el-dialog :title="form.ID?'编辑房间展示信息':'添加房间展示信息'" v-model="showDialog" size="" @close="resetForm('form')">
+    <el-dialog :title="form.ID?'编辑房间展示信息':'添加房间展示信息'" v-model="showDialog" size="small" @close="resetForm('form')">
         <el-form ref="form" :model="form">
             <el-row :gutter="24">
                 <el-col :span="12">

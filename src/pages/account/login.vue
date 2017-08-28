@@ -69,6 +69,7 @@ export default {
       _self.isBtnLoading = true
       try {
         const data = await accountApi.login(loginParams)
+        console.log(data)
         _self.isBtnLoading = false
         const user = {
           id: '1',
@@ -93,7 +94,11 @@ export default {
 
         // }
       } catch (e) {
-        _self.$message.error(e)
+        //_self.$message.error(e)
+        _self.$message.error('用户名或密码错误!!!')
+        //this.username='',
+        this.password= '', 
+        this.isBtnLoading= false
       }
       if (_self.$route.query.redirect) {
         _self.$router.push({
