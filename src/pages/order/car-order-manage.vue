@@ -89,6 +89,9 @@
             <el-table-column type="expand">
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand" label-width="110px">
+                      <el-form-item label="OrderKey">
+                          <span>{{ props.row.OrderKey }}</span>
+                      </el-form-item>
                         <el-form-item label="订单渠道">
                             <span>{{ props.row.Channel }}</span>
                         </el-form-item>
@@ -199,7 +202,7 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="OrderKey" label="OrderKey" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="OrderKey" label="OrderKey" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="Channel" label="渠道" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
@@ -675,7 +678,7 @@ export default {
         labelVal: 1,
         linkName: '',
         linkPhone: '',
-        orderKey:'',
+        orderKey: '',
         externalOrderID: '',
         carTransportType: '',
         carClassify: ''
@@ -833,7 +836,7 @@ export default {
         labelVal: 1,
         linkName: '',
         linkPhone: '',
-        orderKey:'',
+        orderKey: '',
         externalOrderID: '',
         carTransportType: '',
         carClassify: ''
@@ -914,8 +917,7 @@ export default {
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
             _self.filters.labelVal === 2 ? _self.filters.linkPhone : '',
-          orderKey:
-            _self.filters.labelVal === 3 ? _self.filters.orderKey : '',
+          orderKey: _self.filters.labelVal === 3 ? _self.filters.orderKey : '',
           externalOrderID:
             _self.filters.labelVal === 4 ? _self.filters.externalOrderID : '',
           externalOrderStete: _self.filters.externalOrderStete,
