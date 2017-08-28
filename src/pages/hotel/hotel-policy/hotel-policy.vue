@@ -459,11 +459,11 @@ export default {
     },
     async getReserveMode() {
       const res = await rserveModeApi.list()
-      this.reserveModeOptions = res.data
+      this.reserveModeOptions = res.data.Data
     },
     async getSecretType() {
       const res = await secretTypeApi.list()
-      this.secretTypeOptions = res.data
+      this.secretTypeOptions = res.data.Data
     },
     async submitForm() {
       const _self = this

@@ -93,7 +93,11 @@ export default {
 
         // }
       } catch (e) {
-        _self.$message.error(e)
+        //_self.$message.error(e)
+        _self.$message.error('用户名或密码错误!!!')
+        //this.username='',
+        this.password= '', 
+        this.isBtnLoading= false
       }
       if (_self.$route.query.redirect) {
         _self.$router.push({
