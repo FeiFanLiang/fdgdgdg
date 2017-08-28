@@ -120,7 +120,7 @@ export default {
       rules: {
         name: [
           { required: true, message: '请输入菜单名称', trigger: 'blur' },
-          { min: 1, max: 4, message: '长度在 1 到 4 个字符', trigger: 'blur' }
+          { min: 1, max: 8, message: '长度在 1 到 8 个字符', trigger: 'blur' }
         ],
         url: [{ validator: checkUrl, trigger: 'blur' }]
       },

@@ -69,7 +69,6 @@ export default {
       _self.isBtnLoading = true
       try {
         const data = await accountApi.login(loginParams)
-        console.log(data)
         _self.isBtnLoading = false
         const user = {
           id: '1',
