@@ -212,25 +212,32 @@ export default {
     }
   },
   computed: {
-    platHotelId() {
-      const _self = this
-      let platformId = ''
-      if (
-        _self.form.platformId &&
-        _self.platInfoList &&
-        Array.isArray(_self.platInfoList)
-      ) {
-        _self.platInfoList.forEach(item => {
-          if (
-            item &&
-            item.Platform &&
-            item.Platform.ID === _self.form.platformId
-          ) {
-            platformId = item.PlatHotelID
-          }
-        })
+    platHotelId: {
+      // getter
+      get: function () {
+        const _self = this
+        let platformId = ''
+        if (
+          _self.form.platformId &&
+          _self.platInfoList &&
+          Array.isArray(_self.platInfoList)
+        ) {
+          _self.platInfoList.forEach(item => {
+            if (
+              item &&
+              item.Platform &&
+              item.Platform.ID === _self.form.platformId
+            ) {
+              platformId = item.PlatHotelID
+            }
+          })
+        }
+        return platformId 
+      },
+      // setter
+      set: function (newValue) {
+        this.platformId = newValue
       }
-      return platformId
     }
   },
   watch: {
