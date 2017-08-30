@@ -1,9 +1,23 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
-        <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-    </CustomSearch>
-    <el-table :data="hotelsOrder" :loading="loading" @expand="expand" border row-key="ID" :expand-row-keys="expandRowKeys">
+    <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback"> -->
+    <el-row :gutter="24">
+        <el-col :span="4">
+          <el-input  placeholder="请输入酒店名称" v-model="filters.Hotel"></el-input>
+        </el-col>
+        <el-col :span="4">
+          <el-input  placeholder="请输入城市名称" v-model="filters.City"></el-input>
+        </el-col>
+        <el-col :span="5">
+            <el-date-picker  v-model="filters.CreateTime" type="daterange" align="right" placeholder="选择预约日期" :picker-options="pickerOptions"></el-date-picker>
+        </el-col>
+        <el-col :offset="2" :span="6">
+            <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+            <el-button type="primary" @click="clickAddBtn">创建</el-button>
+        </el-col>
+    </el-row>
+    <!-- </CustomSearch> -->
+    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" :expand-row-keys="expandRowKeys">
         <el-table-column type="expand">
             <template scope="props">
               <div>
@@ -281,13 +295,41 @@ import { hotelsOrderApi } from 'api'
         ],
         filters: {
             Hotel: '',
-            City: ''
+            City: '',
+            CreateTime:''
         },
         remsgstateList:[],
         oderstateList:[],
         active:0,
         ID:'',
-        expandRowKeys:[]
+        expandRowKeys:[],
+        pickerOptions: {
+                shortcuts: [{
+                    text: '最近一周',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近一个月',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }, {
+                    text: '最近三个月',
+                    onClick(picker) {
+                    const end = new Date();
+                    const start = new Date();
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                    picker.$emit('pick', [start, end]);
+                    }
+                }]
+            }
       }
     },
     created() {
@@ -295,6 +337,10 @@ import { hotelsOrderApi } from 'api'
         this.configList = hotelsOrderApi.getConfig()
     },
     methods: {
+        hotelsOrderSearch(){
+            const _self = this
+            _self.fetchData()
+        },
         expand(row,expanded){
             const _self = this
             _self.active = 0
@@ -304,7 +350,6 @@ import { hotelsOrderApi } from 'api'
                 if(row.Screenshot){
                     _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
                 }
-                console.log(_self.imageUrl)
                 _self.expandRowKeys.length = 0
                 _self.expandRowKeys.push(row.ID)
                 _self.ID = row.ID
@@ -354,13 +399,18 @@ import { hotelsOrderApi } from 'api'
             _self.loading = true
             _self.currentPage = currentPage || _self.currentPage
             _self.pageSize = pageSize || _self.pageSize
+            let d1 = new Date(_self.filters.CreateTime[0]);
+            let d2 = new Date(_self.filters.CreateTime[1]); 
+            let d11=d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate() + ' ' + d1.getHours() + ':' + d1.getMinutes();
+            let d22=d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate() + ' ' + d1.getHours() + ':' + d1.getMinutes();
             const options = {
                 pageIndex: _self.currentPage,
                 pageSize: _self.pageSize,
                 order: 'ID',
                 query: {
                     Hotel: _self.filters.Hotel,
-                    City: _self.filters.City
+                    City: _self.filters.City,
+                    "CreateTime>": d11, "CreateTime<": d22
                 }
             }
             try {
