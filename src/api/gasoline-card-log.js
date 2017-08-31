@@ -1,11 +1,8 @@
 import axios from 'axios'
 import path from './api'
-const base = path.apiBaseUrl + 'ParkSale/GasolineLog/'
+const base = path.apiBaseUrl + 'ParkSale/GasolineCardLog/'
 
 export default {
-        cardList(params) {
-           return axios.get(base + 'GetGasolineCardList', {params:params})
-        },
         list(params) {
             return axios.get(base + 'list', {params:params})
         },

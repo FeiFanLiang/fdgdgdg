@@ -99,13 +99,47 @@
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
+                        <el-form-item label="加油站" prop="GasolineStation">
+                            <!-- <el-input placeholder="请输入加油站名称" v-model="form.GasolineStation"></el-input> -->
+                            <el-autocomplete
+                                class="inline-input"
+                                v-model="form.GasolineStation"
+                                :fetch-suggestions="querySearch1"
+                                placeholder="请输入加油站名称"
+                                @select="handleSelect1"
+                            ></el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="油卡编号" prop="GasolineCardNo">
+                            <!-- <el-input placeholder="请输入油卡编号" v-model="form.GasolineCardNo"></el-input> -->
+                            <el-select v-model="form.GasolineCardNo" placeholder="请选择">
+                                <el-option
+                                v-for="(item,index) in cardList"
+                                :key="index"
+                                :label="item.CardNum"
+                                :value="item.ID">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="12">
                         <el-form-item label="流水号" prop="SerialNumber">
                             <el-input placeholder="请输入流水号" v-model="form.SerialNumber" :disabled="disabled"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="油品标号" prop="GasolineType">
-                            <el-input placeholder="请输入油品标号" v-model="form.GasolineType"></el-input>
+                            <!-- <el-input placeholder="请输入油品标号" v-model="form.GasolineType"></el-input> -->
+                            <el-autocomplete
+                                class="inline-input"
+                                v-model="form.GasolineType"
+                                :fetch-suggestions="querySearch"
+                                placeholder="请输入油品标号"
+                                @select="handleSelect"
+                            ></el-autocomplete>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -128,8 +162,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="加油站" prop="GasolineStation">
-                            <el-input placeholder="请输入加油站名称" v-model="form.GasolineStation"></el-input>
+                        <el-form-item label="车辆当前公里数" prop="CarKilometer">
+                            <el-input placeholder="请输入车辆当前公里数" v-model="form.CarKilometer"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -191,7 +225,15 @@ export default {
         CarID: '',
         DriverID: '',
         Channel: 0,
-        DateTimeString: ''
+        DateTimeString: '',
+        GasolineStation:'',
+        GasolineCardNo:'',
+        SerialNumber:'',
+        GasolineType:'',
+        UnitPrice:'',
+        Count:'',
+        Total:'',
+        CarKilometer:''
       },
       Channel: '',
       channelList: [
@@ -206,10 +248,43 @@ export default {
       ],
       carList: [],
       driverList: [],
-      pickerOptions: {}
+      pickerOptions: {},
+      isEditable:true,
+      oilList:[
+          { "value": "90#"},
+          { "value": "95#"},
+          { "value": "柴油"}
+      ],
+      stationList:[
+          { "value": "杭州支路加油站"},
+          { "value": "山东路加油站"},
+          { "value": "萍乡路加油站"}
+      ],
+      cardList:[]
     }
   },
   methods: {
+    querySearch(queryString, cb) {
+        var restaurants = this.oilList;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        cb(results);
+    },
+    createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
+        };
+    },
+    handleSelect(item) {
+        console.log(item);
+    },
+    querySearch1(queryString, cb) {
+        var restaurants = this.stationList;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        cb(results);
+    },
+    handleSelect1(item) {
+        console.log(item);
+    },
     gasolineSearch() {
       this.fetchData()
     },
@@ -243,6 +318,8 @@ export default {
       this.carList = res.data.Data
       const res2 = await driverBaseApi.listByQuery()
       this.driverList = res2.data.Data
+      const res3 = await gasolineLogApi.cardList()
+      this.cardList = res3.data.Data
     },
     handleSizeChange(val) {
       this.pageSize = val
@@ -258,7 +335,15 @@ export default {
         CarID: '',
         DriverID: '',
         Channel: 0,
-        DateTimeString: ''
+        DateTimeString: '',
+        GasolineStation:'',
+        GasolineCardNo:'',
+        SerialNumber:'',
+        GasolineType:'',
+        UnitPrice:'',
+        Count:'',
+        Total:'',
+        CarKilometer:''
       }
       _self.showDialog = true
     },
