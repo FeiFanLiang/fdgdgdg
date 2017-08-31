@@ -8,6 +8,7 @@ import carOrderManageApi from './car-order-manage'
 import orderChannelApi from './order-channel'
 import carUseApi from './car-use'
 import gasolineLogApi from './gasoline-log'
+import gasolineCardLogApi from './gasoline-card-log'
 import driverBaseApi from './driver-base'
 import driverEvaluateApi from './driver-evaluate'
 import hotelAreaApi from './hotel-area'
@@ -55,6 +56,7 @@ export {
   orderChannelApi,
   carUseApi,
   gasolineLogApi,
+  gasolineCardLogApi,
   driverBaseApi,
   driverEvaluateApi,
   hotelAreaApi,

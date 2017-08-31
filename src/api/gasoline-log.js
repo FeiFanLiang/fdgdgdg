@@ -3,7 +3,10 @@ import path from './api'
 const base = path.apiBaseUrl + 'ParkSale/GasolineLog/'
 
 export default {
-    list(params) {
+        cardList(params) {
+           return axios.get(base + 'GetGasolineCardList', {params:params})
+        },
+        list(params) {
             return axios.get(base + 'list', {params:params})
         },
         detail(id) {

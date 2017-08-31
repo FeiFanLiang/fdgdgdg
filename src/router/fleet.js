@@ -34,6 +34,11 @@ export default {
       component: _import('fleet/gasoline-log/gasoline-log')
     },
     {
+      path: 'gasoline-card-log',
+      name: '加油卡充值记录',
+      component: _import('fleet/gasoline-card-log/gasoline-card-log')
+    },
+    {
       path: 'car-line',
       name: '车辆运行线路',
       component: _import('fleet/car-line/car-line')
