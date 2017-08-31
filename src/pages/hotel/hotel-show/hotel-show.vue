@@ -26,7 +26,7 @@
                 </template>
             </el-table-column>
         </el-table> -->
-        <el-dialog :title="form.ID?'编辑酒店展示信息':'添加酒店展示信息'" v-model="showDialog" size="" @close="resetForm('form')">
+        <el-dialog :title="form.ID?'编辑酒店展示信息':'添加酒店展示信息'" v-model="showDialog" size="large" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules">
                 <el-row :gutter="5">
                     <el-col :span="6">

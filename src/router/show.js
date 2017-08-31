@@ -11,6 +11,11 @@ export default {
       path: 'bargains-room',
       component: _import('show/bargains-room/bargains-room'),
       name: '特价房型展示'
+    },
+    {
+      path: 'hotel-show',
+      component: _import('show/hotel-show/hotel-show'),
+      name: '酒店展示'
     }
   ]
 }

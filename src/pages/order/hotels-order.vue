@@ -127,7 +127,7 @@
     <div class="pagination-wrapper">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-     <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')">
+    <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')">
         <el-form ref="form" :model="form" label-width="110px">
             <el-row :gutter="24">
                 <el-col :span="12">
