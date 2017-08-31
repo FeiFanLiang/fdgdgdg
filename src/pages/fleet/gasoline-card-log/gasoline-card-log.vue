@@ -99,21 +99,14 @@ export default {
   data() {
     return {
       rules: {
-        CarNum: [{ required: true, message: '请选择油卡编号' }]
+        GasolineCardID: [{ required: true, message: '请选择油卡编号' }],
+        DateTime: [{ required: true, message: '请选择加油时间' }],
+        Total: [{ required: true, message: '请输入总额' }],
+        Balance: [{ required: true, message: '请输入余额' }]
       },
       filters: {
         gasolineCardID: ''
       },
-      selectedOptions: [
-        {
-          value: '1',
-          label: '车牌号'
-        },
-        {
-          value: '2',
-          label: '司机姓名'
-        }
-      ],
       imageUrl: '',
       list: [],
       currentPage: 1,
@@ -225,6 +218,7 @@ export default {
         if (valid) {
           try {
             _self.isEditable = false
+            _self.form.DateTime ? (_self.form.DateTime = new Date(_self.form.DateTime).Format('yyyy-MM-dd hh:mm:ss')): ''
             await gasolineCardLogApi.add(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
@@ -250,6 +244,7 @@ export default {
         if (valid) {
           try {
             _self.isEditable = false
+            _self.form.DateTime ? (_self.form.DateTime = new Date(_self.form.DateTime).Format('yyyy-MM-dd hh:mm:ss')): ''
             await gasolineCardLogApi.edit(_self.form.ID, _self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
