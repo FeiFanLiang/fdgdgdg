@@ -216,6 +216,7 @@
                     <span v-if="scope.row.CarTransportType === 2">指定线路</span>
                     <span v-if="scope.row.CarTransportType === 3">接站</span>
                     <span v-if="scope.row.CarTransportType === 4">送站</span>
+                    <span v-if="scope.row.CarTransportType === 5">包车</span>
                 </template>
             </el-table-column>
             <el-table-column label="车型类别" show-overflow-tooltip>
@@ -646,6 +647,10 @@ export default {
         {
           value: 4,
           label: '送站'
+        },
+        {
+          value: 5,
+          label: '包车'
         }
       ],
       carClassifyList: [
