@@ -11,7 +11,18 @@
         <el-col :span="5">
             <el-date-picker  v-model="filters.CreateTime" type="daterange" align="right" placeholder="选择预约日期" :picker-options="pickerOptions"></el-date-picker>
         </el-col>
-        <el-col :offset="2" :span="6">
+        <el-col :span="5">
+          <el-select v-model="testValue" placeholder="区域">
+      <el-option
+        v-for="item in ['日本']"
+        :key="item"
+        :label="item"
+        :value="item">
+      </el-option>
+    </el-select>
+        </el-col>
+
+        <el-col  :span="6">
             <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
             <el-button type="primary" @click="clickAddBtn">创建</el-button>
         </el-col>
@@ -55,7 +66,7 @@
                     <p><span>发单状态</span><span class="span-text">{{ props.row.FaDanState }}</span></p>
                     <p><span>发单单号</span><span class="span-text">{{ props.row.FaDanNo }}</span></p>
                     <p><span>订单状态</span><span class="span-text">{{ props.row.OrderState }}</span></p>
-                    <p><span>酒店预订号</span><span class="span-text">{{ props.row.BookingNo }}</span></p>
+                    <p><span>酒店预订号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
                     <p><span>审核状态</span><span class="span-text">{{ props.row.StateAuditor }}</span></p>
                     <p><span>提交状态</span><span class="span-text">{{ props.row.StateSubmit }}</span></p>
                     <p><span>打款状态</span><span class="span-text">{{ props.row.StateDaKuan }}</span></p>
@@ -81,7 +92,7 @@
               <div>
                 <el-card class="box-card2">
                     <img :src="imageUrl" width="132px" height="132px" style="display:inline-block" v-if="imageUrl"/>
-                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" 
+                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
                         :show-file-list="false" :on-success="handleSuccess" :before-upload="beforeAvatarUpload" style="display:inline-block">
                         <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -105,22 +116,33 @@
         </el-table-column>
 
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
+        <el-table-column label="订单类型" prop="OrderType" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="Hotel" show-overflow-tooltip></el-table-column>
         <el-table-column label="城市" prop="City"></el-table-column>
         <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
-        <el-table-column label="入住日期" prop="StayDateStart"></el-table-column>
-        <el-table-column label="退房日期" prop="StayDateEnd"></el-table-column>
-        <el-table-column label="间数" prop="RoomNum"></el-table-column>
-        <el-table-column label="晚数" prop="NightNum"></el-table-column>
+        <el-table-column label="入住/退房日期" width="200">
+          <template scope="scope">
+            <span>{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
+              <span>{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+     </template>
+        </el-table-column>
+        <!-- <el-table-column label="退房日期" prop="StayDateEnd"></el-table-column> -->
+        <el-table-column label="间/晚" prop="RoomNum">
+          <template scope="scope">
+            <span>{{ scope.row.RoomNum }}</span>/
+            <span>{{ scope.row.NightNum }}</span>
+     </template>
+        </el-table-column>
+        <!-- <el-table-column label="晚数" prop="NightNum"></el-table-column> -->
         <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
         <el-table-column label="货币" prop="Currency"></el-table-column>
         <el-table-column label="总金额" prop="AmountTotal"></el-table-column>
         <el-table-column label="订单状态" prop="OrderState"></el-table-column>
-        
+
         <el-table-column label="操作" width="150">
             <template scope="scope">
                 <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton> 
+                <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
             </template>
         </el-table-column>
     </el-table>
@@ -158,7 +180,7 @@
                     <el-form-item label="入住日期" prop="StayDateStart">
                         <el-date-picker v-model="form.StayDateStart" type="datetime" placeholder="选择日期时间" style="width:100%;"></el-date-picker>
                     </el-form-item>
-                </el-col> 
+                </el-col>
                 <el-col :span="12">
                     <el-form-item label="总金额" prop="AmountTotal">
                         <el-input placeholder="请输入总金额" v-model="form.AmountTotal"></el-input>
@@ -243,299 +265,320 @@
         <el-button @click="showDialog = false">取 消</el-button>
         <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
         </span>
-    </el-dialog> 
+    </el-dialog>
 </div>
 </template>
- 
+
 <script>
 import { hotelsOrderApi } from 'api'
 
-  export default {
-    data() {
-      return {
-        imageUrl:'',
-        imageUrl2:'',
-        action:'',
-        fileList: [],
-        currentPage: 1,
-        pageSize: 10,
-        count: 0,
-        loading: false,
-        hotelsOrder:[],
-        form:{
-            PayState:'',
-            HoltelReMsgState:'',
-            OrderState:'',
-            StayDateStart:'',
-            FaDanState:'已发单',
-            StateAuditor:'已审核',
-            StateSubmit:'已提交',
-            StateDaKuan:'已打款',
-            StateScreenshot:'已截图',
-            Screenshot:''
+export default {
+  data() {
+    return {
+      testValue: '日本',
+      imageUrl: '',
+      imageUrl2: '',
+      action: '',
+      fileList: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      loading: false,
+      hotelsOrder: [],
+      form: {
+        PayState: '',
+        HoltelReMsgState: '',
+        OrderState: '',
+        StayDateStart: '',
+        FaDanState: '已发单',
+        StateAuditor: '已审核',
+        StateSubmit: '已提交',
+        StateDaKuan: '已打款',
+        StateScreenshot: '已截图',
+        Screenshot: ''
+      },
+      copyForm: {},
+      showDialog: false,
+      isEditable: true,
+      title: '',
+      active: 0,
+      payState: [
+        {
+          label: '未付款',
+          value: 0
         },
-        copyForm:{},
-        showDialog:false,
-        isEditable: true,
-        title:'',
-        active:0,
-        payState:[
-            {
-                label:'未付款',
-                value:0
-            },
-            {
-                label:'未结清',
-                value:1
-            },
-            {
-                label:'已结清',
-                value:2
-            }
-        ],
-        filters: {
-            Hotel: '',
-            City: '',
-            CreateTime:''
+        {
+          label: '未结清',
+          value: 1
         },
-        remsgstateList:[],
-        oderstateList:[],
-        active:0,
-        ID:'',
-        expandRowKeys:[],
-        pickerOptions: {
-                shortcuts: [{
-                    text: '最近一周',
-                    onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                    picker.$emit('pick', [start, end]);
-                    }
-                }, {
-                    text: '最近一个月',
-                    onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                    picker.$emit('pick', [start, end]);
-                    }
-                }, {
-                    text: '最近三个月',
-                    onClick(picker) {
-                    const end = new Date();
-                    const start = new Date();
-                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                    picker.$emit('pick', [start, end]);
-                    }
-                }]
+        {
+          label: '已结清',
+          value: 2
+        }
+      ],
+      filters: {
+        Hotel: '',
+        City: '',
+        CreateTime: ['', '']
+      },
+      remsgstateList: [],
+      oderstateList: [],
+      active: 0,
+      ID: '',
+      expandRowKeys: [],
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
             }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      }
+    }
+  },
+  created() {
+    this.fetchData()
+    this.configList = hotelsOrderApi.getConfig()
+  },
+  methods: {
+    hotelsOrderSearch() {
+      const _self = this
+      _self.fetchData()
+    },
+    expand(row, expanded) {
+      const _self = this
+      _self.active = 0
+      _self.imageUrl = ''
+      if (expanded) {
+        _self.action =
+          'http://liukai.iok.la/Hotel/HotelOrder/UploadPic/' + row.OrderID
+        if (row.Screenshot) {
+          _self.imageUrl =
+            'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
+        }
+        _self.expandRowKeys.length = 0
+        _self.expandRowKeys.push(row.ID)
+        _self.ID = row.ID
+        if (row.StateAuditor == '已审核') {
+          _self.active = 1
+        }
+        if (row.StateAuditor == '已提交') {
+          _self.active = 2
+        }
+        if (row.StateAuditor == '已打款') {
+          _self.active = 3
+        }
+        if (row.StateAuditor == '已截图') {
+          _self.active = 4
+        }
       }
     },
-    created() {
-        this.fetchData()
-        this.configList = hotelsOrderApi.getConfig()
+    async getStateList() {
+      const _self = this
+      _self.remsgstateList = []
+      _self.oderstateList = []
+      const res = await hotelsOrderApi.getState()
+      let d = res.data.Data
+      for (let i in d) {
+        if (d[i].FCode == 'remsgstate') {
+          _self.remsgstateList.push(d[i].Name)
+        }
+        if (d[i].FCode == 'oderstate') {
+          _self.oderstateList.push(d[i].Name)
+        }
+      }
     },
-    methods: {
-        hotelsOrderSearch(){
-            const _self = this
-            _self.fetchData()
-        },
-        expand(row,expanded){
-            const _self = this
-            _self.active = 0
-            _self.imageUrl = ''
-            if(expanded){
-                _self.action = "http://liukai.iok.la/Hotel/HotelOrder/UploadPic/" + row.OrderID
-                if(row.Screenshot){
-                    _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
-                }
-                _self.expandRowKeys.length = 0
-                _self.expandRowKeys.push(row.ID)
-                _self.ID = row.ID
-                if(row.StateAuditor == '已审核'){
-                    _self.active = 1
-                }
-                if(row.StateAuditor == '已提交'){
-                    _self.active = 2
-                }
-                if(row.StateAuditor == '已打款'){
-                    _self.active = 3
-                }
-                if(row.StateAuditor == '已截图'){
-                    _self.active = 4
-                }
-            }
-        },
-        async getStateList(){
-            const _self = this
-            _self.remsgstateList = []
-            _self.oderstateList = []
-            const res = await hotelsOrderApi.getState();
-            let d = res.data.Data;
-            for(let i in d){
-                if(d[i].FCode == 'remsgstate'){
-                    _self.remsgstateList.push(d[i].Name)
-                }
-                if(d[i].FCode == 'oderstate'){
-                    _self.oderstateList.push(d[i].Name)
-                }
-            }
-        },
-        handleSizeChange(val) {
-            this.pageSize = val
-            this.fetchData(1, this.pageSize)
-        },
-        handleCurrentChange(val) {
-            this.currentPage = val
-            this.fetchData(this.currentPage)
-        },
-        searchCallback(filters) {
-            this.filters = filters
-            this.fetchData()
-        },
-        async fetchData(currentPage, pageSize) {
-            const _self = this
-            _self.loading = true
-            _self.currentPage = currentPage || _self.currentPage
-            _self.pageSize = pageSize || _self.pageSize
-            let d1 = new Date(_self.filters.CreateTime[0]);
-            let d2 = new Date(_self.filters.CreateTime[1]); 
-            let d11=d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate() + ' ' + d1.getHours() + ':' + d1.getMinutes();
-            let d22=d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate() + ' ' + d1.getHours() + ':' + d1.getMinutes();
-            const options = {
-                pageIndex: _self.currentPage,
-                pageSize: _self.pageSize,
-                order: 'ID',
-                query: {
-                    Hotel: _self.filters.Hotel,
-                    City: _self.filters.City,
-                    "CreateTime>": d11, "CreateTime<": d22
-                }
-            }
-            try {
-                const res = await hotelsOrderApi.listByQuery(options)
-                _self.hotelsOrder = res.data.Data
-                _self.active = 0
-                _self.count = res.data.Count
-                _self.loading = false
-            } catch (e) {
-                _self.loading = false
-            }
-        },
-        async clickEditBtn($index, row) {
-            const _self = this
-            try {
-                _self.showDialog = true
-                _self.form.ID = row.ID
-                _self.form.Hotel = row.Hotel
-                _self.form.Room = row.Room
-                _self.form.RoomNum = row.RoomNum
-                _self.form.NightNum = row.NightNum
-                _self.form.StayDateStart = row.StayDateStart
-                _self.form.AmountTotal = row.AmountTotal
-                _self.form.Passenger = row.Passenger
-                _self.form.PassengerTel = row.PassengerTel
-                _self.form.PayState = row.PayState
-                _self.form.HoltelReMsgState = row.HoltelReMsgState
-                _self.form.FaDanState = row.FaDanState
-                _self.form.OrderState = row.OrderState
-                _self.form.StateAuditor = row.StateAuditor
-                _self.form.StateSubmit = row.StateSubmit
-                _self.form.StateDaKuan = row.StateDaKuan
-                _self.form.StateScreenshot = row.StateScreenshot
-                _self.form.PassengerAsk = row.PassengerAsk
-                _self.copyForm = Object.assign({}, _self.form)
-                _self.getStateList()
-            } catch (e) {
-                console.error(e)
-            }
-        },
-        async clickAddBtn(){
-            const _self = this
-            _self.title = '添加酒店订单信息'
-            _self.showDialog = true
-            _self.form = {
-                PayState:'',
-                HoltelReMsgState:'',
-                OrderState:'',
-                StayDateStart:'',
-                FaDanState:'已发单',
-                StateAuditor:'已审核',
-                StateSubmit:'已提交',
-                StateDaKuan:'已打款',
-                StateScreenshot:'已截图'
-            }
-            _self.getStateList()
-        },
-        submitForm() {
-            const _self = this
-            if (_self.form.ID) {
-                _self.editSave()
-            } else {
-                _self.addSave()
-            }
-        },
-        async addSave() {
-            const _self = this
-            /* _self.$refs['form'].validate(async valid => {
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(1, this.pageSize)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.fetchData(this.currentPage)
+    },
+    searchCallback(filters) {
+      this.filters = filters
+      this.fetchData()
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this
+      _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      let query = {}
+      if (_self.filters.CreateTime[0] && _self.filters.CreateTime[1]) {
+        let d1 = new Date(_self.filters.CreateTime[0])
+        let d2 = new Date(_self.filters.CreateTime[1])
+
+        let d11 =
+          d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate()
+        let d22 =
+          d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate()
+        query = {
+          Hotel: _self.filters.Hotel,
+          City: _self.filters.City,
+          'CreateTime>': d11,
+          'CreateTime<': d22
+        }
+      } else {
+        query = {
+          Hotel: _self.filters.Hotel,
+          City: _self.filters.City
+        }
+      }
+
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: 'ID',
+        query: query
+      }
+      try {
+        const res = await hotelsOrderApi.listByQuery(options)
+        _self.hotelsOrder = res.data.Data
+        _self.active = 0
+        _self.count = res.data.Count
+        _self.loading = false
+      } catch (e) {
+        _self.loading = false
+      }
+    },
+    async clickEditBtn($index, row) {
+      const _self = this
+      try {
+        _self.showDialog = true
+        _self.form.ID = row.ID
+        _self.form.Hotel = row.Hotel
+        _self.form.Room = row.Room
+        _self.form.RoomNum = row.RoomNum
+        _self.form.NightNum = row.NightNum
+        _self.form.StayDateStart = row.StayDateStart
+        _self.form.AmountTotal = row.AmountTotal
+        _self.form.Passenger = row.Passenger
+        _self.form.PassengerTel = row.PassengerTel
+        _self.form.PayState = row.PayState
+        _self.form.HoltelReMsgState = row.HoltelReMsgState
+        _self.form.FaDanState = row.FaDanState
+        _self.form.OrderState = row.OrderState
+        _self.form.StateAuditor = row.StateAuditor
+        _self.form.StateSubmit = row.StateSubmit
+        _self.form.StateDaKuan = row.StateDaKuan
+        _self.form.StateScreenshot = row.StateScreenshot
+        _self.form.PassengerAsk = row.PassengerAsk
+        _self.copyForm = Object.assign({}, _self.form)
+        _self.getStateList()
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    async clickAddBtn() {
+      const _self = this
+      _self.title = '添加酒店订单信息'
+      _self.showDialog = true
+      _self.form = {
+        PayState: '',
+        HoltelReMsgState: '',
+        OrderState: '',
+        StayDateStart: '',
+        FaDanState: '已发单',
+        StateAuditor: '已审核',
+        StateSubmit: '已提交',
+        StateDaKuan: '已打款',
+        StateScreenshot: '已截图'
+      }
+      _self.getStateList()
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.ID) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
+      const _self = this
+      /* _self.$refs['form'].validate(async valid => {
                 if (valid) { */
-                try {
-                    _self.isEditable = false
-                    await hotelsOrderApi.add(_self.form)
-                    _self.fetchData()
-                    //_self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
-                        message: '保存成功',
-                        type: 'success'
-                    })
-                } catch (e) {
-                    _self.$message.error('添加失败!!!')
-                } finally {
-                    _self.isEditable = true
-                }
-                /* } else {
+      try {
+        _self.isEditable = false
+        await hotelsOrderApi.add(_self.form)
+        _self.fetchData()
+        //_self.$refs['form'].resetFields()
+        _self.showDialog = false
+        _self.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } catch (e) {
+        _self.$message.error('添加失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
+      /* } else {
                 return false
                 }
             }) */
-        },
-        async editSave() {
-            const _self = this
-            const form = {}
-            for (let [k, v] of Object.entries(_self.form)) {
-                if (_self.form[k] != _self.copyForm[k]) {
-                form[k] = v
-                }
-            }
-            try {
-                _self.isEditable = false
-                await hotelsOrderApi.edit(_self.form.ID, form)
-                _self.fetchData()
-                _self.showDialog = false
-                _self.$message({
-                    message: '编辑成功',
-                    type: 'success'
-                })
-            } catch (e) {
-                console.error(e)
-                _self.$message.error('编辑失败!!!')
-            } finally {
-                _self.isEditable = true
-            }
-        },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
-            }
-            if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
-            }
-            return isJPG && isLt2M;
-        },
-        /* submitUpload() {
+    },
+    async editSave() {
+      const _self = this
+      const form = {}
+      for (let [k, v] of Object.entries(_self.form)) {
+        if (_self.form[k] != _self.copyForm[k]) {
+          form[k] = v
+        }
+      }
+      try {
+        _self.isEditable = false
+        await hotelsOrderApi.edit(_self.form.ID, form)
+        _self.fetchData()
+        _self.showDialog = false
+        _self.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('编辑失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    /* submitUpload() {
             this.$refs.upload.submit();
         },
         handleRemove(file, fileList) {
@@ -544,13 +587,12 @@ import { hotelsOrderApi } from 'api'
         handlePreview(file) {
             console.log(file);
         }, */
-        async handleSuccess(response, file, fileList) {
-            console.log(file)
-            this.imageUrl2 = URL.createObjectURL(file.raw);
-        }
-
+    async handleSuccess(response, file, fileList) {
+      console.log(file)
+      this.imageUrl2 = URL.createObjectURL(file.raw)
     }
   }
+}
 </script>
 <style lang="scss">
 #HotelsOrder{
