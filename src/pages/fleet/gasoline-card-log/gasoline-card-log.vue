@@ -27,6 +27,7 @@
                 </template>
             </el-table-column>
             <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="cardNum" label="加油卡卡号"></el-table-column>
             <el-table-column label="类型" show-overflow-tooltip>
                 <template scope="scope">
                     <span v-if="scope.row.UseType === 0">充值</span>
@@ -34,7 +35,6 @@
                 </template>
             </el-table-column>
             <el-table-column prop="DateTime" label="加油时间" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="cardNum" label="油卡编号"></el-table-column>
             <el-table-column prop="Total" label="总额"></el-table-column>
             <el-table-column prop="Balance" label="余额"></el-table-column>
             <!-- <el-table-column label="操作" width="150">
