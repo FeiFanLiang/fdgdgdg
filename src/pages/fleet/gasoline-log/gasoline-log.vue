@@ -25,7 +25,7 @@
                 <el-button type="primary" @click="recharge">加油卡充值</el-button>
             </el-col >
         </el-row>
-        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
+        <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" :expand-row-keys="expandRowKeys" @expand="getInfo">
             <el-table-column type="expand">
                 <template scope="props">
                     <el-form label-position="left" inline class="demo-table-expand" label-width="110px">
@@ -251,7 +251,6 @@ import path from '../../../api/api.js'
 import { gasolineLogApi, carBaseApi, driverBaseApi } from 'api'
 export default {
   created() {
-    this.imageUrl = path.imageUrl
     this.fetchData()
     this.getList()
   },
@@ -283,7 +282,6 @@ export default {
           label: '司机姓名'
         }
       ],
-      imageUrl: '',
       list: [],
       currentPage: 1,
       pageSize: 10,
@@ -341,7 +339,9 @@ export default {
           { "value": "萍乡路加油站"}
       ],
       cardList:[],
-      cardBalance:''
+      cardBalance:'',
+      expandRowKeys: []
+
     }
   },
   watch:{
@@ -534,6 +534,13 @@ export default {
         }
       })
     },
+    getInfo(row, expanded) {
+        const _self = this
+        if (expanded) {
+          _self.expandRowKeys.length = 0
+          _self.expandRowKeys.push(row.ID)
+        }
+      },
     // async editSave() {
     //   const _self = this
     //   _self.$refs['form'].validate(async valid => {
@@ -582,9 +589,6 @@ export default {
     }
     .demo-table-expand {
         padding: 0 0 10px 16px !important;
-    }
-    .mbtm-10 {
-        margin-bottom: 10px;
     }
     .demo-table-expand .el-form-item span {
         color: orange;

@@ -12,6 +12,9 @@ export default {
         getLastLog(id) {
             return axios.get(base + 'GetLastLog/' + id)
         },
+        getGasolineLogByCardLog(id) {
+            return axios.get(base + 'GetGasolineLog/' + id)
+        },
         detail(id) {
             return axios.get(base + id)
         },
