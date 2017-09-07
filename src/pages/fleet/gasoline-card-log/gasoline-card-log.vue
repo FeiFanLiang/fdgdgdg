@@ -2,14 +2,13 @@
   <div id="gasoline-card-log">
     <el-row :gutter="20">
       <el-col :span="4">
-        <el-select v-model="filters.gasolineCardID" placeholder="请选择">
+        <el-select v-model="filters.gasolineCardID" placeholder="请选择车辆" clearable >
           <el-option v-for="(item,index) in cardList" :key="index" :label="item.CardNum" :value="item.ID">
           </el-option>
         </el-select>
       </el-col>
       <el-col :span="10">
         <el-button type="primary" @click="gasolineSearch(filters)">搜索</el-button>
-        <el-button type="primary" @click="clear()">清空</el-button>
       </el-col>
     </el-row>
     <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" @expand="getInfo" v-loading="loading" border row-key="ID" :expand-row-keys="expandRowKeys">
@@ -151,10 +150,6 @@
         console.log(item);
       },
       gasolineSearch() {
-        this.fetchData()
-      },
-      clear() {
-        this.filters.gasolineCardID = ''
         this.fetchData()
       },
       async fetchData(currentPage, pageSize) {

@@ -73,6 +73,7 @@
             <el-table-column prop="Total" label="总额"></el-table-column>
             <!-- <el-table-column prop="DateTime" label="时间" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="GasolineStation" label="加油站" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <!-- <el-table-column label="操作" width="150">
 <template scope="scope">
     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
@@ -194,8 +195,15 @@
                         </el-form-item>
                     </el-col> -->
                     <el-col :span="12">
-                        <el-form-item label="余额" prop="Balance">
-                            <el-input placeholder="请输入余额" v-model="form.Balance" disabled></el-input>
+                        <el-form-item label="加油卡余额" prop="Balance">
+                            <el-input placeholder="加油卡余额" v-model="form.Balance" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="24">
+                        <el-form-item label="备注">
+                            <el-input type="textarea" placeholder="请输入备注信息" v-model="form.Remark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -233,8 +241,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="油卡余额" prop="Balance">
-                            <el-input placeholder="油卡余额" v-model="rechargeForm.Balance" disabled></el-input>
+                        <el-form-item label="加油卡余额" prop="Balance">
+                            <el-input placeholder="加油卡余额" v-model="rechargeForm.Balance" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -303,7 +311,8 @@ export default {
         Count:'',
         Total:'',
         CarKilometer:'',
-        Balance:''
+        Balance:'',
+        Remark:''
       },
       rechargeForm : {
         GasolineCardID:'',
@@ -346,11 +355,9 @@ export default {
   },
   watch:{
       'form.GasolineCardNo':async function () {
-          console.log(this.form.GasolineCardNo)
           const res = await gasolineLogApi.getLastLog(this.form.GasolineCardNo)
           this.cardBalance = (res.data.Data&&res.data.Data.Balance)?res.data.Data.Balance:0
           this.form.Balance =  this.cardBalance - this.form.Total||0
-          console.log(this.cardBalance,this.form.Balance)
       },
       'form.UnitPrice': function () {
           this.form.Total =  this.form.UnitPrice * this.form.Count
@@ -361,7 +368,6 @@ export default {
       'form.Total': function () {
           if(this.cardBalance){
               this.form.Balance =  this.cardBalance - this.form.Total||0
-               console.log(this.cardBalance,this.form.Balance)
           }
       },
       'rechargeForm.GasolineCardID': async function(){
@@ -381,7 +387,6 @@ export default {
         };
     },
     handleSelect(item) {
-        console.log(item);
     },
     querySearch1(queryString, cb) {
         var restaurants = this.stationList;
@@ -389,7 +394,6 @@ export default {
         cb(results);
     },
     handleSelect1(item) {
-        console.log(item);
     },
     gasolineSearch() {
       this.fetchData()
@@ -420,9 +424,15 @@ export default {
       }
     },
     async getList() {
-      const res = await carBaseApi.listByQuery()
+      const form = {
+        pageIndex: 1,
+        pageSize: 100,
+        order: 'ID',
+        query: {}
+      }
+      const res = await carBaseApi.listByQuery(form)
       this.carList = res.data.Data
-      const res2 = await driverBaseApi.listByQuery()
+      const res2 = await driverBaseApi.listByQuery(form)
       this.driverList = res2.data.Data
       const res3 = await gasolineLogApi.cardList()
       this.cardList = res3.data.Data
@@ -450,7 +460,8 @@ export default {
         Count:'',
         Total:'',
         CarKilometer:'',
-        Balance:''
+        Balance:'',
+        Remark:''
       }
       _self.showDialog = true
     },
