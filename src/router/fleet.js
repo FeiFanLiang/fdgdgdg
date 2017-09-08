@@ -30,12 +30,12 @@ export default {
     },
     {
       path: 'gasoline-log',
-      name: '加油记录',
+      name: '加油充值',
       component: _import('fleet/gasoline-log/gasoline-log')
     },
     {
       path: 'gasoline-card-log',
-      name: '加油卡充值记录',
+      name: '加油卡记录',
       component: _import('fleet/gasoline-card-log/gasoline-card-log')
     },
     {
