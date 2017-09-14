@@ -31,13 +31,13 @@
                     <el-form label-position="left" inline class="demo-table-expand" label-width="110px">
                         <el-row :gutter="24">
                             <el-col :span="12">
-                                <el-form-item label="加油时间">
+                                <el-form-item label="时间">
                                 <span>{{ props.row.GasolineCardLog.DateTime }}</span>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="加油卡ID">
-                                    <span>{{ props.row.GasolineCardLog.GasolineCardID }}</span>
+                                <el-form-item label="加油卡号">
+                                    <span>{{ props.row.GasolineCardLog.cardNum }}</span>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -48,7 +48,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="12">
-                                <el-form-item label="余额">
+                                <el-form-item label="账户余额">
                                     <span>{{ props.row.GasolineCardLog.Balance }}</span>
                                 </el-form-item>
                             </el-col>
@@ -56,24 +56,25 @@
                     </el-form>
                 </template>
             </el-table-column>
-            <el-table-column prop="ID" label="ID"></el-table-column>
+            <el-table-column prop="DateTime" label="时间" show-overflow-tooltip width="150"></el-table-column>
+            <el-table-column prop="GasolineStation" label="加油站" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="GasolineCardLog.cardNum" label="卡号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Driver.Name" label="司机"></el-table-column>
-            <el-table-column prop="Channel" label="渠道">
+            <el-table-column prop="CarKilometer" label="车辆当前公里数" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Driver.Name" label="司机" show-overflow-tooltip></el-table-column>
+            <!-- <el-table-column prop="Channel" label="渠道">
                 <template scope="scope">
                             <p v-if="scope.row.Channel === 0">加油卡</p>
                             <p v-if="scope.row.Channel === 1">其他</p>
                 </template>
-            </el-table-column>
-            <el-table-column prop="DateTime" label="加油时间" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="SerialNumber" label="流水号"></el-table-column>
-            <el-table-column prop="GasolineType" label="油品标号"></el-table-column>
-            <el-table-column prop="UnitPrice" label="单价"></el-table-column>
+            </el-table-column> -->
+            <!-- <el-table-column prop="SerialNumber" label="流水号"></el-table-column> -->
+            <!-- <el-table-column prop="GasolineType" label="油品标号"></el-table-column> -->
+            <el-table-column prop="UnitPrice" label="单价"  width="65"></el-table-column>
             <el-table-column prop="Count" label="数量"></el-table-column>
-            <el-table-column prop="Total" label="总额"></el-table-column>
-            <!-- <el-table-column prop="DateTime" label="时间" show-overflow-tooltip></el-table-column> -->
-            <el-table-column prop="GasolineStation" label="加油站" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="Total" label="总价"></el-table-column>
+            <el-table-column prop="GasolineCardLog.Balance" label="账户余额"></el-table-column>
+            <el-table-column prop="Remark" label="备注" show-overflow-tooltip  width="65"></el-table-column>
             <!-- <el-table-column label="操作" width="150">
 <template scope="scope">
     <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
@@ -259,7 +260,7 @@ import path from '../../../api/api.js'
 import { gasolineLogApi, carBaseApi, driverBaseApi } from 'api'
 export default {
   created() {
-    this.fetchData()
+    this.getCardList()
     this.getList()
   },
   data() {
@@ -343,14 +344,13 @@ export default {
           { "value": "柴油"}
       ],
       stationList:[
-          { "value": "杭州支路加油站"},
-          { "value": "山东路加油站"},
-          { "value": "萍乡路加油站"}
+          { "value": "杭州支路"},
+          { "value": "山东路"},
+          { "value": "萍乡路"}
       ],
       cardList:[],
       cardBalance:'',
       expandRowKeys: []
-
     }
   },
   watch:{
@@ -415,13 +415,33 @@ export default {
       try {
         const res = await gasolineLogApi.list(options)
         _self.list = res.data.Data
-
+        _self.list.forEach(function(item1) {
+            item1.DateTime = item1.DateTime.slice(0,16)
+            _self.cardList.forEach(function(item2) {
+              if (item1.GasolineCardLog.GasolineCardID === item2.ID) {
+                  item1.GasolineCardLog.cardNum = item2.CardNum
+              }
+            })
+          })
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
         console.error(e)
         _self.loading = false
       }
+    },
+    async getCardList() {
+        const _self = this
+        _self.loading = true
+        try {
+          const res3 = await gasolineLogApi.cardList()
+          _self.cardList = res3.data.Data
+          _self.loading = false
+        } catch (e) {
+          console.error(e)
+          _self.loading = false
+        }
+        _self.fetchData()
     },
     async getList() {
       const form = {
@@ -434,8 +454,6 @@ export default {
       this.carList = res.data.Data
       const res2 = await driverBaseApi.listByQuery(form)
       this.driverList = res2.data.Data
-      const res3 = await gasolineLogApi.cardList()
-      this.cardList = res3.data.Data
     },
     handleSizeChange(val) {
       this.pageSize = val

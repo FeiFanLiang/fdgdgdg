@@ -7,7 +7,7 @@ import { bargainsRoomApi } from '../config-data'
 export default {
   getConfig: bargainsRoomApi.getConfig,
   list (params) {
-    return axios.get(base, {
+    return axios.get(base+'BargainsRoom', {
       params: params
     })
   },

@@ -200,6 +200,7 @@ export default {
         const res = await hotelShowApi.list()
         if (res && res.data) {
           _self.hotelShowList = res.data
+          console.log(_self.hotelShowList)
         }
         _self.loading = false
       } catch (e) {

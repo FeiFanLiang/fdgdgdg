@@ -2,7 +2,7 @@
   <div id="gasoline-card-log">
     <el-row :gutter="20">
       <el-col :span="4">
-        <el-select v-model="filters.gasolineCardID" placeholder="请选择车辆" clearable >
+        <el-select v-model="filters.gasolineCardID" placeholder="请选择加油卡" clearable >
           <el-option v-for="(item,index) in cardList" :key="index" :label="item.CardNum" :value="item.ID">
           </el-option>
         </el-select>
@@ -181,9 +181,17 @@
         }
       },
       async getList() {
-        const res3 = await gasolineLogApi.cardList()
-        this.cardList = res3.data.Data
-        this.fetchData()
+        const _self = this
+        _self.loading = true
+        try {
+          const res3 = await gasolineLogApi.cardList()
+          _self.cardList = res3.data.Data
+          _self.loading = false
+        } catch (e) {
+          console.error(e)
+          _self.loading = false
+        }
+        _self.fetchData()
       },
       async getInfo(row, expanded) {
         const _self = this

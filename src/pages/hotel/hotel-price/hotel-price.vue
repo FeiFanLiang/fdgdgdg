@@ -1,14 +1,14 @@
 <template lang="html">
-  <div>
-    <!-- <HotelTopMenu path="price"></HotelTopMenu > -->
-    <el-row :gutter="20" style="display:flex;align-items: center;">
-      <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#c8e4ec"></dt>
-        <dd>开房</dd>
-      </el-col>
-      <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#e4e8f1"></dt>
-        <dd>关房</dd>
-      </el-col>
-      <!-- <el-col :span="3">
+<div>
+  <!-- <HotelTopMenu path="price"></HotelTopMenu > -->
+  <el-row :gutter="20" style="display:flex;align-items: center;">
+    <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#c8e4ec"></dt>
+      <dd>开房</dd>
+    </el-col>
+    <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#e4e8f1"></dt>
+      <dd>关房</dd>
+    </el-col>
+    <!-- <el-col :span="3">
         <el-select v-model="value7" placeholder="请选择">
           <el-option-group v-for="(group,gIndex) in options3" :key="group.label" :label="group.label">
             <el-option v-for="(item,index) in group.options" :key="item.value" :label="item.label" :value="item.value">
@@ -22,24 +22,24 @@
           </el-option>
         </el-select>
       </el-col> -->
-      <el-col :span="4" :offset="6">
-        <el-select v-model="periodType" placeholder="请选择">
-          <el-option v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]" :key="item.value" :label="item.label" :value="item.value">
-          </el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="10">
-        <el-button icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
-        <el-date-picker class="mydate" v-model="chosenDate" type="date" placeholder="选择日期">
-        </el-date-picker>
-        <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
-      </el-col>
-    </el-row>
+    <el-col :span="4" :offset="6">
+      <el-select v-model="periodType" placeholder="请选择">
+        <el-option v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]" :key="item.value" :label="item.label" :value="item.value">
+        </el-option>
+      </el-select>
+    </el-col>
+    <el-col :span="10">
+      <el-button icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
+      <el-date-picker class="mydate" v-model="chosenDate" type="date" placeholder="选择日期">
+      </el-date-picker>
+      <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
+    </el-col>
+  </el-row>
 
-    <el-table :data="roomList" row-key="RoomID" @expand="handleExpand"  :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+  <el-table :data="roomList" row-key="RoomID" @expand="handleExpand" :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
 
-      <el-table-column type="expand" label="周日">
-        <template scope="props">
+    <el-table-column type="expand" label="周日">
+      <template scope="props">
         <template  v-for="sonRoom in props.row.SonRooms" >
           <table style="width: 100%;">
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
@@ -81,7 +81,7 @@
               </td>
               </tr>
           </table >
-        </template>
+</template>
         </template>
       </el-table-column>
       <el-table-column label="房型" prop="RoomName" min-width="300"></el-table-column>
@@ -105,12 +105,12 @@
       <el-row style="margin-top:20px;" v-for="(item,index) in priceForm.price" :key="index">
         <el-col :span="12" :offset="1">
           <el-input placeholder="售卖价" v-model="priceForm.price[index].price">
-            <template slot="prepend">
-               {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            </template>
-            <template slot="append">
-               ￥
-            </template>
+<template slot="prepend">
+ {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</template>
+<template slot="append">
+ ￥
+</template>
           </el-input>
         </el-col>
         <el-col :span="10" :offset="1" v-if="index!==0">
@@ -140,12 +140,12 @@
       <el-radio-button :label="1">子房型</el-radio-button>
     </el-radio-group>
   </el-form-item> -->
-  <!-- <el-form-item label="获取渠道">
+  <el-form-item label="获取渠道">
     <el-radio-group v-model="stateForm.updateChannel">
       <el-radio-button :label="0">机器抓取</el-radio-button>
       <el-radio-button :label="1">人工更改</el-radio-button>
     </el-radio-group>
-  </el-form-item> -->
+  </el-form-item>
   <el-form-item label="剩余数量">
      <el-input-number v-model="stateForm.count"  :min="1" ></el-input-number>
   </el-form-item>
@@ -161,9 +161,14 @@
 </template>
 
 <script>
-import { roomStatPriceApi, hotelThreePlatInfoApi } from 'api'
+import {
+  roomStatPriceApi,
+  hotelThreePlatInfoApi
+} from 'api'
 import chunk from 'lodash/chunk'
-import { HotelTopMenu } from 'components'
+import {
+  HotelTopMenu
+} from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -192,13 +197,12 @@ export default {
         date: '',
         count: '',
         isOpen: '',
-        updateChannel: 0
+        updateChannel: ''
       },
       priceForm: {
         sonRoomId: '',
         time: '',
-        price: [
-          {
+        price: [{
             title: '最高采购价',
             id: -1,
             price: ''
@@ -210,13 +214,13 @@ export default {
             stat: 0
           },
           {
-            title: '携程',
+            title: '去哪',
             id: 2,
             price: '',
             stat: 0
           },
           {
-            title: '去哪',
+            title: '携程',
             id: 3,
             price: '',
             stat: 0
@@ -240,20 +244,16 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       periodType: 'month',
-      options3: [
-        {
+      options3: [{
           label: '售卖价',
-          options: [
-            {
-              value: 'Shanghai',
-              label: '售卖价'
-            }
-          ]
+          options: [{
+            value: 'Shanghai',
+            label: '售卖价'
+          }]
         },
         {
           label: '渠道价',
-          options: [
-            {
+          options: [{
               value: 'Chengdu',
               label: '去哪儿B'
             },
@@ -265,12 +265,10 @@ export default {
         },
         {
           label: '采购价',
-          options: [
-            {
-              value: 'Beijing',
-              label: '采购价'
-            }
-          ]
+          options: [{
+            value: 'Beijing',
+            label: '采购价'
+          }]
         }
       ]
     }
@@ -332,8 +330,7 @@ export default {
     },
     startAndEndDay() {
       const _self = this
-      if (
-        !_self.monthList ||
+      if (!_self.monthList ||
         !_self.monthList.length ||
         !_self.weekList ||
         !_self.weekList.length
@@ -451,9 +448,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays - 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -473,9 +468,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays + 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -496,9 +489,9 @@ export default {
         let date = new Date(dateIn)
         let s = ''
         let mouth =
-          date.getMonth() + 1 >= 10
-            ? date.getMonth() + 1
-            : '0' + (date.getMonth() + 1)
+          date.getMonth() + 1 >= 10 ?
+          date.getMonth() + 1 :
+          '0' + (date.getMonth() + 1)
         let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
         s += date.getFullYear() + '-' // 获取年份。
         s += mouth + '-' // 获取月份。
@@ -514,7 +507,7 @@ export default {
       de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
       let unixDb = db.getTime()
       let unixDe = de.getTime()
-      for (let k = unixDb; k <= unixDe; ) {
+      for (let k = unixDb; k <= unixDe;) {
         arry.push(format(new Date(parseInt(k))))
         k = k + 24 * 60 * 60 * 1000
       }
@@ -522,17 +515,16 @@ export default {
     },
     priceOne(item, date) {
       const _self = this
-
       _self.priceChangeForOne = true
       _self.priceForm.sonRoomId = item.SonRoomID
       _self.priceForm.time = [new Date(date), new Date(date)]
-      _self.priceForm.price[0].price = _self.price(item, date)
-      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
+      _self.priceForm.price[0].price = _self.price(item, date);
+      ['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
       })
-      console.log(_self.priceForm.price)
       _self.stateForm.count = item.timeDate[date].Count
       _self.stateForm.isOpen = item.timeDate[date].IsOpen
+      _self.stateForm.updateChannel = item.timeDate[date].UpdateChannel
       _self.stateForm.sonRoomId = item.SonRoomID
       _self.stateForm.date = [new Date(date), new Date(date)]
     },
@@ -591,7 +583,7 @@ export default {
           date: time,
           count: _self.stateForm.count,
           isOpen: _self.stateForm.isOpen,
-          updateChannel: 0
+          updateChannel: _self.stateForm.updateChannel,
         })
       })
       const res = await roomStatPriceApi.UpdateRoomState(stateForm)
@@ -624,48 +616,56 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .legend {
-    display: inline;
-    float: left;
-    margin: 1px 3px 0 0;
-    background-color: #fff;
-    border: 1px solid #e1e1e1;
-    height: 14px;
-    overflow: hidden;
-    text-align: center;
-    width: 14px;
-  }
-  .ui-table-col-center {
-    background-color: #fbfbfb;
-    cursor: pointer;
-    vertical-align: top;
-    border: 1px solid #ececec;
-  }
-  .open {
-    width: 12%;
-    height: 100px;
-    background-color: #c8e4ec;
-    padding: 10px;
-  }
-  .close {
-    width: 12%;
-    height: 100px;
-    background-color: #e4e8f1;
-    padding: 10px;
-  }
-  .column_tr {
-    width: 100%;
-  }
-  .column_tr:after {
-    clear: both;
-  }
-  .dayname{
-    color: #13ce66;
-  }
-  .price{
-    color:#48576a;
-  }
-  .remain{
-    color:#50bfff;
-  }
+.legend {
+  display: inline;
+  float: left;
+  margin: 1px 3px 0 0;
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  height: 14px;
+  overflow: hidden;
+  text-align: center;
+  width: 14px;
+}
+
+.ui-table-col-center {
+  background-color: #fbfbfb;
+  cursor: pointer;
+  vertical-align: top;
+  border: 1px solid #ececec;
+}
+
+.open {
+  width: 12%;
+  height: 100px;
+  background-color: #c8e4ec;
+  padding: 10px;
+}
+
+.close {
+  width: 12%;
+  height: 100px;
+  background-color: #e4e8f1;
+  padding: 10px;
+}
+
+.column_tr {
+  width: 100%;
+}
+
+.column_tr:after {
+  clear: both;
+}
+
+.dayname {
+  color: #13ce66;
+}
+
+.price {
+  color: #48576a;
+}
+
+.remain {
+  color: #50bfff;
+}
 </style>

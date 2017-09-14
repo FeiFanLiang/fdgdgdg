@@ -355,6 +355,7 @@ export default {
         _self.searchForm.endDate = new Date(_self.searchForm.endDate).Format(
           'yyyy-MM-dd'
         )
+        console.log(_self.searchForm)
         const res = await bargainsRoomApi.list(_self.searchForm)
         _self.list = res.data
         for (let [index, elem] of _self.list.entries()) {

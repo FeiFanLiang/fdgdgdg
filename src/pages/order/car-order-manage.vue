@@ -231,6 +231,7 @@
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="RealPrice" label="实收金额" show-overflow-tooltip></el-table-column>
             <!-- <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
