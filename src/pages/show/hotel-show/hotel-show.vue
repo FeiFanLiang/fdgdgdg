@@ -140,7 +140,12 @@
         <el-table-column prop="CheckOutPolicy" label="离店政策" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Favorable" label="好评率"></el-table-column>
         <el-table-column prop="FloorLevelsNum" label="楼层数"></el-table-column>
-        <el-table-column prop="IsTransfer" label="接送机服务"></el-table-column>
+        <el-table-column prop="IsTransfer" label="接送机服务">
+<template scope="props">
+<span v-if="props.row.IsTransfer">是</span>
+<span v-if="!props.row.IsTransfer">否</span>
+</template>
+        </el-table-column>
         <el-table-column prop="Rooms" label="房间数"></el-table-column>
         <el-table-column label="操作" width="150">
 <template scope="scope">
