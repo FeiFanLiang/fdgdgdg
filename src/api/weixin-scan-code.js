@@ -13,6 +13,6 @@ export default {
     return axios.put(base + id, params)
   },
   url (code) {
-    return axios.post(base2 + 'GetQrWithArg/' + code)
+    return axios.get(base2 + 'GetQrWithArg/' + code)
   }
 }

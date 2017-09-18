@@ -71,12 +71,18 @@ router.afterEach(transition => {
   NProgress.done()
 })
 
-// axios.interceptors.request.use(function(config) {
-//     return config;
-// }, function(error) {
-
-//     return Promise.reject(error);
-// });
+axios.interceptors.request.use(
+  function (config) {
+    // if (config.url.indexOf('weixinredirect.qdjp.cn') > -1) {
+    //   config.withCredentials = false
+    // }
+    // console.log(config)
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
+  }
+)
 
 axios.interceptors.response.use(
   function (response) {
