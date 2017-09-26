@@ -51,9 +51,9 @@
             <strong v-if="sonRoom.Remark">备注1</strong>  {{sonRoom.Remark}}
               <br/>
               <br/>
-            <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
-            <br/>
-            <p v-for="item in sonRoom.platTimeRange" v-if="item.platName">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
+            <!-- <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
+            <br/> -->
+            <p v-for="item in sonRoom.platTimeRange" v-if="item.platName&&item.platName==='全日空ANA'">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
             <!-- <span class="gray" style="display: none;">(无效)</span> -->
             </div>
             </td>
@@ -79,9 +79,9 @@
                 <strong v-if="sonRoom.Remark">备注1</strong>  {{sonRoom.Remark}}
                   <br/>
                   <br/>
-                <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
-                <br/>
-                <p v-for="item in sonRoom.platTimeRange" v-if="item.platName">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
+                <!-- <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
+                <br/> -->
+                <p v-for="item in sonRoom.platTimeRange" v-if="item.platName&&item.platName==='全日空ANA'">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
                 <!-- <span class="gray" style="display: none;">(无效)</span> -->
                 </div>
               </td>
