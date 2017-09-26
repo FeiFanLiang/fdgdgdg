@@ -88,10 +88,10 @@
   </div> -->
   <el-tabs v-model="activeName" @tab-click="handleChange">
     <el-tab-pane label="房型信息" name="room"><HotelRoomPage></HotelRoomPage></el-tab-pane>
-    <el-tab-pane label="政策信息" name="policy">  <HotelPolicyPage></HotelPolicyPage></el-tab-pane>
+    <!-- <el-tab-pane label="政策信息" name="policy">  <HotelPolicyPage></HotelPolicyPage></el-tab-pane> -->
     <el-tab-pane label="价格信息" name="price">  <HotelPricePage></HotelPricePage></el-tab-pane>
-    <el-tab-pane label="平台映射" name="platform"><HotelPlatformPage></HotelPlatformPage></el-tab-pane>
-    <el-tab-pane label="展示信息" name="show">  <HotelShowPage></HotelShowPage></el-tab-pane>
+    <!-- <el-tab-pane label="平台映射" name="platform"><HotelPlatformPage></HotelPlatformPage></el-tab-pane> -->
+    <!-- <el-tab-pane label="展示信息" name="show">  <HotelShowPage></HotelShowPage></el-tab-pane> -->
   </el-tabs>
         <!-- <el-collapse v-model="activeNames" @change="handleChange" accordion>
             <el-collapse-item title="房型信息" name="room">
