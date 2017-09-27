@@ -1,5 +1,5 @@
 <template lang="html">
-<div>
+<div class="hotel-price">
   <!-- <HotelTopMenu path="price"></HotelTopMenu > -->
   <el-row :gutter="20" style="display:flex;align-items: center;">
     <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#c8e4ec"></dt>
@@ -691,57 +691,69 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-.legend {
-  display: inline;
-  float: left;
-  margin: 1px 3px 0 0;
-  background-color: #fff;
-  border: 1px solid #e1e1e1;
-  height: 14px;
-  overflow: hidden;
-  text-align: center;
-  width: 14px;
+<style lang="scss" scoped>
+.hotel-price{
+
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: rgba(255,255,255,0);
+    background-clip: padding-box;
+  }
+  .el-table--enable-row-hover .el-table__body td:hover.current  {
+    background-color: #ff000057!important;
+    background-clip: padding-box;
+  }
+  .legend {
+    display: inline;
+    float: left;
+    margin: 1px 3px 0 0;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    height: 14px;
+    overflow: hidden;
+    text-align: center;
+    width: 14px;
+  }
+
+  .ui-table-col-center {
+    background-color: #fbfbfb;
+    cursor: pointer;
+    vertical-align: top;
+    border: 1px solid #ececec;
+  }
+
+  .open {
+    width: 12%;
+    height: 100px;
+    background-color: #c8e4ec!important;
+    padding: 10px;
+  }
+
+  .close {
+    width: 12%;
+    height: 100px;
+    background-color: #ffcfc9!important;
+    padding: 10px;
+  }
+
+  .column_tr {
+    width: 100%;
+  }
+
+  .column_tr:after {
+    clear: both;
+  }
+
+  .dayname {
+    color: #13ce66;
+  }
+
+  .price {
+    color: #48576a;
+  }
+
+  .remain {
+    color: #50bfff;
+  }
 }
 
-.ui-table-col-center {
-  background-color: #fbfbfb;
-  cursor: pointer;
-  vertical-align: top;
-  border: 1px solid #ececec;
-}
-
-.open {
-  width: 12%;
-  height: 100px;
-  background-color: #c8e4ec;
-  padding: 10px;
-}
-
-.close {
-  width: 12%;
-  height: 100px;
-  background-color: #e4e8f1;
-  padding: 10px;
-}
-
-.column_tr {
-  width: 100%;
-}
-
-.column_tr:after {
-  clear: both;
-}
-
-.dayname {
-  color: #13ce66;
-}
-
-.price {
-  color: #48576a;
-}
-
-.remain {
-  color: #50bfff;
-}
 </style>
