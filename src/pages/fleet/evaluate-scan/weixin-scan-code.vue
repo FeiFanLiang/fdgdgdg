@@ -36,7 +36,7 @@
         <el-button @click="showDialog = false">取 消</el-button>
           <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
-    </el-dialog> 
+    </el-dialog>
 </div>
 </template>
 <script>
@@ -50,15 +50,15 @@ export default {
       showDialog: false,
       dialogTitle: '',
       form: {
-        Title:'',
-        Code:'',
-        QrCodeUrl:'',
-        Remark:''
+        Title: '',
+        Code: '',
+        QrCodeUrl: '',
+        Remark: ''
       },
       copyForm: {},
       currentPage: 1,
       pageSize: 10,
-      count:0
+      count: 0
     }
   },
   created() {
@@ -73,7 +73,7 @@ export default {
       this.currentPage = val
       this.fetchData(this.currentPage)
     },
-    async fetchData(currentPage,pageSize) {
+    async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true
       _self.currentPage = currentPage || _self.currentPage
@@ -82,8 +82,7 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'ID',
-        query: {
-        }
+        query: {}
       }
       try {
         const res = await weixinScanCodeApi.listByQuery(options)
@@ -110,32 +109,35 @@ export default {
       }
     },
     async submitForm() {
-        const _self = this
-        const form = {}
-        for (let [k, v] of Object.entries(_self.form)) {
-            if (_self.form[k] != _self.copyForm[k]) {
-            form[k] = v
-            }
+      const _self = this
+      const form = {}
+      for (let [k, v] of Object.entries(_self.form)) {
+        if (_self.form[k] != _self.copyForm[k]) {
+          form[k] = v
         }
-        try {
-            _self.isEditable = false
-            await weixinScanCodeApi.edit(_self.form.ID, form)
-            _self.showDialog = false
-            _self.fetchData()
-            _self.$message({
-            message: '编辑成功',
-            type: 'success'
-            })
-        } catch (e) {
-            console.error(e)
-            _self.$message.error('编辑失败!!!')
-        } finally {
-            _self.isEditable = true
-        }
+      }
+      try {
+        _self.isEditable = false
+        await weixinScanCodeApi.edit(_self.form.ID, form)
+        _self.showDialog = false
+        _self.fetchData()
+        _self.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('编辑失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
     },
-    async createUrl(row){
-        const _self = this
-        await weixinScanCodeApi.url(row.Code)
+    async createUrl(row) {
+      const _self = this
+      const res = await weixinScanCodeApi.url(row.Code)
+      row.QrCodeUrl = res.data
+      await weixinScanCodeApi.edit(row.ID, row)
+      _self.fetchData()
     }
   }
 }
