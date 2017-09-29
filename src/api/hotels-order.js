@@ -29,5 +29,49 @@ export default {
   },
   img(ID){
     return axios.post(base + 'UploadPic/' + ID,ID)
-  }
+  },
+  //全部完成订单
+  all(params){
+    return axios.get(base + 'ListOrderEnd',{
+      params: params
+    })
+  },
+  //待审核列表
+  check(params){
+    return axios.get(base + 'ListDaiShenHe',{
+      params: params
+    })
+  },
+  //审核
+  check2 (id) {
+    return axios.post(base + 'SetCheckOrder' + id, id)
+  },
+  //待完结列表
+  finsh(params){
+    return axios.get(base + 'ListDaiWanJie',{
+      params: params
+    })
+  },
+  //完结
+  finsh2 (id) {
+    return axios.post(base + 'SetOverOrder' + id, id)
+  },
+  //待付款列表
+  pay(params){
+    return axios.get(base + 'ListDaiFuKuan',{
+      params: params
+    })
+  },
+  //待对账付款列表
+  checkOut(params){
+    return axios.get(base + 'ListDaiFuKuanCheck',{
+      params: params
+    })
+  },
+  //待对账收款列表
+  checkIn(params){
+    return axios.get(base + 'ListDaiShouKuanCheck',{
+      params: params
+    })
+  },
 }

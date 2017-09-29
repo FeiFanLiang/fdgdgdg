@@ -22,6 +22,11 @@ export default {
       path: 'HotelsOrder',
       component: _import('order/hotels-order'),
       name: '酒店订单'
-    }
+    },
+    {
+      path: 'OrderOtherList',
+      component: _import('order/order-otherlist'),
+      name: '酒店订单列表'
+    },
   ]
 }
