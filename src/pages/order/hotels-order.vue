@@ -1,9 +1,8 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <!-- <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback"> -->
     <el-row :gutter="24">
         <el-col :span="4">
-          <el-input  placeholder="请输入酒店名称" v-model="filters.Hotel"></el-input>
+          <el-input  placeholder="请输入酒店名称" v-model="filters.HotelName"></el-input>
         </el-col>
         <el-col :span="4">
           <el-input  placeholder="请输入城市名称" v-model="filters.City"></el-input>
@@ -27,11 +26,10 @@
             <el-button type="primary" @click="clickAddBtn">创建</el-button>
         </el-col>
     </el-row>
-    <!-- </CustomSearch> -->
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" :expand-row-keys="expandRowKeys">
         <el-table-column type="expand">
             <template scope="props">
-              <div>
+              <!-- <div>
                 <h4 style="color:orange;">当前步骤流程</h4>
                 <el-steps :space="100" :active="active" finish-status="success">
                     <el-step title="审核"></el-step>
@@ -39,54 +37,64 @@
                     <el-step title="提交"></el-step>
                     <el-step title="截图"></el-step>
                 </el-steps>
-              </div>
+              </div> -->
               <div>
                 <el-card class="box-card">
-                    <p><span>订单来源ID</span><span class="span-text">{{ props.row.ThreePlatID }}</span></p>
-                    <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
-                    <p><span>入住人</span><span class="span-text">{{ props.row.Passenger }}</span></p>
-                    <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p>
+                    <h4>预订其他信息</h4>
                     <p><span>联系固话</span><span class="span-text">{{ props.row.PassengerTel2 }}</span></p>
                     <p><span>Email</span><span class="span-text">{{ props.row.Email }}</span></p>
                     <p><span>特殊要求</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
-                    <p><span>备注</span><span class="span-text">{{ props.row.Remark }}</span></p>
+                    <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
+                    <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p>
+                    <p><span>其他订单号</span><span class="span-text">{{ props.row.PlatOrderNo }}</span></p>
+                    <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
+                    <p><span>其他订单类型</span><span class="span-text">{{ props.row.PlatOrderType }}</span></p>
+                    <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p>
                 </el-card>
                 <el-card class="box-card">
-                    <p><span>实收款额</span><span class="span-text">{{ props.row.AmountShouldIn }}</span></p>
-                    <p><span>应支款额</span><span class="span-text">{{ props.row.AmountShouldOut }}</span></p>
-                    <p><span>已支付金额</span><span class="span-text">{{ props.row.AmountPaid }}</span></p>
-                    <p><span>支付状态</span><span class="span-text">{{ props.row.PayState }}</span></p>
+                    <h4>财务付款</h4>
+                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFuKuan }}</span></p>
+                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShouKuan }}</span></p>
+                    <p><span>应收款额</span><span class="span-text">{{ props.row.AmountYingShou }}</span></p>
+                    <p><span>实收款额</span><span class="span-text">{{ props.row.AmountShiShou }}</span></p>
+                    <p><span>应付款额</span><span class="span-text">{{ props.row.AmountYingFu }}</span></p>
+                    <p><span>实付款额</span><span class="span-text">{{ props.row.AmountShiFu }}</span></p>
+                    <p><span>酒店低价</span><span class="span-text">{{ props.row.HotelFee }}</span></p>
+                    <p><span>利润</span><span class="span-text">{{ props.row.Profit }}</span></p>
                     <p><span>优惠金额</span><span class="span-text">{{ props.row.Discounts }}</span></p>
                     <p><span>其他费用</span><span class="span-text">{{ props.row.OherFee }}</span></p>
-                    <p><span>卖价</span><span class="span-text">{{ props.row.Price }}</span></p>
-                    <p><span>底价</span><span class="span-text">{{ props.row.PriceFloor }}</span></p>
+                    <p><span>改期费</span><span class="span-text">{{ props.row.FeeChange }}</span></p>
+                    <p><span>退票费</span><span class="span-text">{{ props.row.FeeCancel }}</span></p>
+                    <p><span>佣金</span><span class="span-text">{{ props.row.Commission }}</span></p>
+                    <p><span>手续费</span><span class="span-text">{{ props.row.Fee }}</span></p>
                 </el-card>
                 <el-card class="box-card">
-                    <p><span>酒店回传状态</span><span class="span-text">{{ props.row.HoltelReMsgState }}</span></p>
-                    <p><span>发单状态</span><span class="span-text">{{ props.row.FaDanState }}</span></p>
-                    <p><span>发单单号</span><span class="span-text">{{ props.row.FaDanNo }}</span></p>
+                    <h4>订单状态、发单信息</h4>
                     <p><span>订单状态</span><span class="span-text">{{ props.row.OrderState }}</span></p>
-                    <p><span>酒店预订号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
-                    <p><span>审核状态</span><span class="span-text">{{ props.row.StateAuditor }}</span></p>
-                    <p><span>提交状态</span><span class="span-text">{{ props.row.StateSubmit }}</span></p>
-                    <p><span>打款状态</span><span class="span-text">{{ props.row.StateDaKuan }}</span></p>
-                    <p><span>截图状态</span><span class="span-text">{{ props.row.StateScreenshot }}</span></p>
-                    <p><span>对冲金额</span><span class="span-text">{{ props.row.DuiChongMoney }}</span></p>
-                    <p><span>对冲单号</span><span class="span-text">{{ props.row.DuiChongID }}</span></p>
+                    <p><span>订单类型</span><span class="span-text">{{ props.row.OrderType }}</span></p>
+                    <p><span>酒店预定号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
+                    <h4>外采、关联消息</h4>
+                    <p><span>外采类型</span><span class="span-text">{{ props.row.WaiCaiType }}</span></p>
+                    <p><span>外采编号</span><span class="span-text">{{ props.row.WaiCaiNo }}</span></p>
+                    <p><span>关联订单</span><span class="span-text">{{ props.row.POrderID }}</span></p>
+                    <h4>其他信息</h4>
+                    <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
+                    <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p>
+                    <p><span>第三方平台ID</span><span class="span-text">{{ props.row.ThreePlatID }}</span></p>
+                    <p><span>是否保密</span><span class="span-text" v-if="props.row.Secret === 0">不需要保密</span><span class="span-text" v-if="props.row.Secret === 1">需要保密</span></p>
+                    <p><span>保密状态</span><span class="span-text" v-if="props.row.SecretState === 0">未处理</span><span class="span-text" v-if="props.row.SecretState === 1">已经保密</span></p>
+                    <p><span>结算周期</span><span class="span-text">{{ props.row.SettlementCycle }}</span></p>
                 </el-card>
                 <el-card class="box-card">
-                    <p><span>创建时间</span><span class="span-text">{{ props.row.CreateTime }}</span></p>
-                    <p><span>创建ID</span><span class="span-text">{{ props.row.CreateUserID }}</span></p>
-                    <p><span>创建用户名</span><span class="span-text">{{ props.row.CreateUserName }}</span></p>
-                    <p><span>更新时间</span><span class="span-text">{{ props.row.UpdateTime }}</span></p>
-                    <p><span>更新用户ID</span><span class="span-text">{{ props.row.UpdateUserID }}</span></p>
-                    <p><span>更新用户姓名</span><span class="span-text">{{ props.row.UpdateUserName }}</span></p>
-                    <p><span>是否已删除</span>
-                        <span class="span-text" v-if="props.row.IsDelete">是</span>
-                        <span class="span-text" v-else>否</span>
-                    </p>
-                    <p><span>删除用户</span><span class="span-text">{{ props.row.DeleteUser }}</span></p>
-                    <p><span>删除时间</span><span class="span-text">{{ props.row.DeleteTime }}</span></p>
+                    <h4>财务、对账信息、操作流程</h4>
+                    <p><span>审核状态</span><span class="span-text" v-if="props.row.StateAuditor === 1">审核</span><span class="span-text" v-if="props.row.StateAuditor === 2">结束</span></p>
+                    <p><span>付款状态</span><span class="span-text" v-if="props.row.StateFuKuan === 0">未付</span><span class="span-text" v-if="props.row.StateFuKuan === 1">已付款</span></p>
+                    <p><span>收款状态</span><span class="span-text" v-if="props.row.StateShouKuan === 1">完成</span></p>
+                    <p><span>对账付款</span><span class="span-text" v-if="props.row.StateCheckFuKuan === 1">完成</span></p>
+                    <p><span>对账收款</span><span class="span-text" v-if="props.row.StateCheckShouKuan === 1">完成</span></p>
+                    <p><span>审核对账</span><span class="span-text" v-if="props.row.StateCheckEnd === 1">平</span></p>
+                    <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
+                    <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p>
                 </el-card>
               </div>
               <div>
@@ -116,14 +124,14 @@
         </el-table-column>
 
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
-        <el-table-column label="订单类型" prop="OrderType" show-overflow-tooltip></el-table-column>
-        <el-table-column label="酒店名称" prop="Hotel" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column label="订单类型" prop="OrderType" show-overflow-tooltip></el-table-column> -->
+        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
         <el-table-column label="城市" prop="City"></el-table-column>
         <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span>{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
-              <span>{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+            <span>{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
      </template>
         </el-table-column>
         <!-- <el-table-column label="退房日期" prop="StayDateEnd"></el-table-column> -->
@@ -131,15 +139,23 @@
           <template scope="scope">
             <span>{{ scope.row.RoomNum }}</span>/
             <span>{{ scope.row.NightNum }}</span>
-     </template>
+          </template>
         </el-table-column>
         <!-- <el-table-column label="晚数" prop="NightNum"></el-table-column> -->
+        <el-table-column label="入住人" prop="Passenger"></el-table-column>
+        <el-table-column label="联系电话" prop="PassengerTel" width="128"></el-table-column>
+        <!-- <el-table-column label="联系固话" prop="PassengerTel2"></el-table-column> -->
         <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
-        <el-table-column label="货币" prop="Currency"></el-table-column>
+        <el-table-column label="预定时间" prop="BookTime" width="80">
+            <template scope="scope">
+                <span>{{ scope.row.BookTime.substring(5,16) }}</span>
+            </template>
+        </el-table-column>
+        <!-- <el-table-column label="货币" prop="Currency"></el-table-column>
         <el-table-column label="总金额" prop="AmountTotal"></el-table-column>
-        <el-table-column label="订单状态" prop="OrderState"></el-table-column>
+        <el-table-column label="订单状态" prop="OrderState"></el-table-column> -->
 
-        <el-table-column label="操作" width="150">
+        <el-table-column label="操作" width="140">
             <template scope="scope">
                 <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
                 <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
@@ -153,8 +169,8 @@
         <el-form ref="form" :model="form" label-width="110px">
             <el-row :gutter="24">
                 <el-col :span="12">
-                    <el-form-item label="酒店名称" prop="Hotel">
-                        <el-input placeholder="请输入酒店名称" v-model="form.Hotel"></el-input>
+                    <el-form-item label="酒店名称" prop="HotelName">
+                        <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -182,8 +198,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                    <el-form-item label="总金额" prop="AmountTotal">
-                        <el-input placeholder="请输入总金额" v-model="form.AmountTotal"></el-input>
+                    <el-form-item label="退房日期" prop="StayDateEnd">
+                        <el-input placeholder="请输入退房日期" v-model="form.StayDateEnd"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -196,60 +212,6 @@
                 <el-col :span="12">
                     <el-form-item label="联系电话" prop="PassengerTel">
                         <el-input placeholder="请输入酒店名称" v-model="form.PassengerTel"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="12">
-                    <el-form-item label="支付状态" prop="PayState">
-                        <el-select v-model="form.PayState" placeholder="请选择">
-                            <el-option v-for="item in payState" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="酒店回传状态" prop="HoltelReMsgState">
-                        <el-select v-model="form.HoltelReMsgState" placeholder="请选择">
-                            <el-option v-for="(item,index) in remsgstateList" :key="index" :label="item" :value="item"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="12">
-                    <el-form-item label="发单状态" prop="FaDanState">
-                        <el-switch v-model="form.FaDanState" on-text="已发" off-text="未发" on-value="已发单" off-value="未发单"></el-switch>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="订单状态" prop="OrderState">
-                        <el-select v-model="form.OrderState" placeholder="请选择">
-                            <el-option v-for="(item,index) in oderstateList" :key="index" :label="item" :value="item"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="12">
-                    <el-form-item label="审核状态" prop="StateAuditor">
-                        <el-switch v-model="form.StateAuditor" on-text="已审" off-text="未审" on-value="已审核" off-value="未审核"></el-switch>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="提交状态" prop="StateSubmit">
-                        <el-switch v-model="form.StateSubmit" on-text="已提" off-text="未提" on-value="已提交" off-value="未提交"></el-switch>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="12">
-                    <el-form-item label="打款状态" prop="StateDaKuan">
-                        <el-switch v-model="form.StateDaKuan" on-text="已打" off-text="未打" on-value="已打款" off-value="未打款"></el-switch>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="截图状态" prop="StateScreenshot">
-                        <el-switch v-model="form.StateScreenshot" on-text="已有" off-text="无" on-value="已截图" off-value="未截图"></el-switch>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -285,39 +247,14 @@ export default {
       count: 0,
       loading: false,
       hotelsOrder: [],
-      form: {
-        PayState: '',
-        HoltelReMsgState: '',
-        OrderState: '',
-        StayDateStart: '',
-        FaDanState: '已发单',
-        StateAuditor: '已审核',
-        StateSubmit: '已提交',
-        StateDaKuan: '已打款',
-        StateScreenshot: '已截图',
-        Screenshot: ''
-      },
+      form: {},
       copyForm: {},
       showDialog: false,
       isEditable: true,
       title: '',
       active: 0,
-      payState: [
-        {
-          label: '未付款',
-          value: 0
-        },
-        {
-          label: '未结清',
-          value: 1
-        },
-        {
-          label: '已结清',
-          value: 2
-        }
-      ],
       filters: {
-        Hotel: '',
+        HotelName: '',
         City: '',
         CreateTime: ['', '']
       },
@@ -361,7 +298,6 @@ export default {
   },
   created() {
     this.fetchData()
-    this.configList = hotelsOrderApi.getConfig()
   },
   methods: {
     hotelsOrderSearch() {
@@ -438,14 +374,14 @@ export default {
         let d22 =
           d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate()
         query = {
-          Hotel: _self.filters.Hotel,
+          HotelName: _self.filters.HotelName,
           City: _self.filters.City,
           'CreateTime>': d11,
           'CreateTime<': d22
         }
       } else {
         query = {
-          Hotel: _self.filters.Hotel,
+          HotelName: _self.filters.HotelName,
           City: _self.filters.City
         }
       }
@@ -471,22 +407,14 @@ export default {
       try {
         _self.showDialog = true
         _self.form.ID = row.ID
-        _self.form.Hotel = row.Hotel
+        _self.form.HotelName = row.HotelName
         _self.form.Room = row.Room
         _self.form.RoomNum = row.RoomNum
         _self.form.NightNum = row.NightNum
         _self.form.StayDateStart = row.StayDateStart
-        _self.form.AmountTotal = row.AmountTotal
+        _self.form.StayDateEnd = row.StayDateEnd
         _self.form.Passenger = row.Passenger
         _self.form.PassengerTel = row.PassengerTel
-        _self.form.PayState = row.PayState
-        _self.form.HoltelReMsgState = row.HoltelReMsgState
-        _self.form.FaDanState = row.FaDanState
-        _self.form.OrderState = row.OrderState
-        _self.form.StateAuditor = row.StateAuditor
-        _self.form.StateSubmit = row.StateSubmit
-        _self.form.StateDaKuan = row.StateDaKuan
-        _self.form.StateScreenshot = row.StateScreenshot
         _self.form.PassengerAsk = row.PassengerAsk
         _self.copyForm = Object.assign({}, _self.form)
         _self.getStateList()
@@ -498,17 +426,7 @@ export default {
       const _self = this
       _self.title = '添加酒店订单信息'
       _self.showDialog = true
-      _self.form = {
-        PayState: '',
-        HoltelReMsgState: '',
-        OrderState: '',
-        StayDateStart: '',
-        FaDanState: '已发单',
-        StateAuditor: '已审核',
-        StateSubmit: '已提交',
-        StateDaKuan: '已打款',
-        StateScreenshot: '已截图'
-      }
+      _self.form = {}
       _self.getStateList()
     },
     submitForm() {
@@ -596,6 +514,10 @@ export default {
 </script>
 <style lang="scss">
 #HotelsOrder{
+    .pagination-wrapper{
+      text-align: center;
+      margin: 10px;
+    }
     .demo-table-expand{
         .el-col{
             height: 32px;
@@ -610,7 +532,7 @@ export default {
     }
     .box-card{
         width:24.7%;
-        height:34rem;
+        height:50rem;
         display:inline-block;
     }
     .span-text{
