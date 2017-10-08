@@ -58,8 +58,8 @@
                 </el-date-picker>
             </el-col>
             <el-col :span="4">
-                <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions">
-                </el-date-picker>
+                <!-- <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions"></el-date-picker> -->
+                <el-date-picker  v-model="filters.bookTime" type="daterange" align="right" placeholder="选择提单日期" :picker-options="pickerOptions2"></el-date-picker>
             </el-col>
             <el-col :span="6" :offset="1">
                 <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
@@ -524,6 +524,37 @@ export default {
       isEditable: true,
       showDialog: false,
       pickerOptions: {},
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      },
       loginData: '',
       copyForm: {},
       form: {
@@ -689,6 +720,7 @@ export default {
         carTransportType: '',
         carClassify: ''
       },
+
       selectedOptions: [
         {
           value: 1,
@@ -917,8 +949,11 @@ export default {
           'useTime<': _self.filters.useTimeE
             ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
             : '',
-          bookTime: _self.filters.bookTime
-            ? new Date(_self.filters.bookTime).Format('yyyy-MM-dd')
+          'bookTime>': _self.filters.bookTime[0]
+            ? new Date(_self.filters.bookTime[0]).Format('yyyy-MM-dd')
+            : '',
+          'bookTime<': _self.filters.bookTime[1]
+            ? new Date(_self.filters.bookTime[1]).Format('yyyy-MM-dd')
             : '',
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
