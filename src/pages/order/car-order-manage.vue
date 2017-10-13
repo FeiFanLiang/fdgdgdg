@@ -83,6 +83,7 @@
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
                 <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
+                <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -976,6 +977,47 @@ export default {
         console.error(e)
         _self.loading = false
         _self.$message.error('数据获取失败!!!')
+      }
+    },
+    async downloadList() {
+      const _self = this
+      const { currentPage, pageSize, filters } = this
+
+      const options = {
+        order: filters.sortValue,
+        query: {
+          channel: filters.channel,
+          payStatus: filters.payStatus,
+          isCancel: filters.isCancel,
+          'useTime>': filters.useTimeS
+            ? new Date(filters.useTimeS).Format('yyyy-MM-dd')
+            : '',
+          'useTime<': filters.useTimeE
+            ? new Date(filters.useTimeE).Format('yyyy-MM-dd')
+            : '',
+          'bookTime>': filters.bookTime[0]
+            ? new Date(filters.bookTime[0]).Format('yyyy-MM-dd')
+            : '',
+          'bookTime<': filters.bookTime[1]
+            ? new Date(filters.bookTime[1]).Format('yyyy-MM-dd')
+            : '',
+          linkName: filters.labelVal === 1 ? filters.linkName : '',
+          linkPhone: filters.labelVal === 2 ? filters.linkPhone : '',
+          orderKey: filters.labelVal === 3 ? filters.orderKey : '',
+          externalOrderID:
+            filters.labelVal === 4 ? filters.externalOrderID : '',
+          externalOrderStete: filters.externalOrderStete,
+          carTransportType: filters.carTransportType,
+          carClassify: filters.carClassify
+        }
+      }
+      try {
+        const res = await carOrderManageApi.downloadList(options)
+        if (res.request.responseURL) {
+          window.location.href = res.request.responseURL
+        }
+      } catch (e) {
+        _self.$message.error('数据下载失败!!!')
       }
     },
     handleSizeChange(val) {

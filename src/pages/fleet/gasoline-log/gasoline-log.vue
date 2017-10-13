@@ -23,6 +23,7 @@
                 <el-button type="primary" @click="gasolineSearch(filters)">搜索</el-button>
                 <el-button type="primary" @click="clickAddBtn">添加加油记录</el-button>
                 <el-button type="primary" @click="recharge">加油卡充值</el-button>
+                <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button>
             </el-col >
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" :expand-row-keys="expandRowKeys" @expand="getInfo">
@@ -297,29 +298,29 @@ export default {
       count: 0,
       loading: false,
       showDialog: false,
-      showRecharge:false,
+      showRecharge: false,
       disabled: false,
       form: {
         CarID: '',
         DriverID: '',
         Channel: 0,
         DateTime: '',
-        GasolineStation:'',
-        GasolineCardNo:'',
-        SerialNumber:'',
-        GasolineType:'',
-        UnitPrice:'',
-        Count:'',
-        Total:'',
-        CarKilometer:'',
-        Balance:'',
-        Remark:''
+        GasolineStation: '',
+        GasolineCardNo: '',
+        SerialNumber: '',
+        GasolineType: '',
+        UnitPrice: '',
+        Count: '',
+        Total: '',
+        CarKilometer: '',
+        Balance: '',
+        Remark: ''
       },
-      rechargeForm : {
-        GasolineCardID:'',
+      rechargeForm: {
+        GasolineCardID: '',
         DateTime: '',
-        Total:'',
-        Balance:''
+        Total: '',
+        Balance: ''
       },
       Channel: '',
       channelList: [
@@ -335,66 +336,68 @@ export default {
       carList: [],
       driverList: [],
       pickerOptions: {},
-      isEditable:true,
-      isRechargeEditable:true,
-      oilList:[
-          { "value": "90#"},
-          { "value": "92#"},
-          { "value": "95#"},
-          { "value": "柴油"}
+      isEditable: true,
+      isRechargeEditable: true,
+      oilList: [
+        { value: '90#' },
+        { value: '92#' },
+        { value: '95#' },
+        { value: '柴油' }
       ],
-      stationList:[
-          { "value": "杭州支路"},
-          { "value": "山东路"},
-          { "value": "萍乡路"}
-      ],
-      cardList:[],
-      cardBalance:'',
+      stationList: [{ value: '杭州支路' }, { value: '山东路' }, { value: '萍乡路' }],
+      cardList: [],
+      cardBalance: '',
       expandRowKeys: []
     }
   },
-  watch:{
-      'form.GasolineCardNo':async function () {
-          const res = await gasolineLogApi.getLastLog(this.form.GasolineCardNo)
-          this.cardBalance = (res.data.Data&&res.data.Data.Balance)?res.data.Data.Balance:0
-          this.form.Balance =  this.cardBalance - this.form.Total||0
-      },
-      'form.UnitPrice': function () {
-          this.form.Total =  this.form.UnitPrice * this.form.Count
-      },
-      'form.Count': function () {
-          this.form.Total =  this.form.UnitPrice * this.form.Count
-      },
-      'form.Total': function () {
-          if(this.cardBalance){
-              this.form.Balance =  this.cardBalance - this.form.Total||0
-          }
-      },
-      'rechargeForm.GasolineCardID': async function(){
-          const res = await gasolineLogApi.getLastLog(this.rechargeForm.GasolineCardID)
-          this.rechargeForm.Balance = (res.data.Data&&res.data.Data.Balance)?res.data.Data.Balance:0
+  watch: {
+    'form.GasolineCardNo': async function() {
+      const res = await gasolineLogApi.getLastLog(this.form.GasolineCardNo)
+      this.cardBalance =
+        res.data.Data && res.data.Data.Balance ? res.data.Data.Balance : 0
+      this.form.Balance = this.cardBalance - this.form.Total || 0
+    },
+    'form.UnitPrice': function() {
+      this.form.Total = this.form.UnitPrice * this.form.Count
+    },
+    'form.Count': function() {
+      this.form.Total = this.form.UnitPrice * this.form.Count
+    },
+    'form.Total': function() {
+      if (this.cardBalance) {
+        this.form.Balance = this.cardBalance - this.form.Total || 0
       }
+    },
+    'rechargeForm.GasolineCardID': async function() {
+      const res = await gasolineLogApi.getLastLog(
+        this.rechargeForm.GasolineCardID
+      )
+      this.rechargeForm.Balance =
+        res.data.Data && res.data.Data.Balance ? res.data.Data.Balance : 0
+    }
   },
   methods: {
     querySearch(queryString, cb) {
-        var restaurants = this.oilList;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        cb(results);
+      var restaurants = this.oilList
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants
+      cb(results)
     },
     createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.indexOf(queryString.toLowerCase()) === 0);
-        };
+      return restaurant => {
+        return restaurant.value.indexOf(queryString.toLowerCase()) === 0
+      }
     },
-    handleSelect(item) {
-    },
+    handleSelect(item) {},
     querySearch1(queryString, cb) {
-        var restaurants = this.stationList;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        cb(results);
+      var restaurants = this.stationList
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants
+      cb(results)
     },
-    handleSelect1(item) {
-    },
+    handleSelect1(item) {},
     gasolineSearch() {
       this.fetchData()
     },
@@ -416,13 +419,13 @@ export default {
         const res = await gasolineLogApi.list(options)
         _self.list = res.data.Data
         _self.list.forEach(function(item1) {
-            item1.DateTime = item1.DateTime.slice(0,16)
-            _self.cardList.forEach(function(item2) {
-              if (item1.GasolineCardLog.GasolineCardID === item2.ID) {
-                  item1.GasolineCardLog.cardNum = item2.CardNum
-              }
-            })
+          item1.DateTime = item1.DateTime.slice(0, 16)
+          _self.cardList.forEach(function(item2) {
+            if (item1.GasolineCardLog.GasolineCardID === item2.ID) {
+              item1.GasolineCardLog.cardNum = item2.CardNum
+            }
           })
+        })
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
@@ -430,18 +433,36 @@ export default {
         _self.loading = false
       }
     },
-    async getCardList() {
-        const _self = this
-        _self.loading = true
-        try {
-          const res3 = await gasolineLogApi.cardList()
-          _self.cardList = res3.data.Data
-          _self.loading = false
-        } catch (e) {
-          console.error(e)
-          _self.loading = false
+    async downloadList() {
+      const _self = this
+      const options = {
+        order: 'ID',
+        query: {
+          CarID: _self.filters.labelVal === '1' ? _self.filters.CarID : '',
+          DriverID: _self.filters.labelVal === '2' ? _self.filters.DriverID : ''
         }
-        _self.fetchData()
+      }
+      try {
+        const res = await gasolineLogApi.downloadList(options)
+        if (res.request.responseURL) {
+          window.location.href = res.request.responseURL
+        }
+      } catch (e) {
+        _self.$message.error('数据下载失败!!!')
+      }
+    },
+    async getCardList() {
+      const _self = this
+      _self.loading = true
+      try {
+        const res3 = await gasolineLogApi.cardList()
+        _self.cardList = res3.data.Data
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
+        _self.loading = false
+      }
+      _self.fetchData()
     },
     async getList() {
       const form = {
@@ -470,26 +491,26 @@ export default {
         DriverID: '',
         Channel: 0,
         DateTime: '',
-        GasolineStation:'',
-        GasolineCardNo:'',
-        SerialNumber:'',
-        GasolineType:'',
-        UnitPrice:'',
-        Count:'',
-        Total:'',
-        CarKilometer:'',
-        Balance:'',
-        Remark:''
+        GasolineStation: '',
+        GasolineCardNo: '',
+        SerialNumber: '',
+        GasolineType: '',
+        UnitPrice: '',
+        Count: '',
+        Total: '',
+        CarKilometer: '',
+        Balance: '',
+        Remark: ''
       }
       _self.showDialog = true
     },
-    recharge(){
+    recharge() {
       const _self = this
       this.rechargeForm = {
-        GasolineCardID:'',
+        GasolineCardID: '',
         DateTime: '',
-        Total:'',
-        Balance:''
+        Total: '',
+        Balance: ''
       }
       _self.showRecharge = true
     },
@@ -505,11 +526,11 @@ export default {
     // },
     submitForm() {
       const _self = this
-    //   if (_self.form.ID) {
-    //     _self.editSave()
-    //   } else {
-        _self.addSave()
-    //   }
+      //   if (_self.form.ID) {
+      //     _self.editSave()
+      //   } else {
+      _self.addSave()
+      //   }
     },
     async addSave() {
       const _self = this
@@ -517,7 +538,9 @@ export default {
         if (valid) {
           try {
             _self.isEditable = false
-            _self.form.DateTime = new Date(_self.form.DateTime).Format('yyyy-MM-dd hh:mm:ss')
+            _self.form.DateTime = new Date(_self.form.DateTime).Format(
+              'yyyy-MM-dd hh:mm:ss'
+            )
             await gasolineLogApi.add(_self.form)
             _self.fetchData()
             _self.$refs['form'].resetFields()
@@ -543,7 +566,9 @@ export default {
         if (valid) {
           try {
             _self.isRechargeEditable = false
-            _self.rechargeForm.DateTime = new Date(_self.rechargeForm.DateTime).Format('yyyy-MM-dd hh:mm:ss')
+            _self.rechargeForm.DateTime = new Date(
+              _self.rechargeForm.DateTime
+            ).Format('yyyy-MM-dd hh:mm:ss')
             await gasolineLogApi.recharge(_self.rechargeForm)
             _self.fetchData()
             _self.$refs['rechargeForm'].resetFields()
@@ -564,12 +589,12 @@ export default {
       })
     },
     getInfo(row, expanded) {
-        const _self = this
-        if (expanded) {
-          _self.expandRowKeys.length = 0
-          _self.expandRowKeys.push(row.ID)
-        }
-      },
+      const _self = this
+      if (expanded) {
+        _self.expandRowKeys.length = 0
+        _self.expandRowKeys.push(row.ID)
+      }
+    },
     // async editSave() {
     //   const _self = this
     //   _self.$refs['form'].validate(async valid => {
