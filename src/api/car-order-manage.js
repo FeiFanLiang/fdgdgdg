@@ -35,5 +35,10 @@ export default {
     return axios.get(base + 'DayPandect', {
       params: params
     })
+  },
+  downloadList (params) {
+    return axios.get(base + 'downloadList', {
+      params: params
+    })
   }
 }
