@@ -119,7 +119,8 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" :expand-row-keys="expandRowKeys">
+    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" 
+    :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}">
         <el-table-column type="expand">
             <template scope="props">
               <!-- <div>
@@ -245,7 +246,7 @@
         <el-table-column label="联系电话" prop="PassengerTel" width="128"></el-table-column>
         <!-- <el-table-column label="联系固话" prop="PassengerTel2"></el-table-column> -->
         <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
-        <el-table-column label="预定时间" prop="BookTime" width="80">
+        <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
             <template scope="scope">
                 <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
             </template>
@@ -587,12 +588,12 @@
                 </el-upload>
               </el-col>
             </el-row>
-            <!-- <div v-show="showEdit">
+            <div v-show="showEdit">
             <el-row :gutter="24">
               <el-col :span="3" style="text-align:center;color:orange;"><h1>附加项目</h1></el-col>
             </el-row>
             <div style="text-align:right;width:90%;">
-              <el-button>添加</el-button>
+              <el-button @click="addFujia">添加</el-button>
             </div>
             <el-row :gutter="24">
               <el-col>
@@ -605,12 +606,12 @@
                     </template>
                   </el-table-column>
                   <el-table-column label="金额" prop="Money"></el-table-column>
-                  <el-table-column label="创建时间" prop="CreateDate"></el-table-column> -->
+                  <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
                   <!-- <el-table-column label="来源" prop="PlateName"></el-table-column>
                   <el-table-column label="订单编号" prop="PlateOrderNo"></el-table-column>
                   <el-table-column label="使用时间" prop="UseDate"></el-table-column> -->
                   <!-- <el-table-column label="创建人" prop="UserID"></el-table-column> -->
-                <!-- </el-table> -->
+                </el-table>
                 <!-- <div style="margin-left:40px;">
                   金额：{{fujia.Money}}
                   <br>
@@ -618,15 +619,49 @@
                           <span v-if="fujia.TypeID === 1">车票</span>
                           <span v-if="fujia.TypeID === 2">自助餐</span>
                 </div> -->
-              <!-- </el-col>
+              </el-col>
             </el-row>
-            </div> -->
+            </div>
         </el-form>
         <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
-
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
         </span>
+    </el-dialog>
+
+    <el-dialog title="添加附加项目" v-model="showFujia" @close="resetForm('form2')">
+      <el-form ref="form2" :model="form2" label-width="110px">
+        <el-form-item label="订单ID" prop="HotelOrderID">
+            <el-input placeholder="请输入订单ID" v-model="form2.HotelOrderID" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="金额" prop="Money">
+            <el-input placeholder="请输入金额" v-model="form2.Money" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="来源" prop="PlateName">
+            <el-input placeholder="请输入来源" v-model="form2.PlateName" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="订单编号" prop="PlateOrderNo">
+            <el-input placeholder="请输入订单编号" v-model="form2.PlateOrderNo" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="使用时间" prop="UseDate">
+            <el-date-picker v-model="form2.UseDate" type="date" placeholder="选择使用时间" style="width:100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="订单类型" prop="TypeID">
+            <el-select v-model="form2.TypeID">
+              <el-option v-for="item in TypeID" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="CreateDate">
+            <el-input placeholder="请输入创建时间" v-model="form2.CreateDate" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="Remark">
+            <el-input type="textarea" v-model="form2.Remark" style="width:100%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showFujia = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm2()">保存</el-button>
+      </span>
     </el-dialog>
 </div>
 </template>
@@ -660,6 +695,7 @@ export default {
         StateScreenshot:''
       },
       copyForm: {},
+      showFujia:false,
       showDialog: false,
       showEdit:false,
       isEditable: true,
@@ -768,6 +804,16 @@ export default {
         {label:'单结',value:0},
         {label:'周结',value:1},
         {label:'月结',value:2},
+      ],
+      form2:{
+        UseDate:'',
+        TypeID:'',
+        HotelOrderID:''
+      },
+      TypeID:[
+        {label:'门票',value:0},
+        {label:'车票',value:1},
+        {label:'自助餐',value:2},
       ]
     }
   },
@@ -946,6 +992,8 @@ export default {
     },
     async clickEditBtn($index, row) {
       const _self = this
+      _self.title = '编辑酒店订单信息'
+      _self.ID = row.ID
       try {
         _self.showDialog = true
         _self.showEdit = true
@@ -955,13 +1003,13 @@ export default {
         let a = res2.data.Data
         const options = {
           query:{
-            HotelOrderID: row.ID
+            HotelOrderID:row.ID
           }
         }
         console.log(options)
-        // const res3 = await paymentCheckApi.fujiaList(options)
-        // console.log(res3)
-        // _self.fujia = res3.data.Data
+        const res3 = await paymentCheckApi.fujiaList(options)
+        console.log(res3)
+        _self.fujia = res3.data.Data
         for(let i in a){
           _self.money.push(a[i].HotelPayment)
         }
@@ -969,6 +1017,42 @@ export default {
         _self.getStateList()
       } catch (e) {
         console.error(e)
+      }
+    },
+    async addFujia(){
+      const _self = this
+      _self.showFujia = true
+      console.log('111111111'+_self.ID)
+      let date = new Date().Format('yyyy-MM-dd hh:mm')
+      _self.form2 = {
+        HotelOrderID: _self.ID,
+        Money: 0,
+        PlateName: '',
+        PlateOrderNo: '',
+        UseDate: '',
+        TypeID: '',
+        Remark: '',
+        CreateDate:date
+      }
+    },
+    async submitForm2(){
+      const _self = this
+      try {
+        await paymentCheckApi.addFujia(_self.form2)
+        _self.showFujia = false
+        _self.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        const options = {
+          query:{
+            HotelOrderID:_self.ID
+          }
+        }
+        const res3 = await paymentCheckApi.fujiaList(options)
+        _self.fujia = res3.data.Data
+      } catch (e) {
+        _self.$message.error('添加失败!!!')
       }
     },
     async clickAddBtn() {

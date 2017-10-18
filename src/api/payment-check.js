@@ -1,7 +1,7 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPayment/'
-const base2 = path.apiBaseUrl + 'Hotel/HoltelOrderAddition/'
+const base2 = path.apiBaseUrl + 'Hotel/HotelOrderAddition/'
 
 export default {
     listByQuery (params) {
@@ -19,5 +19,8 @@ export default {
         return axios.get(base2 + 'list',{
             params: params
         })
+    },
+    addFujia(params){
+        return axios.post(base2,params)
     }
 }
