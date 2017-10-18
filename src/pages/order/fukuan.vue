@@ -78,7 +78,7 @@
             </el-form-item>
             <el-form-item label="支付账户" prop="CompanyAcount">
                 <el-select v-model="payCheck.CompanyAcount" class="input">
-                    <el-option v-for="item in CompanyAcount" :key="item" :label="item" :value="item"></el-option>
+                    <el-option v-for="item in CompanyAcount" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="Remark">
@@ -120,7 +120,6 @@ export default {
             imgUrl:'',
             dialogImageUrl: '',
             dialogVisible: false,
-            upLoadData: {},
             checkAll: true,
             isIndeterminate: false,
             checkAll1: true,
@@ -142,12 +141,11 @@ export default {
                 {label:'微信',value:3},
                 {label:'支付宝',value:4}
             ],
-            // CompanyAcount:[
-            //     {label:'惠和',value:0},
-            //     {label:'奥讯',value:1},
-            //     {label:'鸿源迅达',value:2}
-            // ]
-            CompanyAcount:['惠和','奥讯','鸿源迅达'],
+            CompanyAcount:[
+                {label:'惠和',value:0},
+                {label:'奥讯',value:1},
+                {label:'鸿源迅达',value:2}
+            ],
             payCheck:{
                 PaymentNo: "",
                 CompanyAcount: "",
@@ -187,9 +185,6 @@ export default {
         },
         handleRemove(file, fileList) {
             console.log(file, fileList);
-        },
-        handlePreview(file) {
-            console.log(file);
         },
         list(){
             for(let i in this.hejiPay){
@@ -334,11 +329,12 @@ export default {
                 }
                 const res = await hotelsOrderApi.paySave(params)
                 _self.ID = res.data.Data.ID
-                _self.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadPic/'
-                _self.upLoadData = {
-                    TypeID: 1,
-                    ID: this.ID
-                }
+                // _self.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadPic/'
+                // _self.upLoadData = {
+                //     TypeID: 1,
+                //     ID: this.ID
+                // }
+                _self.imgUrl = 'http://192.168.10.95:8500/Hotel/Image'
                 _self.$message({
                     message: '付款成功',
                     type: 'success'

@@ -9,8 +9,8 @@
     <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
-        <span>{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
-        <span>{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+        <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
+        <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
         </template>
     </el-table-column>
     <el-table-column label="间/晚" prop="RoomNum">
@@ -23,7 +23,7 @@
     <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
     <el-table-column label="预定时间" prop="BookTime" width="80">
         <template scope="scope">
-            <span>{{ scope.row.BookTime.substring(5,16) }}</span>
+            <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
   </el-table>

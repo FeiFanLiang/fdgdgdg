@@ -61,12 +61,6 @@
         <el-card class="box-card">
             <el-form ref="form" :model="form" label-width="110px">
                 <el-form-item label="图片">
-                    <!-- <el-upload class="upload-demo" ref="upload" :action="imgUrl" :on-preview="handlePreview"
-                    :on-remove="handleRemove" :file-list="fileList" :auto-upload="false">
-                        <el-button slot="trigger" size="small" type="primary">请上传截图</el-button>
-                        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
-                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                    </el-upload> -->
                     <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                         <i class="el-icon-plus"></i>
                     </el-upload>
@@ -74,12 +68,7 @@
                         <img width="100%" :src="dialogImageUrl" alt="">
                     </el-dialog>
                 </el-form-item>
-                <!-- <el-form-item>
-                    <el-button size="small">作废</el-button>
-                    <span>已作废</span>
-                </el-form-item> -->
             </el-form>
-            <!-- <el-button style="margin:20px 110px;width:120px;" @click="saveImg">保存</el-button> -->
         </el-card>
     </el-dialog>
 </div>
@@ -93,7 +82,6 @@ export default {
             imgUrl:'',
             dialogImageUrl: '',
             dialogVisible: false,
-            upLoadData: {},
             checkAll: true,
             isIndeterminate: false,
             hejiPay:[],
@@ -139,27 +127,12 @@ export default {
         _self.payClick()
     },
     methods:{
-        // submitUpload() {
-        //     this.imgUrl = 'http://liukai.iok.la/Hotel/Image'
-        //     this.$refs.upload.submit();
-
-        // },
-        // async saveImg(){
-        //     let params = {
-        //         TypeID: 1,
-        //         ID: this.ID
-        //     }http://liukai.iok.la/Hotel/Image
-        //     const res = await hotelsOrderApi.imgSave(params)
-        // },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
         handleRemove(file, fileList) {
             console.log(file, fileList);
-        },
-        handlePreview(file) {
-            console.log(file);
         },
         list(){
             for(let i in this.hejiPay){
@@ -258,11 +231,6 @@ export default {
             const _self = this
             try {
                 let payment = _self.payCheck
-                // let list =[]
-                // for(let i in _self.hejiPay){
-                //     for(let j in _self.hejiPay[i].PaymentInfo)
-                //     list.push(_self.hejiPay[i].PaymentInfo[j])
-                // }
                 _self.checkList = _self.roompayList
                 const params = {
                     payment:payment,
@@ -270,11 +238,7 @@ export default {
                 }
                 const res = await hotelsOrderApi.paySave(params)
                 _self.ID = res.data.Data.ID
-                _self.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadPic/'
-                _self.upLoadData = {
-                    TypeID: 1,
-                    ID: this.ID
-                }
+                _self.imgUrl = 'http://192.168.10.95:8500/Hotel/Image'
                 _self.$message({
                     message: '收款成功',
                     type: 'success'

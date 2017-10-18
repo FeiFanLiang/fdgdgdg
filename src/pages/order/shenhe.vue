@@ -327,12 +327,12 @@
             <el-row :gutter="24"><el-col :span="3" style="text-align:center;color:orange;"><h1>截图信息</h1></el-col></el-row>
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
-                <img :src="imageUrl" width="132px" height="132px" style="display:inline-block" v-if="imageUrl"/>
-                <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false" :on-success="handleSuccess" :before-upload="beforeAvatarUpload" style="display:inline-block">
-                    <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
                 </el-upload>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
               </el-col>
             </el-row>
         </el-form>
@@ -350,10 +350,9 @@ import { hotelsOrderApi,paymentCheckApi } from 'api'
 export default {
   data() {
     return {
-      imageUrl: '',
-      imageUrl2: '',
-      action: '',
-      fileList: [],
+      action:'',
+      dialogImageUrl: '',
+      dialogVisible: false,
       currentPage: 1,
       pageSize: 10,
       count: 0,
@@ -482,10 +481,7 @@ export default {
         }
         _self.copyForm = Object.assign({}, _self.form)
         _self.getStateList()
-        _self.action = 'http://liukai.iok.la/Hotel/Image'
-        if (row.Screenshot) {
-          _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
-        }
+        _self.action = 'http://192.168.10.95:8500/Hotel/Image'
       } catch (e) {
         console.error(e)
       }
@@ -514,21 +510,6 @@ export default {
         _self.isEditable = true
       }
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
-      }
-      return isJPG && isLt2M
-    },
-    async handleSuccess(response, file, fileList) {
-      console.log(file)
-      this.imageUrl2 = URL.createObjectURL(file.raw)
-    },
     async check($index,row){
         const _self = this
         try {
@@ -541,6 +522,13 @@ export default {
             console.error(e)
             _self.$message.error('审核失败!!!')
         } 
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     }
   }
 }

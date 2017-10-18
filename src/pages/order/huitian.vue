@@ -35,7 +35,7 @@
     </div>
     <el-dialog title="编辑订单信息" v-model="showDialog" @close="resetForm('form')" size="full">
         <el-form ref="form" :model="form" label-width="110px">
-            <el-row :gutter="24"><el-col :span="3" style="text-align:center;color:orange;"><h1>客人信息</h1></el-col></el-row>
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>客人信息</h1></el-col></el-row>
             <el-row :gutter="24">
               <el-col :span="6">
                     <el-form-item label="入住日期" prop="StayDateStart">
@@ -92,7 +92,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row :gutter="24"><el-col :span="3" style="text-align:center;color:orange;"><h1>订单信息</h1></el-col></el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单信息</h1></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="酒店名称" prop="HotelName">
@@ -190,14 +191,14 @@
                 <el-col :span="6">
                     <el-form-item label="结算周期（付款）" prop="SettlementCycleFu">
                         <el-select v-model="form.SettlementCycleFu">
-                          <el-option v-for="item in SCycle" :key="item" :label="item" :value="item"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（收款）" prop="SettlementCycle">
                         <el-select v-model="form.SettlementCycleFu">
-                          <el-option v-for="item in SCycle" :key="item" :label="item" :value="item"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -206,14 +207,14 @@
                 <el-col :span="6">
                     <el-form-item label="订单状态" prop="OrderState">
                         <el-select v-model="form.OrderState">
-                          <el-option v-for="item in OrderState" :key="item" :label="item" :value="item"></el-option>
+                          <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="订单类型" prop="OrderType">
                         <el-select v-model="form.OrderType">
-                          <el-option v-for="item in OrderType" :key="item" :label="item" :value="item"></el-option>
+                          <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -224,21 +225,14 @@
                 </el-col>
             </el-row>
             <el-row :gutter="24">
-                <el-col :span="5">
-                    <el-form-item label="紧急打款" prop="UrgentPay">
-                        <el-radio-group v-model="form.UrgentPay">
-                          <el-radio :label="1">紧急</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item label="不可合并支付" prop="UnMergePay">
-                        <el-radio-group v-model="form.UnMergePay">
-                          <el-radio :label="1">不可合并</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
+              <el-col>
+                <el-form-item label="备注" prop="Remark">
+                    <el-input type="textarea" v-model="form.Remark"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="7">
                     <el-form-item label="酒店区域" prop="HotelArea">
                         <el-radio-group v-model="form.HotelArea">
                           <el-radio :label="1">国际</el-radio>
@@ -252,6 +246,20 @@
                           <el-radio :label="0">未回填</el-radio>
                           <el-radio :label="1">回传成功</el-radio>
                           <el-radio :label="2">回填失败</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="不可合并支付" prop="UnMergePay">
+                        <el-radio-group v-model="form.UnMergePay">
+                          <el-radio :label="1">不可合并</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                    <el-form-item label="紧急打款" prop="UrgentPay">
+                        <el-radio-group v-model="form.UrgentPay">
+                          <el-radio :label="1">紧急</el-radio>
                         </el-radio-group>
                     </el-form-item>
                 </el-col>
@@ -283,14 +291,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="备注" prop="Remark">
-                    <el-input type="textarea" v-model="form.Remark"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24"><el-col :span="3" style="text-align:center;color:orange;"><h1>财务信息</h1></el-col></el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
             <el-row :gutter="24">
               <el-col>
                 <el-table :data="money" style="width: 90%;margin-left:40px;">
@@ -323,22 +325,22 @@
                 </el-table>
               </el-col>
             </el-row>
-            <el-row :gutter="24"><el-col :span="3" style="text-align:center;color:orange;"><h1>截图信息</h1></el-col></el-row>
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
-                <img :src="imageUrl" width="132px" height="132px" style="display:inline-block" v-if="imageUrl"/>
-                <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/"
-                    :show-file-list="false" :on-success="handleSuccess" :before-upload="beforeAvatarUpload" style="display:inline-block">
-                    <img v-if="imageUrl2" :src="imageUrl2" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
                 </el-upload>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
               </el-col>
             </el-row>
         </el-form>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="showDialog = false">取 消</el-button>
-            <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
-        </span>
+        <div slot="footer" class="dialog-footer" style="text-align:center;">
+            <el-button @click="showDialog = false" size="large">取 消</el-button>
+            <el-button type="primary" @click="submitForm()" :loading="!isEditable" size="large">{{isEditable?'确 定':'提交中'}}</el-button>
+        </div>
     </el-dialog>
 </div>
 </template>
@@ -349,10 +351,9 @@ import { hotelsOrderApi,paymentCheckApi } from 'api'
 export default {
   data() {
     return {
-      imageUrl: '',
-      imageUrl2: '',
-      action: '',
-      fileList: [],
+      action:'',
+      dialogImageUrl: '',
+      dialogVisible: false,
       currentPage: 1,
       pageSize: 10,
       count: 0,
@@ -361,14 +362,16 @@ export default {
       form: {
         StayDateStart:'',
         StayDateEnd:'',
-        DateTime:'',
+        BookTime:'',
         OrderState:'',
         OrderType:'',
         UrgentPay:'',
         UnMergePay:'',
         HotelArea:'',
         BackfillState:'',
-        StateScreenshot:''
+        StateScreenshot:'',
+        SettlementCycle:'',
+        SettlementCycleFu:''
       },
       copyForm: {},
       showDialog: false,
@@ -410,11 +413,31 @@ export default {
           }
         ]
       },
-      OrderState:['未处理','已处理','已拒绝','未处理+未发单','待排房','风险订单+未处理','风险订单+已处理'],
-      OrderType:['新订','修改','取消','延住','无效','新订+修改','改期'],
+      OrderState:[
+        {label:'未处理',value:0},
+        {label:'已处理',value:1},
+        {label:'已拒绝',value:2},
+        {label:'未处理+未发单',value:3},
+        {label:'待排房',value:4},
+        {label:'风险订单+未处理',value:5},
+        {label:'风险订单+已处理',value:6},
+      ],
+      OrderType:[
+        {label:'新订',value:0},
+        {label:'修改',value:1},
+        {label:'取消',value:2},
+        {label:'延住',value:3},
+        {label:'无效',value:4},
+        {label:'新订+修改',value:5},
+        {label:'改期',value:6},
+      ],
       money:[],
       fujia:{},
-      SCycle:['单结','周结','月结']
+      SCycle:[
+        {label:'单结',value:0},
+        {label:'周结',value:1},
+        {label:'月结',value:2},
+      ],
     }
   },
   created() {
@@ -481,10 +504,7 @@ export default {
         }
         _self.copyForm = Object.assign({}, _self.form)
         _self.getStateList()
-        _self.action = 'http://liukai.iok.la/Hotel/Image'
-        if (row.Screenshot) {
-          _self.imageUrl = 'http://liukai.iok.la/Upload/hotelorder/' + row.Screenshot
-        }
+        _self.action = 'http://192.168.10.95:8500/Hotel/Image'
       } catch (e) {
         console.error(e)
       }
@@ -527,6 +547,13 @@ export default {
     async handleSuccess(response, file, fileList) {
       console.log(file)
       this.imageUrl2 = URL.createObjectURL(file.raw)
+    },
+    handleRemove(file, fileList) {
+        console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+        this.dialogImageUrl = file.url;
+        this.dialogVisible = true;
     }
   }
 }

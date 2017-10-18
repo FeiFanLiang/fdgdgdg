@@ -49,11 +49,6 @@ export default {
         hidden: true
       }
     },
-    // {
-    //   path: 'Finish',
-    //   component: _import('order/finish'),
-    //   name: '全部完成订单'
-    // },
     {
       path: 'FukuanList',
       component: _import('order/fukuan-list'),
