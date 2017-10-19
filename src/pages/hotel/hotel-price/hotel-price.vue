@@ -299,17 +299,9 @@ export default {
           }]
         }
       ]
-    }, {
-      label: '采购价',
-      options: [{
-        value: 'Beijing',
-        label: '采购价'
-      }]
     }
-  ]
-}
-},
-computed: {
+  },
+  computed: {
     calendar() {
       if (!this.chosenDate) return
       let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
