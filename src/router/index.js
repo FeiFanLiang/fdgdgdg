@@ -11,6 +11,7 @@ import fleetRoute from './fleet'
 import evaluateScanRoute from './evaluate-scan'
 import wechatRoute from './wechat'
 import dwz from './dwz'
+import test from './test'
 const children = [
   hotelRoute, // 酒店
   showRoute, // 展示信息
@@ -22,6 +23,7 @@ const children = [
   roleRoute, // 角色
   userRoute, // 用户
   dwz // 短链接
+  // test // 测试专用
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

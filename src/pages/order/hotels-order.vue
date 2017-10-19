@@ -221,7 +221,7 @@
               </div>
             </template>
         </el-table-column>
-        <el-table-column label="ID" prop="ID"></el-table-column>
+        <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip>
             <template scope="scope">
               <span v-bind:style="styleObject">{{ scope.row.OrderNo }}</span>
@@ -266,7 +266,7 @@
         </el-table-column>
     </el-table>
     <div class="pagination-wrapper">
-        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
     <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')" size="full">
         <el-form ref="form" :model="form" label-width="110px">
@@ -683,7 +683,7 @@ export default {
       imageUrl2: '',
       fileList: [],
       currentPage: 1,
-      pageSize: 10,
+      pageSize: 100,
       count: 0,
       loading: false,
       hotelsOrder: [],
@@ -910,7 +910,7 @@ export default {
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: 'ID',
+        order: 'BookTime',
         query: { 
           OrderNo:_self.filters.OrderNo,
           HotelName:_self.filters.HotelName,
