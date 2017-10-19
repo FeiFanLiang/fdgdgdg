@@ -267,8 +267,8 @@
 
         </el-tabs>
         <div class="" v-if="activeTabName!== 'carInfo'">
-          <p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:#377eb8;display:inline-block;">接机</p>
-          <p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:#5cb85c;display:inline-block;">送机</p>
+          <p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:rgba(0,178,102, 0.5);display:inline-block;">接机</p>
+          <p style="color:#fff;width:50px;height:30px;line-height:30px;text-align:center;background-color:rgba(255,51,0, 0.5);display:inline-block;">送机</p>
         </div>
         <p id="chart" v-if="activeTabName!== 'carInfo'"></p>
         <el-dialog :title="tag?'编辑派车信息':'添加派车信息'" v-model="showDialog" size="small" @close="resetForm('form')">
@@ -598,10 +598,10 @@ export default {
           measure: driverInfo.Name,
           categories: {
             接机: {
-              color: '#377eb8'
+              color: 'rgba(0,178,102, 0.5)'
             },
             送机: {
-              color: '#5cb85c'
+              color: 'rgba(255,51,0, 0.5)'
             }
           },
           data: [chartInfoData]
@@ -872,10 +872,10 @@ export default {
           measure: k,
           categories: {
             接机: {
-              color: '#377eb8'
+              color: 'rgba(0,178,102, 0.5)'
             },
             送机: {
-              color: '#5cb85c'
+              color: 'rgba(255,51,0, 0.5)'
             }
           },
           data: v
@@ -906,8 +906,12 @@ export default {
     createChart() {
       const chartData = [...this.chartData]
       $('#chart').empty()
-      let chart = visavailChart().width(800)
-      this.d3Chart = d3.select('#chart').datum(chartData).call(chart)
+      width = document.getElementById('car-arrange-page').offsetWidth
+      let chart = visavailChart().width(width)
+      this.d3Chart = d3
+        .select('#chart')
+        .datum(chartData)
+        .call(chart)
     },
     compare(property) {
       return function(a, b) {
