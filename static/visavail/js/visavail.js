@@ -3,48 +3,34 @@ function visavailChart () {
   var margin = {
     // top margin includes title and legend
     top: 70,
-
     // right margin should provide space for last horz. axis title
     right: 40,
-
     bottom: 20,
-
     // left margin should provide space for y axis titles
     left: 100
   }
-
   // height of horizontal data bars
   var dataHeight = 18
-
   // spacing between horizontal data bars
   var lineSpacing = 14
-
   // vertical space for heading
   var paddingTopHeading = -50
-
   // vertical overhang of vertical grid lines on bottom
   var paddingBottom = 10
-
   // space for y axis titles
   var paddingLeft = -100
-
   var width = 940 - margin.left - margin.right
-
   // title of chart is drawn or not (default: yes)
   var drawTitle = 1
-
   // year ticks to be emphasized or not (default: yes)
   var emphasizeYearTicks = 1
-
   // define chart pagination
   // max. no. of datasets that is displayed, 0: all (default: all)
   var maxDisplayDatasets = 0
-
   // dataset that is displayed first in the current
   // display, chart will show datasets "curDisplayFirstDataset" to
   // "curDisplayFirstDataset+maxDisplayDatasets"
   var curDisplayFirstDataset = 0
-
   // global div for tooltip
   var div = d3
     .select('body')
@@ -74,13 +60,10 @@ function visavailChart () {
         startSet = 0
         endSet = dataset.length
       }
-
       // append data attribute in HTML for pagination interface
       selection.attr('data-max-pages', maxPages)
-
       var noOfDatasets = endSet - startSet
       var height = dataHeight * noOfDatasets + lineSpacing * noOfDatasets - 1
-
       // check how data is arranged
       if (definedBlocks === null) {
         definedBlocks = 0
@@ -98,7 +81,6 @@ function visavailChart () {
           }
         }
       }
-
       // check if data has custom categories
       if (customCategories === null) {
         customCategories = 0
@@ -109,7 +91,6 @@ function visavailChart () {
           }
         }
       }
-
       // parse data text strings to JavaScript date stamps
       var parseDate = d3.time.format('%Y-%m-%d')
       var parseDateTime = d3.time.format('%Y-%m-%d %H:%M:%S')
@@ -136,7 +117,6 @@ function visavailChart () {
                   "'YYYY-MM-DD HH:MM:SS'."
               )
             }
-
             if (!definedBlocks) {
               d1[2] = d3.time.second.offset(d1[0], d.interval_s)
             } else {
@@ -224,7 +204,10 @@ function visavailChart () {
         .clamp(1)
 
       // define axes
-      var xAxis = d3.svg.axis().scale(xScale).orient('top')
+      var xAxis = d3.svg
+        .axis()
+        .scale(xScale)
+        .orient('top')
 
       // create SVG element
       var svg = d3
@@ -334,7 +317,11 @@ function visavailChart () {
         })
 
       // create x axis
-      svg.select('#g_axis').append('g').attr('class', 'axis').call(xAxis)
+      svg
+        .select('#g_axis')
+        .append('g')
+        .attr('class', 'axis')
+        .call(xAxis)
 
       // make y groups for different data series
       var g = svg
@@ -388,7 +375,10 @@ function visavailChart () {
             +this.getAttribute('x'),
             +this.getAttribute('y')
           )
-          div.transition().duration(200).style('opacity', 0.9)
+          div
+            .transition()
+            .duration(200)
+            .style('opacity', 0.9)
           div
             .html(function () {
               var output = ''
@@ -445,7 +435,10 @@ function visavailChart () {
             .style('height', dataHeight + 11 + 'px')
         })
         .on('mouseout', function () {
-          div.transition().duration(500).style('opacity', 0)
+          div
+            .transition()
+            .duration(500)
+            .style('opacity', 0)
         })
 
       // rework ticks and grid for better visual structure
