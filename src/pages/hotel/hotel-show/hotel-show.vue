@@ -364,7 +364,7 @@ export default {
             imageList: [],
             currentPage: 1,
             pageSize: 10,
-            count: 0,
+            count: 0,                                                                                                                                                                    
             loading2: false,
             loadingHotel: false,
             hotelList: [],
@@ -379,7 +379,7 @@ export default {
             //     labelVal: '1'
             // },
             // selectedOptions: [{
-            //         value: '1',
+            //         value: '1',0
             //         label: '车牌号'
             //     },
             //     {

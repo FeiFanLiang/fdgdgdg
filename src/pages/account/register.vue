@@ -1,39 +1,30 @@
 <template lang="html">
-  <div id="register-page" @keyup.enter="register">
-    <div class="register-form">
-      <div class="input-group">
-        <div class="title">美票</div>
-        <el-input
-          :autofocus="true"
-          placeholder="请输入姓名"
-          icon="message"
-          v-model="username">
-        </el-input>
-      </div>
-      <div class="input-group">
-        <el-input
-          placeholder="请输入用户名"
-          icon="message"
-          v-model="userID">
-        </el-input>
-      </div>
-      <div class="input-group">
-        <el-input
-          placeholder="请输入密码"
-          type="password"
-          icon="edit"
-          v-model="password">
-        </el-input>
-      </div>
-      <div class="input-group">
-        <el-button @click.native="register" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
-      </div>
+<div id="register-page" @keyup.enter="register">
+  <div class="register-form">
+    <div class="input-group">
+      <div class="title">美票</div>
+      <el-input :autofocus="true" placeholder="请输入姓名" icon="message" v-model="username">
+      </el-input>
+    </div>
+    <div class="input-group">
+      <el-input placeholder="请输入用户名" icon="message" v-model="userID">
+      </el-input>
+    </div>
+    <div class="input-group">
+      <el-input placeholder="请输入密码" type="password" icon="edit" v-model="password">
+      </el-input>
+    </div>
+    <div class="input-group">
+      <el-button @click.native="register" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import { accountApi } from 'api';
+import {
+  accountApi
+} from 'api';
 import Particle from 'zhihu-particle';
 export default {
   mounted() {
@@ -82,14 +73,22 @@ export default {
       try {
         const data = await accountApi.register(registerParams);
         _self.isBtnLoading = false;
-        const { msg, code, user } = data;
+        const {
+          msg,
+          code,
+          user
+        } = data;
         if (code !== 200) {
           _self.$message.error(msg);
         } else {
           _self.isBtnLoading = true;
           const data = await accountApi.login(registerParams);
           _self.isBtnLoading = false;
-          const { msg, code, user } = data;
+          const {
+            msg,
+            code,
+            user
+          } = data;
           if (code !== 200) {
             _self.$message.error(msg);
           } else {
@@ -115,42 +114,39 @@ export default {
 
 <style lang="scss" scoped>
 #register-page {
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #efeeee;
+  .register-form {
     display: flex;
-    justify-content: center;
+    position: absolute;
+    z-index: 100;
+    flex-direction: column;
     align-items: center;
-    background: #efeeee;
-
-    .register-form {
-        display: flex;
-        position: absolute;
-        z-index: 100;
-        flex-direction: column;
-        align-items: center;
-        width: 500px;
-        height: 400px;
-        border-radius: 10px;
-        background: white;
-        border: 1px #eaeaea solid;
-        box-shadow: 0 0 25px #cac6c6;
-
-        .title {
-            color: #20a0ff;
-            font-weight: bold;
-            font-size: 40px;
-            text-align: center;
-            line-height: 2.2;
-            font-family: sans-serif;
-        }
-
-        .input-group {
-            margin-top: 30px;
-            width: 80%;
-            button {
-                width: 100%;
-            }
-        }
+    width: 500px;
+    height: 400px;
+    border-radius: 10px;
+    background: white;
+    border: 1px #eaeaea solid;
+    box-shadow: 0 0 25px #cac6c6;
+    .title {
+      color: #20a0ff;
+      font-weight: bold;
+      font-size: 40px;
+      text-align: center;
+      line-height: 2.2;
+      font-family: sans-serif;
     }
+    .input-group {
+      margin-top: 30px;
+      width: 80%;
+      button {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>
