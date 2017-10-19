@@ -35,7 +35,7 @@
 <script>
 import ImgList from './img-list.vue'
 
-var win = window
+let win = window
 export default {
   data() {
     return {
@@ -84,15 +84,15 @@ export default {
         return
       }
       this.images.push({
-        url: data.url
+        url: 'http://192.168.10.95:8500/upload/' + data.url
       })
       this.text += '![image]($src)'.replace('$src', data.url)
     },
     //drag-drop
     handleDrag(e) {
       // 获取文件列表
-      var fileList = e.dataTransfer.files
-      var hasImg = this.fileUpload(fileList)
+      let fileList = e.dataTransfer.files
+      let hasImg = this.fileUpload(fileList)
       if (hasImg) {
         this.isDrogover = false
         e.preventDefault()
@@ -111,14 +111,14 @@ export default {
       console.log('fileInputClick', e)
     },
     fileInputChange(e) {
-      var myFiles = e.target.files
+      let myFiles = e.target.files
       this.fileUpload(myFiles)
     },
     //paste
     handleTPaste(event) {
       function isImage(items) {
-        var i = 0
-        var item
+        let i = 0
+        let item
         while (i < items.length) {
           item = items[i]
           if (item.type.indexOf('image') !== -1) {
@@ -130,7 +130,7 @@ export default {
       }
 
       function getFilename(e) {
-        var value
+        let value
         if (window.clipboardData && window.clipboardData.getData) {
           value = window.clipboardData.getData('Text')
         } else if (e.clipboardData && e.clipboardData.getData) {
@@ -139,12 +139,12 @@ export default {
         value = value.split('\r')
         return value.first()
       }
-      var image
+      let image
       if (event.clipboardData && event.clipboardData.items) {
         image = isImage(event.clipboardData.items)
         if (image) {
           event.preventDefault()
-          var file = image.getAsFile()
+          let file = image.getAsFile()
           file.name = getFilename(event) || 'image-' + Date.now() + '.png'
           return this.fileUpload([file])
         }
@@ -152,7 +152,7 @@ export default {
     },
     //upload
     fileUpload(myFiles) {
-      var hasImg = false
+      let hasImg = false
       if (myFiles.length > 0) {
         // a hack to push all the Promises into a new array
         Array.prototype.slice.call(myFiles, 0).map(file => {
@@ -165,21 +165,21 @@ export default {
         })
       } else {
         // someone tried to upload without adding files
-        var err = new Error('No files to upload for this field')
-        // this.$dispatch('onFileError', myFiles, err)
+        let err = new Error('No files to upload for this field')
+        // this.$emit('onFileError', myFiles, err)
       }
       return hasImg
     },
     _handleUpload(file, callback) {
-      var form = new win.FormData()
-      var xhr = new win.XMLHttpRequest()
-      // this.$dispatch('beforeFileUpload', file)
+      let form = new win.FormData()
+      let xhr = new win.XMLHttpRequest()
+      // this.$emit('beforeFileUpload', file)
       try {
         // form.append('Content-Type', file.type || 'application/octet-stream')
         // our request will have the file in the ['file'] key
         form.append('file', file, file.name)
       } catch (err) {
-        // this.$dispatch('onFileError', file, err)
+        // this.$emit('onFileError', file, err)
         return
       }
 
@@ -190,40 +190,40 @@ export default {
           return
         }
         if (xhr.status < 400) {
-          var res = JSON.parse(xhr.responseText)
-          // this.$dispatch('onFileUpload', file, res)
+          let res = JSON.parse(xhr.responseText)
+          // this.$emit('onFileUpload', file, res)
           callback(null, res)
         } else {
-          var err = JSON.parse(xhr.responseText)
+          let err = JSON.parse(xhr.responseText)
           err.status = xhr.status
           err.statusText = xhr.statusText
-          // this.$dispatch('onFileError', file, err)
+          // this.$emit('onFileError', file, err)
           callback(err)
         }
       }.bind(this)
 
       xhr.onerror = function() {
-        var err = JSON.parse(xhr.responseText)
+        let err = JSON.parse(xhr.responseText)
         err.status = xhr.status
         err.statusText = xhr.statusText
-        // this.$dispatch('onFileError', file, err)
+        // this.$emit('onFileError', file, err)
         callback(err)
       }.bind(this)
 
       xhr.open('POST', this.action, true)
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
       if (this.headers) {
-        for (var header in this.headers) {
+        for (let header in this.headers) {
           xhr.setRequestHeader(header, this.headers[header])
         }
       }
       xhr.send(form)
-      // this.$dispatch('afterFileUpload', file)
+      // this.$emit('afterFileUpload', file)
     },
     _onProgress(e) {
       // this is an internal call in XHR to update the progress
       e.percent = e.loaded / e.total * 100
-      // this.$dispatch('onFileProgress', e)
+      // this.$emit('onFileProgress', e)
     }
   }
 }
