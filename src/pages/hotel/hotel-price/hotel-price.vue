@@ -60,11 +60,16 @@
             <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in week" @click="priceOne(sonRoom,day.date)">
             <div class="dayname">{{sonRoom.SonRoomName}}</div>
             <div class="dayname">{{day.date}}</div>
-            <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
-            <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
-            <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
-            <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
-            <div class="price">全日空ANA￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+            <div class="price" v-if="currency(sonRoom,day.date)===0">底价<span>￥</span>{{price(sonRoom,day.date)}}</div>
+            <div class="price" v-if="currency(sonRoom,day.date)===1">底价<span>YEN</span>{{price(sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('飞猪',sonRoom,day.date)===0">飞猪<span>￥</span>{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('飞猪',sonRoom,day.date)===1">飞猪<span>YEN</span>{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('去哪',sonRoom,day.date)===0">去哪<span>￥</span>{{otherPrice('去哪',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('去哪',sonRoom,day.date)===1">去哪<span>YEN</span>{{otherPrice('去哪',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('携程',sonRoom,day.date)===0">携程<span>￥</span>{{otherPrice('携程',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('携程',sonRoom,day.date)===1">携程<span>YEN</span>{{otherPrice('携程',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('全日空ANA',sonRoom,day.date)===0">全日空ANA<span>￥</span>{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+            <div class="price" v-if="otherCurrency('全日空ANA',sonRoom,day.date)===1">全日空ANA<span>YEN</span>{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
             <div class="remain">余{{count(sonRoom,day.date)}}</div>
             </td>
             </tr>
@@ -88,11 +93,16 @@
               <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{sonRoom.SonRoomName}}</div>
                 <div class="dayname">{{day.date}}</div>
-                <div class="price">底价￥{{price(sonRoom,day.date)}}</div>
-                <div class="price">飞猪￥{{otherPrice('飞猪',sonRoom,day.date)}}</div>
-                <div class="price">去哪￥{{otherPrice('去哪',sonRoom,day.date)}}</div>
-                <div class="price">携程￥{{otherPrice('携程',sonRoom,day.date)}}</div>
-                <div class="price">全日空ANA￥{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+                <div class="price" v-if="currency(sonRoom,day.date)===0">底价<span>￥</span>{{price(sonRoom,day.date)}}</div>
+                <div class="price" v-if="currency(sonRoom,day.date)===1">底价<span>YEN</span>{{price(sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('飞猪',sonRoom,day.date)===0">飞猪<span>￥</span>{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('飞猪',sonRoom,day.date)===1">飞猪<span>YEN</span>{{otherPrice('飞猪',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('去哪',sonRoom,day.date)===0">去哪<span>￥</span>{{otherPrice('去哪',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('去哪',sonRoom,day.date)===1">去哪<span>YEN</span>{{otherPrice('去哪',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('携程',sonRoom,day.date)===0">携程<span>￥</span>{{otherPrice('携程',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('携程',sonRoom,day.date)===1">携程<span>YEN</span>{{otherPrice('携程',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('全日空ANA',sonRoom,day.date)===0">全日空ANA<span>￥</span>{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
+                <div class="price" v-if="otherCurrency('全日空ANA',sonRoom,day.date)===1">全日空ANA<span>YEN</span>{{otherPrice('全日空ANA',sonRoom,day.date)}}</div>
                 <div class="remain">余{{count(sonRoom,day.date)}}</div>
               </td>
               </tr>
@@ -184,7 +194,9 @@ import {
   sonRoomPlatformApi
 } from 'api'
 import chunk from 'lodash/chunk'
-import { HotelTopMenu } from 'components'
+import {
+  HotelTopMenu
+} from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -218,8 +230,7 @@ export default {
       priceForm: {
         sonRoomId: '',
         time: '',
-        price: [
-          {
+        price: [{
             title: '最高采购价',
             id: -1,
             price: ''
@@ -261,20 +272,16 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       periodType: 'month',
-      options3: [
-        {
+      options3: [{
           label: '售卖价',
-          options: [
-            {
-              value: 'Shanghai',
-              label: '售卖价'
-            }
-          ]
+          options: [{
+            value: 'Shanghai',
+            label: '售卖价'
+          }]
         },
         {
           label: '渠道价',
-          options: [
-            {
+          options: [{
               value: 'Chengdu',
               label: '去哪儿B'
             },
@@ -286,12 +293,10 @@ export default {
         },
         {
           label: '采购价',
-          options: [
-            {
-              value: 'Beijing',
-              label: '采购价'
-            }
-          ]
+          options: [{
+            value: 'Beijing',
+            label: '采购价'
+          }]
         }
       ]
     }
@@ -353,8 +358,7 @@ export default {
     },
     startAndEndDay() {
       const _self = this
-      if (
-        !_self.monthList ||
+      if (!_self.monthList ||
         !_self.monthList.length ||
         !_self.weekList ||
         !_self.weekList.length
@@ -451,6 +455,18 @@ export default {
       }
       return ''
     },
+    currency(item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
+        item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
+      ) {
+        return item.timeDate[date].SonRoomPurchasePrice.Currency
+      }
+      return ''
+    },
     otherPrice(type, item, date) {
       if (
         item &&
@@ -500,7 +516,7 @@ export default {
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {
-        room.SonRooms.forEach(async (sroom, srindex) => {
+        room.SonRooms.forEach(async(sroom, srindex) => {
           const platTimeRange = await this.platTimeRange(sroom.ID)
           sroom.platTimeRange = platTimeRange
           if (rindex + 1 === newList.length && srindex + 1 === room.length) {
@@ -519,9 +535,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays - 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -541,9 +555,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays + 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -564,9 +576,9 @@ export default {
         let date = new Date(dateIn)
         let s = ''
         let mouth =
-          date.getMonth() + 1 >= 10
-            ? date.getMonth() + 1
-            : '0' + (date.getMonth() + 1)
+          date.getMonth() + 1 >= 10 ?
+          date.getMonth() + 1 :
+          '0' + (date.getMonth() + 1)
         let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
         s += date.getFullYear() + '-' // 获取年份。
         s += mouth + '-' // 获取月份。
@@ -582,7 +594,7 @@ export default {
       de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
       let unixDb = db.getTime()
       let unixDe = de.getTime()
-      for (let k = unixDb; k <= unixDe; ) {
+      for (let k = unixDb; k <= unixDe;) {
         arry.push(format(new Date(parseInt(k))))
         k = k + 24 * 60 * 60 * 1000
       }
@@ -593,8 +605,8 @@ export default {
       _self.priceChangeForOne = true
       _self.priceForm.sonRoomId = item.ID
       _self.priceForm.time = [new Date(date), new Date(date)]
-      _self.priceForm.price[0].price = _self.price(item, date)
-      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
+      _self.priceForm.price[0].price = _self.price(item, date);
+      ['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
         _self.priceForm.price[index + 1].stat = _self.otherStat(i, item, date)
       })
@@ -692,13 +704,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hotel-price{
-
+.hotel-price {
   .el-table--enable-row-hover .el-table__body tr:hover>td {
-    background-color: rgba(255,255,255,0);
+    background-color: rgba(255, 255, 255, 0);
     background-clip: padding-box;
   }
-  .el-table--enable-row-hover .el-table__body td:hover.current  {
+  .el-table--enable-row-hover .el-table__body td:hover.current {
     background-color: #ff000057!important;
     background-clip: padding-box;
   }
@@ -713,47 +724,38 @@ export default {
     text-align: center;
     width: 14px;
   }
-
   .ui-table-col-center {
     background-color: #fbfbfb;
     cursor: pointer;
     vertical-align: top;
     border: 1px solid #ececec;
   }
-
   .open {
     width: 12%;
     height: 100px;
     background-color: #c8e4ec!important;
     padding: 10px;
   }
-
   .close {
     width: 12%;
     height: 100px;
     background-color: #ffcfc9!important;
     padding: 10px;
   }
-
   .column_tr {
     width: 100%;
   }
-
   .column_tr:after {
     clear: both;
   }
-
   .dayname {
     color: #13ce66;
   }
-
   .price {
     color: #48576a;
   }
-
   .remain {
     color: #50bfff;
   }
 }
-
 </style>
