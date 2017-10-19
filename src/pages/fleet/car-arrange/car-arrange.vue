@@ -744,6 +744,7 @@ export default {
         if (res.data) {
           _self.chartData = res.data
           _self.arrangeList = []
+          console.dir(_self.chartData)
           let data = Object.values(res.data)
           for (let [index1, elem1] of data.entries()) {
             for (let [index2, elem2] of data[index1].entries()) {
@@ -900,6 +901,7 @@ export default {
           arr[index1].data = mm
         }
       }
+      console.dir(arr)
       _self.chartData = arr
       _self.chartData.length ? _self.createChart() : ''
     },
