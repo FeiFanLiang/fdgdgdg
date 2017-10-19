@@ -1,7 +1,7 @@
 <template>
   <ul class="img-list">
-    <li class="img-item" v-for="img in lists">
-      <img v-bind:src="img.url">
+    <li class="img-item" v-for="img in lists" >
+      <img :src="img.url">
     </li>
   </ul>
 </template>
