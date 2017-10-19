@@ -608,7 +608,6 @@ export default {
         })
       }
       this.chartData = chartData
-      console.log(JSON.stringify(this.chartData))
       this.createChart()
       // this.d3Chart.datum(this.chartData)
       this.isSendCarEditable = false
@@ -744,7 +743,6 @@ export default {
         if (res.data) {
           _self.chartData = res.data
           _self.arrangeList = []
-          console.dir(_self.chartData)
           let data = Object.values(res.data)
           for (let [index1, elem1] of data.entries()) {
             for (let [index2, elem2] of data[index1].entries()) {
@@ -882,33 +880,25 @@ export default {
           data: v
         })
       }
+      let YYYYMMDD = moment().format('YYYY-MM-DD')
       for (let [index1, elem1] of arr.entries()) {
         let mm = []
         for (let [index2, elem2] of arr[index1].data.entries()) {
-          // mm.push({
-          //     'useTimg': elem2.arrange.UseTime,
-          //     'predictTime': elem2.arrange.PredictTime,
-          //     'endTime': _self.increaseTime(elem2.arrange.UseTime,elem2.arrange.PredictTime*60)
-          // })
           mm.push([
-            elem2.arrange.UseTime,
+            elem2.begintime.replace(/1111-11-11/, YYYYMMDD),
             elem2.order.CarTransportType ? '接机' : '送机',
-            _self.increaseTime(
-              elem2.arrange.UseTime,
-              elem2.arrange.PredictTime * 60
-            )
+            elem2.endtime.replace(/1111-11-11/, YYYYMMDD)
           ])
           arr[index1].data = mm
         }
       }
-      console.dir(arr)
       _self.chartData = arr
       _self.chartData.length ? _self.createChart() : ''
     },
     createChart() {
       const chartData = [...this.chartData]
       $('#chart').empty()
-      width = document.getElementById('car-arrange-page').offsetWidth
+      let width = document.getElementById('car-arrange-page').offsetWidth
       let chart = visavailChart().width(width)
       this.d3Chart = d3
         .select('#chart')
@@ -938,7 +928,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-#car-arrange-page {
   .box-card {
       width: 25%;
     .clearfix:before,.clearfix:after {
@@ -957,13 +946,10 @@ export default {
         border-bottom: 1px solid #d1dbe5;
    }
   }
-
-
   .carinfo{
       display: flex;
       justify-content: space-between;
   }
-
   .carinfo-rightcard{
       width:70%;
       .width-85{
@@ -983,6 +969,4 @@ export default {
     }
   }
 
-
-}
 </style>
