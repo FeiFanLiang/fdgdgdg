@@ -1,6 +1,6 @@
 <template lang="html">
-    <div id="car-base">
-        <!-- <el-row :gutter="20" class="align-center">
+<div id="car-base">
+  <!-- <el-row :gutter="20" class="align-center">
             <el-col :span="4">
                 <el-select v-model="filters.carClassify" clearable placeholder="车辆分类" style="width:100%" @change="fetchData()">
                     <el-option label="全部" value="">全部</el-option>
@@ -18,23 +18,23 @@
                 <el-button type="primary" @click="clickAddBtn">创建</el-button>
             </el-col>
         </el-row> -->
-        <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
-            <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
-        </CustomSearch>
-        <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" >
-          <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
-              <template scope="scope">
+  <CustomSearch :configList="configList.searchFields" @searchCallback="searchCallback">
+    <el-button type="primary" @click="clickAddBtn" slot="button-add">创建</el-button>
+  </CustomSearch>
+  <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData">
+    <el-table-column prop="CarClassify" label="车辆分类" slot="left-one">
+      <template scope="scope">
                   <p v-if="scope.row.CarClassify === 0">经济型</p>
                   <p v-if="scope.row.CarClassify === 1">舒适型</p>
                   <p v-if="scope.row.CarClassify === 2">商务型</p>
                   <p v-if="scope.row.CarClassify === 3">豪华型</p>
-              </template>
+</template>
           </el-table-column>
           <el-table-column label="操作" width="150" slot="right-one">
 <template scope="scope">
-  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
-    编辑</el-button>
-  <DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+<DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
           </el-table-column>
         </CustomTable>
@@ -42,11 +42,11 @@
             <el-table-column prop="ID" label="ID"></el-table-column>
             <el-table-column prop="CarClassify" label="车辆分类">
 <template scope="scope">
-  <p v-if="scope.row.CarClassify === 0">
-    经济型</p>
-  <p v-if="scope.row.CarClassify === 1">舒适型</p>
-  <p v-if="scope.row.CarClassify === 2">商务型</p>
-  <p v-if="scope.row.CarClassify === 3">豪华型</p>
+<p v-if="scope.row.CarClassify === 0">
+  经济型</p>
+<p v-if="scope.row.CarClassify === 1">舒适型</p>
+<p v-if="scope.row.CarClassify === 2">商务型</p>
+<p v-if="scope.row.CarClassify === 3">豪华型</p>
 </template>
             </el-table-column>
             <el-table-column prop="CarMode" label="车型"></el-table-column>
@@ -58,9 +58,9 @@
             <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
             <el-table-column label="操作" width="150">
 <template scope="scope">
-  <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
-    编辑</el-button>
-  <DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+<DeleteButton api="carBaseApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
             </el-table-column>
         </el-table>  -->
@@ -145,11 +145,19 @@
             <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
         </el-dialog>
+        <UploadImage></UploadImage>
     </div>
 </template>
 <script>
-import { carBaseApi } from 'api'
+import {
+  carBaseApi
+} from 'api'
+import UploadImage from 'components/upload-image'
+
 export default {
+  components: {
+    UploadImage
+  },
   created() {
     this.fetchData()
     this.configList = carBaseApi.getConfig()
@@ -180,51 +188,36 @@ export default {
         remark: ''
       },
       rules: {
-        carClassify: [
-          {
-            required: true,
-            message: '请输入车辆分类'
-          }
-        ],
-        carMode: [
-          {
-            required: true,
-            message: '请输入车型'
-          }
-        ],
-        carNumber: [
-          {
-            required: true,
-            message: '请输入车牌号'
-          }
-        ],
-        operationCity: [
-          {
-            required: true,
-            message: '请输入运营城市'
-          }
-        ],
-        seatNum: [
-          {
-            required: true,
-            message: '请输入座位数'
-          }
-        ],
-        seatingNum: [
-          {
-            required: true,
-            message: '请输入最大载客人数'
-          }
-        ],
-        luggageNum: [
-          {
-            required: true,
-            message: '请输入行李数'
-          }
-        ]
+        carClassify: [{
+          required: true,
+          message: '请输入车辆分类'
+        }],
+        carMode: [{
+          required: true,
+          message: '请输入车型'
+        }],
+        carNumber: [{
+          required: true,
+          message: '请输入车牌号'
+        }],
+        operationCity: [{
+          required: true,
+          message: '请输入运营城市'
+        }],
+        seatNum: [{
+          required: true,
+          message: '请输入座位数'
+        }],
+        seatingNum: [{
+          required: true,
+          message: '请输入最大载客人数'
+        }],
+        luggageNum: [{
+          required: true,
+          message: '请输入行李数'
+        }]
       },
-      carClassifyList: [
-        {
+      carClassifyList: [{
           value: 0,
           label: '经济型'
         },
