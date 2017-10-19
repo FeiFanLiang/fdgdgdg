@@ -58,8 +58,8 @@
                 </el-date-picker>
             </el-col>
             <el-col :span="4">
-                <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions">
-                </el-date-picker>
+                <!-- <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions"></el-date-picker> -->
+                <el-date-picker  v-model="filters.bookTime" type="daterange" align="right" placeholder="选择提单日期" :picker-options="pickerOptions2"></el-date-picker>
             </el-col>
             <el-col :span="6" :offset="1">
                 <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
@@ -83,6 +83,7 @@
                 <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button>
                 <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
                 <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
+                <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button>
             </el-col>
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -524,6 +525,37 @@ export default {
       isEditable: true,
       showDialog: false,
       pickerOptions: {},
+      pickerOptions2: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              picker.$emit('pick', [start, end])
+            }
+          },
+          {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              picker.$emit('pick', [start, end])
+            }
+          }
+        ]
+      },
       loginData: '',
       copyForm: {},
       form: {
@@ -689,6 +721,7 @@ export default {
         carTransportType: '',
         carClassify: ''
       },
+
       selectedOptions: [
         {
           value: 1,
@@ -917,8 +950,11 @@ export default {
           'useTime<': _self.filters.useTimeE
             ? new Date(_self.filters.useTimeE).Format('yyyy-MM-dd')
             : '',
-          bookTime: _self.filters.bookTime
-            ? new Date(_self.filters.bookTime).Format('yyyy-MM-dd')
+          'bookTime>': _self.filters.bookTime[0]
+            ? new Date(_self.filters.bookTime[0]).Format('yyyy-MM-dd')
+            : '',
+          'bookTime<': _self.filters.bookTime[1]
+            ? new Date(_self.filters.bookTime[1]).Format('yyyy-MM-dd')
             : '',
           linkName: _self.filters.labelVal === 1 ? _self.filters.linkName : '',
           linkPhone:
@@ -941,6 +977,47 @@ export default {
         console.error(e)
         _self.loading = false
         _self.$message.error('数据获取失败!!!')
+      }
+    },
+    async downloadList() {
+      const _self = this
+      const { currentPage, pageSize, filters } = this
+
+      const options = {
+        order: filters.sortValue,
+        query: {
+          channel: filters.channel,
+          payStatus: filters.payStatus,
+          isCancel: filters.isCancel,
+          'useTime>': filters.useTimeS
+            ? new Date(filters.useTimeS).Format('yyyy-MM-dd')
+            : '',
+          'useTime<': filters.useTimeE
+            ? new Date(filters.useTimeE).Format('yyyy-MM-dd')
+            : '',
+          'bookTime>': filters.bookTime[0]
+            ? new Date(filters.bookTime[0]).Format('yyyy-MM-dd')
+            : '',
+          'bookTime<': filters.bookTime[1]
+            ? new Date(filters.bookTime[1]).Format('yyyy-MM-dd')
+            : '',
+          linkName: filters.labelVal === 1 ? filters.linkName : '',
+          linkPhone: filters.labelVal === 2 ? filters.linkPhone : '',
+          orderKey: filters.labelVal === 3 ? filters.orderKey : '',
+          externalOrderID:
+            filters.labelVal === 4 ? filters.externalOrderID : '',
+          externalOrderStete: filters.externalOrderStete,
+          carTransportType: filters.carTransportType,
+          carClassify: filters.carClassify
+        }
+      }
+      try {
+        const res = await carOrderManageApi.downloadList(options)
+        if (res.request.responseURL) {
+          window.location.href = res.request.responseURL
+        }
+      } catch (e) {
+        _self.$message.error('数据下载失败!!!')
       }
     },
     handleSizeChange(val) {

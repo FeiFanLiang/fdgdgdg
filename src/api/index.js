@@ -43,6 +43,7 @@ import dwzApi from './dwz'
 import weixinScanCodeApi from './weixin-scan-code'
 import roomStatPriceApi from './room-stat-price'
 import hotelsOrderApi from './hotels-order'
+import paymentCheckApi from './payment-check'
 // import menuApi from './menu'
 
 export {
@@ -91,5 +92,6 @@ export {
   weixinScanCodeApi,
   roomStatPriceApi,
   // menuApi,
-  hotelsOrderApi
+  hotelsOrderApi,
+  paymentCheckApi
 }

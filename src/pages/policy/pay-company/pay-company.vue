@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="pay-company-page">
     <el-row>
-      <el-col :span="12">
+      <el-col :span="11">
         <el-button type="primary" @click="clickAddBtn()">创建</el-button>
       </el-col>
     </el-row>
@@ -11,7 +11,13 @@
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
          </template>
+
       </el-table-column>
+       <el-table-column sortable prop="State" label="状态" width="180" show-overflow-tooltip slot="right-one">
+           <template scope="scope">
+             {{scope.row.State?'正常':'废除'}}
+              </template>
+       </el-table-column>
     </CustomTable>
        <!-- <el-table :data="list" ref="table" style="width: 100%"
         v-loading="loading"
@@ -32,12 +38,49 @@
       </el-table>  -->
       <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form"  >
-          <el-form-item label="账户名称" prop="accountName">
-            <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
-          </el-form-item>
-          <el-form-item label="银行帐户" prop="accountNum">
-            <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
-          </el-form-item>
+              <el-row :gutter="20">
+                <el-col :span="11">
+                  <el-form-item label="账户名称" prop="accountName">
+                    <el-input placeholder="请输入账户名称" v-model="form.accountName"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="11">
+                  <el-form-item label="银行帐户" prop="accountNum">
+                    <el-input placeholder="请输入银行账户" v-model="form.accountNum"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="11">
+                  <el-form-item label="简称" prop="shortName">
+                    <el-input placeholder="请输入简称" v-model="form.shortName"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="11">
+                  <el-form-item label="序号" prop="sortNo">
+                    <el-input placeholder="请输入序号" v-model="form.sortNo"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="11">
+                  <el-form-item label="公司名称" prop="company">
+                    <el-input placeholder="请输入公司名称" v-model="form.company"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="11">
+                  <el-form-item label="状态" prop="state">
+                    <el-select v-model="form.state" placeholder="请选择">
+     <el-option
+       v-for="item in [{value:0,label:'废除'},{value:1,label:'正常'}]"
+       :key="item.value"
+       :label="item.label"
+       :value="item.value">
+     </el-option>
+   </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
           <el-form-item label="Remark">
             <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
@@ -68,7 +111,11 @@ export default {
         id: '',
         accountName: '',
         accountNum: '',
-        remark: ''
+        remark: '',
+        shortName: '',
+        sortNo: '',
+        company: '',
+        state: ''
       },
       rules: {
         accountName: [
@@ -116,6 +163,10 @@ export default {
         _self.form.accountName = res.data.Data.AccountName
         _self.form.accountNum = res.data.Data.AccountNum
         _self.form.remark = res.data.Data.Remark
+        _self.form.shortName = res.data.Data.ShortName
+        _self.form.sortNo = res.data.Data.SortNo
+        _self.form.company = res.data.Data.Company
+        _self.form.state = res.data.Data.State
         _self.copyForm = Object.assign({}, _self.form)
       } catch (e) {
         console.error(e)

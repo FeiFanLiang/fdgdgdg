@@ -26,7 +26,8 @@ axios.defaults.timeout = 3 * 60 * 1000
 // Vue.use(VueAxiosProgressBarInterceptor);
 
 import App from './app.vue'
-import routes from './router'
+// import routes from './router'
+import routes, { getPermissionRoute } from './router'
 
 import './styles/index.scss'
 
@@ -50,7 +51,12 @@ export const router = new VueRouter({
   mode: 'history',
   linkActiveClass: 'active'
 })
-
+router.addRoutes(getPermissionRoute('admin')) // 动态添加可访问路由表
+router.options.routes = [
+  ...router.options.routes,
+  ...getPermissionRoute('admin')
+]
+console.log(router.options.routes)
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     let user = JSON.parse(localStorage.getItem('user'))

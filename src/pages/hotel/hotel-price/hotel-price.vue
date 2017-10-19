@@ -1,5 +1,5 @@
 <template lang="html">
-<div>
+<div class="hotel-price">
   <!-- <HotelTopMenu path="price"></HotelTopMenu > -->
   <el-row :gutter="20" style="display:flex;align-items: center;">
     <el-col :span="2"><dt class="legend" style="color:#FF4949;background-color:#c8e4ec"></dt>
@@ -36,7 +36,7 @@
     </el-col>
   </el-row>
 
-  <el-table :data="roomList" row-key="RoomID" @expand="handleExpand" :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+  <el-table :data="roomList" row-key="ID" @expand="handleExpand" :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
 
     <el-table-column type="expand" label="周日">
       <template scope="props">
@@ -45,7 +45,15 @@
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
             <div style="margin-left: 30px;">
-            {{sonRoom.SonRoomName}}
+              <strong>  {{sonRoom.SonRoomName}}</strong>
+              <br/>
+              <br/>
+            <strong v-if="sonRoom.Remark">备注1</strong>  {{sonRoom.Remark}}
+              <br/>
+              <br/>
+            <!-- <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
+            <br/> -->
+            <p v-for="item in sonRoom.platTimeRange" v-if="item.platName&&item.platName==='全日空ANA'">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
             <!-- <span class="gray" style="display: none;">(无效)</span> -->
             </div>
             </td>
@@ -69,10 +77,18 @@
           <table style="width: 100%;">
               <tr class="column_tr" v-if="periodType==='week'">
               <td class="ui-table-col-left" colspan="1" rowspan="6" style="width:12%;">
-              <div style="margin-left: 30px;">
-                {{sonRoom.SonRoomName}}
-              <!-- <span class="gray" style="display: none;">(无效)</span> -->
-              </div>
+                <div style="margin-left: 30px;">
+                  <strong>  {{sonRoom.SonRoomName}}</strong>
+                  <br/>
+                  <br/>
+                <strong v-if="sonRoom.Remark">备注1</strong>  {{sonRoom.Remark}}
+                  <br/>
+                  <br/>
+                <!-- <strong v-if="sonRoom.Remark2">备注2</strong>  {{sonRoom.Remark2}}
+                <br/> -->
+                <p v-for="item in sonRoom.platTimeRange" v-if="item.platName&&item.platName==='全日空ANA'">  {{item.platName}}<br/>开始时间：{{item.beginDate}}<br/>结束时间：{{item.endDate}}</p>
+                <!-- <span class="gray" style="display: none;">(无效)</span> -->
+                </div>
               </td>
               <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
                 <div class="dayname">{{sonRoom.SonRoomName}}</div>
@@ -173,12 +189,12 @@
 <script>
 import {
   roomStatPriceApi,
-  hotelThreePlatInfoApi
+  hotelThreePlatInfoApi,
+  hotelRoomApi,
+  sonRoomPlatformApi
 } from 'api'
 import chunk from 'lodash/chunk'
-import {
-  HotelTopMenu
-} from 'components'
+import { HotelTopMenu } from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -212,6 +228,7 @@ export default {
       priceForm: {
         sonRoomId: '',
         time: '',
+<<<<<<< HEAD
         price: [{
           title: '最高采购价',
           id: -1,
@@ -241,6 +258,38 @@ export default {
           price: '',
           stat: 0
         }
+=======
+        price: [
+          {
+            title: '最高采购价',
+            id: -1,
+            price: ''
+          },
+          {
+            title: '飞猪',
+            id: 1,
+            price: '',
+            stat: 0
+          },
+          {
+            title: '去哪',
+            id: 2,
+            price: '',
+            stat: 0
+          },
+          {
+            title: '携程',
+            id: 3,
+            price: '',
+            stat: 0
+          },
+          {
+            title: '全日空ANA',
+            id: 4,
+            price: '',
+            stat: 0
+          }
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
         ]
       },
       status: '1',
@@ -254,6 +303,7 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       periodType: 'month',
+<<<<<<< HEAD
       options3: [{
         label: '售卖价',
         options: [{
@@ -270,6 +320,39 @@ export default {
         {
           value: 'Shenzhen',
           label: '去哪儿C'
+=======
+      options3: [
+        {
+          label: '售卖价',
+          options: [
+            {
+              value: 'Shanghai',
+              label: '售卖价'
+            }
+          ]
+        },
+        {
+          label: '渠道价',
+          options: [
+            {
+              value: 'Chengdu',
+              label: '去哪儿B'
+            },
+            {
+              value: 'Shenzhen',
+              label: '去哪儿C'
+            }
+          ]
+        },
+        {
+          label: '采购价',
+          options: [
+            {
+              value: 'Beijing',
+              label: '采购价'
+            }
+          ]
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
         }
         ]
       },
@@ -340,7 +423,8 @@ export default {
     },
     startAndEndDay() {
       const _self = this
-      if (!_self.monthList ||
+      if (
+        !_self.monthList ||
         !_self.monthList.length ||
         !_self.weekList ||
         !_self.weekList.length
@@ -363,12 +447,30 @@ export default {
     }
   },
   methods: {
+    async platTimeRange(pid) {
+      if (!pid) {
+        return ''
+      }
+      const res = await sonRoomPlatformApi.listBySonRoom(pid)
+
+      if (!res.data || !res.data.length) {
+        return ''
+      }
+
+      const data = res.data.map(item => ({
+        platName: item.Platform.PlatName,
+        beginDate: item.BeginDate,
+        endDate: item.EndDate
+      }))
+
+      return data
+    },
     handleExpand(row, expanded) {
       this.chosenRoom = row
       if (expanded) {
         this.getPriceList()
         this.expandRowKeys.length = 0
-        this.expandRowKeys.push(row.RoomID)
+        this.expandRowKeys.push(row.ID)
       }
     },
     handleTabClick(tab) {
@@ -384,14 +486,14 @@ export default {
       }
       _self.loading = true
       const form = {
-        SonRooms: _self.chosenRoom.SonRooms.map(item => item.SonRoomID),
+        SonRooms: _self.chosenRoom.SonRooms.map(item => item.ID),
         BeginDate: _self.startAndEndDay[0].date,
         EndDate: _self.startAndEndDay[1].date
       }
       const res = await roomStatPriceApi.getPriceList(form)
       let SonRooms = [..._self.chosenRoom.SonRooms]
       SonRooms.forEach((item, index) => {
-        item.timeDate = res.data.Sonrooms[String(item.SonRoomID)].STSes
+        item.timeDate = res.data.Sonrooms[String(item.ID)].STSes
       })
       _self.chosenRoom.SonRooms = SonRooms
       _self.loading = false
@@ -447,7 +549,11 @@ export default {
       }
       return ''
     },
+<<<<<<< HEAD
     otherCurrency(type, item, date) {
+=======
+    otherStat(type, item, date) {
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
       if (
         item &&
         item.timeDate &&
@@ -459,7 +565,11 @@ export default {
         let value = item.timeDate[date].salePrice.find(
           item => item.ThreePlatId === this.platInfoList[type]
         )
+<<<<<<< HEAD
         return value ? value.Currency : ''
+=======
+        return value ? value.Stat : ''
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
       }
       return ''
     },
@@ -475,9 +585,27 @@ export default {
       return ''
     },
     async fetchData() {
+<<<<<<< HEAD
       const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       this.roomList = res.data
       console.log(this.roomList)
+=======
+      // const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
+      const res = await hotelRoomApi.list(this.stateForm.hotelId)
+      this.roomList = [...res.data]
+      const newList = [...res.data]
+      newList.forEach((room, rindex) => {
+        room.SonRooms.forEach(async (sroom, srindex) => {
+          const platTimeRange = await this.platTimeRange(sroom.ID)
+          sroom.platTimeRange = platTimeRange
+          if (rindex + 1 === newList.length && srindex + 1 === room.length) {
+            this.roomList = newList
+          }
+        })
+
+        // this.$set(newList[index], 'platTimeRange', platTimeRange)
+      })
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
     },
     expand(item) {
       item.isExpand = !item.isExpand
@@ -487,7 +615,9 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
+        _self.chosenDate = new Date(
+          +nowdays - 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -507,7 +637,9 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
+        _self.chosenDate = new Date(
+          +nowdays + 7 * oneDayTime
+        ).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -528,9 +660,15 @@ export default {
         let date = new Date(dateIn)
         let s = ''
         let mouth =
+<<<<<<< HEAD
           date.getMonth() + 1 >= 10 ?
             date.getMonth() + 1 :
             '0' + (date.getMonth() + 1)
+=======
+          date.getMonth() + 1 >= 10
+            ? date.getMonth() + 1
+            : '0' + (date.getMonth() + 1)
+>>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
         let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
         s += date.getFullYear() + '-' // 获取年份。
         s += mouth + '-' // 获取月份。
@@ -546,7 +684,7 @@ export default {
       de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
       let unixDb = db.getTime()
       let unixDe = de.getTime()
-      for (let k = unixDb; k <= unixDe;) {
+      for (let k = unixDb; k <= unixDe; ) {
         arry.push(format(new Date(parseInt(k))))
         k = k + 24 * 60 * 60 * 1000
       }
@@ -555,16 +693,17 @@ export default {
     priceOne(item, date) {
       const _self = this
       _self.priceChangeForOne = true
-      _self.priceForm.sonRoomId = item.SonRoomID
+      _self.priceForm.sonRoomId = item.ID
       _self.priceForm.time = [new Date(date), new Date(date)]
-      _self.priceForm.price[0].price = _self.price(item, date);
-      ['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
+      _self.priceForm.price[0].price = _self.price(item, date)
+      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
+        _self.priceForm.price[index + 1].stat = _self.otherStat(i, item, date)
       })
       _self.stateForm.count = item.timeDate[date].Count
       _self.stateForm.isOpen = item.timeDate[date].IsOpen
       _self.stateForm.updateChannel = item.timeDate[date].UpdateChannel
-      _self.stateForm.sonRoomId = item.SonRoomID
+      _self.stateForm.sonRoomId = item.ID
       _self.stateForm.date = [new Date(date), new Date(date)]
     },
     async priceSubmit() {
@@ -622,7 +761,7 @@ export default {
           date: time,
           count: _self.stateForm.count,
           isOpen: _self.stateForm.isOpen,
-          updateChannel: _self.stateForm.updateChannel,
+          updateChannel: _self.stateForm.updateChannel
         })
       })
       const res = await roomStatPriceApi.UpdateRoomState(stateForm)
@@ -654,57 +793,69 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-.legend {
-  display: inline;
-  float: left;
-  margin: 1px 3px 0 0;
-  background-color: #fff;
-  border: 1px solid #e1e1e1;
-  height: 14px;
-  overflow: hidden;
-  text-align: center;
-  width: 14px;
+<style lang="scss" scoped>
+.hotel-price{
+
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: rgba(255,255,255,0);
+    background-clip: padding-box;
+  }
+  .el-table--enable-row-hover .el-table__body td:hover.current  {
+    background-color: #ff000057!important;
+    background-clip: padding-box;
+  }
+  .legend {
+    display: inline;
+    float: left;
+    margin: 1px 3px 0 0;
+    background-color: #fff;
+    border: 1px solid #e1e1e1;
+    height: 14px;
+    overflow: hidden;
+    text-align: center;
+    width: 14px;
+  }
+
+  .ui-table-col-center {
+    background-color: #fbfbfb;
+    cursor: pointer;
+    vertical-align: top;
+    border: 1px solid #ececec;
+  }
+
+  .open {
+    width: 12%;
+    height: 100px;
+    background-color: #c8e4ec!important;
+    padding: 10px;
+  }
+
+  .close {
+    width: 12%;
+    height: 100px;
+    background-color: #ffcfc9!important;
+    padding: 10px;
+  }
+
+  .column_tr {
+    width: 100%;
+  }
+
+  .column_tr:after {
+    clear: both;
+  }
+
+  .dayname {
+    color: #13ce66;
+  }
+
+  .price {
+    color: #48576a;
+  }
+
+  .remain {
+    color: #50bfff;
+  }
 }
 
-.ui-table-col-center {
-  background-color: #fbfbfb;
-  cursor: pointer;
-  vertical-align: top;
-  border: 1px solid #ececec;
-}
-
-.open {
-  width: 12%;
-  height: 100px;
-  background-color: #c8e4ec;
-  padding: 10px;
-}
-
-.close {
-  width: 12%;
-  height: 100px;
-  background-color: #e4e8f1;
-  padding: 10px;
-}
-
-.column_tr {
-  width: 100%;
-}
-
-.column_tr:after {
-  clear: both;
-}
-
-.dayname {
-  color: #13ce66;
-}
-
-.price {
-  color: #48576a;
-}
-
-.remain {
-  color: #50bfff;
-}
 </style>
