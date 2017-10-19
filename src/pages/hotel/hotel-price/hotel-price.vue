@@ -132,10 +132,10 @@
         <el-col :span="12" :offset="1">
           <el-input placeholder="售卖价" v-model="priceForm.price[index].price">
 <template slot="prepend">
-   {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </template>
 <template slot="append">
-   ￥
+ ￥
 </template>
           </el-input>
         </el-col>
@@ -194,7 +194,9 @@ import {
   sonRoomPlatformApi
 } from 'api'
 import chunk from 'lodash/chunk'
-import { HotelTopMenu } from 'components'
+import {
+  HotelTopMenu
+} from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -228,39 +230,7 @@ export default {
       priceForm: {
         sonRoomId: '',
         time: '',
-<<<<<<< HEAD
         price: [{
-          title: '最高采购价',
-          id: -1,
-          price: ''
-        },
-        {
-          title: '飞猪',
-          id: 1,
-          price: '',
-          stat: 0
-        },
-        {
-          title: '去哪',
-          id: 2,
-          price: '',
-          stat: 0
-        },
-        {
-          title: '携程',
-          id: 3,
-          price: '',
-          stat: 0
-        },
-        {
-          title: '全日空ANA',
-          id: 4,
-          price: '',
-          stat: 0
-        }
-=======
-        price: [
-          {
             title: '最高采购价',
             id: -1,
             price: ''
@@ -289,7 +259,6 @@ export default {
             price: '',
             stat: 0
           }
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
         ]
       },
       status: '1',
@@ -303,38 +272,16 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       periodType: 'month',
-<<<<<<< HEAD
       options3: [{
-        label: '售卖价',
-        options: [{
-          value: 'Shanghai',
-          label: '售卖价'
-        }]
-      },
-      {
-        label: '渠道价',
-        options: [{
-          value: 'Chengdu',
-          label: '去哪儿B'
-        },
-        {
-          value: 'Shenzhen',
-          label: '去哪儿C'
-=======
-      options3: [
-        {
           label: '售卖价',
-          options: [
-            {
-              value: 'Shanghai',
-              label: '售卖价'
-            }
-          ]
+          options: [{
+            value: 'Shanghai',
+            label: '售卖价'
+          }]
         },
         {
           label: '渠道价',
-          options: [
-            {
+          options: [{
               value: 'Chengdu',
               label: '去哪儿B'
             },
@@ -346,27 +293,23 @@ export default {
         },
         {
           label: '采购价',
-          options: [
-            {
-              value: 'Beijing',
-              label: '采购价'
-            }
-          ]
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
+          options: [{
+            value: 'Beijing',
+            label: '采购价'
+          }]
         }
-        ]
-      },
-      {
-        label: '采购价',
-        options: [{
-          value: 'Beijing',
-          label: '采购价'
-        }]
-      }
       ]
+    }, {
+      label: '采购价',
+      options: [{
+        value: 'Beijing',
+        label: '采购价'
+      }]
     }
-  },
-  computed: {
+  ]
+}
+},
+computed: {
     calendar() {
       if (!this.chosenDate) return
       let time1 = new Date(this.chosenDate).Format('yyyy-MM-dd')
@@ -423,8 +366,7 @@ export default {
     },
     startAndEndDay() {
       const _self = this
-      if (
-        !_self.monthList ||
+      if (!_self.monthList ||
         !_self.monthList.length ||
         !_self.weekList ||
         !_self.weekList.length
@@ -549,11 +491,7 @@ export default {
       }
       return ''
     },
-<<<<<<< HEAD
-    otherCurrency(type, item, date) {
-=======
     otherStat(type, item, date) {
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
       if (
         item &&
         item.timeDate &&
@@ -565,11 +503,7 @@ export default {
         let value = item.timeDate[date].salePrice.find(
           item => item.ThreePlatId === this.platInfoList[type]
         )
-<<<<<<< HEAD
-        return value ? value.Currency : ''
-=======
         return value ? value.Stat : ''
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
       }
       return ''
     },
@@ -585,17 +519,12 @@ export default {
       return ''
     },
     async fetchData() {
-<<<<<<< HEAD
-      const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
-      this.roomList = res.data
-      console.log(this.roomList)
-=======
       // const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       const res = await hotelRoomApi.list(this.stateForm.hotelId)
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {
-        room.SonRooms.forEach(async (sroom, srindex) => {
+        room.SonRooms.forEach(async(sroom, srindex) => {
           const platTimeRange = await this.platTimeRange(sroom.ID)
           sroom.platTimeRange = platTimeRange
           if (rindex + 1 === newList.length && srindex + 1 === room.length) {
@@ -605,7 +534,6 @@ export default {
 
         // this.$set(newList[index], 'platTimeRange', platTimeRange)
       })
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
     },
     expand(item) {
       item.isExpand = !item.isExpand
@@ -615,9 +543,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays - 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -637,9 +563,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays + 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -660,15 +584,9 @@ export default {
         let date = new Date(dateIn)
         let s = ''
         let mouth =
-<<<<<<< HEAD
           date.getMonth() + 1 >= 10 ?
-            date.getMonth() + 1 :
-            '0' + (date.getMonth() + 1)
-=======
-          date.getMonth() + 1 >= 10
-            ? date.getMonth() + 1
-            : '0' + (date.getMonth() + 1)
->>>>>>> 76ccbdd2235c7c914cb5539e69149382f7902993
+          date.getMonth() + 1 :
+          '0' + (date.getMonth() + 1)
         let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
         s += date.getFullYear() + '-' // 获取年份。
         s += mouth + '-' // 获取月份。
@@ -684,7 +602,7 @@ export default {
       de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
       let unixDb = db.getTime()
       let unixDe = de.getTime()
-      for (let k = unixDb; k <= unixDe; ) {
+      for (let k = unixDb; k <= unixDe;) {
         arry.push(format(new Date(parseInt(k))))
         k = k + 24 * 60 * 60 * 1000
       }
@@ -695,8 +613,8 @@ export default {
       _self.priceChangeForOne = true
       _self.priceForm.sonRoomId = item.ID
       _self.priceForm.time = [new Date(date), new Date(date)]
-      _self.priceForm.price[0].price = _self.price(item, date)
-      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
+      _self.priceForm.price[0].price = _self.price(item, date);
+      ['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
         _self.priceForm.price[index + 1].stat = _self.otherStat(i, item, date)
       })
@@ -794,13 +712,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.hotel-price{
-
+.hotel-price {
   .el-table--enable-row-hover .el-table__body tr:hover>td {
-    background-color: rgba(255,255,255,0);
+    background-color: rgba(255, 255, 255, 0);
     background-clip: padding-box;
   }
-  .el-table--enable-row-hover .el-table__body td:hover.current  {
+  .el-table--enable-row-hover .el-table__body td:hover.current {
     background-color: #ff000057!important;
     background-clip: padding-box;
   }
@@ -815,47 +732,38 @@ export default {
     text-align: center;
     width: 14px;
   }
-
   .ui-table-col-center {
     background-color: #fbfbfb;
     cursor: pointer;
     vertical-align: top;
     border: 1px solid #ececec;
   }
-
   .open {
     width: 12%;
     height: 100px;
     background-color: #c8e4ec!important;
     padding: 10px;
   }
-
   .close {
     width: 12%;
     height: 100px;
     background-color: #ffcfc9!important;
     padding: 10px;
   }
-
   .column_tr {
     width: 100%;
   }
-
   .column_tr:after {
     clear: both;
   }
-
   .dayname {
     color: #13ce66;
   }
-
   .price {
     color: #48576a;
   }
-
   .remain {
     color: #50bfff;
   }
 }
-
 </style>
