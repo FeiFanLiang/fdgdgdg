@@ -1,38 +1,38 @@
 <template lang="html">
-  <div id="HotelBasePage">
-    <el-row :gutter="20">
-      <el-col :span="3"><el-select v-model="filters.labelVal"  placeholder="请选择">
-        <el-option
-            v-for="(item,index) in selectedOptions"
-            :label="item.label"
-            :value="item.value"
-            :key="index">
+<div id="HotelBasePage">
+  <el-row :gutter="20">
+    <el-col :span="3">
+      <el-select v-model="filters.labelVal" placeholder="请选择">
+        <el-option v-for="(item,index) in selectedOptions" :label="item.label" :value="item.value" :key="index">
         </el-option>
-      </el-select></el-col>
-      <el-col :span="3"><el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
+      </el-select>
+    </el-col>
+    <el-col :span="3">
+      <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
       <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
-      <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input></el-col>
-      <el-col :span="5">
-        <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
-        <el-button type="primary" @click="dialogTableVisible=true">
-            创建
-        </el-button>
-      </el-col >
-      <el-col :span="7">
-        <el-radio-group v-model="isForeign" @change="areaTypeChange">
-      <el-radio-button :label="false">国内</el-radio-button>
-      <el-radio-button :label="true">国外</el-radio-button>
-    </el-radio-group>
-      </el-col >
-    </el-row>
-    <div class="eltable">
-      <CustomTable :list="hotelbase" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="getHotelbaseList" >
-        <el-table-column   label="操作" width="180" fixed="right" slot="right-one">
-          <template scope="scope">
+      <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
+    </el-col>
+    <el-col :span="5">
+      <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
+      <el-button type="primary" @click="dialogTableVisible=true">
+        创建
+      </el-button>
+    </el-col>
+    <el-col :span="7">
+      <el-radio-group v-model="isForeign" @change="areaTypeChange">
+        <el-radio-button :label="false">国内</el-radio-button>
+        <el-radio-button :label="true">国外</el-radio-button>
+      </el-radio-group>
+    </el-col>
+  </el-row>
+  <div class="eltable">
+    <CustomTable :list="hotelbase" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="getHotelbaseList">
+      <el-table-column label="操作" width="180" fixed="right" slot="right-one">
+        <template scope="scope">
             <!--<el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>-->
             <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
             <DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
-          </template>
+</template>
         </el-table-column>
       </CustomTable>
       <!-- <el-table
@@ -49,11 +49,12 @@
         <el-table-column prop="Policys.PurchasingName" label="政策负责人"></el-table-column>
         <el-table-column prop="Policys.PayMode.ModeName" label="结款"></el-table-column>
         <el-table-column   label="操作" width="180" fixed="right">
-          <template scope="scope">
-            <el-button size="small" @click="addHotelShow( scope.row)">添加展示信息</el-button>
-            <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
-            <DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
-          </template>
+<template scope="scope">
+<el-button size="small" @click="addHotelShow( scope.row)">
+  添加展示信息</el-button>
+<el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
+<DeleteButton api="hotelBaseApi" @successCallBack="getHotelbaseList" :id="scope.row.ID"></DeleteButton>
+</template>
         </el-table-column>
       </el-table> -->
     </div>
@@ -75,7 +76,9 @@
 </template>
 
 <script>
-import { hotelBaseApi } from 'api'
+import {
+  hotelBaseApi
+} from 'api'
 import HotelBaseAdd from './hotel-base-add.vue'
 export default {
   components: {
@@ -100,8 +103,7 @@ export default {
         HotelName_En: '',
         labelVal: '1'
       },
-      selectedOptions: [
-        {
+      selectedOptions: [{
           value: '1',
           label: '酒店ID'
         },
@@ -155,12 +157,10 @@ export default {
         order: 'ID',
         query: {
           ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-          HotelName:
-            _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-          HotelName_En:
-            _self.filters.labelVal === '3' ? _self.filters.HotelName_En : ''
+          HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
+          HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : '',
+          IsForeign: _self.isForeign
         },
-        IsForeign: _self.isForeign
       }
       const res = await hotelBaseApi.listAll(options)
       if (res && res.data && res.data.Data) {
@@ -208,9 +208,9 @@ export default {
 
 <style lang="scss">
 #HotelBasePage {
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
-    }
+  .pagination-wrapper {
+    text-align: center;
+    padding: 30px;
+  }
 }
 </style>
