@@ -2,20 +2,6 @@
 <div id="HotelsOrder">
     <el-form label-width="80px">
       <el-row :gutter="24">
-          <!-- <el-col :span="4">
-            <el-input  placeholder="请输入酒店名称" v-model="filters.HotelName"></el-input>
-          </el-col>
-          <el-col :span="4">
-            <el-input  placeholder="请输入城市名称" v-model="filters.City"></el-input>
-          </el-col>
-          <el-col :span="5">
-              <el-date-picker  v-model="filters.CreateTime" type="daterange" align="right" placeholder="选择预约日期" :picker-options="pickerOptions"></el-date-picker>
-          </el-col>
-          <el-col :span="5">
-            <el-select v-model="testValue" placeholder="区域">
-              <el-option v-for="item in ['日本']" :key="item" :label="item" :value="item"></el-option>
-            </el-select>
-          </el-col> -->
           <el-col :span="6">
             <el-form-item label="订单编号">
               <el-input v-model="filters.OrderNo"></el-input>
@@ -120,7 +106,7 @@
       </el-row>
     </el-form>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" 
-    :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}">
+      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}">
         <el-table-column type="expand">
             <template scope="props">
               <div>
@@ -203,7 +189,11 @@
                     <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
                     <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p>
                     <br>
-                    <p><span>酒店区域</span><span class="span-text" v-if="props.row.HotelArea === 1">国际</span><span class="span-text" v-if="props.row.HotelArea === 0">国内</span></p>
+                    <p><span>酒店区域</span>
+                        <span class="span-text" v-if="props.row.HotelArea === 1">国际</span>
+                        <span class="span-text" v-if="props.row.HotelArea === 0">国内</span>
+                        <span class="span-text" v-if="props.row.HotelArea === 2">美国</span>
+                    </p>
                     <p>
                       <span>回填状态</span>
                       <span class="span-text" v-if="props.row.BackfillState === 0">未回填</span>
@@ -270,6 +260,20 @@
     </div>
     <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')" size="full">
         <el-form ref="form" :model="form" label-width="110px">
+            <el-row :gutter="24">
+              <el-col :span="6">
+                    <el-form-item label="订单编号" prop="OrderNo">
+                        <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
+                    </el-form-item>
+              </el-col>
+              <!-- <el-col :span="6">
+                    <el-form-item label="订单来源" prop="FromID">
+                        <el-select v-model="form.FromID">
+                          <el-option v-for="item in FromID" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+              </el-col> -->
+            </el-row>
             <el-row :gutter="24"><el-col :span="24" style="color:orange;"><h1>客人信息</h1></el-col></el-row>
             <el-row :gutter="24">
               <el-col :span="6">
@@ -318,7 +322,8 @@
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="到店时间" prop="ArrivalTime">
-                        <el-input placeholder="请输入到店时间" v-model="form.ArrivalTime"></el-input>
+                        <!-- <el-input placeholder="请输入到店时间" v-model="form.ArrivalTime"></el-input> -->
+                        <el-time-select v-model="form.ArrivalTime" :picker-options="{start:'00:00',step:'00:15',end:'24:00'}" placeholder="选择时间"></el-time-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -412,11 +417,6 @@
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
-                    <el-form-item label="优惠金额" prop="Discounts">
-                        <el-input placeholder="请输入优惠金额" v-model="form.Discounts"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
                     <el-form-item label="其他费用" prop="OherFee">
                         <el-input placeholder="请输入其他费用" v-model="form.OherFee"></el-input>
                     </el-form-item>
@@ -431,28 +431,7 @@
                         <el-input placeholder="请输入退票费" v-model="form.FeeCancel"></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="6">
-                    <el-form-item label="佣金" prop="Commission">
-                        <el-input placeholder="请输入佣金" v-model="form.Commission"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="结算周期（付款）" prop="SettlementCycleFu">
-                        <el-select v-model="form.SettlementCycleFu">
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="结算周期（收款）" prop="SettlementCycle">
-                        <el-select v-model="form.SettlementCycle">
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
+            </el-row>  
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="订单状态" prop="OrderState">
@@ -501,25 +480,55 @@
                         <el-radio-group v-model="form.HotelArea">
                           <el-radio :label="1">国际</el-radio>
                           <el-radio :label="0">国内</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item label="不可合并支付" prop="UnMergePay">
-                        <el-radio-group v-model="form.UnMergePay">
-                          <el-radio :label="1">不可合并</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="5">
-                    <el-form-item label="紧急打款" prop="UrgentPay">
-                        <el-radio-group v-model="form.UrgentPay">
-                          <el-radio :label="1">紧急</el-radio>
+                          <el-radio :label="3">美国</el-radio>
                         </el-radio-group>
                     </el-form-item>
                 </el-col>
               </el-row>
-              <el-row :gutter="24">
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:20px;" />
+            <el-row :gutter="24">
+                <el-col :span="6">
+                    <el-form-item label="优惠金额" prop="Discounts">
+                        <el-input placeholder="请输入优惠金额" v-model="form.Discounts"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="佣金" prop="Commission">
+                        <el-input placeholder="请输入佣金" v-model="form.Commission"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
+                        <el-select v-model="form.SettlementCycleFu">
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="结算周期（收）" prop="SettlementCycle">
+                        <el-select v-model="form.SettlementCycle">
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="7">
+                  <el-form-item label="不可合并支付" prop="UnMergePay">
+                      <el-radio-group v-model="form.UnMergePay">
+                        <el-radio :label="1">不可合并</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                  <el-form-item label="紧急打款" prop="UrgentPay">
+                      <el-radio-group v-model="form.UrgentPay">
+                        <el-radio :label="1">紧急</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
                 <el-col :span="7">
                     <el-form-item label="订单截图状态" prop="StateScreenshot">
                         <el-radio-group v-model="form.StateScreenshot">
@@ -699,7 +708,9 @@ export default {
         BackfillState:'',
         StateScreenshot:'',
         SettlementCycle:'',
-        SettlementCycleFu:''
+        SettlementCycleFu:'',
+        FromID:'',
+        OrderNo:''
       },
       copyForm: {},
       showFujia:false,
@@ -781,7 +792,8 @@ export default {
       HotelArea:[
         {label:'全部',value:''},
         {label:'国内',value:0},
-        {label:'国际',value:1}
+        {label:'国际',value:1},
+        {label:'美国',value:2}
       ],
       styleObject:{},
       OrderState:[
@@ -931,34 +943,34 @@ export default {
       try {
         const res = await hotelsOrderApi.listByQuery(options)
         _self.hotelsOrder = res.data.Data
-        for(let item in _self.hotelsOrder){
-          let a = _self.hotelsOrder[item].SettlementCycle;
-          if(a == '单结'){
-            _self.styleObject = {
-              color:'#FD5921'
-            }
-          }
-          if(a == '日结'){
-            _self.styleObject = {
-              color:'#FD1393'
-            }
-          }
-          if(a == '周结'){
-            _self.styleObject = {
-              color:'#1297E8'
-            }
-          }
-          if(a == '半月结'){
-            _self.styleObject = {
-              color:'#A127BE'
-            }
-          }
-          if(a == '月结'){
-            _self.styleObject = {
-              color:'#20A228'
-            }
-          }
-        }
+        // for(let item in _self.hotelsOrder){
+        //   let a = _self.hotelsOrder[item].SettlementCycle;
+          // if(a == 0){
+          //   _self.styleObject = {
+          //     color:'#FD5921'
+          //   }
+          // }
+          // if(a == 1){
+          //   _self.styleObject = {
+          //     color:'#1297E8'
+          //   }
+          // }
+          // if(a == 2){
+          //   _self.styleObject = {
+          //     color:'#20A228'
+          //   }
+          // }
+          // if(a == '半月结'){
+          //   _self.styleObject = {
+          //     color:'#A127BE'
+          //   }
+          // }
+          // if(a == '周结'){
+          //   _self.styleObject = {
+          //     color:'#1297E8'
+          //   }
+          // }
+        //}
         _self.active = 0
         _self.count = res.data.Count
         _self.loading = false
@@ -1048,7 +1060,10 @@ export default {
         SettlementCycle:'',
         SettlementCycleFu:'',
         SecretState:'',
-        Secret:''
+        Secret:'',
+        FromID:'',
+        ArrivalTime:'',
+        OrderNo:''
       },
       _self.getStateList()
     },
