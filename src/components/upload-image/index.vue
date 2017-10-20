@@ -1,18 +1,9 @@
 <template>
-  <div id="app">
-    <div class="write-content"
-        @drop="handleDrag"
-        @dragover="handleDragover"
-        @dragleave="handleDragleave"
-        :class="{focused:isFocus, dragoverd: isDrogover}">
-      <textarea
-        @paste="handleTPaste"
-        @focus="handleTFocus"
-        @blur="handleTBlur"
-        v-model="text"
-        placeholder=""></textarea>
-        <p class="drag-and-drop">
-          <span class="default" v-show="upStatus === 'default'">
+<div id="app">
+  <div class="write-content" @drop="handleDrag" @dragover="handleDragover" @dragleave="handleDragleave" :class="{focused:isFocus, dragoverd: isDrogover}">
+    <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="text" placeholder=""></textarea>
+    <p class="drag-and-drop">
+      <span class="default" v-show="upStatus === 'default'">
             图片通过拖拽,
             <input type="file" multiple="multiple"
               class="manual-file-chooser js-manual-file-chooser"
@@ -20,16 +11,16 @@
               @change="fileInputChange">
             <button class="btn-link manual-file-chooser-text">选择图片选择它们</button>,或从剪贴板粘贴.
           </span>
-          <span class="loading" v-show="upStatus === 'loading'">
+      <span class="loading" v-show="upStatus === 'loading'">
             图片上传中<strong>{{percentText}}%</strong>
           </span>
-          <span class="error" v-show="upStatus === 'error'">
+      <span class="error" v-show="upStatus === 'error'">
             {{errorText}}
           </span>
-        </p>
-    </div>
-    <ImgList :lists="images" />
+    </p>
   </div>
+  <ImgList :lists="images" />
+</div>
 </template>
 
 <script>
@@ -91,6 +82,7 @@ export default {
     //drag-drop
     handleDrag(e) {
       // 获取文件列表
+      console.log('handleDrag', e)
       let fileList = e.dataTransfer.files
       let hasImg = this.fileUpload(fileList)
       if (hasImg) {
@@ -232,14 +224,16 @@ export default {
 
 
 <style scoped>
-*{
+* {
   box-sizing: border-box;
 }
+
 .write-content {
   position: relative;
   width: 600px;
   margin: 0 auto;
 }
+
 .write-content textarea {
   width: 100%;
   min-height: 200px;
@@ -254,22 +248,26 @@ export default {
   background-color: #fafafa;
   border-radius: 3px 3px 0 0;
   outline: none;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
 }
-.write-content textarea:focus{
+
+.write-content textarea:focus {
   background-color: #fff;
   border-color: #51a7e8;
   outline: none;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.075),0 0 5px rgba(81,167,232,0.5);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075), 0 0 5px rgba(81, 167, 232, 0.5);
 }
-.write-content.focused .drag-and-drop{
+
+.write-content.focused .drag-and-drop {
   border-color: #51a7e8;
-  box-shadow: rgba(81,167,232,0.5) 0 0 3px;
+  box-shadow: rgba(81, 167, 232, 0.5) 0 0 3px;
 }
+
 .dragoverd textarea,
 .dragoverd .drag-and-drop {
-    box-shadow: #c9ff00 0 0 3px;
+  box-shadow: #c9ff00 0 0 3px;
 }
+
 .manual-file-chooser {
   position: absolute;
   width: 240px;
@@ -278,7 +276,8 @@ export default {
   cursor: pointer;
   opacity: 0.0001;
 }
-.manual-file-chooser-text{
+
+.manual-file-chooser-text {
   display: inline-block;
   padding: 0;
   font-size: inherit;
@@ -294,12 +293,14 @@ export default {
   -webkit-appearance: none;
   text-transform: none;
 }
+
 .manual-file-chooser-text:hover,
 .manual-file-chooser-text:focus {
   text-decoration: underline;
   outline: none;
 }
-.drag-and-drop{
+
+.drag-and-drop {
   padding: 7px 10px;
   margin: 0;
   font-size: 13px;
@@ -311,10 +312,12 @@ export default {
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
 }
-.drag-and-drop .default{
+
+.drag-and-drop .default {
   display: inline-block;
 }
-.drag-and-drop .error{
+
+.drag-and-drop .error {
   color: #bd2c00;
 }
 </style>
