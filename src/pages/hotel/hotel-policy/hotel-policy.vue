@@ -94,14 +94,14 @@
                             <el-input v-model="forms.AccountNum"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="财务备注">
-                            <el-input type="textarea" v-model="forms.FinanceRemark"></el-input>
-                        </el-form-item>
-                    </el-col>
                      <el-col :span="6" style="margin-top:40px;">
                         <el-form-item label="默认政策" prop="IsDefault">
                             <el-switch on-text="是" off-text="否" v-model="forms.IsDefault"></el-switch>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="财务备注">
+                            <el-input type="textarea" v-model="forms.FinanceRemark"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>

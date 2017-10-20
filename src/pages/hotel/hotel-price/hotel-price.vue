@@ -455,6 +455,22 @@ export default {
       }
       return ''
     },
+    otherCurrency(type, item, date) {
+      if (
+        item &&
+        item.timeDate &&
+        item.timeDate[date] &&
+        item.timeDate[date].hasOwnProperty('salePrice') &&
+        Array.isArray(item.timeDate[date].salePrice) &&
+        item.timeDate[date].salePrice.length > 0
+      ) {
+        let value = item.timeDate[date].salePrice.find(
+          item => item.ThreePlatId === this.platInfoList[type]
+        )
+        return value ? value.Currency : ''
+      }
+      return ''
+    },
     currency(item, date) {
       if (
         item &&
