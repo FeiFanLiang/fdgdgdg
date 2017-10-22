@@ -73,16 +73,13 @@ export default {
       this.isFocus = false
     },
     uploadComplete(err, data) {
-      console.log(222222, data)
       if (err) {
         return
       }
-      console.log(111,this.images)
       this.images.push({
-        url: 'http://192.168.10.95:8500/upload/' + data.url
+        url: 'http://192.168.10.95:8500/upload/' + data
       })
-      this.text += '![image]($src)'.replace('$src', data.url)
-      console.log(111,this.images)
+      this.text += '![image]($src)'.replace('$src', data)
     },
     //drag-drop
     handleDrag(e) {
@@ -165,16 +162,13 @@ export default {
     },
     //upload
     fileUpload(myFiles) {
-      console.log(333, myFiles)
       let hasImg = false
       if (myFiles.length > 0) {
         // a hack to push all the Promises into a new array
         Array.prototype.slice.call(myFiles, 0).map(file => {
-          debugger
           if (/^image/.test(file.type)) {
             hasImg = true
             return this._handleUpload(file, (err, data) => {
-              debugger
               this.uploadComplete(err, data)
             })
           }
@@ -206,7 +200,7 @@ export default {
           return
         }
         if (xhr.status < 400) {
-          // let res = JSON.parse(xhr.responseText)
+          let res = xhr.responseText
           this.$emit('onFileUpload', file, res)
           callback(null, res)
         } else {
