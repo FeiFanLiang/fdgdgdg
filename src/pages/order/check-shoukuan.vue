@@ -1,7 +1,8 @@
 <template lang="html">
 <div id="CheckShoukuan">
   <el-button size="large" style="margin:10px 0;" @click="collection">收款</el-button>
-  <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange">
+  <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
+  :default-sort = "{prop: 'BookTime', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
     <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
@@ -21,7 +22,7 @@
     </el-table-column>
     <el-table-column label="入住人" prop="Passenger"></el-table-column>
     <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
-    <el-table-column label="预定时间" prop="BookTime" width="80">
+    <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
         <template scope="scope">
             <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
         </template>
@@ -69,7 +70,7 @@ export default {
             const options = {
                 pageIndex: currentPage || _self.currentPage,
                 pageSize: pageSize || _self.pageSize,
-                order: 'ID'
+                order: 'BookTime'
             }
             try {
                 const res = await hotelsOrderApi.checkIn(options)

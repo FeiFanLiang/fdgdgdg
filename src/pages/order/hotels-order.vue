@@ -19,7 +19,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="订单平台">
-              <el-select v-model="filters.ThreePlatID">
+              <el-select v-model="filters.ThreePlatID" clearable>
                 <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
@@ -33,7 +33,7 @@
           </el-col> -->
           <el-col :span="6">
             <el-form-item label="结款方式">
-              <el-select v-model="filters.SettlementCycle">
+              <el-select v-model="filters.SettlementCycle" clearable>
                 <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -64,14 +64,14 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="打款账户">
-              <el-select v-model="filters.CompanyAcount">
+              <el-select v-model="filters.CompanyAcount" clearable>
                 <el-option v-for="item in CompanyAcount" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="酒店区域">
-              <el-select v-model="filters.HotelArea">
+              <el-select v-model="filters.HotelArea" clearable>
                 <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
@@ -105,7 +105,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border row-key="ID" 
+    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
       :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}">
         <el-table-column type="expand">
             <template scope="props">
@@ -235,7 +235,7 @@
           </template>
         </el-table-column>
         <!-- <el-table-column label="晚数" prop="NightNum"></el-table-column> -->
-        <el-table-column label="入住人" prop="Passenger"></el-table-column>
+        <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
         <!-- <el-table-column label="联系电话" prop="PassengerTel" width="128"></el-table-column> -->
         <!-- <el-table-column label="联系固话" prop="PassengerTel2"></el-table-column> -->
         <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
@@ -269,7 +269,7 @@
               </el-col>
               <el-col :span="6">
                     <el-form-item label="订单平台" prop="ThreePlatID">
-                        <el-select v-model="form.ThreePlatID">
+                        <el-select v-model="form.ThreePlatID" clearable>
                           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
                         </el-select>
                     </el-form-item>
@@ -338,14 +338,14 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="订单状态" prop="OrderState">
-                        <el-select v-model="form.OrderState">
+                        <el-select v-model="form.OrderState" clearable>
                           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="订单类型" prop="OrderType">
-                        <el-select v-model="form.OrderType">
+                        <el-select v-model="form.OrderType" clearable>
                           <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -384,7 +384,7 @@
                 <el-col :span="6">
                     <el-form-item label="付款货币" prop="CurrencyFuKuan">
                         <!-- <el-input placeholder="请输入付款货币" v-model="form.CurrencyFuKuan"></el-input> -->
-                        <el-select v-model="form.CurrencyFuKuan">
+                        <el-select v-model="form.CurrencyFuKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -392,7 +392,7 @@
                 <el-col :span="6">
                     <el-form-item label="收款货币" prop="CurrencyShouKuan">
                         <!-- <el-input placeholder="请输入收款货币" v-model="form.CurrencyShouKuan"></el-input> -->
-                        <el-select v-model="form.CurrencyShouKuan">
+                        <el-select v-model="form.CurrencyShouKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -470,14 +470,14 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
-                        <el-select v-model="form.SettlementCycleFu">
+                        <el-select v-model="form.SettlementCycleFu" clearable>
                           <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（收）" prop="SettlementCycle">
-                        <el-select v-model="form.SettlementCycle">
+                        <el-select v-model="form.SettlementCycle" clearable>
                           <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -659,7 +659,7 @@
             <el-date-picker v-model="form2.UseDate" type="date" placeholder="选择使用时间" style="width:100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="订单类型" prop="TypeID">
-            <el-select v-model="form2.TypeID">
+            <el-select v-model="form2.TypeID" clearable>
               <el-option v-for="item in TypeID" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
@@ -693,7 +693,7 @@ export default {
       imageUrl2: '',
       fileList: [],
       currentPage: 1,
-      pageSize: 100,
+      pageSize: 10,
       count: 0,
       loading: false,
       hotelsOrder: [],
