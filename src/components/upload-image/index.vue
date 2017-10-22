@@ -1,7 +1,7 @@
 <template>
 <div id="app">
   <div class="write-content" @drop="handleDrag" @dragover="handleDragover" @dragleave="handleDragleave" :class="{focused:isFocus, dragoverd: isDrogover}">
-    <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="text" placeholder=""></textarea>
+    <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="text" placeholder="" contentEditable="true"></textarea>
     <p class="drag-and-drop">
       <span class="default" v-show="upStatus === 'default'">
             图片通过拖拽,
@@ -57,8 +57,10 @@ export default {
       })
       this.$on('onFileProgress', msg => {
         this.percentText = parseInt(msg.percent)
+        this.upStatus = 'default'
       })
       this.$on('onFileUpload', (file, msg) => {
+        console.log(111111111111,file,msg)
         this.upStatus = 'default'
       })
     })
@@ -71,18 +73,20 @@ export default {
       this.isFocus = false
     },
     uploadComplete(err, data) {
+      console.log(222222, data)
       if (err) {
         return
       }
+      console.log(111,this.images)
       this.images.push({
         url: 'http://192.168.10.95:8500/upload/' + data.url
       })
       this.text += '![image]($src)'.replace('$src', data.url)
+      console.log(111,this.images)
     },
     //drag-drop
     handleDrag(e) {
       // 获取文件列表
-      console.log('handleDrag', e)
       let fileList = e.dataTransfer.files
       let hasImg = this.fileUpload(fileList)
       if (hasImg) {
@@ -121,36 +125,56 @@ export default {
         return false
       }
 
+
+
       function getFilename(e) {
         let value
-        if (window.clipboardData && window.clipboardData.getData) {
-          value = window.clipboardData.getData('Text')
-        } else if (e.clipboardData && e.clipboardData.getData) {
-          value = e.clipboardData.getData('text/plain')
+        if (e && e.clipboardData && e.clipboardData.getData) {
+          if (/image/.test(e.clipboardData.types)) {
+            //粘贴图片
+            value = e.clipboardData.getData('image/xxxx');
+            //检测图片来源
+            //如果是最原始的 data，比如 QQ 截图、Word 里复制所产生，直接把 data 上传
+            //这一部分可能用了是 HTML5 中 HTTP_CONTENT_DISPOSITION 上传机制
+            //除了 HTML5，非显式的 input[type="file"] 应该是无法上传文件的
+            //如果是 file，上传到知乎服务器
+            //如果是外部网站 URL，后台 curl get 转移到知乎服务器
+            //最后生成一个知乎的 URL，作为 img 标签插入到 contentEditable div 中
+          } else if (/text\/plain/.test(e.clipboardData.types)) {
+            //粘贴简单文本 ....
+            value = e.clipboardData.getData('text/plain')
+          }
+          if (e.preventDefault) {
+            e.stopPropagation();
+            e.preventDefault();
+          }
+          return false;
         }
-        value = value.split('\r')
-        return value.first()
       }
+
       let image
       if (event.clipboardData && event.clipboardData.items) {
         image = isImage(event.clipboardData.items)
         if (image) {
           event.preventDefault()
           let file = image.getAsFile()
-          file.name = getFilename(event) || 'image-' + Date.now() + '.png'
+          // file.name = getFilename(event) || 'image-' + Date.now() + '.png'
           return this.fileUpload([file])
         }
       }
     },
     //upload
     fileUpload(myFiles) {
+      console.log(333, myFiles)
       let hasImg = false
       if (myFiles.length > 0) {
         // a hack to push all the Promises into a new array
         Array.prototype.slice.call(myFiles, 0).map(file => {
+          debugger
           if (/^image/.test(file.type)) {
             hasImg = true
             return this._handleUpload(file, (err, data) => {
+              debugger
               this.uploadComplete(err, data)
             })
           }
@@ -158,20 +182,20 @@ export default {
       } else {
         // someone tried to upload without adding files
         let err = new Error('No files to upload for this field')
-        // this.$emit('onFileError', myFiles, err)
+        this.$emit('onFileError', myFiles, err)
       }
       return hasImg
     },
     _handleUpload(file, callback) {
       let form = new win.FormData()
       let xhr = new win.XMLHttpRequest()
-      // this.$emit('beforeFileUpload', file)
+      this.$emit('beforeFileUpload', file)
       try {
         // form.append('Content-Type', file.type || 'application/octet-stream')
         // our request will have the file in the ['file'] key
         form.append('file', file, file.name)
       } catch (err) {
-        // this.$emit('onFileError', file, err)
+        this.$emit('onFileError', file, err)
         return
       }
 
@@ -182,14 +206,14 @@ export default {
           return
         }
         if (xhr.status < 400) {
-          let res = JSON.parse(xhr.responseText)
-          // this.$emit('onFileUpload', file, res)
+          // let res = JSON.parse(xhr.responseText)
+          this.$emit('onFileUpload', file, res)
           callback(null, res)
         } else {
           let err = JSON.parse(xhr.responseText)
           err.status = xhr.status
           err.statusText = xhr.statusText
-          // this.$emit('onFileError', file, err)
+          this.$emit('onFileError', file, err)
           callback(err)
         }
       }.bind(this)
@@ -198,7 +222,7 @@ export default {
         let err = JSON.parse(xhr.responseText)
         err.status = xhr.status
         err.statusText = xhr.statusText
-        // this.$emit('onFileError', file, err)
+        this.$emit('onFileError', file, err)
         callback(err)
       }.bind(this)
 
@@ -215,7 +239,7 @@ export default {
     _onProgress(e) {
       // this is an internal call in XHR to update the progress
       e.percent = e.loaded / e.total * 100
-      // this.$emit('onFileProgress', e)
+      this.$emit('onFileProgress', e)
     }
   }
 }
