@@ -1,14 +1,14 @@
 <template lang="html">
 <div id="list">
   <ul class="img-list">
-    <li class="img-item" v-for="img in lists">11
-      <img :src="img.url">
+    <li id="my-mask" class="mask-wrapper img-item test" v-for="img in lists">
+      <img class="" :src="img.url">
+      <div class="mask-inner">
+        <i class="el-icon-view" @click="view(img.url)"></i>
+      </div>
     </li>
   </ul>
-  <el-upload action="" :file-list="lists" list-type="picture-card" :on-preview="handlePictureCardPreview" :disabled="true">
-    <i class="el-icon-plus"></i>
-  </el-upload>
-  <el-dialog v-model="dialogVisible" size="tiny">
+  <el-dialog v-model="dialogVisible" size="small">
     <img width="100%" :src="dialogImageUrl" alt="">
   </el-dialog>
 </div>
@@ -22,7 +22,7 @@ export default {
     }
   },
   created() {
-    console.log(1)
+    // console.log(1)
   },
   data() {
     return {
@@ -31,17 +31,20 @@ export default {
     };
   },
   methods: {
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
+    view(url) {
       this.dialogVisible = true;
+      this.dialogImageUrl = url;
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #list {
   .el-upload--picture-card {
+    display: none !important;
+  }
+  .el-upload {
     display: none !important;
   }
   .img-list {
@@ -51,12 +54,12 @@ export default {
     overflow: hidden;
   }
   .img-item {
+    position: relative;
     float: left;
     margin: 0 10px 10px 0;
     width: 112px;
     height: 112px;
     border: 1px solid #ccc;
-    padding: 3px;
     border-radius: 3px;
     overflow: hidden;
   }
@@ -65,6 +68,41 @@ export default {
   }
   .img-item img {
     width: 100%;
+    height: 100%;
+  }
+  .mask-wrapper {
+    position: relative;
+    overflow: hidden;
+  }
+  .mask-inner {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: 100%;
+    -moz-transition: top ease 200ms;
+    -o-transition: top ease 200ms;
+    -webkit-transition: top ease 200ms;
+    transition: top ease 200ms;
+    text-align: center;
+    padding-top: 33%;
+  }
+  .mask-wrapper:hover .mask-inner {
+    top: 0;
+  }
+  #my-mask {
+    width: 220px;
+    height: 220px;
+  }
+  #my-mask .mask-inner {
+    background: rgba(0, 0, 0, .5);
+  }
+  .el-icon-view {
+    width: 30px;
+    height: 30px;
+    padding-top: 10px;
+    cursor: pointer;
+    color: white;
   }
 }
 </style>

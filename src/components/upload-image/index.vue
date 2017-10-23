@@ -60,7 +60,6 @@ export default {
         this.upStatus = 'default'
       })
       this.$on('onFileUpload', (file, msg) => {
-        console.log(111111111111,file,msg)
         this.upStatus = 'default'
       })
     })
@@ -79,7 +78,7 @@ export default {
       this.images.push({
         url: 'http://192.168.10.95:8500/upload/' + data
       })
-      this.text += '![image]($src)'.replace('$src', data)
+      this.text += data
     },
     //drag-drop
     handleDrag(e) {
