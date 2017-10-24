@@ -6,9 +6,9 @@
       <span class="default" v-show="upStatus === 'default'">
             图片通过拖拽,
             <input type="file" multiple="multiple"
-              class="manual-file-chooser js-manual-file-chooser"
+              class="manual-file-chooser js-manual-file-chooser "
               @click="fileInputClick"
-              @change="fileInputChange">
+              @change="fileInputChange" >
             <button class="btn-link manual-file-chooser-text">选择图片选择它们</button>,或从剪贴板粘贴.
           </span>
       <span class="loading" v-show="upStatus === 'loading'">
@@ -111,10 +111,11 @@ export default {
     },
     //form
     fileInputClick(e) {
-      console.log('fileInputClick', e)
+      document.querySelector('.js-manual-file-chooser').value = ''
     },
     fileInputChange(e) {
       let myFiles = e.target.files
+      console.log(myFiles)
       this.fileUpload(myFiles)
     },
     //paste
@@ -164,12 +165,14 @@ export default {
     },
     //upload
     fileUpload(myFiles) {
-      let hasImg = false
+      // let hasImg = false
       if (myFiles.length > 0) {
         Array.prototype.slice.call(myFiles, 0).map(file => {
           if (/^image/.test(file.type)) {
-            hasImg = true
+            // hasImg = true
             return this._handleUpload(file, (err, data) => {
+              console.log(1)
+              console.log(err, data)
               this.uploadComplete(err, data)
             })
           }
@@ -178,7 +181,7 @@ export default {
         let err = new Error('No files to upload for this field')
         this.$emit('onFileError', myFiles, err)
       }
-      return hasImg
+      // return hasImg
     },
     _handleUpload(file, callback) {
       let form = new win.FormData()
