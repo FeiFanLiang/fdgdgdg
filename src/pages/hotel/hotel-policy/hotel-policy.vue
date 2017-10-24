@@ -7,6 +7,7 @@
         <el-table-column type="expand" slot="left-one">
             <template scope="props">
                    <el-form label-position="left" class="demo-table-expand" ref="forms" :model="forms" :rules="rules">
+                        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                 <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="政策负责人">
@@ -99,13 +100,15 @@
                             <el-switch on-text="是" off-text="否" v-model="forms.IsDefault"></el-switch>
                         </el-form-item>
                     </el-col>
+                    
+                </el-row>
+                <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="财务备注">
                             <el-input type="textarea" v-model="forms.FinanceRemark"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="退改规则备注">
                             <el-input type="textarea" v-model="forms.Remark1"></el-input>
@@ -121,13 +124,14 @@
                             <el-input type="textarea" v-model="forms.Remark3"></el-input>
                         </el-form-item>
                     </el-col>
+                    
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="备注4">
                             <el-input type="textarea" v-model="forms.Remark4"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="备注5">
                             <el-input type="textarea" v-model="forms.Remark5"></el-input>
@@ -143,13 +147,14 @@
                             <el-input type="textarea" v-model="forms.Remark7"></el-input>
                         </el-form-item>
                     </el-col>
+                    
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="备注8">
                             <el-input type="textarea" v-model="forms.Remark8"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="备注9">
                             <el-input type="textarea" v-model="forms.Remark9"></el-input>
@@ -161,6 +166,8 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                 <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+                            <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
                 <el-row>
                           <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
                               <i class="el-icon-plus"></i>
@@ -318,6 +325,7 @@
         </el-dialog>
         <el-dialog title="添加政策信息" v-model="createDialog" size="small" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110">
+                            <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>基础信息</h1></el-col></el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="政策负责人">
@@ -409,79 +417,83 @@
                             <el-input v-model="form.AccountNum"></el-input>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="12" style="margin-top:40px;">
+                        <el-form-item label="默认政策" prop="IsDefault">
+                            <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
+                 <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+                            <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>备注信息</h1></el-col></el-row>
                 <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="财务备注">
                             <el-input type="textarea" v-model="form.FinanceRemark"></el-input>
                         </el-form-item>
                     </el-col>
-                     <el-col :span="12" style="margin-top:40px;">
-                        <el-form-item label="默认政策" prop="IsDefault">
-                            <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
+                     <el-col :span="12">
                         <el-form-item label="退改规则备注">
                             <el-input type="textarea" v-model="form.Remark1"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="费用信息备注">
                             <el-input type="textarea" v-model="form.Remark2"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
+                     <el-col :span="12">
                         <el-form-item label="备注3">
                             <el-input type="textarea" v-model="form.Remark3"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注4">
                             <el-input type="textarea" v-model="form.Remark4"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注5">
                             <el-input type="textarea" v-model="form.Remark5"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注6">
                             <el-input type="textarea" v-model="form.Remark6"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注7">
                             <el-input type="textarea" v-model="form.Remark7"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注8">
                             <el-input type="textarea" v-model="form.Remark8"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="12">
+                     <el-col :span="12">
                         <el-form-item label="备注9">
                             <el-input type="textarea" v-model="form.Remark9"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="24">
                     <el-col :span="12">
                         <el-form-item label="备注10">
                             <el-input type="textarea" v-model="form.Remark10"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
+                 <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+                            <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
                 
             </el-form>
             <span slot="footer" class="dialog-footer">
