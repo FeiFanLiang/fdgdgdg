@@ -1,10 +1,11 @@
 <template lang="html">
 <div id="list">
   <ul class="img-list">
-    <li id="my-mask" class="mask-wrapper img-item test" v-for="img in lists">
+    <li id="my-mask" class="mask-wrapper img-item test" v-for="(img,index) in lists">
       <img class="" :src="img.url">
       <div class="mask-inner">
         <i class="el-icon-view" @click="view(img.url)"></i>
+        <i class="el-icon-delete" @click="del(index)"></i>
       </div>
     </li>
   </ul>
@@ -21,19 +22,19 @@ export default {
       type: Array
     }
   },
-  created() {
-    // console.log(1)
-  },
   data() {
     return {
       dialogImageUrl: '',
       dialogVisible: false
-    };
+    }
   },
   methods: {
     view(url) {
-      this.dialogVisible = true;
-      this.dialogImageUrl = url;
+      this.dialogVisible = true
+      this.dialogImageUrl = url
+    },
+    del(index) {
+      this.$emit('del', index)
     }
   }
 }
@@ -98,8 +99,17 @@ export default {
     background: rgba(0, 0, 0, .5);
   }
   .el-icon-view {
-    width: 30px;
-    height: 30px;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    padding-top: 10px;
+    cursor: pointer;
+    color: white;
+  }
+  .el-icon-delete {
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
     padding-top: 10px;
     cursor: pointer;
     color: white;
