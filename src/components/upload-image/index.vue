@@ -1,9 +1,11 @@
 <template>
 <div id="app">
   <div class="write-content" @drop="handleDrag" @dragover="handleDragover" @dragleave="handleDragleave" :class="{focused:isFocus, dragoverd: isDrogover}">
-    <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="showText" placeholder="" contentEditable="true"></textarea>
-    <p class="drag-and-drop">
-      <span class="default" v-show="upStatus === 'default'">
+    <ImgList :lists="images" @del="del" />
+    <div>
+      <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="showText" placeholder="" contentEditable="true"></textarea>
+      <p class="drag-and-drop">
+        <span class="default" v-show="upStatus === 'default'">
             图片通过拖拽,
             <input type="file" multiple="multiple"
               class="manual-file-chooser js-manual-file-chooser "
@@ -11,15 +13,16 @@
               @change="fileInputChange" >
             <button class="btn-link manual-file-chooser-text">选择图片选择它们</button>,或从剪贴板粘贴.
           </span>
-      <span class="loading" v-show="upStatus === 'loading'">
+        <span class="loading" v-show="upStatus === 'loading'">
             图片上传中<strong>{{percentText}}%</strong>
           </span>
-      <span class="error" v-show="upStatus === 'error'">
+        <span class="error" v-show="upStatus === 'error'">
             {{errorText}}
           </span>
-    </p>
+      </p>
+    </div>
+
   </div>
-  <ImgList :lists="images" @del="del"/>
 </div>
 </template>
 
@@ -248,13 +251,13 @@ export default {
 
 .write-content {
   position: relative;
-  width: 600px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .write-content textarea {
-  width: 100%;
-  min-height: 200px;
+  /* width: 100%; */
+  width: 200px;
+  min-height: 150px;
   max-height: 500px;
   padding: 10px;
   resize: vertical;
@@ -319,6 +322,7 @@ export default {
 }
 
 .drag-and-drop {
+  width:200px;
   padding: 7px 10px;
   margin: 0;
   font-size: 13px;

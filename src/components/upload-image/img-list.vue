@@ -51,7 +51,6 @@ export default {
   .img-list {
     margin: 10px auto;
     padding: 0;
-    width: 600px;
     overflow: hidden;
   }
   .img-item {
@@ -92,8 +91,8 @@ export default {
     top: 0;
   }
   #my-mask {
-    width: 220px;
-    height: 220px;
+    width: 200px;
+    height: 200px;
   }
   #my-mask .mask-inner {
     background: rgba(0, 0, 0, .5);
