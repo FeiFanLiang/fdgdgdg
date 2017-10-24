@@ -31,10 +31,15 @@ import ImgList from './img-list.vue'
 
 let win = window
 export default {
+   props: {
+    images: {
+      type: Array
+    }
+  },
   data() {
     return {
       // text: '',
-      images: [],
+      // images: [],
       isFocus: false,
       isDrogover: false,
       upStatus: 'default',
@@ -47,6 +52,7 @@ export default {
   computed: {
     showText: {
       get() {
+        console.log(111,this.images)
         return JSON.stringify(this.images)
       }
     }
@@ -55,6 +61,7 @@ export default {
     ImgList
   },
   mounted() {
+    console.log(this.images)
     this.$nextTick(() => {
       this.$on('onFileError', (file, msg) => {
         this.upStatus = 'error'
@@ -75,8 +82,7 @@ export default {
 
   methods: {
     del(index) {
-      this.images.splice(index, 1)
-      this.$emit('images', this.images)
+      this.$emit('del',this.images[index],this.images)
     },
     handleTFocus(e) {
       this.isFocus = true

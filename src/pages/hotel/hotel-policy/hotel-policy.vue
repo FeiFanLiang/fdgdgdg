@@ -172,6 +172,7 @@
                           <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
                               <i class="el-icon-plus"></i>
                           </el-upload>
+                                  <UploadImage  :images="imageList" @del="handleRemove"></UploadImage>
                       </el-row>
                       <el-row :gutter="24">
                           <el-col :span="5">
@@ -505,6 +506,8 @@
 </template>
 <script>
 import path from '../../../api/api.js'
+import UploadImage from 'components/upload-image'
+
 
 import {
     hotelPolicyApi,
@@ -520,7 +523,8 @@ import {
 
 export default {
     components: {
-        HotelTopMenu
+        HotelTopMenu,
+        UploadImage
     },
     created() {
         const _self = this
@@ -672,6 +676,7 @@ export default {
                     name: item.Path,
                     url: path.imageUrl + item.Path
                 }))
+                console.log(this.imageList)
             }
         },
         async getPayMode() {
@@ -767,6 +772,7 @@ export default {
             }
         },
         async handleRemove(file, fileList) {
+            console.log('1000000',file,fileList)
             if (file && file.id) {
                 await hotelPolicyImageApi.del(file.id)
             }
