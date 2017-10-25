@@ -1,5 +1,5 @@
 <template lang="html">
-<div id="list">
+<div id="list" style="display: inline-block;">
   <ul class="img-list">
     <li id="my-mask" class="mask-wrapper img-item test" v-for="(img,index) in lists">
       <img class="" :src="img.url">
