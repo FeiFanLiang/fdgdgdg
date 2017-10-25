@@ -264,7 +264,11 @@
     <p>外采渠道:{{scope.row.PurchaseChannel}}</p>
     <p>外采订单号:{{scope.row.PurchaseOrderNo}}</p>
     <p>外采金额:{{scope.row.PurchasePrice}}</p>
+    <p>外采处理人:{{scope.row.PurchasProcessor}}</p>
     <p>外采备注:{{scope.row.PurchaseRemark}}</p>
+    <p>是否报销:{{scope.row.IsPurchaseReturned?"是":"否"}}</p>
+    <p>报销时间:{{scope.row.PurchaseReturnedTime}}</p>
+    <p>报销处理人:{{scope.row.PurchaseReturnedProcessor}}</p>
 </el-popover>
 <div v-popover:popover1>
     <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsPurchase"></i>
@@ -535,6 +539,11 @@
                             <el-switch v-model="form.isPurchase" on-text="" off-text=""></el-switch>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="外采处理人" prop="purchasProcessor">
+                            <el-input placeholder="请输入外采处理人" v-model="form.purchasProcessor"></el-input>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
                 <el-row :gutter="24">
                     <el-col :span="24">
@@ -656,7 +665,8 @@ export default {
                 purchaseChannel: '',
                 purchaseOrderNo: '',
                 purchasePrice: '',
-                purchaseRemark: ''
+                purchaseRemark: '',
+                purchasProcessor:''
             },
             sortList: [{
                     value: 'id',
@@ -1113,7 +1123,8 @@ export default {
                 purchaseChannel: '',
                 purchaseOrderNo: '',
                 purchasePrice: '',
-                purchaseRemark: ''
+                purchaseRemark: '',
+                purchasProcessor:''
             }
             _self.form.staffUserId = _self.loginData.id
             _self.form.staffUserName = _self.loginData.username
@@ -1162,6 +1173,7 @@ export default {
                 _self.form.purchaseOrderNo = res.data.Data.PurchaseOrderNo
                 _self.form.purchasePrice = res.data.Data.PurchasePrice
                 _self.form.purchaseRemark = res.data.Data.PurchaseRemark
+                _self.form.purchasProcessor = res.data.Data.PurchasProcessor
                 _self.copyForm = Object.assign({}, _self.form)
             } catch (e) {
                 console.error(e)
