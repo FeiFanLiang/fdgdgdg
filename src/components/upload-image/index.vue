@@ -31,15 +31,13 @@ import ImgList from './img-list.vue'
 
 let win = window
 export default {
-   props: {
+  props: {
     images: {
       type: Array
     }
   },
   data() {
     return {
-      // text: '',
-      // images: [],
       isFocus: false,
       isDrogover: false,
       upStatus: 'default',
@@ -52,8 +50,8 @@ export default {
   computed: {
     showText: {
       get() {
-        console.log(111,this.images)
-        return JSON.stringify(this.images)
+        let names = this.images.map(image => image.name)
+        return JSON.stringify(names)
       }
     }
   },
@@ -61,7 +59,6 @@ export default {
     ImgList
   },
   mounted() {
-    console.log(this.images)
     this.$nextTick(() => {
       this.$on('onFileError', (file, msg) => {
         this.upStatus = 'error'
@@ -82,7 +79,7 @@ export default {
 
   methods: {
     del(index) {
-      this.$emit('del',this.images[index],this.images)
+      this.$emit('onRemove', this.images[index], this.images)
     },
     handleTFocus(e) {
       this.isFocus = true
@@ -94,11 +91,7 @@ export default {
       if (err) {
         return
       }
-      this.images.push({
-        url: 'http://192.168.10.95:8500/upload/' + data
-      })
-
-      this.$emit('images', this.images)
+      this.$emit('onSuccess', data)
     },
     //drag-drop
     handleDrag(e) {
@@ -124,7 +117,6 @@ export default {
     },
     fileInputChange(e) {
       let myFiles = e.target.files
-      console.log(myFiles)
       this.fileUpload(myFiles)
     },
     //paste
@@ -174,14 +166,10 @@ export default {
     },
     //upload
     fileUpload(myFiles) {
-      // let hasImg = false
       if (myFiles.length > 0) {
         Array.prototype.slice.call(myFiles, 0).map(file => {
           if (/^image/.test(file.type)) {
-            // hasImg = true
             return this._handleUpload(file, (err, data) => {
-              console.log(1)
-              console.log(err, data)
               this.uploadComplete(err, data)
             })
           }
@@ -190,7 +178,6 @@ export default {
         let err = new Error('No files to upload for this field')
         this.$emit('onFileError', myFiles, err)
       }
-      // return hasImg
     },
     _handleUpload(file, callback) {
       let form = new win.FormData()
