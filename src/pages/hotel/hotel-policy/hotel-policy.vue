@@ -537,7 +537,7 @@ export default {
     return {
       loading: false,
       isEditable: true,
-      uploadUrl: path.uploadUrl,
+    //   uploadUrl: path.uploadUrl,
       dialogImageUrl: '',
       dialogVisible: false,
       fileList: [],

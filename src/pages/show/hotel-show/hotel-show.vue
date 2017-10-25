@@ -335,6 +335,7 @@
                     <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
                         <i class="el-icon-plus"></i>
                     </el-upload>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -352,7 +353,12 @@ import {
     hotelImageApi,
     hotelBaseApi
 } from 'api'
+import UploadImage from 'components/upload-image'
+
 export default {
+    components: {
+        UploadImage
+    },
     created() {
         // this.form.hotelId = this.$route.params.ID
         this.fetchData()

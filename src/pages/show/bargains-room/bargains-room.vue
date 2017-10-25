@@ -1,24 +1,24 @@
 <template lang="html">
-    <div id="bargains-room-page">
-        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
-            <el-form-item label="开始日期">
-                <el-date-picker v-model="searchForm.beginDate" type="date" placeholder="选择开始日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item label="结束日期">
-                <el-date-picker v-model="searchForm.endDate" type="date" placeholder="选择结束日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="fetchData">搜索</el-button>
-                <el-button type="primary" @click="clickAddBtn">创建</el-button>
-            </el-form-item>
-        </el-form>
-        <CustomTable :list="list" :loading="loading" :configList="configList.listFields"  >
-          <el-table-column label="操作" fixed="right" slot="right-one">
-              <template scope="scope">
+<div id="bargains-room-page">
+  <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+    <el-form-item label="开始日期">
+      <el-date-picker v-model="searchForm.beginDate" type="date" placeholder="选择开始日期" :picker-options="pickerOptions">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item label="结束日期">
+      <el-date-picker v-model="searchForm.endDate" type="date" placeholder="选择结束日期" :picker-options="pickerOptions">
+      </el-date-picker>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="fetchData">搜索</el-button>
+      <el-button type="primary" @click="clickAddBtn">创建</el-button>
+    </el-form-item>
+  </el-form>
+  <CustomTable :list="list" :loading="loading" :configList="configList.listFields">
+    <el-table-column label="操作" fixed="right" slot="right-one">
+      <template scope="scope">
                   <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-              </template>
+</template>
           </el-table-column>
         </CustomTable>
         <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID">
@@ -33,9 +33,10 @@
             <el-table-column prop="BuyUserPhone" label="购买人手机号" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CreateUser" label="创建人"></el-table-column>
             <el-table-column label="操作" fixed="right">
-                <template scope="scope">
-                    <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                </template>
+<template scope="scope">
+<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+</template>
             </el-table-column>
         </el-table> -->
         <p>{{bargainsForm.hotelId}}</p>
@@ -122,9 +123,7 @@
                     </el-form-item>
                 </el-row>
                 <el-row>
-                    <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -139,9 +138,18 @@
 </template>
 <script>
 import path from '../../../api/api.js'
-import { bargainsRoomApi, hotelBaseApi, hotelRoomApi, hotelImageApi } from 'api'
+import {
+  bargainsRoomApi,
+  hotelBaseApi,
+  hotelRoomApi,
+  hotelImageApi
+} from 'api'
+import UploadImage from 'components/upload-image'
 
 export default {
+  components: {
+    UploadImage
+  },
   created() {
     this.searchForm.beginDate = new Date(
       new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-01'
@@ -188,48 +196,34 @@ export default {
         buyUserPhone: ''
       },
       bargainsRules: {
-        hotelId: [
-          {
-            required: true,
-            message: '请输入酒店名称'
-          }
-        ],
-        rooms: [
-          {
-            required: true,
-            message: '请选择子房型'
-          }
-        ],
-        sonRoomId: [
-          {
-            required: true,
-            message: '请填写子房型ID'
-          }
-        ],
-        useDate: [
-          {
-            required: true,
-            message: '请填写入住日期'
-          }
-        ],
-        days: [
-          {
-            required: true,
-            message: '请填写入住天数'
-          }
-        ],
-        price: [
-          {
-            required: true,
-            message: '请填写价格'
-          }
-        ],
-        webLowestPrice: [
-          {
-            required: true,
-            message: '请填写网站最低价'
-          }
-        ]
+        hotelId: [{
+          required: true,
+          message: '请输入酒店名称'
+        }],
+        rooms: [{
+          required: true,
+          message: '请选择子房型'
+        }],
+        sonRoomId: [{
+          required: true,
+          message: '请填写子房型ID'
+        }],
+        useDate: [{
+          required: true,
+          message: '请填写入住日期'
+        }],
+        days: [{
+          required: true,
+          message: '请填写入住天数'
+        }],
+        price: [{
+          required: true,
+          message: '请填写价格'
+        }],
+        webLowestPrice: [{
+          required: true,
+          message: '请填写网站最低价'
+        }]
       }
     }
   },
@@ -276,8 +270,7 @@ export default {
     },
     beforeAvatarUpload(file) {
       const _self = this
-      if (
-        !_self.bargainsForm.sonRoomId &&
+      if (!_self.bargainsForm.sonRoomId &&
         !Object.is(_self.bargainsForm.sonRoomId, 0)
       ) {
         _self.$message({
