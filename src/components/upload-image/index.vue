@@ -96,7 +96,6 @@ export default {
       }
       console.log(data)
       this.$emit('onSuccess', data)
-      this.$emit('onTotal', this.images)
     },
     //drag-drop
     handleDrag(e) {

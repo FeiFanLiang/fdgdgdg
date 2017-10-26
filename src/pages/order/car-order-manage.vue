@@ -560,6 +560,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                <p>外采图片</p>
                 <el-row>
                     <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess" ></UploadImage>
                 </el-row>
@@ -1209,6 +1210,7 @@ export default {
     },
     async clickEditBtn($index, row) {
       const _self = this
+      _self.imageList = []
       try {
         const res = await carOrderManageApi.detail(row.ID)
         // _self.copyForm = res.data.Data
