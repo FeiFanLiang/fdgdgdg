@@ -8,6 +8,9 @@
     <el-col :span="2"><dt class="legend" style="color:#D3DCE6;background-color:#e4e8f1"></dt>
       <dd>关房</dd>
     </el-col>
+    <el-col :span="4">
+      <el-button @click="mutipEdit()">批量修改房间状态</el-button>
+    </el-col>
     <!-- <el-col :span="3">
         <el-select v-model="value7" placeholder="请选择">
           <el-option-group v-for="(group,gIndex) in options3" :key="group.label" :label="group.label">
@@ -37,7 +40,6 @@
   </el-row>
 
   <el-table :data="roomList" row-key="ID" @expand="handleExpand" :expand-row-keys="expandRowKeys" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
-
     <el-table-column type="expand" label="周日">
       <template scope="props">
         <template  v-for="sonRoom in props.row.SonRooms" >
@@ -45,6 +47,7 @@
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
             <div style="margin-left: 30px;">
+              <el-checkbox @change="mutipSelect(sonRoom)" v-model="mutipValue"></el-checkbox>
               <strong>  {{sonRoom.SonRoomName}}</strong>
               <br/>
               <br/>
@@ -183,6 +186,40 @@
     <el-button type="primary" :loading="!isEditable" @click="submit()">{{isEditable?'确 定':'提交中'}}</el-button>
   </div>
     </el-dialog>
+
+    <el-dialog title="修改房间状态" v-model="mutip">
+      <el-tabs v-model="singalSonRoomId" @tab-click="handleSingalSonRoomId">
+    <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList">
+      <el-form ref="singalStateForm" :model="singalStateForm" label-width="80px">
+        <el-form-item label="生效时间">
+      <el-col >
+        <el-date-picker v-model="singalStateForm.date" type="daterange" align="left" placeholder="选择日期范围">
+        </el-date-picker>
+      </el-col>
+    </el-form-item>
+    <el-form-item label="是否开房">
+      <el-radio-group v-model="singalStateForm.isOpen">
+        <el-radio-button :label="true">开房</el-radio-button>
+        <el-radio-button :label="false">关房</el-radio-button>
+      </el-radio-group>
+  </el-form-item>
+  <el-form-item label="获取渠道">
+    <el-radio-group v-model="singalStateForm.updateChannel">
+      <el-radio-button :label="0">机器抓取</el-radio-button>
+      <el-radio-button :label="1">人工更改</el-radio-button>
+    </el-radio-group>
+  </el-form-item>
+  <el-form-item label="剩余数量">
+     <el-input-number v-model="singalStateForm.count"  :min="1" ></el-input-number>
+  </el-form-item>
+        </el-form>
+    </el-tab-pane>
+  </el-tabs>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="colseMutip()">关闭</el-button>
+    <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确 定':'提交中'}}</el-button>
+  </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,12 +242,28 @@ export default {
   created() {
     const _self = this
     _self.stateForm.hotelId = _self.$route.params.ID
+    _self.singalStateForm.hotelId = _self.$route.params.ID
     _self.chosenDate = Date.now()
     _self.fetchData()
     _self.getHotelThreePlatInfoList()
   },
   data() {
     return {
+      mutipValue: false,
+      singalSonRoomId: '',
+      mutipList: [],
+      mutip: false,
+      singalStateForm: {
+        hotelId: '',
+        roomId: '',
+        sonRoomId: '',
+        roomType: 1,
+        date: '',
+        count: '',
+        isOpen: '',
+        updateChannel: ''
+      },
+      isMutipEditable: true,
       loading: false,
       isEditable: true,
       activeName: 'price',
@@ -381,6 +434,76 @@ export default {
     }
   },
   methods: {
+    handleSingalSonRoomId(tab) {
+      const _self = this
+      _self.mutipList.forEach(function(item) {
+        if (Number(tab.name) === item.ID) {
+          _self.singalSonRoomId = String(item.ID)
+          _self.singalStateForm.sonRoomId = item.ID
+          _self.singalStateForm.count = 0
+          _self.singalStateForm.isOpen = false
+          _self.singalStateForm.updateChannel = 0
+          _self.singalStateForm.date = [new Date(), new Date()]
+        }
+      })
+
+      console.log(tab.name)
+    },
+    mutipSelect(a) {
+      console.log(a)
+      if (this.mutipValue) {
+        this.mutipList.push(a)
+      } else {
+        this.mutipList.splice(a)
+      }
+      console.log(this.mutipList)
+    },
+    mutipEdit() {
+      const _self = this
+      if (_self.mutipList.length > 0) {
+        _self.mutip = true
+        _self.singalSonRoomId = String(_self.mutipList[0].ID)
+        _self.singalStateForm.sonRoomId = _self.mutipList[0].ID
+        _self.singalStateForm.count = 0
+        _self.singalStateForm.isOpen = false
+        _self.singalStateForm.updateChannel = 0
+        _self.singalStateForm.date = [new Date(), new Date()]
+        console.log(this.mutipList)
+      } else {
+        this.$message.error('请先选择子房型')
+      }
+    },
+    async mutipSubmit() {
+      const _self = this
+      _self.isMutipEditable = false
+      let form = []
+      let timeList = _self.dateScope(
+        _self.singalStateForm.date[0],
+        _self.singalStateForm.date[1]
+      )
+      timeList.forEach(time => {
+        form.push({
+          hotelId: _self.singalStateForm.hotelId,
+          roomId: _self.chosenRoom.roomId,
+          sonRoomId: _self.singalStateForm.sonRoomId,
+          roomType: 1,
+          date: time,
+          count: _self.singalStateForm.count,
+          isOpen: _self.singalStateForm.isOpen,
+          updateChannel: _self.singalStateForm.updateChannel
+        })
+      })
+      const res = await roomStatPriceApi.UpdateRoomState(form)
+      _self.$message({
+        message: '修改成功',
+        type: 'success'
+      })
+      _self.isMutipEditable = true
+    },
+    colseMutip() {
+      this.mutip = false
+      this.getPriceList()
+    },
     async platTimeRange(pid) {
       if (!pid) {
         return ''
@@ -678,6 +801,7 @@ export default {
         _self.stateForm.date[0],
         _self.stateForm.date[1]
       )
+      console.log('!!!!!!!!!!!!!', _self.chosenRoom.roomId)
       timeList.forEach(time => {
         stateForm.push({
           hotelId: _self.stateForm.hotelId,

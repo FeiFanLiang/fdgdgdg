@@ -94,9 +94,8 @@ export default {
       if (err) {
         return
       }
-      
-      this.$emit('onTotal', this.images)
       this.$emit('onSuccess', data)
+      this.$emit('onTotal', this.images)
     },
     //drag-drop
     handleDrag(e) {
