@@ -345,342 +345,358 @@
 
 <script>
 import path from 'api/api'
-import { hotelShowApi, hotelImageApi, hotelBaseApi } from 'api'
+import {
+    hotelShowApi,
+    hotelImageApi,
+    hotelBaseApi
+} from 'api'
 import UploadImage from 'components/upload-image'
 
 export default {
-  components: {
-    UploadImage
-  },
-  created() {
-    // this.form.hotelId = this.$route.params.ID
-    this.fetchData()
-  },
-  data() {
-    return {
-      rules: {},
-      uploadUrl: path.uploadUrl,
-      imageList: [],
-      currentPage: 1,
-      pageSize: 10,
-      count: 0,
-      loading2: false,
-      loadingHotel: false,
-      hotelList: [],
-      hotelShowList: [],
-      expandRowKeys: [],
-      pickerOptions: {},
-      pickerOptions2: {},
-      pickerOptions3: {},
-      // filters: {
-      //     CarID: '',
-      //     DriverID: '',
-      //     labelVal: '1'
-      // },
-      // selectedOptions: [{
-      //         value: '1',
-      //         label: '车牌号'
-      //     },
-      //     {
-      //         value: '2',
-      //         label: '司机姓名'
-      //     }
-      // ],
-      form: {
-        ID: 0,
-        BusinessTime: '',
-        CheckInPolicy: '',
-        CheckOutPolicy: '',
-        Favorable: '',
-        FloorLevelsNum: '',
-        HotelID: '',
-        IsTransfer: false,
-        Rooms: '',
-        SeviceFacility: '',
-        DiningFacility: '',
-        RecreationFacilicy: '',
-        ConferenceFacilicy: '',
-        RoomFacilicy: '',
-        FloorLevelsNum: '',
-        Traffic: '',
-        Label: '',
-        HotArea: '',
-        FilmentTime: '',
-        BreakfastTime: '',
-        Acreage: '',
-        CheckInNum: '',
-        Floor: '',
-        NetWork: '',
-        Smoke: ''
-        // HotelImages: []
-      },
-      title: '',
-      showDialog: false,
-      isEditable: true,
-      rowId: ''
-    }
-  },
-  methods: {
-    beforeAvatarUpload(file) {
-      const _self = this
-      // if (!_self.bargainsForm.sonRoomId &&
-      //     !Object.is(_self.bargainsForm.sonRoomId, 0)
-      // ) {
-      //     _self.$message({
-      //         message: '请先选择子房型',
-      //         type: 'warning'
-      //     })
-      //     return false
-      // }
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJPG) {
-        _self.$message.error('上传图片只能是 JPG/PNG 格式!')
-      }
-      return isJPG
+    components: {
+        UploadImage
     },
-    async handleRemove(file, fileList) {
-      try {
-        if (file && file.id) {
-          await hotelImageApi.del(file.id)
-          await this.getImageList(this.rowId)
+    created() {
+        // this.form.hotelId = this.$route.params.ID
+        this.fetchData()
+    },
+    data() {
+        return {
+            rules: {},
+            uploadUrl: path.uploadUrl,
+            imageList: [],
+            currentPage: 1,
+            pageSize: 10,
+            count: 0,
+            loading2: false,
+            loadingHotel: false,
+            hotelList: [],
+            hotelShowList: [],
+            expandRowKeys: [],
+            pickerOptions: {},
+            pickerOptions2: {},
+            pickerOptions3: {},
+            // filters: {
+            //     CarID: '',
+            //     DriverID: '',
+            //     labelVal: '1'
+            // },
+            // selectedOptions: [{
+            //         value: '1',
+            //         label: '车牌号'
+            //     },
+            //     {
+            //         value: '2',
+            //         label: '司机姓名'
+            //     }
+            // ],
+            form: {
+                ID: 0,
+                BusinessTime: '',
+                CheckInPolicy: '',
+                CheckOutPolicy: '',
+                Favorable: '',
+                FloorLevelsNum: '',
+                HotelID: '',
+                IsTransfer: false,
+                Rooms: '',
+                SeviceFacility: '',
+                DiningFacility: '',
+                RecreationFacilicy: '',
+                ConferenceFacilicy: '',
+                RoomFacilicy: '',
+                FloorLevelsNum: '',
+                Traffic: '',
+                Label: '',
+                HotArea: '',
+                FilmentTime: '',
+                BreakfastTime: '',
+                Acreage: '',
+                CheckInNum: '',
+                Floor: '',
+                NetWork: '',
+                Smoke: ''
+                // HotelImages: []
+            },
+            title: '',
+            showDialog: false,
+            isEditable: true,
+            rowId: '',
+            listzzz: ''
+        }
+    },
+    methods: {
+        beforeAvatarUpload(file) {
+            const _self = this
+            // if (!_self.bargainsForm.sonRoomId &&
+            //     !Object.is(_self.bargainsForm.sonRoomId, 0)
+            // ) {
+            //     _self.$message({
+            //         message: '请先选择子房型',
+            //         type: 'warning'
+            //     })
+            //     return false
+            // }
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+            if (!isJPG) {
+                _self.$message.error('上传图片只能是 JPG/PNG 格式!')
+            }
+            return isJPG
+        },
+        async handleRemove(file, fileList) {
+            if (file) {
+                let id
+                this.listzzz.forEach(async function(item) {
+                    if (file === item.ImageUrl) {
+                        id = item.ID
+                    }
+                })
+                try {
+                    await hotelImageApi.del(id)
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    })
+                    await this.getImageList(this.rowId)
 
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-        }
-      } catch (e) {
-        this.$message.error('删除失败,请重试！')
-      }
-    },
-    handlePictureCardPreview(file) {
-      // this.dialogImageUrl = file.url;
-      // this.dialogVisible = true;
-    },
-    async handleSuccess(response, file, fileList) {
-      try {
-        if (!response) {
-          this.$message.error('上传失败,请重新上传')
-          return false
-        }
-        const form = {
-          hotelId: this.form.HotelID,
-          imageUrl: response
-        }
-        await hotelImageApi.add(form)
-        await this.getImageList(this.rowId)
-        this.$message({
-          message: '上传成功',
-          type: 'success'
-        })
-      } catch (e) {
-        this.$message.error('上传失败,请重新上传')
-      }
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.fetchData(1, this.pageSize)
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val
-      this.fetchData(this.currentPage)
-    },
-    search() {
-      this.fetchData()
-    },
-    async fetchData() {
-      const _self = this
-      _self.loading2 = true
-      try {
-        const res = await hotelShowApi.list()
-        if (res && res.data) {
-          _self.hotelShowList = res.data
-          _self.hotelShowList.forEach(function(item1) {
-            item1.BusinessTime = new Date(item1.BusinessTime).Format(
-              'yyyy-MM-dd'
-            )
-            item1.BreakfastTime = new Date(item1.BreakfastTime).Format(
-              'yyyy-MM-dd'
-            )
-            item1.FilmentTime = new Date(item1.FilmentTime).Format('yyyy-MM-dd')
-          })
-        }
-        _self.loading2 = false
-      } catch (e) {
-        console.error(e)
-        _self.loading2 = false
-      }
-    },
-    getInfo(row, expanded) {
-      const _self = this
-      if (expanded) {
-        _self.expandRowKeys.length = 0
-        _self.expandRowKeys.push(row.ID)
-      }
-    },
-    async remoteHotelList(querys) {
-      const _self = this
-      if (querys !== '') {
-        _self.loadingHotel = true
-        const options = {
-          pageIndex: 1,
-          pageSize: 20,
-          order: 'ID',
-          query: {
-            HotelName: querys
-          }
-        }
-        const res = await hotelBaseApi.listAll(options)
-        if (res && res.data && res.data.Data) {
-          _self.hotelList = res.data.Data
-          _self.loadingHotel = false
-        }
-      } else {
-        _self.hotelList = []
-      }
-    },
-    clickAddBtn() {
-      const _self = this
-      _self.title = '添加酒店展示信息'
-      _self.showDialog = true
-      _self.form = {
-        ID: 0,
-        BusinessTime: '',
-        CheckInPolicy: '',
-        CheckOutPolicy: '',
-        Favorable: '',
-        FloorLevelsNum: '',
-        HotelID: '',
-        IsTransfer: false,
-        Rooms: '',
-        SeviceFacility: '',
-        DiningFacility: '',
-        RecreationFacilicy: '',
-        ConferenceFacilicy: '',
-        RoomFacilicy: '',
-        FloorLevelsNum: '',
-        Traffic: '',
-        Label: '',
-        HotArea: '',
-        FilmentTime: '',
-        BreakfastTime: '',
-        Acreage: '',
-        CheckInNum: '',
-        Floor: '',
-        NetWork: '',
-        Smoke: ''
-        // HotelImages: []
-      }
-      _self.imageList = []
-    },
-    async getImageList(id) {
-      const res = await hotelShowApi.detail(id)
-      if (Array.isArray(res.data.HotelImages)) {
-        this.imageList = res.data.HotelImages.map(item => item.ImageUrl)
-      }
-    },
-    async clickEditBtn($index, row) {
-      const _self = this
-      _self.title = '酒店展示信息编辑'
-      _self.imageList = []
-      _self.showDialog = true
-      _self.rowId = row.ID
-      const res = await hotelShowApi.detail(row.ID)
-      _self.form = res.data
-      _self.getImageList(row.ID)
-    },
-    handleCommand(command) {
-      this.$message('click on item ' + command)
-    },
-    submitForm() {
-      const _self = this
-      if (_self.form.ID) {
-        _self.editSave()
-      } else {
-        _self.addSave()
-      }
-    },
-    async addSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            _self.isEditable = false
-            _self.form.BusinessTime
-              ? (_self.form.BusinessTime = new Date(
-                  _self.form.BusinessTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            _self.form.BreakfastTime
-              ? (_self.form.BreakfastTime = new Date(
-                  _self.form.BreakfastTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            _self.form.FilmentTime
-              ? (_self.form.FilmentTime = new Date(
-                  _self.form.FilmentTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            await await hotelShowApi.add(_self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '保存成功',
-              type: 'success'
+                } catch (e) {
+                    this.$message.error('删除失败,请重试！')
+                }
+            }
+        },
+        handlePictureCardPreview(file) {
+            // this.dialogImageUrl = file.url;
+            // this.dialogVisible = true;
+        },
+        async handleSuccess(response, file, fileList) {
+            try {
+                if (!response) {
+                    this.$message.error('上传失败,请重新上传')
+                    return false
+                }
+                const form = {
+                    hotelId: this.form.HotelID,
+                    imageUrl: response
+                }
+                await hotelImageApi.add(form)
+                await this.getImageList(this.rowId)
+                this.$message({
+                    message: '上传成功',
+                    type: 'success'
+                })
+            } catch (e) {
+                this.$message.error('上传失败,请重新上传')
+            }
+        },
+        handleSizeChange(val) {
+            this.pageSize = val
+            this.fetchData(1, this.pageSize)
+        },
+        handleCurrentChange(val) {
+            this.currentPage = val
+            this.fetchData(this.currentPage)
+        },
+        search() {
+            this.fetchData()
+        },
+        async fetchData() {
+            const _self = this
+            _self.loading2 = true
+            try {
+                const res = await hotelShowApi.list()
+                if (res && res.data) {
+                    _self.hotelShowList = res.data
+                    _self.hotelShowList.forEach(function(item1) {
+                        item1.BusinessTime = new Date(item1.BusinessTime).Format(
+                            'yyyy-MM-dd'
+                        )
+                        item1.BreakfastTime = new Date(item1.BreakfastTime).Format(
+                            'yyyy-MM-dd'
+                        )
+                        item1.FilmentTime = new Date(item1.FilmentTime).Format('yyyy-MM-dd')
+                    })
+                }
+                _self.loading2 = false
+            } catch (e) {
+                console.error(e)
+                _self.loading2 = false
+            }
+        },
+        getInfo(row, expanded) {
+            const _self = this
+            if (expanded) {
+                _self.expandRowKeys.length = 0
+                _self.expandRowKeys.push(row.ID)
+            }
+        },
+        async remoteHotelList(querys) {
+            const _self = this
+            if (querys !== '') {
+                _self.loadingHotel = true
+                const options = {
+                    pageIndex: 1,
+                    pageSize: 20,
+                    order: 'ID',
+                    query: {
+                        HotelName: querys
+                    }
+                }
+                const res = await hotelBaseApi.listAll(options)
+                if (res && res.data && res.data.Data) {
+                    _self.hotelList = res.data.Data
+                    _self.loadingHotel = false
+                }
+            } else {
+                _self.hotelList = []
+            }
+        },
+        clickAddBtn() {
+            const _self = this
+            _self.title = '添加酒店展示信息'
+            _self.showDialog = true
+            _self.form = {
+                ID: 0,
+                BusinessTime: '',
+                CheckInPolicy: '',
+                CheckOutPolicy: '',
+                Favorable: '',
+                FloorLevelsNum: '',
+                HotelID: '',
+                IsTransfer: false,
+                Rooms: '',
+                SeviceFacility: '',
+                DiningFacility: '',
+                RecreationFacilicy: '',
+                ConferenceFacilicy: '',
+                RoomFacilicy: '',
+                FloorLevelsNum: '',
+                Traffic: '',
+                Label: '',
+                HotArea: '',
+                FilmentTime: '',
+                BreakfastTime: '',
+                Acreage: '',
+                CheckInNum: '',
+                Floor: '',
+                NetWork: '',
+                Smoke: ''
+                // HotelImages: []
+            }
+            _self.imageList = []
+        },
+        async getImageList(id) {
+            const res = await hotelShowApi.detail(id)
+            this.listzzz = res.data.HotelImages
+            let arr = []
+            if (this.listzzz && Array.isArray(this.listzzz)) {
+                this.listzzz.forEach(function(item) {
+                    arr.push(item.ImageUrl)
+                })
+                this.imageList = arr
+            }
+        },
+        async clickEditBtn($index, row) {
+            const _self = this
+            _self.title = '酒店展示信息编辑'
+            _self.imageList = []
+            _self.showDialog = true
+            _self.rowId = row.ID
+            const res = await hotelShowApi.detail(row.ID)
+            _self.form = res.data
+            _self.getImageList(row.ID)
+        },
+        handleCommand(command) {
+            this.$message('click on item ' + command)
+        },
+        submitForm() {
+            const _self = this
+            if (_self.form.ID) {
+                _self.editSave()
+            } else {
+                _self.addSave()
+            }
+        },
+        async addSave() {
+            const _self = this
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        _self.isEditable = false
+                        _self.form.BusinessTime ?
+                            (_self.form.BusinessTime = new Date(
+                                _self.form.BusinessTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        _self.form.BreakfastTime ?
+                            (_self.form.BreakfastTime = new Date(
+                                _self.form.BreakfastTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        _self.form.FilmentTime ?
+                            (_self.form.FilmentTime = new Date(
+                                _self.form.FilmentTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        await await hotelShowApi.add(_self.form)
+                        _self.fetchData()
+                        _self.$refs['form'].resetFields()
+                        _self.showDialog = false
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        console.error(e)
+                        _self.$message.error('添加失败!!!')
+                    } finally {
+                        _self.isEditable = true
+                    }
+                } else {
+                    return false
+                }
             })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('添加失败!!!')
-          } finally {
-            _self.isEditable = true
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    async editSave() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            _self.isEditable = false
-            _self.form.BusinessTime
-              ? (_self.form.BusinessTime = new Date(
-                  _self.form.BusinessTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            _self.form.BreakfastTime
-              ? (_self.form.BreakfastTime = new Date(
-                  _self.form.BreakfastTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            _self.form.FilmentTime
-              ? (_self.form.FilmentTime = new Date(
-                  _self.form.FilmentTime
-                ).Format('yyyy-MM-dd hh:mm:ss'))
-              : ''
-            await hotelShowApi.edit(_self.form.ID, _self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.showDialog = false
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
+        },
+        async editSave() {
+            const _self = this
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        _self.isEditable = false
+                        _self.form.BusinessTime ?
+                            (_self.form.BusinessTime = new Date(
+                                _self.form.BusinessTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        _self.form.BreakfastTime ?
+                            (_self.form.BreakfastTime = new Date(
+                                _self.form.BreakfastTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        _self.form.FilmentTime ?
+                            (_self.form.FilmentTime = new Date(
+                                _self.form.FilmentTime
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                        await hotelShowApi.edit(_self.form.ID, _self.form)
+                        _self.fetchData()
+                        _self.$refs['form'].resetFields()
+                        _self.showDialog = false
+                        _self.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        console.error(e)
+                        _self.$message.error('编辑失败!!!')
+                    } finally {
+                        _self.isEditable = true
+                    }
+                } else {
+                    return false
+                }
             })
-          } catch (e) {
-            console.error(e)
-            _self.$message.error('编辑失败!!!')
-          } finally {
-            _self.isEditable = true
-          }
-        } else {
-          return false
         }
-      })
     }
-  }
 }
 </script>
 <style lang="scss">
