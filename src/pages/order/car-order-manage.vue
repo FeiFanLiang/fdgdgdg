@@ -561,7 +561,7 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess" @onTotal="test"></UploadImage>
+                    <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess" ></UploadImage>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -949,21 +949,13 @@ export default {
         }
       }
     },
-    imageList: function(newQuestion) {
-      let ss = []
-      newQuestion.forEach(function(value, index, array) {
-        ss.push(value.name)
-      })
-      this.form.purchasImg = ss.join(',')
-      console.log('this.form.purchasImg', this.form.purchasImg)
+    imageList(newList) {
+      this.form.purchasImg = newList.join(',')
     }
   },
   methods: {
-    test(a) {
-      console.log('test', a)
-    },
-    async handleRemove(file, fileList) {
-      this.imageList.splice(file.id)
+    async handleRemove(index, fileList) {
+      this.imageList.splice(index, 1)
     },
     async handleSuccess(response, file, fileList) {
       if (!response) {
@@ -971,7 +963,6 @@ export default {
         return false
       }
       this.imageList.push(response)
-      this.getImageList(this.imageList.join(','))
     },
     querySearch(queryString, cb) {
       var restaurants = this.purchaseList
@@ -1212,13 +1203,8 @@ export default {
       if (list) {
         const images = list.split(',')
         if (Array.isArray(images)) {
-          this.imageList = images.map((item, index) => ({
-            id: index,
-            name: item,
-            url: path.imageUrl + item
-          }))
+          this.imageList = images
         }
-        console.log(this.imageList)
       }
     },
     async clickEditBtn($index, row) {

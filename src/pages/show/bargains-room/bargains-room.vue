@@ -137,7 +137,7 @@
     </div>
 </template>
 <script>
-import path from '../../../api/api.js'
+import path from 'api/api'
 import {
   bargainsRoomApi,
   hotelBaseApi,

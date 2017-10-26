@@ -53,8 +53,8 @@ export default {
   computed: {
     showText: {
       get() {
-        let names = this.images.map(image => image.name)
-        return JSON.stringify(names)
+        // let names = this.images.map(image => image.name)
+        return JSON.stringify(this.images)
       }
     }
   },
@@ -94,8 +94,7 @@ export default {
       if (err) {
         return
       }
-
-      this.$emit('onTotal', this.images)
+      console.log(data)
       this.$emit('onSuccess', data)
     },
     //drag-drop

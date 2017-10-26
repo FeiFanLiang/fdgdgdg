@@ -502,7 +502,7 @@
     </div>
 </template>
 <script>
-import path from '../../../api/api.js'
+import path from 'api/api'
 import UploadImage from 'components/upload-image'
 
 import {

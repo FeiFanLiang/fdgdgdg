@@ -1,10 +1,10 @@
 <template lang="html">
 <div id="list" style="display: inline-block;">
   <ul class="img-list">
-    <li id="my-mask" class="mask-wrapper img-item test" v-for="(img,index) in lists">
-      <img class="" :src="img.url">
+    <li id="my-mask" class="mask-wrapper img-item test" v-for="(img,index) in images">
+      <img class="" :src="img">
       <div class="mask-inner">
-        <i class="el-icon-view" @click="view(img.url)"></i>
+        <i class="el-icon-view" @click="view(img)"></i>
         <i class="el-icon-delete" @click="del(index)"></i>
       </div>
     </li>
@@ -16,10 +16,18 @@
 </template>
 
 <script>
+import path from 'api/api'
+
 export default {
   props: {
     lists: {
       type: Array
+    }
+  },
+  computed: {
+    images() {
+      console.log(this.lists.map(item => path.imageUrl + item))
+      return this.lists.map(item => path.imageUrl + item)
     }
   },
   data() {
