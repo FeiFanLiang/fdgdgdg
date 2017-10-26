@@ -35,8 +35,8 @@ export default {
     images: {
       type: Array
     },
-    list:{
-      type:Array
+    list: {
+      type: Array
     }
   },
   data() {
@@ -53,8 +53,8 @@ export default {
   computed: {
     showText: {
       get() {
-        let names = this.images.map(image => image.name)
-        return JSON.stringify(names)
+        // let names = this.images.map(image => image.name)
+        return JSON.stringify(this.images)
       }
     }
   },
@@ -94,6 +94,7 @@ export default {
       if (err) {
         return
       }
+      console.log(data)
       this.$emit('onSuccess', data)
       this.$emit('onTotal', this.images)
     },

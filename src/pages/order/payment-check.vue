@@ -14,7 +14,7 @@
                     <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
                 </el-table> -->
                 <div>
-                    {{props.row.Remark}}
+                    备注：{{props.row.Remark}}
                 </div>
             </template>
         </el-table-column>
@@ -108,7 +108,6 @@ export default {
       try {
         const res = await paymentCheckApi.listByQuery()
         _self.paymentCheck = res.data.Data
-        console.log(res)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {

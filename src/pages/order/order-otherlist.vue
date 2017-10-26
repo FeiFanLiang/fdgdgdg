@@ -25,16 +25,6 @@
             {{scope.row.StayDateStart.substring(5,10)}}
         </template>
     </el-table-column>
-    <!-- <el-table-column prop="OrderNo" label="订单编号" show-overflow-tooltip></el-table-column>
-    <el-table-column prop="OrderTitle" label="订单标题"></el-table-column>
-    <el-table-column prop="PlatOrderNo" label="其他订单号" width="130"></el-table-column>
-    <el-table-column prop="PlatOrderState" label="其他订单状态"></el-table-column>
-    <el-table-column prop="PlatOrderType" label="其他订单类型" width="90"></el-table-column>
-    <el-table-column prop="FromID" label="来源订单ID"></el-table-column>
-    <el-table-column prop="HotelPolicyID" label="政策ID"></el-table-column>
-    <el-table-column prop="OrderState" label="订单状态" width="100"></el-table-column>
-    <el-table-column prop="OrderType" label="订单类型" width="100"></el-table-column>
-    <el-table-column prop="HotelBookingNo" label="酒店预定号"></el-table-column> -->
     <el-table-column label="操作" v-if="showButton" width="100">
         <template scope="scope">
             <el-button type="text" @click="clickButton(scope.row)">{{buttonText}}</el-button>
