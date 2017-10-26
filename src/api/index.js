@@ -14,6 +14,7 @@ import driverEvaluateApi from './driver-evaluate'
 import hotelAreaApi from './hotel-area'
 import hotelBaseApi from './hotel-base'
 import hotelImageApi from './hotel-image'
+import imageApi from './image'
 import hotelPayModeApi from './hotel-paymode'
 import hotelPlatformApi from './hotel-platform'
 import hotelPolicyApi from './hotel-policy'
@@ -63,6 +64,7 @@ export {
   hotelAreaApi,
   hotelBaseApi,
   hotelImageApi,
+  imageApi,
   hotelPayModeApi,
   hotelPlatformApi,
   hotelPolicyApi,

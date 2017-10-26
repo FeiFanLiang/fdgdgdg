@@ -197,7 +197,7 @@
                     <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span></p>
                 </el-card>
               </div>
-            </template>
+</template>
         </el-table-column>
         <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip>
@@ -212,17 +212,19 @@
         <el-table-column label="城市" prop="City" width="70"></el-table-column>
         <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
-          <template scope="scope">
-            <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
-            <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
-          </template>
+<template scope="scope">
+<span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
+/
+<span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+</template>
         </el-table-column>
         <!-- <el-table-column label="退房日期" prop="StayDateEnd"></el-table-column> -->
         <el-table-column label="间/晚" prop="RoomNum" width="72">
-          <template scope="scope">
-            <span>{{ scope.row.RoomNum }}</span>/
-            <span>{{ scope.row.NightNum }}</span>
-          </template>
+<template scope="scope">
+<span>{{ scope.row.RoomNum }}</span>
+/
+<span>{{ scope.row.NightNum }}</span>
+</template>
         </el-table-column>
         <!-- <el-table-column label="晚数" prop="NightNum"></el-table-column> -->
         <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
@@ -230,19 +232,20 @@
         <!-- <el-table-column label="联系固话" prop="PassengerTel2"></el-table-column> -->
         <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
         <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
-            <template scope="scope">
-                <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
-            </template>
+<template scope="scope">
+<span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
+</template>
         </el-table-column>
         <!-- <el-table-column label="货币" prop="Currency"></el-table-column>
         <el-table-column label="总金额" prop="AmountTotal"></el-table-column>
         <el-table-column label="订单状态" prop="OrderState"></el-table-column> -->
 
         <el-table-column label="操作" width="140">
-            <template scope="scope">
-                <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-                <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-            </template>
+<template scope="scope">
+<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+<DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
         </el-table-column>
     </el-table>
     <div class="pagination-wrapper">
@@ -534,10 +537,10 @@
               <el-col>
                 <el-table :data="money" style="width: 95%;margin-left:40px;">
                   <el-table-column label="类别" prop="PaymentType">
-                    <template scope="scope">
-                        <span v-if="scope.row.PaymentType === 0">收款</span>
-                        <span v-if="scope.row.PaymentType === 1">付款</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.PaymentType === 0">收款</span>
+<span v-if="scope.row.PaymentType === 1">付款</span>
+</template>
                   </el-table-column>
                   <el-table-column label="货币类型" prop="Currency"></el-table-column>
                   <el-table-column label="编号" prop="PaymentNo"></el-table-column>
@@ -545,19 +548,19 @@
                   <el-table-column label="收付时间" prop="PaymentDate"></el-table-column>
                   <el-table-column label="收付方式" prop="PaymentModel"></el-table-column>
                   <el-table-column label="状态" prop="State">
-                    <template scope="scope">
-                        <span v-if="scope.row.State === 0">待处理</span>
-                        <span v-if="scope.row.State === 1">已处理，待对账</span>
-                        <span v-if="scope.row.State === 2">已对账，待结算</span>
-                        <span v-if="scope.row.State === 3">结算完成</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.State === 0">待处理</span>
+<span v-if="scope.row.State === 1">已处理，待对账</span>
+<span v-if="scope.row.State === 2">已对账，待结算</span>
+<span v-if="scope.row.State === 3">结算完成</span>
+</template>
                   </el-table-column>
                   <el-table-column label="截图" prop="StateScreenshot">
-                    <template scope="scope">
-                        <span v-if="scope.row.StateScreenshot === 0">未截图</span>
-                        <span v-if="scope.row.StateScreenshot === 1">截图完成</span>
-                        <span v-if="scope.row.StateScreenshot === 2">不截图</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.StateScreenshot === 0">未截图</span>
+<span v-if="scope.row.StateScreenshot === 1">截图完成</span>
+<span v-if="scope.row.StateScreenshot === 2">不截图</span>
+</template>
                   </el-table-column>                  
                 </el-table>
               </el-col>
@@ -566,9 +569,10 @@
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
-                <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                   <i class="el-icon-plus"></i>
-                </el-upload>
+                </el-upload> -->
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 <el-dialog v-model="dialogVisible" size="tiny">
                   <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
@@ -583,11 +587,11 @@
               <el-col>
                 <el-table :data="fujia" style="width: 95%;margin-left:40px;">
                   <el-table-column label="订单类型" prop="TypeID">
-                    <template scope="scope">
-                        <span v-if="scope.row.TypeID === 0">门票</span>
-                        <span v-if="scope.row.TypeID === 1">车票</span>
-                        <span v-if="scope.row.TypeID === 2">自助餐</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.TypeID === 0">门票</span>
+<span v-if="scope.row.TypeID === 1">车票</span>
+<span v-if="scope.row.TypeID === 2">自助餐</span>
+</template>
                   </el-table-column>
                   <el-table-column label="金额" prop="Money"></el-table-column>
                   <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
@@ -644,13 +648,23 @@
 </template>
 
 <script>
-import { hotelsOrderApi,paymentCheckApi,hotelThreePlatInfoApi } from 'api'
+import {
+  hotelsOrderApi,
+  paymentCheckApi,
+  hotelThreePlatInfoApi,
+  hotelImageApi
+} from 'api'
+import UploadImage from 'components/upload-image'
 
 export default {
+  components: {
+    UploadImage
+  },
   data() {
     let that = this;
     return {
-      action:'',
+      imageList: [],
+      action: '',
       dialogImageUrl: '',
       dialogVisible: false,
       fileList: [],
@@ -660,50 +674,50 @@ export default {
       loading: false,
       hotelsOrder: [],
       form: {
-        StayDateStart:'',
-        StayDateEnd:'',
-        BookTime:'',
-        OrderState:'',
-        OrderType:'',
-        UrgentPay:'',
-        UnMergePay:'',
-        HotelArea:'',
-        BackfillState:'',
-        StateScreenshot:'',
-        SettlementCycle:'',
-        SettlementCycleFu:'',
-        ThreePlatID:'',
-        OrderNo:'',
-        NightNum:'',  
-        RoomNum:'',
-        CurrencyFuKuan:'',
-        CurrencyShouKuan:''
+        StayDateStart: '',
+        StayDateEnd: '',
+        BookTime: '',
+        OrderState: '',
+        OrderType: '',
+        UrgentPay: '',
+        UnMergePay: '',
+        HotelArea: '',
+        BackfillState: '',
+        StateScreenshot: '',
+        SettlementCycle: '',
+        SettlementCycleFu: '',
+        ThreePlatID: '',
+        OrderNo: '',
+        NightNum: '',
+        RoomNum: '',
+        CurrencyFuKuan: '',
+        CurrencyShouKuan: ''
       },
       copyForm: {},
-      showFujia:false,
+      showFujia: false,
       showDialog: false,
-      showEdit:false,
+      showEdit: false,
       isEditable: true,
       title: '',
       active: 0,
       filters: {
-        OrderNo:'',
-        HotelName:'',
-        Passenger:'',
-        BookTime:'',
-        StayDateStart:'',
-        ThreePlatID:'',
-        SettlementCycle:'',
-        HotelBookingNoNeed:'',
-        CompanyAcount:'',
-        HotelArea:'',
-        StateAuditor:'',
-        StateFuKuan:'',
-        UrgentPay:'',
-        SecretState:'',
-        Secret:''
+        OrderNo: '',
+        HotelName: '',
+        Passenger: '',
+        BookTime: '',
+        StayDateStart: '',
+        ThreePlatID: '',
+        SettlementCycle: '',
+        HotelBookingNoNeed: '',
+        CompanyAcount: '',
+        HotelArea: '',
+        StateAuditor: '',
+        StateFuKuan: '',
+        UrgentPay: '',
+        SecretState: '',
+        Secret: ''
       },
-      checkList:[],
+      checkList: [],
       remsgstateList: [],
       oderstateList: [],
       active: 0,
@@ -716,68 +730,169 @@ export default {
       },
       pickerOptions2: {
         disabledDate(time) {
-           return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateStart).getTime();
+          return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateStart).getTime();
         }
       },
-      ThreePlatID:[],
-      SettlementCycle:[
-        {label:'全部',value:''},
-        {label:'单结',value:0},
-        // {label:'日结',value:'日结'},
-        {label:'周结',value:1},
-        // {label:'半月结',value:'半月结'},
-        {label:'月结',value:2},
+      ThreePlatID: [],
+      SettlementCycle: [{
+          label: '全部',
+          value: ''
+        },
+        {
+          label: '单结',
+          value: '单结'
+        },
+        // {
+        //   label: '日结',
+        //   value: '日结'
+        // },
+        {
+          label: '周结',
+          value: '周结'
+        },
+        // {
+        //   label: '半月结',
+        //   value: '半月结'
+        // },
+        {
+          label: '月结',
+          value: '月结'
+        },
       ],
-      CompanyAcount:[
-        {label:'全部',value:''},
-        {label:'惠和',value:'惠和'},
-        {label:'奥讯',value:'奥讯'}
+      CompanyAcount: [{
+          label: '全部',
+          value: ''
+        },
+        {
+          label: '惠和',
+          value: '惠和'
+        },
+        {
+          label: '奥讯',
+          value: '奥讯'
+        }
       ],
-      HotelArea:[
-        {label:'全部',value:''},
-        {label:'国内',value:0},
-        {label:'国际',value:1},
-        {label:'美国',value:2}
+      HotelArea: [{
+          label: '全部',
+          value: ''
+        },
+        {
+          label: '国内',
+          value: 0
+        },
+        {
+          label: '国际',
+          value: 1
+        },
+        {
+          label: '美国',
+          value: 2
+        }
       ],
-      OrderState:[
-        {label:'未处理',value:0},
-        {label:'已处理',value:1},
-        {label:'已拒绝',value:2},
-        {label:'未处理+未发单',value:3},
-        {label:'待排房',value:4},
-        {label:'风险订单+未处理',value:5},
-        {label:'风险订单+已处理',value:6},
+      styleObject: {},
+      OrderState: [{
+          label: '未处理',
+          value: 0
+        },
+        {
+          label: '已处理',
+          value: 1
+        },
+        {
+          label: '已拒绝',
+          value: 2
+        },
+        {
+          label: '未处理+未发单',
+          value: 3
+        },
+        {
+          label: '待排房',
+          value: 4
+        },
+        {
+          label: '风险订单+未处理',
+          value: 5
+        },
+        {
+          label: '风险订单+已处理',
+          value: 6
+        },
       ],
-      OrderType:[
-        {label:'新订',value:0},
-        {label:'修改',value:1},
-        {label:'取消',value:2},
-        {label:'延住',value:3},
-        {label:'无效',value:4},
-        {label:'新订+修改',value:5},
-        {label:'改期',value:6},
+      OrderType: [{
+          label: '新订',
+          value: 0
+        },
+        {
+          label: '修改',
+          value: 1
+        },
+        {
+          label: '取消',
+          value: 2
+        },
+        {
+          label: '延住',
+          value: 3
+        },
+        {
+          label: '无效',
+          value: 4
+        },
+        {
+          label: '新订+修改',
+          value: 5
+        },
+        {
+          label: '改期',
+          value: 6
+        },
       ],
-      money:[],
-      fujia:[],
-      SCycle:[
-        {label:'单结',value:0},
-        {label:'周结',value:1},
-        {label:'月结',value:2},
+      money: [],
+      fujia: [],
+      SCycle: [{
+          label: '单结',
+          value: 0
+        },
+        {
+          label: '周结',
+          value: 1
+        },
+        {
+          label: '月结',
+          value: 2
+        },
       ],
-      form2:{
-        UseDate:'',
-        TypeID:'',
-        HotelOrderID:''
+      form2: {
+        UseDate: '',
+        TypeID: '',
+        HotelOrderID: ''
       },
-      TypeID:[
-        {label:'门票',value:0},
-        {label:'车票',value:1},
-        {label:'自助餐',value:2},
+      TypeID: [{
+          label: '门票',
+          value: 0
+        },
+        {
+          label: '车票',
+          value: 1
+        },
+        {
+          label: '自助餐',
+          value: 2
+        },
       ],
-      Currency:[
-        {label:'CNY',value:'CNY'},
-        {label:'USD',value:'USD'},
-        {label:'JPY',value:'JPY'},
+      Currency: [{
+          label: 'CNY',
+          value: 'CNY'
+        },
+        {
+          label: 'USD',
+          value: 'USD'
+        },
+        {
+          label: 'JPY',
+          value: 'JPY'
+        },
       ]
     }
   },
@@ -786,11 +901,11 @@ export default {
     this.ThreePlat()
   },
   methods: {
-    async ThreePlat(){
+    async ThreePlat() {
       const res = await hotelThreePlatInfoApi.getList()
       this.ThreePlatID = res.data
     },
-    ruzhu(val){
+    ruzhu(val) {
       this.form.StayDateStart = val
       if(this.form.StayDateEnd != ''){
         let date1= new Date(val);  //开始时间  
@@ -801,7 +916,7 @@ export default {
         this.form.NightNum = days
       }
     },
-    tuifang(val){
+    tuifang(val) {
       this.form.StayDateEnd = val
       if(this.form.StayDateStart != ''){
         let date1= new Date(this.form.StayDateStart);  //开始时间  
@@ -872,28 +987,28 @@ export default {
       _self.filters.StateAuditor = ''
       _self.filters.StateFuKuan = ''
       _self.filters.UrgentPay = ''
-      for(let item in _self.checkList){
-        if(_self.checkList[item]=='已审核未打款'){
+      for (let item in _self.checkList) {
+        if (_self.checkList[item] == '已审核未打款') {
           _self.filters.StateAuditor = 2
           _self.filters.StateFuKuan = 0
         }
-        if(_self.checkList[item]=='未审核'){
+        if (_self.checkList[item] == '未审核') {
           _self.filters.StateAuditor = 1
         }
-        if(_self.checkList[item]=='紧急打款'){
+        if (_self.checkList[item] == '紧急打款') {
           _self.filters.UrgentPay = 1
         }
       }
       let d11 = ''
       let d22 = ''
-      if(_self.filters.BookTime[0] != null){
+      if (_self.filters.BookTime[0] != null) {
         let d1 = new Date(_self.filters.BookTime[0])
         let d2 = new Date(_self.filters.BookTime[1])
         d11 =
           d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate()
         d22 =
           d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate()
-       }
+      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -905,15 +1020,15 @@ export default {
           Passenger:_self.filters.Passenger,
           'BookTime>': d11,
           'BookTime<': d22,
-          StayDateStart:new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd'),
-          ThreePlatID:_self.filters.ThreePlatID,
-          SettlementCycle:_self.filters.SettlementCycle,
-          HotelBookingNoNeed:_self.filters.HotelBookingNoNeed,
-          CompanyAcount:_self.filters.CompanyAcount,
-          HotelArea:_self.filters.HotelArea,
-          StateAuditor:_self.filters.StateAuditor,
-          StateFuKuan:_self.filters.StateFuKuan,
-          UrgentPay:_self.filters.UrgentPay
+          StayDateStart: new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd'),
+          ThreePlatID: _self.filters.ThreePlatID,
+          SettlementCycle: _self.filters.SettlementCycle,
+          HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,
+          CompanyAcount: _self.filters.CompanyAcount,
+          HotelArea: _self.filters.HotelArea,
+          StateAuditor: _self.filters.StateAuditor,
+          StateFuKuan: _self.filters.StateFuKuan,
+          UrgentPay: _self.filters.UrgentPay
         }
       }
       try {
@@ -939,13 +1054,13 @@ export default {
         const res2 = await paymentCheckApi.detail(row.ID)
         let a = res2.data.Data
         const options = {
-          query:{
-            HotelOrderID:row.ID
+          query: {
+            HotelOrderID: row.ID
           }
         }
         const res3 = await paymentCheckApi.fujiaList(options)
         _self.fujia = res3.data.Data
-        for(let i in a){
+        for (let i in a) {
           _self.money.push(a[i].HotelPayment)
         }
         _self.copyForm = Object.assign({}, _self.form)
@@ -954,7 +1069,7 @@ export default {
         console.error(e)
       }
     },
-    async addFujia(){
+    async addFujia() {
       const _self = this
       _self.showFujia = true
       let date = new Date().Format('yyyy-MM-dd hh:mm')
@@ -966,10 +1081,10 @@ export default {
         UseDate: '',
         TypeID: '',
         Remark: '',
-        CreateDate:date
+        CreateDate: date
       }
     },
-    async submitForm2(){
+    async submitForm2() {
       const _self = this
       try {
         await paymentCheckApi.addFujia(_self.form2)
@@ -979,8 +1094,8 @@ export default {
           type: 'success'
         })
         const options = {
-          query:{
-            HotelOrderID:_self.ID
+          query: {
+            HotelOrderID: _self.ID
           }
         }
         const res3 = await paymentCheckApi.fujiaList(options)
@@ -994,30 +1109,30 @@ export default {
       _self.title = '添加酒店订单信息'
       _self.showDialog = true
       _self.showEdit = false
-      _self.form= {
-        StayDateStart:'',
-        StayDateEnd:'',
-        BookTime:'',
-        OrderState:'',
-        OrderType:'',
-        UrgentPay:'',
-        UnMergePay:'',
-        HotelArea:'',
-        BackfillState:'',
-        StateScreenshot:'',
-        SettlementCycle:'',
-        SettlementCycleFu:'',
-        SecretState:'',
-        Secret:'',
-        ThreePlatID:'',
-        ArrivalTime:'',
-        OrderNo:'',
-        RoomNum:'',
-        NightNum:'',
-        CurrencyFuKuan:'',
-        CurrencyShouKuan:''
-      },
-      _self.getStateList()
+      _self.form = {
+          StayDateStart: '',
+          StayDateEnd: '',
+          BookTime: '',
+          OrderState: '',
+          OrderType: '',
+          UrgentPay: '',
+          UnMergePay: '',
+          HotelArea: '',
+          BackfillState: '',
+          StateScreenshot: '',
+          SettlementCycle: '',
+          SettlementCycleFu: '',
+          SecretState: '',
+          Secret: '',
+          ThreePlatID: '',
+          ArrivalTime: '',
+          OrderNo: '',
+          RoomNum: '',
+          NightNum: '',
+          CurrencyFuKuan: '',
+          CurrencyShouKuan: ''
+        },
+        _self.getStateList()
     },
     submitForm() {
       const _self = this
@@ -1068,6 +1183,31 @@ export default {
         _self.isEditable = true
       }
     },
+    async handleSuccess(response, file, fileList) {
+      try {
+        if (!response) {
+          this.$message.error('上传失败,请重新上传')
+          return false
+        }
+        const form = {
+          hotelId: this.form.HotelID,
+          imageUrl: response,
+          smallImageUrl: '',
+          imageType: file.type,
+          description: '',
+          imgWidth: 0,
+          imgHeight: 0,
+          imgGroup: ''
+        }
+        await hotelImageApi.add(form)
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$message.error('上传失败,请重新上传')
+      }
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -1079,54 +1219,54 @@ export default {
 }
 </script>
 <style lang="scss">
-#HotelsOrder{
-    .pagination-wrapper{
+#HotelsOrder {
+  .pagination-wrapper {
+    text-align: center;
+    margin: 10px;
+  }
+  .demo-table-expand {
+    .el-col {
+      height: 32px;
       text-align: center;
-      margin: 10px;
+      border-right: 1px solid lightgrey;
+      color: orange
     }
-    .demo-table-expand{
-        .el-col{
-            height: 32px;
-            text-align: center;
-            border-right: 1px solid lightgrey;
-            color:orange
-        }
-    }
-    .el-card {
-        background-color: #fbfdff;
-        box-shadow: none;
-    }
-    .box-card{
-        width:24.7%;
-        height:50rem;
-        display:inline-block;
-    }
-    .span-text{
-        margin-left:20px;
-        color:orange;
-    }
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #20a0ff;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 132px;
-        height: 132px;
-        line-height: 132px;
-        text-align: center;
-    }
-    .avatar {
-        width: 132px;
-        height: 132px;
-        display: block;
-    }
+  }
+  .el-card {
+    background-color: #fbfdff;
+    box-shadow: none;
+  }
+  .box-card {
+    width: 24.7%;
+    height: 50rem;
+    display: inline-block;
+  }
+  .span-text {
+    margin-left: 20px;
+    color: orange;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #20a0ff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 132px;
+    height: 132px;
+    line-height: 132px;
+    text-align: center;
+  }
+  .avatar {
+    width: 132px;
+    height: 132px;
+    display: block;
+  }
 }
 </style>

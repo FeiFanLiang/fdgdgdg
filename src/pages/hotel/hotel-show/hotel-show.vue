@@ -332,9 +332,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                    <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -347,12 +345,17 @@
 
 <script>
 import path from '../../../api/api.js'
+import UploadImage from 'components/upload-image'
+
 import {
     hotelShowApi,
     hotelImageApi,
     hotelBaseApi
 } from 'api'
 export default {
+    components: {
+        UploadImage
+    },
     created() {
         this.form.hotelID = this.$route.params.ID
         this.fetchData()
@@ -360,11 +363,11 @@ export default {
     data() {
         return {
             rules: {},
-            uploadUrl: path.uploadUrl,
+            // uploadUrl: path.uploadUrl,
             imageList: [],
             currentPage: 1,
             pageSize: 10,
-            count: 0,                                                                                                                                                                    
+            count: 0,
             loading2: false,
             loadingHotel: false,
             hotelList: [],
@@ -463,13 +466,7 @@ export default {
                 }
                 const form = {
                     hotelId: this.form.HotelID,
-                    imageUrl: response,
-                    smallImageUrl: '',
-                    imageType: file.type,
-                    description: '',
-                    imgWidth: 0,
-                    imgHeight: 0,
-                    imgGroup: ''
+                    imageUrl: response
                 }
                 await hotelImageApi.add(form)
                 this.$message({

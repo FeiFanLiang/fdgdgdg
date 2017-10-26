@@ -332,9 +332,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                    <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-row>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -352,7 +350,12 @@ import {
     hotelImageApi,
     hotelBaseApi
 } from 'api'
+import UploadImage from 'components/upload-image'
+
 export default {
+    components: {
+        UploadImage
+    },
     created() {
         // this.form.hotelId = this.$route.params.ID
         this.fetchData()
@@ -417,7 +420,8 @@ export default {
             },
             title: '',
             showDialog: false,
-            isEditable: true
+            isEditable: true,
+            rowId: ''
         }
     },
     methods: {
@@ -442,6 +446,8 @@ export default {
             try {
                 if (file && file.id) {
                     await hotelImageApi.del(file.id)
+                    await this.getImageList(this.rowId)
+
                     this.$message({
                         message: '删除成功',
                         type: 'success'
@@ -463,15 +469,10 @@ export default {
                 }
                 const form = {
                     hotelId: this.form.HotelID,
-                    imageUrl: response,
-                    smallImageUrl: '',
-                    imageType: file.type,
-                    description: '',
-                    imgWidth: 0,
-                    imgHeight: 0,
-                    imgGroup: ''
+                    imageUrl: response
                 }
                 await hotelImageApi.add(form)
+                await this.getImageList(this.rowId)
                 this.$message({
                     message: '上传成功',
                     type: 'success'
@@ -479,9 +480,6 @@ export default {
             } catch (e) {
                 this.$message.error('上传失败,请重新上传')
             }
-        },
-        handleError(err, file, fileList) {
-            this.$message.error('上传失败,请重新上传')
         },
         handleSizeChange(val) {
             this.pageSize = val
@@ -575,20 +573,25 @@ export default {
             }
             _self.imageList = []
         },
-        async clickEditBtn($index, row) {
-            const _self = this
-            _self.title = '酒店展示信息编辑'
-            _self.imageList = []
-            _self.showDialog = true
-            const res = await hotelShowApi.detail(row.ID)
-            _self.form = res.data
-            if (Array.isArray(_self.form.HotelImages)) {
-                this.imageList = _self.form.HotelImages.map(item => ({
+        async getImageList(id) {
+            const res = await hotelShowApi.detail(id)
+            if (Array.isArray(res.data.HotelImages)) {
+                this.imageList = res.data.HotelImages.map(item => ({
                     id: item.ID,
                     name: item.ImageUrl,
                     url: path.imageUrl + item.ImageUrl
                 }))
             }
+        },
+        async clickEditBtn($index, row) {
+            const _self = this
+            _self.title = '酒店展示信息编辑'
+            _self.imageList = []
+            _self.showDialog = true
+            _self.rowId = row.ID
+            const res = await hotelShowApi.detail(row.ID)
+            _self.form = res.data
+            _self.getImageList(row.ID)
         },
         handleCommand(command) {
             this.$message('click on item ' + command);
