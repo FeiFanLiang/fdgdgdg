@@ -47,7 +47,7 @@
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
             <div style="margin-left: 30px;">
-              <el-checkbox @change="mutipSelect(sonRoom)" v-model="mutipValue"></el-checkbox>
+              <el-checkbox @change="mutipSelect(sonRoom)" v-model="sonRoom.select"></el-checkbox>
               <strong>  {{sonRoom.SonRoomName}}</strong>
               <br/>
               <br/>
@@ -189,7 +189,7 @@
 
     <el-dialog title="修改房间状态" v-model="mutip">
       <el-tabs v-model="singalSonRoomId" @tab-click="handleSingalSonRoomId">
-    <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList">
+    <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList" :key="a.ID">
       <el-form ref="singalStateForm" :model="singalStateForm" label-width="80px">
         <el-form-item label="生效时间">
       <el-col >
@@ -216,8 +216,9 @@
     </el-tab-pane>
   </el-tabs>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="colseMutip()">关闭</el-button>
-    <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确 定':'提交中'}}</el-button>
+    <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确认修改':'提交中'}}</el-button>
+    <el-button @click="colseMutip()">更新并关闭</el-button>
+    <el-button @click="mutip = false">关闭</el-button>
   </div>
     </el-dialog>
   </div>
@@ -446,17 +447,17 @@ export default {
           _self.singalStateForm.date = [new Date(), new Date()]
         }
       })
-
-      console.log(tab.name)
     },
     mutipSelect(a) {
-      console.log(a)
-      if (this.mutipValue) {
+      if (a.select) {
         this.mutipList.push(a)
       } else {
-        this.mutipList.splice(a)
+        for (let i = 0; i < this.mutipList.length; i++) {
+          if (this.mutipList[i].ID === a.ID) {
+            this.mutipList.splice(i, 1)
+          }
+        }
       }
-      console.log(this.mutipList)
     },
     mutipEdit() {
       const _self = this
@@ -468,7 +469,6 @@ export default {
         _self.singalStateForm.isOpen = false
         _self.singalStateForm.updateChannel = 0
         _self.singalStateForm.date = [new Date(), new Date()]
-        console.log(this.mutipList)
       } else {
         this.$message.error('请先选择子房型')
       }
@@ -509,17 +509,14 @@ export default {
         return ''
       }
       const res = await sonRoomPlatformApi.listBySonRoom(pid)
-
       if (!res.data || !res.data.length) {
         return ''
       }
-
       const data = res.data.map(item => ({
         platName: item.Platform.PlatName,
         beginDate: item.BeginDate,
         endDate: item.EndDate
       }))
-
       return data
     },
     handleExpand(row, expanded) {
@@ -548,11 +545,16 @@ export default {
         EndDate: _self.startAndEndDay[1].date
       }
       const res = await roomStatPriceApi.getPriceList(form)
-      let SonRooms = [..._self.chosenRoom.SonRooms]
-      SonRooms.forEach((item, index) => {
-        item.timeDate = res.data.Sonrooms[String(item.ID)].STSes
+      // let SonRooms = [..._self.chosenRoom.SonRooms]
+      _self.chosenRoom.SonRooms.forEach((item, index) => {
+        // item.timeDate = res.data.Sonrooms[String(item.ID)].STSes
+        this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
+        this.$set(item, 'select', false)
+        // item.select = ''
       })
-      _self.chosenRoom.SonRooms = SonRooms
+      // _self.chosenRoom.SonRooms = SonRooms
+      // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
+      _self.mutipList = []
       _self.loading = false
     },
     isOpen(item, date) {
@@ -801,7 +803,6 @@ export default {
         _self.stateForm.date[0],
         _self.stateForm.date[1]
       )
-      console.log('!!!!!!!!!!!!!', _self.chosenRoom.roomId)
       timeList.forEach(time => {
         stateForm.push({
           hotelId: _self.stateForm.hotelId,

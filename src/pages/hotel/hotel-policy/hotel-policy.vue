@@ -669,8 +669,8 @@ export default {
             const res = await hotelPolicyImageApi.listByPid(id)
             this.listzzz = res.data
             let arr = []
-            if (res.data && Array.isArray(res.data)) {
-                res.data.forEach(function(item) {
+            if (this.listzzz && Array.isArray(this.listzzz)) {
+                this.listzzz.forEach(function(item) {
                     arr.push(item.Path)
                 })
                 this.imageList = arr
@@ -776,9 +776,16 @@ export default {
                         id = item.ID
                     }
                 })
-                await hotelPolicyImageApi.del(id)
-                await this.getImageList(this.expandRowKeys[0])
-
+                try {
+                    await hotelPolicyImageApi.del(id)
+                    this.$message({
+                        message: '删除成功',
+                        type: 'success'
+                    })
+                    await this.getImageList(this.expandRowKeys[0])
+                } catch (e) {
+                    this.$message.error('删除失败,请重试！')
+                }
             }
         },
         handlePictureCardPreview(file) {
