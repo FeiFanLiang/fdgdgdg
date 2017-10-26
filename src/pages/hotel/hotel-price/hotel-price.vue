@@ -46,7 +46,7 @@
           <table style="width: 100%;">
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
-            <div style="margin-left: 30px;">{{sonRoom.select}}
+            <div style="margin-left: 30px;">
               <el-checkbox @change="mutipSelect(sonRoom)" v-model="sonRoom.select"></el-checkbox>
               <strong>  {{sonRoom.SonRoomName}}</strong>
               <br/>
@@ -216,8 +216,9 @@
     </el-tab-pane>
   </el-tabs>
   <div slot="footer" class="dialog-footer">
-    <el-button @click="colseMutip()">关闭</el-button>
-    <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确 定':'提交中'}}</el-button>
+    <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确认修改':'提交中'}}</el-button>
+    <el-button @click="colseMutip()">更新并关闭</el-button>
+    <el-button @click="mutip = false">关闭</el-button>
   </div>
     </el-dialog>
   </div>
@@ -231,7 +232,9 @@ import {
   sonRoomPlatformApi
 } from 'api'
 import chunk from 'lodash/chunk'
-import { HotelTopMenu } from 'components'
+import {
+  HotelTopMenu
+} from 'components'
 const cityOptions = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
 export default {
   components: {
@@ -281,8 +284,7 @@ export default {
       priceForm: {
         sonRoomId: '',
         time: '',
-        price: [
-          {
+        price: [{
             title: '最高采购价',
             id: -1,
             price: ''
@@ -324,20 +326,16 @@ export default {
       isIndeterminate: true,
       radio2: 3,
       periodType: 'month',
-      options3: [
-        {
+      options3: [{
           label: '售卖价',
-          options: [
-            {
-              value: 'Shanghai',
-              label: '售卖价'
-            }
-          ]
+          options: [{
+            value: 'Shanghai',
+            label: '售卖价'
+          }]
         },
         {
           label: '渠道价',
-          options: [
-            {
+          options: [{
               value: 'Chengdu',
               label: '去哪儿B'
             },
@@ -349,12 +347,10 @@ export default {
         },
         {
           label: '采购价',
-          options: [
-            {
-              value: 'Beijing',
-              label: '采购价'
-            }
-          ]
+          options: [{
+            value: 'Beijing',
+            label: '采购价'
+          }]
         }
       ]
     }
@@ -416,8 +412,7 @@ export default {
     },
     startAndEndDay() {
       const _self = this
-      if (
-        !_self.monthList ||
+      if (!_self.monthList ||
         !_self.monthList.length ||
         !_self.weekList ||
         !_self.weekList.length
@@ -452,11 +447,8 @@ export default {
           _self.singalStateForm.date = [new Date(), new Date()]
         }
       })
-      console.log(tab.name)
     },
     mutipSelect(a) {
-      console.dir(this.roomList)
-      console.log(a)
       if (a.select) {
         this.mutipList.push(a)
       } else {
@@ -466,7 +458,6 @@ export default {
           }
         }
       }
-      console.log(a.select, this.mutipList.length, this.mutipList)
     },
     mutipEdit() {
       const _self = this
@@ -478,7 +469,6 @@ export default {
         _self.singalStateForm.isOpen = false
         _self.singalStateForm.updateChannel = 0
         _self.singalStateForm.date = [new Date(), new Date()]
-        console.log(this.mutipList)
       } else {
         this.$message.error('请先选择子房型')
       }
@@ -519,17 +509,14 @@ export default {
         return ''
       }
       const res = await sonRoomPlatformApi.listBySonRoom(pid)
-
       if (!res.data || !res.data.length) {
         return ''
       }
-
       const data = res.data.map(item => ({
         platName: item.Platform.PlatName,
         beginDate: item.BeginDate,
         endDate: item.EndDate
       }))
-
       return data
     },
     handleExpand(row, expanded) {
@@ -567,9 +554,8 @@ export default {
       })
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
-
+      _self.mutipList = []
       _self.loading = false
-      // console.log(1111111, SonRooms)
     },
     isOpen(item, date) {
       if (
@@ -671,7 +657,7 @@ export default {
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {
-        room.SonRooms.forEach(async (sroom, srindex) => {
+        room.SonRooms.forEach(async(sroom, srindex) => {
           const platTimeRange = await this.platTimeRange(sroom.ID)
           sroom.platTimeRange = platTimeRange
           if (rindex + 1 === newList.length && srindex + 1 === room.length) {
@@ -690,9 +676,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays - 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays - 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -712,9 +696,7 @@ export default {
       let nowdays = new Date(_self.chosenDate)
       if (_self.periodType === 'week') {
         const oneDayTime = 24 * 60 * 60 * 1000
-        _self.chosenDate = new Date(
-          +nowdays + 7 * oneDayTime
-        ).toLocaleDateString()
+        _self.chosenDate = new Date(+nowdays + 7 * oneDayTime).toLocaleDateString()
       }
       if (_self.periodType === 'month') {
         let year = nowdays.getFullYear()
@@ -735,9 +717,9 @@ export default {
         let date = new Date(dateIn)
         let s = ''
         let mouth =
-          date.getMonth() + 1 >= 10
-            ? date.getMonth() + 1
-            : '0' + (date.getMonth() + 1)
+          date.getMonth() + 1 >= 10 ?
+          date.getMonth() + 1 :
+          '0' + (date.getMonth() + 1)
         let day = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
         s += date.getFullYear() + '-' // 获取年份。
         s += mouth + '-' // 获取月份。
@@ -753,7 +735,7 @@ export default {
       de.setUTCFullYear(ae[0], ae[1] - 1, ae[2])
       let unixDb = db.getTime()
       let unixDe = de.getTime()
-      for (let k = unixDb; k <= unixDe; ) {
+      for (let k = unixDb; k <= unixDe;) {
         arry.push(format(new Date(parseInt(k))))
         k = k + 24 * 60 * 60 * 1000
       }
@@ -764,8 +746,8 @@ export default {
       _self.priceChangeForOne = true
       _self.priceForm.sonRoomId = item.ID
       _self.priceForm.time = [new Date(date), new Date(date)]
-      _self.priceForm.price[0].price = _self.price(item, date)
-      ;['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
+      _self.priceForm.price[0].price = _self.price(item, date);
+      ['飞猪', '去哪', '携程', '全日空ANA'].forEach((i, index) => {
         _self.priceForm.price[index + 1].price = _self.otherPrice(i, item, date)
         _self.priceForm.price[index + 1].stat = _self.otherStat(i, item, date)
       })
