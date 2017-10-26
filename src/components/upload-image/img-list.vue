@@ -26,7 +26,6 @@ export default {
   },
   computed: {
     images() {
-      console.log(this.lists.map(item => path.imageUrl + item))
       return this.lists.map(item => path.imageUrl + item)
     }
   },
