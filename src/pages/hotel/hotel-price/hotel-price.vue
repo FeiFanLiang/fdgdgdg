@@ -47,7 +47,7 @@
             <tr v-for="(week,index) in monthListChunk" class="column_tr" v-if="periodType==='month'">
             <td class="ui-table-col-left" colspan="1" rowspan="6" v-if="index===0" style="width:12%;">
             <div style="margin-left: 30px;">
-              <el-checkbox @change="mutipSelect(sonRoom)" v-model="mutipValue"></el-checkbox>
+              <el-checkbox @change="mutipSelect(sonRoom)" v-model="sonRoom.select"></el-checkbox>
               <strong>  {{sonRoom.SonRoomName}}</strong>
               <br/>
               <br/>
@@ -189,7 +189,7 @@
 
     <el-dialog title="修改房间状态" v-model="mutip">
       <el-tabs v-model="singalSonRoomId" @tab-click="handleSingalSonRoomId">
-    <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList">
+    <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList" :key="a.ID">
       <el-form ref="singalStateForm" :model="singalStateForm" label-width="80px">
         <el-form-item label="生效时间">
       <el-col >
@@ -446,17 +446,19 @@ export default {
           _self.singalStateForm.date = [new Date(), new Date()]
         }
       })
-
       console.log(tab.name)
     },
     mutipSelect(a) {
-      console.log(a)
-      if (this.mutipValue) {
+      if (a.select) {
         this.mutipList.push(a)
       } else {
-        this.mutipList.splice(a)
+        for (let i = 0; i < this.mutipList.length; i++) {
+          if (this.mutipList[i].ID === a.ID) {
+            this.mutipList.splice(i, 1)
+          }
+        }
       }
-      console.log(this.mutipList)
+      console.log(a.select, this.mutipList.length, this.mutipList)
     },
     mutipEdit() {
       const _self = this
@@ -551,9 +553,11 @@ export default {
       let SonRooms = [..._self.chosenRoom.SonRooms]
       SonRooms.forEach((item, index) => {
         item.timeDate = res.data.Sonrooms[String(item.ID)].STSes
+        // item.select = 0
       })
       _self.chosenRoom.SonRooms = SonRooms
       _self.loading = false
+      console.log(1111111, SonRooms)
     },
     isOpen(item, date) {
       if (
@@ -801,7 +805,6 @@ export default {
         _self.stateForm.date[0],
         _self.stateForm.date[1]
       )
-      console.log('!!!!!!!!!!!!!', _self.chosenRoom.roomId)
       timeList.forEach(time => {
         stateForm.push({
           hotelId: _self.stateForm.hotelId,
