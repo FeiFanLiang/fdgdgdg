@@ -26,11 +26,6 @@
           </el-col>
       </el-row>
       <el-row :gutter="24">
-          <!-- <el-col :span="5">
-            <el-form-item label="打款日期">
-              <el-date-picker  v-model="filters.BookTime" type="date"></el-date-picker>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="6">
             <el-form-item label="结款方式">
               <el-select v-model="filters.SettlementCycle" clearable>
@@ -48,13 +43,6 @@
               <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
             </el-form-item>
           </el-col>
-      </el-row>
-      <el-row :gutter="24">
-          <!-- <el-col :span="6">
-            <el-form-item label="最晚打款">
-              <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
-            </el-form-item>
-          </el-col> -->
       </el-row>
       <el-row :gutter="24">
           <el-col :span="6">
@@ -97,16 +85,16 @@
             <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
         </el-col>
         <el-col :span="14" style="text-align:right;">
-          <el-tag style="background-color:#FD5921">单结</el-tag>
-          <el-tag style="background-color:#FD1393">日结</el-tag>
-          <el-tag style="background-color:#1297E8">周结</el-tag>
-          <el-tag style="background-color:#A127BE">半月结</el-tag>
-          <el-tag style="background-color:#20A228">月结</el-tag>
+          <el-tag style="background-color:#FD5921;margin:0 10px;">单结</el-tag>
+          <!-- <el-tag style="background-color:#FD1393">日结</el-tag> -->
+          <el-tag style="background-color:#1297E8;margin:0 10px;">周结</el-tag>
+          <!-- <el-tag style="background-color:#A127BE">半月结</el-tag> -->
+          <el-tag style="background-color:#20A228;margin:0 10px;">月结</el-tag>
         </el-col>
       </el-row>
     </el-form>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
-      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}">
+      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID">
         <el-table-column type="expand">
             <template scope="props">
               <div>
@@ -214,7 +202,9 @@
         <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip>
             <template scope="scope">
-              <span v-bind:style="styleObject">{{ scope.row.OrderNo }}</span>
+              <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.OrderNo }}</span>
+              <span v-if="scope.row.SettlementCycle == 1" style="color:#1297E8">{{ scope.row.OrderNo }}</span>
+              <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.OrderNo }}</span>
             </template>
         </el-table-column>
         <!-- <el-table-column label="订单类型" prop="OrderType" show-overflow-tooltip></el-table-column> -->
@@ -327,7 +317,6 @@
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="到店时间" prop="ArrivalTime">
-                        <!-- <el-input placeholder="请输入到店时间" v-model="form.ArrivalTime"></el-input> -->
                         <el-time-select v-model="form.ArrivalTime" :picker-options="{start:'00:00',step:'00:15',end:'24:00'}" placeholder="选择时间"></el-time-select>
                     </el-form-item>
                 </el-col>
@@ -376,14 +365,8 @@
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
             <el-row :gutter="24">
-                <!-- <el-col :span="6">
-                    <el-form-item label="订单标题" prop="OrderTitle">
-                        <el-input placeholder="请输入订单标题" v-model="form.OrderTitle"></el-input>
-                    </el-form-item>
-                </el-col> -->
                 <el-col :span="6">
                     <el-form-item label="付款货币" prop="CurrencyFuKuan">
-                        <!-- <el-input placeholder="请输入付款货币" v-model="form.CurrencyFuKuan"></el-input> -->
                         <el-select v-model="form.CurrencyFuKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
@@ -391,7 +374,6 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="收款货币" prop="CurrencyShouKuan">
-                        <!-- <el-input placeholder="请输入收款货币" v-model="form.CurrencyShouKuan"></el-input> -->
                         <el-select v-model="form.CurrencyShouKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
@@ -409,16 +391,6 @@
                 </el-col>
             </el-row>
             <el-row :gutter="24">
-                <!-- <el-col :span="6">
-                    <el-form-item label="应收未收" prop="AmountYingShouWei">
-                        <el-input placeholder="请输入应收未收" v-model="form.AmountYingShouWei"></el-input>
-                    </el-form-item>
-                </el-col> -->
-                <!-- <el-col :span="6">
-                    <el-form-item label="应付未付" prop="AmountYingFuWei">
-                        <el-input placeholder="请输入应付未付" v-model="form.AmountYingFuWei"></el-input>
-                    </el-form-item>
-                </el-col> -->
                 <el-col :span="6">
                     <el-form-item label="实收款额" prop="AmountShiShou">
                         <el-input placeholder="请输入实收款额" v-model="form.AmountShiShou"></el-input>
@@ -624,13 +596,6 @@
                   <el-table-column label="使用时间" prop="UseDate"></el-table-column> -->
                   <!-- <el-table-column label="创建人" prop="UserID"></el-table-column> -->
                 </el-table>
-                <!-- <div style="margin-left:40px;">
-                  金额：{{fujia.Money}}
-                  <br>
-                  订单类型：<span v-if="fujia.TypeID === 0">门票</span>
-                          <span v-if="fujia.TypeID === 1">车票</span>
-                          <span v-if="fujia.TypeID === 2">自助餐</span>
-                </div> -->
               </el-col>
             </el-row>
             </div>
@@ -688,9 +653,6 @@ export default {
       action:'',
       dialogImageUrl: '',
       dialogVisible: false,
-      testValue: '日本',
-      imageUrl: '',
-      imageUrl2: '',
       fileList: [],
       currentPage: 1,
       pageSize: 10,
@@ -760,11 +722,11 @@ export default {
       ThreePlatID:[],
       SettlementCycle:[
         {label:'全部',value:''},
-        {label:'单结',value:'单结'},
-        {label:'日结',value:'日结'},
-        {label:'周结',value:'周结'},
-        {label:'半月结',value:'半月结'},
-        {label:'月结',value:'月结'},
+        {label:'单结',value:0},
+        // {label:'日结',value:'日结'},
+        {label:'周结',value:1},
+        // {label:'半月结',value:'半月结'},
+        {label:'月结',value:2},
       ],
       CompanyAcount:[
         {label:'全部',value:''},
@@ -777,7 +739,6 @@ export default {
         {label:'国际',value:1},
         {label:'美国',value:2}
       ],
-      styleObject:{},
       OrderState:[
         {label:'未处理',value:0},
         {label:'已处理',value:1},
@@ -827,21 +788,15 @@ export default {
   methods: {
     async ThreePlat(){
       const res = await hotelThreePlatInfoApi.getList()
-      console.log(1)
-      console.log(res.data)
       this.ThreePlatID = res.data
     },
     ruzhu(val){
       this.form.StayDateStart = val
-      //NightNum  RoomNum  StayDateStart:'',  StayDateEnd:'',
-      console.log(this.form.StayDateEnd)
       if(this.form.StayDateEnd != ''){
         let date1= new Date(val);  //开始时间  
         let date2 = new Date(this.form.StayDateEnd);    //结束时间  
         let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
         let days=Math.floor(date3/(24*3600*1000))
-        console.log(1)
-        console.log(days)
         this.form.RoomNum = 1
         this.form.NightNum = days
       }
@@ -853,8 +808,6 @@ export default {
         let date2 = new Date(val);   //结束时间  
         let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
         let days=Math.floor(date3/(24*3600*1000))  
-        console.log(2)
-        console.log(days)
         this.form.RoomNum = 1
         this.form.NightNum = days
       }
@@ -945,6 +898,7 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: 'BookTime',
+        desc:true,
         query: { 
           OrderNo:_self.filters.OrderNo,
           HotelName:_self.filters.HotelName,
@@ -965,34 +919,6 @@ export default {
       try {
         const res = await hotelsOrderApi.listByQuery(options)
         _self.hotelsOrder = res.data.Data
-        // for(let item in _self.hotelsOrder){
-        //   let a = _self.hotelsOrder[item].SettlementCycle;
-          // if(a == 0){
-          //   _self.styleObject = {
-          //     color:'#FD5921'
-          //   }
-          // }
-          // if(a == 1){
-          //   _self.styleObject = {
-          //     color:'#1297E8'
-          //   }
-          // }
-          // if(a == 2){
-          //   _self.styleObject = {
-          //     color:'#20A228'
-          //   }
-          // }
-          // if(a == '半月结'){
-          //   _self.styleObject = {
-          //     color:'#A127BE'
-          //   }
-          // }
-          // if(a == '周结'){
-          //   _self.styleObject = {
-          //     color:'#1297E8'
-          //   }
-          // }
-        //}
         _self.active = 0
         _self.count = res.data.Count
         _self.loading = false

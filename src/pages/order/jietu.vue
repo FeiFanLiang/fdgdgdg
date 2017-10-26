@@ -9,28 +9,6 @@
             <span v-if="scope.row.StateScreenshot == 2">不截图</span>
         </template>
     </el-table-column>
-    <!-- <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
-    <el-table-column label="城市" prop="City"></el-table-column>
-    <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
-    <el-table-column label="入住/退房日期" width="200">
-        <template scope="scope">
-        <span>{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
-        <span>{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
-        </template>
-    </el-table-column>
-    <el-table-column label="间/晚" prop="RoomNum">
-        <template scope="scope">
-        <span>{{ scope.row.RoomNum }}</span>/
-        <span>{{ scope.row.NightNum }}</span>
-        </template>
-    </el-table-column>
-    <el-table-column label="入住人" prop="Passenger"></el-table-column>
-    <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
-    <el-table-column label="预定时间" prop="BookTime" width="80">
-        <template scope="scope">
-            <span>{{ scope.row.BookTime.substring(5,16) }}</span>
-        </template>
-    </el-table-column> -->
     <el-table-column label="操作" width="150">
         <template scope="scope">
             <el-button @click="setImgs(scope.row.$index,scope.row)">截图完成</el-button>
