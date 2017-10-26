@@ -138,12 +138,7 @@
 </template>
 <script>
 import path from 'api/api'
-import {
-  bargainsRoomApi,
-  hotelBaseApi,
-  hotelRoomApi,
-  hotelImageApi
-} from 'api'
+import { bargainsRoomApi, hotelBaseApi, hotelRoomApi, hotelImageApi } from 'api'
 import UploadImage from 'components/upload-image'
 
 export default {
@@ -196,34 +191,48 @@ export default {
         buyUserPhone: ''
       },
       bargainsRules: {
-        hotelId: [{
-          required: true,
-          message: '请输入酒店名称'
-        }],
-        rooms: [{
-          required: true,
-          message: '请选择子房型'
-        }],
-        sonRoomId: [{
-          required: true,
-          message: '请填写子房型ID'
-        }],
-        useDate: [{
-          required: true,
-          message: '请填写入住日期'
-        }],
-        days: [{
-          required: true,
-          message: '请填写入住天数'
-        }],
-        price: [{
-          required: true,
-          message: '请填写价格'
-        }],
-        webLowestPrice: [{
-          required: true,
-          message: '请填写网站最低价'
-        }]
+        hotelId: [
+          {
+            required: true,
+            message: '请输入酒店名称'
+          }
+        ],
+        rooms: [
+          {
+            required: true,
+            message: '请选择子房型'
+          }
+        ],
+        sonRoomId: [
+          {
+            required: true,
+            message: '请填写子房型ID'
+          }
+        ],
+        useDate: [
+          {
+            required: true,
+            message: '请填写入住日期'
+          }
+        ],
+        days: [
+          {
+            required: true,
+            message: '请填写入住天数'
+          }
+        ],
+        price: [
+          {
+            required: true,
+            message: '请填写价格'
+          }
+        ],
+        webLowestPrice: [
+          {
+            required: true,
+            message: '请填写网站最低价'
+          }
+        ]
       }
     }
   },
@@ -261,16 +270,13 @@ export default {
     async getImageList(id) {
       const res = await hotelImageApi.listByRoomId(id)
       if (res.data && Array.isArray(res.data)) {
-        this.imageList = res.data.map(item => ({
-          id: item.ID,
-          name: item.ImageUrl,
-          url: path.imageUrl + item.ImageUrl
-        }))
+        this.imageList = res.data.map(item => item.ImageUrl)
       }
     },
     beforeAvatarUpload(file) {
       const _self = this
-      if (!_self.bargainsForm.sonRoomId &&
+      if (
+        !_self.bargainsForm.sonRoomId &&
         !Object.is(_self.bargainsForm.sonRoomId, 0)
       ) {
         _self.$message({
