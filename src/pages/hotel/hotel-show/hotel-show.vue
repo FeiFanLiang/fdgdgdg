@@ -466,13 +466,7 @@ export default {
                 }
                 const form = {
                     hotelId: this.form.HotelID,
-                    imageUrl: response,
-                    smallImageUrl: '',
-                    imageType: file.type,
-                    description: '',
-                    imgWidth: 0,
-                    imgHeight: 0,
-                    imgGroup: ''
+                    imageUrl: response
                 }
                 await hotelImageApi.add(form)
                 this.$message({

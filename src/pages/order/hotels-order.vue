@@ -599,7 +599,7 @@
                 <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
                   <i class="el-icon-plus"></i>
                 </el-upload> -->
-                <UploadImage :images="imageList" @onRemove="handleRemove" ></UploadImage>
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 <el-dialog v-model="dialogVisible" size="tiny">
                   <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
@@ -685,7 +685,8 @@
 import {
   hotelsOrderApi,
   paymentCheckApi,
-  hotelThreePlatInfoApi
+  hotelThreePlatInfoApi,
+  hotelImageApi
 } from 'api'
 import UploadImage from 'components/upload-image'
 
@@ -696,7 +697,7 @@ export default {
   data() {
     let that = this;
     return {
-      imageList:[],
+      imageList: [],
       action: '',
       dialogImageUrl: '',
       dialogVisible: false,
@@ -1252,6 +1253,31 @@ export default {
         _self.$message.error('编辑失败!!!')
       } finally {
         _self.isEditable = true
+      }
+    },
+    async handleSuccess(response, file, fileList) {
+      try {
+        if (!response) {
+          this.$message.error('上传失败,请重新上传')
+          return false
+        }
+        const form = {
+          hotelId: this.form.HotelID,
+          imageUrl: response,
+          smallImageUrl: '',
+          imageType: file.type,
+          description: '',
+          imgWidth: 0,
+          imgHeight: 0,
+          imgGroup: ''
+        }
+        await hotelImageApi.add(form)
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$message.error('上传失败,请重新上传')
       }
     },
     handleRemove(file, fileList) {

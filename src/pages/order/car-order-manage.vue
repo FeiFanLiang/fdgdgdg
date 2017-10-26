@@ -237,6 +237,7 @@
             <el-table-column prop="RealPrice" label="实收金额" show-overflow-tooltip></el-table-column>
             <!-- <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="ProcessorUserName" label="处理人员" show-overflow-tooltip></el-table-column>
             <el-table-column label="是否支付" width="65">
 <template scope="scope">
 <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.PayStatus">
@@ -559,6 +560,9 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                <el-row>
+                    <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess" @onTotal="test"></UploadImage>
+                </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
             <el-button @click="showDialog = false">取 消</el-button>
@@ -568,13 +572,21 @@
     </div>
 </template>
 <script>
+import path from '../../api/api.js'
+
 import {
     carOrderManageApi,
     orderChannelApi,
-    airInformationApi
+    airInformationApi,
+    hotelImageApi
 } from 'api'
+import UploadImage from 'components/upload-image'
+
 
 export default {
+    components: {
+        UploadImage
+    },
     created() {
         this.filters.useTimeS = new Date().Format('yyyy-MM-dd')
         const now = new Date()
@@ -585,6 +597,7 @@ export default {
     },
     data() {
         return {
+            imageList: [],
             airInformationList: [],
             list: [],
             currentPage: 1,
@@ -666,7 +679,8 @@ export default {
                 purchaseOrderNo: '',
                 purchasePrice: '',
                 purchaseRemark: '',
-                purchasProcessor:''
+                purchasProcessor: '',
+                purchasImg: ''
             },
             sortList: [{
                     value: 'id',
@@ -901,9 +915,31 @@ export default {
                     _self.form.destinationCoordinates = ''
                 }
             }
+        },
+        'imageList': function(newQuestion) {
+            let ss = []
+            newQuestion.forEach(function(value, index, array) {
+                ss.push(value.name)　　
+            });
+            this.form.purchasImg = ss.join(",")
+            console.log('this.form.purchasImg', this.form.purchasImg)
         }
     },
     methods: {
+        test(a) {
+            console.log('test', a)
+        },
+        async handleRemove(file, fileList) {
+            this.imageList.splice(file.id)
+        },
+        async handleSuccess(response, file, fileList) {
+            if (!response) {
+                this.$message.error('上传失败,请重新上传')
+                return false
+            }
+            this.imageList.push(response)
+            this.getImageList(this.imageList.join(","))
+        },
         querySearch(queryString, cb) {
             var restaurants = this.purchaseList
             var results = queryString ?
@@ -1124,10 +1160,24 @@ export default {
                 purchaseOrderNo: '',
                 purchasePrice: '',
                 purchaseRemark: '',
-                purchasProcessor:''
+                purchasProcessor: '',
+                purchasImg: ''
             }
             _self.form.staffUserId = _self.loginData.id
             _self.form.staffUserName = _self.loginData.username
+        },
+        async getImageList(list) {
+            if (list) {
+                const images = list.split(",")
+                if (Array.isArray(images)) {
+                    this.imageList = images.map((item, index) => ({
+                        id: index,
+                        name: item,
+                        url: path.imageUrl + item
+                    }))
+                }
+                console.log(this.imageList)
+            }
         },
         async clickEditBtn($index, row) {
             const _self = this
@@ -1174,7 +1224,9 @@ export default {
                 _self.form.purchasePrice = res.data.Data.PurchasePrice
                 _self.form.purchaseRemark = res.data.Data.PurchaseRemark
                 _self.form.purchasProcessor = res.data.Data.PurchasProcessor
+                _self.form.purchasImg = res.data.Data.PurchasImg
                 _self.copyForm = Object.assign({}, _self.form)
+                _self.getImageList(_self.form.purchasImg)
             } catch (e) {
                 console.error(e)
             }
@@ -1219,6 +1271,7 @@ export default {
         },
         async editSave() {
             const _self = this
+            console.log(66666, _self.form)
             _self.$refs['form'].validate(async valid => {
                 if (valid) {
                     try {

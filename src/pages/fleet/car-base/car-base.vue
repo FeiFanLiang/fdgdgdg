@@ -145,19 +145,14 @@
             <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
         </el-dialog>
-        <UploadImage></UploadImage>
     </div>
 </template>
 <script>
 import {
   carBaseApi
 } from 'api'
-import UploadImage from 'components/upload-image'
 
 export default {
-  components: {
-    UploadImage
-  },
   created() {
     this.fetchData()
     this.configList = carBaseApi.getConfig()

@@ -34,6 +34,9 @@ export default {
   props: {
     images: {
       type: Array
+    },
+    list:{
+      type:Array
     }
   },
   data() {
@@ -91,6 +94,8 @@ export default {
       if (err) {
         return
       }
+      
+      this.$emit('onTotal', this.images)
       this.$emit('onSuccess', data)
     },
     //drag-drop

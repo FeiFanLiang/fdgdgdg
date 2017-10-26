@@ -169,10 +169,7 @@
                  <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                             <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
                 <el-row>
-                          <!-- <el-upload :action="uploadUrl" :before-upload="beforeAvatarUpload" list-type="picture-card" :file-list="imageList" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="handleSuccess" :on-error="handleError" :with-credentials="true">
-                              <i class="el-icon-plus"></i>
-                          </el-upload> -->
-                                  <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+                        <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                       </el-row>
                       <el-row :gutter="24">
                           <el-col :span="5">
@@ -509,305 +506,300 @@ import path from '../../../api/api.js'
 import UploadImage from 'components/upload-image'
 
 import {
-  hotelPolicyApi,
-  secretTypeApi,
-  rserveModeApi,
-  payCompanyApi,
-  hotelPolicyImageApi,
-  hotelPayModeApi
+    hotelPolicyApi,
+    secretTypeApi,
+    rserveModeApi,
+    payCompanyApi,
+    hotelPolicyImageApi,
+    hotelPayModeApi
 } from 'api'
-import { HotelTopMenu } from 'components'
+import {
+    HotelTopMenu
+} from 'components'
 
 export default {
-  components: {
-    HotelTopMenu,
-    UploadImage
-  },
-  created() {
-    const _self = this
-    _self.form.HotelID = _self.$route.params.ID
-    _self.getSecretType()
-    _self.getReserveMode()
-    _self.getPayCompany()
-    _self.getPayMode()
-    _self.fetchData()
-    _self.configList = hotelPolicyApi.getConfig()
-  },
-  data() {
-    return {
-      loading: false,
-      isEditable: true,
-    //   uploadUrl: path.uploadUrl,
-      dialogImageUrl: '',
-      dialogVisible: false,
-      fileList: [],
-      expandRowKeys: [],
-      payPeriodList: [
-        {
-          value: 'Advance',
-          text: '预付款'
-        },
-        {
-          value: 'Every',
-          text: '单结'
-        },
-        {
-          value: 'Day',
-          text: '日结'
-        },
-        {
-          value: 'Week',
-          text: '周结'
-        },
-        {
-          value: 'HalfMonth',
-          text: '半月结'
-        },
-        {
-          value: 'Month',
-          text: '月结'
-        },
-        {
-          value: 'None',
-          text: '其他（每单备注）'
+    components: {
+        HotelTopMenu,
+        UploadImage
+    },
+    created() {
+        const _self = this
+        _self.form.HotelID = _self.$route.params.ID
+        _self.getSecretType()
+        _self.getReserveMode()
+        _self.getPayCompany()
+        _self.getPayMode()
+        _self.fetchData()
+        _self.configList = hotelPolicyApi.getConfig()
+    },
+    data() {
+        return {
+            loading: false,
+            isEditable: true,
+            //   uploadUrl: path.uploadUrl,
+            dialogImageUrl: '',
+            dialogVisible: false,
+            fileList: [],
+            expandRowKeys: [],
+            payPeriodList: [{
+                    value: 'Advance',
+                    text: '预付款'
+                },
+                {
+                    value: 'Every',
+                    text: '单结'
+                },
+                {
+                    value: 'Day',
+                    text: '日结'
+                },
+                {
+                    value: 'Week',
+                    text: '周结'
+                },
+                {
+                    value: 'HalfMonth',
+                    text: '半月结'
+                },
+                {
+                    value: 'Month',
+                    text: '月结'
+                },
+                {
+                    value: 'None',
+                    text: '其他（每单备注）'
+                }
+            ],
+            forms: {
+                ID: '',
+                HotelID: '',
+                PersonName: '',
+                PurchasingName: '',
+                IsDefault: '',
+                BankName: '',
+                AccountName: '',
+                AccountNum: '',
+                FinanceLinkMan: '',
+                FinancePhoneNum: '',
+                PayCompanyID: '',
+                FinanceRemark: '',
+                LinkMan: '',
+                PhoneNum: '',
+                SecretTypeID: '',
+                ReserveModeID: '',
+                PayModeID: '',
+                PayPeriod: '',
+                Remark1: '',
+                Remark2: '',
+                Remark3: '',
+                Remark4: '',
+                Remark5: '',
+                Remark6: '',
+                Remark7: '',
+                Remark8: '',
+                Remark9: '',
+                Remark10: ''
+            },
+            imageList: [],
+            form: {
+                ID: 0,
+                HotelID: '',
+                PersonName: '',
+                PurchasingName: '',
+                IsDefault: true,
+                BankName: '',
+                AccountName: '',
+                AccountNum: '',
+                FinanceLinkMan: '',
+                FinancePhoneNum: '',
+                PayCompanyID: '',
+                FinanceRemark: '',
+                LinkMan: '',
+                PhoneNum: '',
+                SecretTypeID: '',
+                ReserveModeID: '',
+                PayModeID: '',
+                PayPeriod: '',
+                Remark1: '',
+                Remark2: '',
+                Remark3: '',
+                Remark4: '',
+                Remark5: '',
+                Remark6: '',
+                Remark7: '',
+                Remark8: '',
+                Remark9: '',
+                Remark10: ''
+            },
+            payModeOptions: [],
+            payCompanyOptions: [],
+            reserveModeOptions: [],
+            secretTypeOptions: [],
+            hotelpolicy: [],
+            createDialog: false,
+            rules: {
+                LinkMan: [{
+                    required: true,
+                    message: '请填写酒店联系人姓名',
+                    trigger: 'blur'
+                }],
+                PhoneNum: [{
+                    required: true,
+                    message: '请填写酒店联系电话',
+                    trigger: 'blur'
+                }],
+                PurchasingName: [{
+                    required: true,
+                    message: '请填写政策采购人姓名',
+                    trigger: 'blur'
+                }]
+            }
         }
-      ],
-      forms: {
-        ID: '',
-        HotelID: '',
-        PersonName: '',
-        PurchasingName: '',
-        IsDefault: '',
-        BankName: '',
-        AccountName: '',
-        AccountNum: '',
-        FinanceLinkMan: '',
-        FinancePhoneNum: '',
-        PayCompanyID: '',
-        FinanceRemark: '',
-        LinkMan: '',
-        PhoneNum: '',
-        SecretTypeID: '',
-        ReserveModeID: '',
-        PayModeID: '',
-        PayPeriod: '',
-        Remark1: '',
-        Remark2: '',
-        Remark3: '',
-        Remark4: '',
-        Remark5: '',
-        Remark6: '',
-        Remark7: '',
-        Remark8: '',
-        Remark9: '',
-        Remark10: ''
-      },
-      imageList: [],
-      form: {
-        ID: 0,
-        HotelID: '',
-        PersonName: '',
-        PurchasingName: '',
-        IsDefault: true,
-        BankName: '',
-        AccountName: '',
-        AccountNum: '',
-        FinanceLinkMan: '',
-        FinancePhoneNum: '',
-        PayCompanyID: '',
-        FinanceRemark: '',
-        LinkMan: '',
-        PhoneNum: '',
-        SecretTypeID: '',
-        ReserveModeID: '',
-        PayModeID: '',
-        PayPeriod: '',
-        Remark1: '',
-        Remark2: '',
-        Remark3: '',
-        Remark4: '',
-        Remark5: '',
-        Remark6: '',
-        Remark7: '',
-        Remark8: '',
-        Remark9: '',
-        Remark10: ''
-      },
-      payModeOptions: [],
-      payCompanyOptions: [],
-      reserveModeOptions: [],
-      secretTypeOptions: [],
-      hotelpolicy: [],
-      createDialog: false,
-      rules: {
-        LinkMan: [
-          {
-            required: true,
-            message: '请填写酒店联系人姓名',
-            trigger: 'blur'
-          }
-        ],
-        PhoneNum: [
-          {
-            required: true,
-            message: '请填写酒店联系电话',
-            trigger: 'blur'
-          }
-        ],
-        PurchasingName: [
-          {
-            required: true,
-            message: '请填写政策采购人姓名',
-            trigger: 'blur'
-          }
-        ]
-      }
-    }
-  },
-  watch: {
-    async expandRowKeys() {
-      const res = await hotelPolicyApi.listByID(this.expandRowKeys[0])
-      this.forms = res.data
-      this.getImageList(this.expandRowKeys[0])
-    }
-  },
-  methods: {
-    async getImageList(id) {
-      const res = await hotelPolicyImageApi.listByPid(id)
-      if (res.data && Array.isArray(res.data)) {
-        this.imageList = res.data.map(item => ({
-          id: item.ID,
-          name: item.Path,
-          url: path.imageUrl + item.Path
-        }))
-      }
     },
-    async getPayMode() {
-      const res = await hotelPayModeApi.list()
-      this.payModeOptions = res.data
+    watch: {
+        async expandRowKeys() {
+            const res = await hotelPolicyApi.listByID(this.expandRowKeys[0])
+            this.forms = res.data
+            this.getImageList(this.expandRowKeys[0])
+        }
     },
-    async getPayCompany() {
-      const res = await payCompanyApi.list()
-      this.payCompanyOptions = res.data
-    },
-    async getReserveMode() {
-      const res = await rserveModeApi.list()
-      this.reserveModeOptions = res.data.Data
-    },
-    async getSecretType() {
-      const res = await secretTypeApi.list()
-      this.secretTypeOptions = res.data.Data
-    },
-    async submitForm() {
-      const _self = this
-      _self.$refs['form'].validate(async valid => {
-        if (valid) {
-          try {
-            _self.isEditable = false
-            await hotelPolicyApi.add(_self.form)
-            _self.fetchData()
-            _self.$refs['form'].resetFields()
-            _self.createDialog = false
-            _self.form = {}
-            _self.$message({
-              message: '添加成功',
-              type: 'success'
+    methods: {
+        async getImageList(id) {
+            const res = await hotelPolicyImageApi.listByPid(id)
+            if (res.data && Array.isArray(res.data)) {
+                this.imageList = res.data.map(item => ({
+                    id: item.ID,
+                    name: item.Path,
+                    url: path.imageUrl + item.Path
+                }))
+            }
+        },
+        async getPayMode() {
+            const res = await hotelPayModeApi.list()
+            this.payModeOptions = res.data
+        },
+        async getPayCompany() {
+            const res = await payCompanyApi.list()
+            this.payCompanyOptions = res.data
+        },
+        async getReserveMode() {
+            const res = await rserveModeApi.list()
+            this.reserveModeOptions = res.data.Data
+        },
+        async getSecretType() {
+            const res = await secretTypeApi.list()
+            this.secretTypeOptions = res.data.Data
+        },
+        async submitForm() {
+            const _self = this
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                    try {
+                        _self.isEditable = false
+                        await hotelPolicyApi.add(_self.form)
+                        _self.fetchData()
+                        _self.$refs['form'].resetFields()
+                        _self.createDialog = false
+                        _self.form = {}
+                        _self.$message({
+                            message: '添加成功',
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        console.error(e)
+                    } finally {
+                        _self.isEditable = true
+                    }
+                } else {
+                    return false
+                }
             })
-          } catch (e) {
-            console.error(e)
-          } finally {
-            _self.isEditable = true
-          }
-        } else {
-          return false
-        }
-      })
-    },
-    hotelpolicyAdd() {
-      this.createDialog = true
-    },
-    async show(row) {
-      const res = await hotelPolicyApi.listByID(row.ID)
-      this.forms = res.data
-    },
-    async hotelpolicyEdit() {
-      const _self = this
-      _self.$refs['forms'].validate(async valid => {
-        if (valid) {
-          try {
-            await hotelPolicyApi.edit(_self.forms)
-            _self.fetchData()
-            _self.$message({
-              message: '编辑成功',
-              type: 'success'
+        },
+        hotelpolicyAdd() {
+            this.createDialog = true
+        },
+        async show(row) {
+            const res = await hotelPolicyApi.listByID(row.ID)
+            this.forms = res.data
+        },
+        async hotelpolicyEdit() {
+            const _self = this
+            _self.$refs['forms'].validate(async valid => {
+                if (valid) {
+                    try {
+                        await hotelPolicyApi.edit(_self.forms)
+                        _self.fetchData()
+                        _self.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        console.error(e)
+                    }
+                } else {
+                    return false
+                }
             })
-          } catch (e) {
-            console.error(e)
-          }
-        } else {
-          return false
+        },
+        async fetchData() {
+            if (!this.$route.params.ID) return
+            const hotelID = this.$route.params.ID
+            this.loading = true
+            const res = await hotelPolicyApi.listByHotelID(hotelID)
+            this.hotelpolicy = res.data
+            this.loading = false
+            this.expandRowKeys.length = 0
+            if (this.hotelpolicy && this.hotelpolicy[0] && this.hotelpolicy[0].ID) {
+                this.expandRowKeys.push(this.hotelpolicy[0].ID)
+            }
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+            if (!isJPG) {
+                this.$message.error('上传图片只能是 JPG/PNG 格式!')
+            }
+            return isJPG
+        },
+        handleExpand(row, expanded) {
+            if (expanded) {
+                this.expandRowKeys.length = 0
+                this.expandRowKeys.push(row.ID)
+            }
+        },
+        async handleRemove(file, fileList) {
+            if (file && file.id) {
+                await hotelPolicyImageApi.del(file.id)
+                await this.getImageList(this.expandRowKeys[0])
+            }
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url
+            this.dialogVisible = true
+        },
+        async handleSuccess(response, file, fileList) {
+            try {
+                if (!response) {
+                    this.$message.error('上传失败,请重新上传')
+                    return false
+                }
+                const form = {
+                    policyId: this.expandRowKeys[0],
+                    path: response
+                }
+                await hotelPolicyImageApi.add(form)
+                this.getImageList(this.expandRowKeys[0])
+                this.$message({
+                    message: '上传成功',
+                    type: 'success'
+                })
+            } catch (e) {
+                this.$message.error('上传失败,请重新上传')
+            }
+        },
+        handleError(err, file, fileList) {
+            this.$message.error('上传失败,请重新上传')
         }
-      })
-    },
-    async fetchData() {
-      if (!this.$route.params.ID) return
-      const hotelID = this.$route.params.ID
-      this.loading = true
-      const res = await hotelPolicyApi.listByHotelID(hotelID)
-      this.hotelpolicy = res.data
-      this.loading = false
-      this.expandRowKeys.length = 0
-      if (this.hotelpolicy && this.hotelpolicy[0] && this.hotelpolicy[0].ID) {
-        this.expandRowKeys.push(this.hotelpolicy[0].ID)
-      }
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-      if (!isJPG) {
-        this.$message.error('上传图片只能是 JPG/PNG 格式!')
-      }
-      return isJPG
-    },
-    handleExpand(row, expanded) {
-      if (expanded) {
-        this.expandRowKeys.length = 0
-        this.expandRowKeys.push(row.ID)
-      }
-    },
-    async handleRemove(file, fileList) {
-      if (file && file.id) {
-        await hotelPolicyImageApi.del(file.id)
-        await this.getImageList(this.expandRowKeys[0])
-      }
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
-    },
-    async handleSuccess(response, file, fileList) {
-      try {
-        if (!response) {
-          this.$message.error('上传失败,请重新上传')
-          return false
-        }
-        const form = {
-          policyId: this.expandRowKeys[0],
-          path: response
-        }
-        await hotelPolicyImageApi.add(form)
-        this.getImageList(this.expandRowKeys[0])
-        this.$message({
-          message: '上传成功',
-          type: 'success'
-        })
-      } catch (e) {
-        this.$message.error('上传失败,请重新上传')
-      }
-    },
-    handleError(err, file, fileList) {
-      this.$message.error('上传失败,请重新上传')
     }
-  }
 }
 </script>
 <style lang="scss" scoped>
