@@ -240,7 +240,7 @@
         <el-table-column label="总金额" prop="AmountTotal"></el-table-column>
         <el-table-column label="订单状态" prop="OrderState"></el-table-column> -->
 
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="150">
 <template scope="scope">
 <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
   编辑</el-button>
@@ -740,7 +740,7 @@ export default {
         },
         {
           label: '单结',
-          value: '单结'
+          value: 0
         },
         // {
         //   label: '日结',
@@ -748,7 +748,7 @@ export default {
         // },
         {
           label: '周结',
-          value: '周结'
+          value: 1
         },
         // {
         //   label: '半月结',
@@ -756,7 +756,7 @@ export default {
         // },
         {
           label: '月结',
-          value: '月结'
+          value: 2
         },
       ],
       CompanyAcount: [{
