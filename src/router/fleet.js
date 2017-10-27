@@ -52,6 +52,11 @@ export default {
       path: 'station',
       name: '车辆停靠点',
       component: _import('fleet/station/station')
-    }
+    },
+    {
+      path: 'car-baoxiao',
+      name: '车的报销',
+      component: _import('fleet/car-baoxiao/car-baoxiao')
+    },
   ]
 }
