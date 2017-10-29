@@ -61,7 +61,7 @@
             <!-- <el-date-picker v-model="filters.bookTime" type="date" placeholder="选择提单日期" :picker-options="pickerOptions"></el-date-picker> -->
             <el-date-picker v-model="filters.bookTime" type="daterange" align="right" placeholder="选择提单日期" :picker-options="pickerOptions2"></el-date-picker>
         </el-col>
-        <el-col :span="6" :offset="1">
+        <!-- <el-col :span="6" :offset="1">
             <el-radio-group v-model="filters.payStatus" @change="payStatusChange($event)">
                 <el-radio label="">全部</el-radio>
                 <el-radio :label="true">已支付</el-radio>
@@ -72,18 +72,18 @@
                 <el-radio :label="true">已取消</el-radio>
                 <el-radio :label="false">未取消</el-radio>
             </el-radio-group>
-        </el-col>
-        <el-col :span="3">
-            <!-- <el-radio-group v-model="filters.isPurchaseReturned" @change="isPurchaseReturnedChange($event)">
+        </el-col> -->
+        <el-col :span="6" :offset="1">
+            <el-radio-group v-model="filters.isPurchaseReturned" @change="isPurchaseReturnedChange($event)">
                 <el-radio label="">全部</el-radio>
                 <el-radio :label="true">已报销</el-radio>
                 <el-radio :label="false">未报销</el-radio>
-            </el-radio-group> -->
-            <el-select v-model="filters.isPurchaseReturned" placeholder="是否报销">
+            </el-radio-group>
+            <!-- <el-select v-model="filters.isPurchaseReturned" placeholder="是否报销">
                 <el-option label="全部" value="">全部</el-option>
                 <el-option label="未报销" :value="false"></el-option>
                 <el-option label="已报销" :value="true"></el-option>
-            </el-select>
+            </el-select> -->
         </el-col>
         <el-col :span="5">
             <el-button type="primary" @click="fetchData()">搜索</el-button>
@@ -93,9 +93,12 @@
     <el-row :gutter="24" style="margin-top:10px;display:flex;align-items:center;">
         <el-col :span="12">
             <!-- <el-button type="primary" @click="clickAddBtn">添加线下订单</el-button> -->
-            <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
-            <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
-            <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right"></i></el-button>
+            <!-- <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button> -->
+            <!-- <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button> -->
+            <!-- <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right"></i></el-button> -->
+            <el-button type="primary" @click="mutipSubmit(true)" :loading="!isMutipEditableA">{{isMutipEditableA?'批量修改为已报销':'提交中'}}</el-button>
+            <el-button type="primary" @click="mutipSubmit(false)" :loading="!isMutipEditableB">{{isMutipEditableB?'批量修改为未报销':'提交中'}}</el-button>
+
         </el-col>
     </el-row>
     <!-- <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border> -->
@@ -176,13 +179,19 @@
 </div>
 </template>
             </el-table-column> -->
-            <el-table-column label="是否报销" width="65">
+            <el-table-column label="是否报销">
+<template scope="scope">
+<el-switch v-model="scope.row.IsPurchaseReturned" on-text="是" off-text="否" :on-value="true" :off-value="false" @change="baoxiaoChange(scope.row,$event)" on-color="dodgerblue" off-color="lightgray">
+</el-switch>
+</template>
+            </el-table-column>
+            <!-- <el-table-column label="是否报销" width="65">
 <template scope="scope">
 <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsPurchaseReturned">
     </i>
 <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column prop="PurchaseReturnedTime" label="报销时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="PurchaseReturnedProcessor" label="报销处理人" show-overflow-tooltip></el-table-column>
 
@@ -801,7 +810,9 @@ export default {
                     value: '滴滴'
                 }
             ],
-            multipleSelection:[]
+            multipleSelection: [],
+            isMutipEditableA: true,
+            isMutipEditableB: true
         }
     },
     watch: {
@@ -833,7 +844,40 @@ export default {
     methods: {
         handleSelectionChange(val) {
             console.log(val)
-            this.multipleSelection = val;
+            this.multipleSelection = []
+            for (let i = 0; i < val.length; i++) {
+                this.multipleSelection.push(val[i].ID)
+            }
+            console.log(this.multipleSelection)
+        },
+        async mutipSubmit(a) {
+            const _self = this
+            a ? _self.isMutipEditableA = false : _self.isMutipEditableB = false
+            let form = {
+                isPurchaseReturned: a
+            }
+            for (let i = 0; i < _self.multipleSelection.length; i++) {
+                await carOrderManageApi.edit(_self.multipleSelection[i], form)
+            }
+            _self.fetchData()
+            a ? _self.isMutipEditableA = true : _self.isMutipEditableB = true
+            _self.$message({
+                message: '修改成功',
+                type: 'success'
+            })
+        },
+        async baoxiaoChange(row, value) {
+            const _self = this
+            const form = {
+                id: row.ID,
+                isPurchaseReturned: value
+            }
+            await carOrderManageApi.edit(form.id, form)
+             _self.fetchData()
+            _self.$message({
+                message: '修改成功',
+                type: 'success'
+            })
         },
         async handleRemove(index, fileList) {
             this.imageList.splice(index, 1)
@@ -935,7 +979,17 @@ export default {
         async fetchChannelList() {
             const _self = this
             const res = await orderChannelApi.channelByQuery('用车')
+            console.log(res.data)
             _self.channelList = res.data
+            let value = {}
+            for (var i = 0; i < _self.channelList.length; i++) {
+                if (_self.channelList[i].ID === 2003) {
+                    value = _self.channelList[i]
+                    _self.channelList.splice(i, 1);
+                    break;
+                }
+            }
+            _self.channelList.unshift(value)
         },
         async fetchData(currentPage, pageSize) {
             const _self = this
