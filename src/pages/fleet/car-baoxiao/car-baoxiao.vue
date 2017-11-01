@@ -153,13 +153,11 @@ export default {
         UploadImage
     },
     created() {
-        let user = JSON.parse(localStorage.getItem('user'))
-        this.userName = user.username
         this.filters.useTimeS = new Date().Format('yyyy-MM-dd')
         const now = new Date()
         now.setDate(now.getDate() + 1)
         this.filters.useTimeE = now.Format('yyyy-MM-dd')
-        this.loginData = JSON.parse(localStorage.getItem('user'))
+        this.userName = JSON.parse(localStorage.getItem('user')).username
         this.fetchData()
     },
     data() {
@@ -206,7 +204,6 @@ export default {
                     }
                 ]
             },
-            loginData: '',
             sortList: [{
                     value: 'id',
                     label: '默认排序'
