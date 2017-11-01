@@ -169,6 +169,7 @@
                  <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                             <el-row :gutter="24"><el-col :span="12" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
                 <el-row>
+                    <div>111</div>
                         <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                       </el-row>
                       <el-row :gutter="24">

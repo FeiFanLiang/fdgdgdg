@@ -108,10 +108,8 @@
         <!-- <el-table-column prop="OrderKey" label="OrderKey" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="Channel" label="渠道" show-overflow-tooltip></el-table-column>
         <el-table-column prop="ExternalOrderID" label="外部订单号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="ExternalOrderStete" label="外部订单状态" show-overflow-tooltip></el-table-column>
         <el-table-column prop="LinkName" label="联系人" show-overflow-tooltip></el-table-column>
         <el-table-column prop="LinkPhone" label="联系电话" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="CarriageNo" label="航班/车次" show-overflow-tooltip></el-table-column>
         <el-table-column label="产品类型" show-overflow-tooltip>
             <template scope="scope">
 <span v-if="scope.row.CarTransportType === 0">
@@ -123,21 +121,17 @@
 <span v-if="scope.row.CarTransportType === 5">包车</span>
 </template>
             </el-table-column>
-            <el-table-column label="车型类别" show-overflow-tooltip>
-<template scope="scope">
-<span v-if="scope.row.CarClassify === 0">
-        经济型</span>
-<span v-if="scope.row.CarClassify === 1">舒适型</span>
-<span v-if="scope.row.CarClassify === 2">商务型</span>
-<span v-if="scope.row.CarClassify === 3">豪华型</span>
-</template>
-            </el-table-column>
             <el-table-column prop="UseTime" label="用车时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Origin" label="始发地" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Destination" label="目的地" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="PreServiceMileage" label="预计服务里程" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="RealPrice" label="实收金额" show-overflow-tooltip></el-table-column>
-            <!-- <el-table-column prop="PreServiceTime" label="预计服务用时" show-overflow-tooltip></el-table-column> -->
+            <el-table-column prop="PurchasePrice" label="外采金额" show-overflow-tooltip></el-table-column>
+            <el-table-column label="差价" show-overflow-tooltip>
+<template scope="scope">
+<span>{{scope.row.RealPrice - scope.row.PurchasePrice}}</span>
+</template>
+            </el-table-column>
+
             <!-- <el-table-column prop="Remark" label="订单备注" show-overflow-tooltip></el-table-column> -->
             <!-- <el-table-column prop="ProcessorUserName" label="处理人员" show-overflow-tooltip></el-table-column> -->
             <!-- <el-table-column label="是否支付" width="65">
@@ -161,24 +155,20 @@
 <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
 </template>
             </el-table-column> -->
-            <!-- <el-table-column label="是否外采单" width="65" >
+            <el-table-column label="是否外采单" width="65" >
 <template scope="scope">
 <el-popover ref="popover1" placement="top-start" width="200" trigger="hover">
     <p>外采渠道:{{scope.row.PurchaseChannel}}</p>
     <p>外采订单号:{{scope.row.PurchaseOrderNo}}</p>
-    <p>外采金额:{{scope.row.PurchasePrice}}</p>
     <p>外采处理人:{{scope.row.PurchasProcessor}}</p>
     <p>外采备注:{{scope.row.PurchaseRemark}}</p>
-    <p>是否报销:{{scope.row.IsPurchaseReturned?"是":"否"}}</p>
-    <p>报销时间:{{scope.row.PurchaseReturnedTime}}</p>
-    <p>报销处理人:{{scope.row.PurchaseReturnedProcessor}}</p>
 </el-popover>
 <div v-popover:popover1>
     <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsPurchase"></i>
     <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
 </div>
 </template>
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column label="是否报销">
 <template scope="scope">
 <el-switch v-model="scope.row.IsPurchaseReturned" on-text="是" off-text="否" :on-value="true" :off-value="false" @change="baoxiaoChange(scope.row,$event)" on-color="dodgerblue" off-color="lightgray">
@@ -722,7 +712,7 @@ export default {
                 externalOrderID: '',
                 carTransportType: '',
                 carClassify: '',
-                isPurchaseReturned: false
+                isPurchaseReturned: true
             },
             selectedOptions: [{
                     value: 1,
@@ -852,19 +842,23 @@ export default {
         },
         async mutipSubmit(a) {
             const _self = this
-            a ? _self.isMutipEditableA = false : _self.isMutipEditableB = false
-            let form = {
-                isPurchaseReturned: a
+            if (_self.multipleSelection.length) {
+                a ? _self.isMutipEditableA = false : _self.isMutipEditableB = false
+                let form = {
+                    isPurchaseReturned: a
+                }
+                for (let i = 0; i < _self.multipleSelection.length; i++) {
+                    await carOrderManageApi.edit(_self.multipleSelection[i], form)
+                }
+                _self.fetchData()
+                a ? _self.isMutipEditableA = true : _self.isMutipEditableB = true
+                _self.$message({
+                    message: '修改成功',
+                    type: 'success'
+                })
+            } else {
+                this.$message.error('请先选择订单！')
             }
-            for (let i = 0; i < _self.multipleSelection.length; i++) {
-                await carOrderManageApi.edit(_self.multipleSelection[i], form)
-            }
-            _self.fetchData()
-            a ? _self.isMutipEditableA = true : _self.isMutipEditableB = true
-            _self.$message({
-                message: '修改成功',
-                type: 'success'
-            })
         },
         async baoxiaoChange(row, value) {
             const _self = this
@@ -873,7 +867,7 @@ export default {
                 isPurchaseReturned: value
             }
             await carOrderManageApi.edit(form.id, form)
-             _self.fetchData()
+            _self.fetchData()
             _self.$message({
                 message: '修改成功',
                 type: 'success'

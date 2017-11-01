@@ -547,10 +547,8 @@ export default {
       const res = await roomStatPriceApi.getPriceList(form)
       // let SonRooms = [..._self.chosenRoom.SonRooms]
       _self.chosenRoom.SonRooms.forEach((item, index) => {
-        // item.timeDate = res.data.Sonrooms[String(item.ID)].STSes
         this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
         this.$set(item, 'select', false)
-        // item.select = ''
       })
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
