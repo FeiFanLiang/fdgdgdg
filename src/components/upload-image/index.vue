@@ -253,6 +253,7 @@ export default {
 
 .write-content textarea {
   /* width: 100%; */
+  margin-right: 10px;
   width: 200px;
   min-height: 150px;
   max-height: 500px;
