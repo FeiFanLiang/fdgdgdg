@@ -1,15 +1,14 @@
 <template>
 <div id="hotel-room-list" style="color:gray;">
-    <!-- <HotelTopMenu path="room">
+  <!-- <HotelTopMenu path="room">
         <el-button type="primary" @click="hotelroomAdd">创建</el-button>
     </HotelTopMenu> -->
-    <el-row>
-      <el-button type="primary" @click="hotelroomAdd">创建</el-button>
-    </el-row>
-    <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border element-loading-text="拼命加载中"
-      v-loading="loading">
-        <el-table-column prop="RoomName" width="95" label="产品名称">
-            <template scope="scope">
+  <el-row>
+    <el-button type="primary" @click="hotelroomAdd">创建</el-button>
+  </el-row>
+  <el-table :data="hotelroomlist" style="width: 100%;text-align:center;" border element-loading-text="拼命加载中" v-loading="loading">
+    <el-table-column prop="RoomName" width="95" label="产品名称">
+      <template scope="scope">
         <el-popover trigger="hover" placement="top">
           <p>房间ID: {{ scope.row.ID }}</p>
           <p>产品名称: {{ scope.row.RoomName }}</p>
@@ -23,98 +22,98 @@
 </template>
     </el-table-column>
     <el-table-column label="子房型名称" width="150">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-     <td>
-        <el-tooltip class="item" effect="dark" :content="item.SonRoomName" placement="top-start" :visible-arrow="false">
-            <p class="mytoollip">{{ item.SonRoomName }}</p>
-        </el-tooltip>
-      </td>
+  <td>
+    <el-tooltip class="item" effect="dark" :content="item.SonRoomName" placement="top-start" :visible-arrow="false">
+      <p class="mytoollip">{{ item.SonRoomName }}</p>
+    </el-tooltip>
+  </td>
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="房间编号" class="child-table" width="95">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-        <td>
-            <el-tooltip class="item" effect="dark" :content="item.SonRoomCode" placement="top-start" :visible-arrow="false">
-                <p class="mytoollip">{{ item.SonRoomCode }}</p>
-            </el-tooltip>
-        </td>
+  <td>
+    <el-tooltip class="item" effect="dark" :content="item.SonRoomCode" placement="top-start" :visible-arrow="false">
+      <p class="mytoollip">{{ item.SonRoomCode }}</p>
+    </el-tooltip>
+  </td>
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="早餐类型" width="95">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-        <td>
-             <el-tooltip class="item" effect="dark" :content="transBreakfastTypes(item.BreakfastType)" placement="top-start" :visible-arrow="false">
-                 <p class="mytoollip">{{transBreakfastTypes(item.BreakfastType)}}</p>
-            </el-tooltip>
-        </td>
+  <td>
+    <el-tooltip class="item" effect="dark" :content="transBreakfastTypes(item.BreakfastType)" placement="top-start" :visible-arrow="false">
+      <p class="mytoollip">{{transBreakfastTypes(item.BreakfastType)}}</p>
+    </el-tooltip>
+  </td>
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="状态" width="65">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-    <td>
-        <i class="el-icon-circle-check" style="color:#13CE66" v-if="!item.IsStop"></i>
-        <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-    </td>
+  <td>
+    <i class="el-icon-circle-check" style="color:#13CE66" v-if="!item.IsStop"></i>
+    <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+  </td>
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="备注一">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-   <td>
-       <el-tooltip class="item" effect="dark" :content="item.Remark" placement="top-start" :visible-arrow="false">
-            <p class="mytoollip">{{ item.Remark }}</p>
-        </el-tooltip>
-   </td>
+  <td>
+    <el-tooltip class="item" effect="dark" :content="item.Remark" placement="top-start" :visible-arrow="false">
+      <p class="mytoollip">{{ item.Remark }}</p>
+    </el-tooltip>
+  </td>
 
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="备注二">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-    <td>
-        <el-tooltip class="item" effect="dark" :content="item.Remark2" placement="top-start" :visible-arrow="false">
-            <p class="mytoollip">{{ item.Remark2 }}</p>
-        </el-tooltip>
-    </td>
+  <td>
+    <el-tooltip class="item" effect="dark" :content="item.Remark2" placement="top-start" :visible-arrow="false">
+      <p class="mytoollip">{{ item.Remark2 }}</p>
+    </el-tooltip>
+  </td>
 </tr>
 </template>
     </el-table-column>
     <el-table-column label="子房型操作" width="170" fixed="right">
-      <template scope="scope">
+<template scope="scope">
 <tr v-for="(item,index) in scope.row.SonRooms" :key="index" class="child-table">
-    <td>
-        <el-button size="mini" @click="hotelSonRoomPlatEdit(index,scope.row)">平台</el-button>
-        <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
-        <el-button size="mini" type="danger" @click="hotelSonRoomDelete(index,scope.row)">删除</el-button>
-    </td>
+  <td>
+    <el-button size="mini" @click="hotelSonRoomPlatEdit(index,scope.row)">平台</el-button>
+    <el-button size="mini" @click="hotelSonRoomEdit(index,scope.row)">编辑</el-button>
+    <el-button size="mini" type="danger" @click="hotelSonRoomDelete(index,scope.row)">删除</el-button>
+  </td>
 </tr>
 </template>
     </el-table-column>
 
     <el-table-column width="195" label="房型操作" fixed="right">
-      <template scope="scope">
-        <tr class="child-table">
-            <td>
-                <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
-            </td>
-        </tr>
-        <tr class="child-table">
-            <td>
-                <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
-                <el-button size="mini" @click="hotelroomDetail( scope.row)">展示信息</el-button>
-                <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
-            </td>
-        </tr>
-      </template>
+<template scope="scope">
+<tr class="child-table">
+  <td>
+    <el-button size="mini" @click="hotelSonRoomAdd( scope.row)">添加子房型</el-button>
+  </td>
+</tr>
+<tr class="child-table">
+  <td>
+    <el-button size="mini" @click="hotelroomEdit( scope.row)">编辑</el-button>
+    <el-button size="mini" @click="hotelroomDetail( scope.row)">展示信息</el-button>
+    <el-button size="mini" type="danger" @click="hotelroomDelete( scope.row)">删除</el-button>
+  </td>
+</tr>
+</template>
     </el-table-column>
   </el-table>
 
@@ -214,8 +213,14 @@
 </template>
 
 <script>
-import { hotelRoomApi, sonRoomApi, hotelRoomBedApi } from 'api'
-import { HotelTopMenu } from 'components'
+import {
+  hotelRoomApi,
+  sonRoomApi,
+  hotelRoomBedApi
+} from 'api'
+import {
+  HotelTopMenu
+} from 'components'
 import HotelRoomPlat from './hotel-room-plat'
 export default {
   components: {
@@ -230,8 +235,7 @@ export default {
       loading: false,
       roomId: '',
       sonRoomId: '',
-      breakfastTypes: [
-        {
+      breakfastTypes: [{
           name: '未定',
           value: '未定'
         },
@@ -283,29 +287,23 @@ export default {
         isStop: false
       },
       rules: {
-        roomName: [
-          {
-            required: true,
-            message: '请填写房间名称',
-            trigger: 'blur'
-          }
-        ]
+        roomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }]
       },
       sonRules: {
-        sonRoomName: [
-          {
-            required: true,
-            message: '请填写房间名称',
-            trigger: 'blur'
-          }
-        ],
-        sonRoomCode: [
-          {
-            required: true,
-            message: '请填写房间编号',
-            trigger: 'blur'
-          }
-        ]
+        sonRoomName: [{
+          required: true,
+          message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        sonRoomCode: [{
+          required: true,
+          message: '请填写房间编号',
+          trigger: 'blur'
+        }]
       },
       dialogVisible: false,
       sonFormDialogVisible: false,
@@ -353,7 +351,9 @@ export default {
     async handleSaveAndEdit() {
       const _self = this
       for (let item in _self.bed) {
-        _self.form.Beds.push({ ID: _self.bed[item] })
+        _self.form.Beds.push({
+          ID: _self.bed[item]
+        })
       }
       _self.$refs['form'].validate(async valid => {
         if (valid) {
@@ -452,7 +452,9 @@ export default {
       if (!row || !row.SonRooms) retrun
       const sonRooms = row.SonRooms[index]
       const _self = this
-      const res = await hotelRoomBedApi.details(sonRooms.BreakfastType)
+      console.log(sonRooms)
+      // const res = await hotelRoomBedApi.details('1')
+      const res = await sonRoomApi.detailById(sonRooms.ID)
       let bedName = res.data.BedName
       _self.roomName = row.RoomName
       _self.breakfastTypesName = bedName
@@ -483,7 +485,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        .then(async () => {
+        .then(async() => {
           try {
             await hotelRoomApi.del(row.ID)
             _self.fetchData()
@@ -506,7 +508,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        .then(async () => {
+        .then(async() => {
           try {
             await sonRoomApi.del(row.SonRooms[index].ID)
             _self.fetchData()
@@ -542,20 +544,20 @@ export default {
 </script>
 <style lang="scss">
 #hotel-room-list {
-    .el-table .info-row {
-        background: #c9e5f5;
-    }
-    .el-table--enable-row-hover .el-table__body tr:hover > td {
-        background-color: #fff;
-    }
-    .child-table > td {
-        border-bottom: 0;
-        border-right: 0;
-    }
-    .mytoollip{
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+  .el-table .info-row {
+    background: #c9e5f5;
+  }
+  .el-table--enable-row-hover .el-table__body tr:hover>td {
+    background-color: #fff;
+  }
+  .child-table>td {
+    border-bottom: 0;
+    border-right: 0;
+  }
+  .mytoollip {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 </style>

@@ -14,6 +14,11 @@ export default {
       name: '酒店基础信息'
     },
     {
+      path: 'HotelBasePolicy',
+      component: _import('hotel/hotel-base-policy/hotel-base-policy'),
+      name: '酒店政策信息'
+    },
+    {
       path: 'HotelBaseAdd',
       component: _import('hotel/hotel-base/hotel-base-add'),
       name: '添加酒店',
@@ -64,6 +69,22 @@ export default {
           path: 'hotelShow',
           component: _import('hotel/hotel-show/hotel-show'),
           name: '酒店展示信息'
+        }
+      ],
+      meta: {
+        hidden: true
+      }
+    },
+    {
+      path: 'HotelBaseEditPolicy/:ID',
+      redirect: { name: '酒店政策信息编辑' },
+      component: Pages.Abstract,
+      name: '酒店政策信息编辑',
+      children: [
+        {
+          path: 'policy',
+          component: _import('hotel/hotel-policy/hotel-policy'),
+          name: '酒店政策信息编辑'
         }
       ],
       meta: {

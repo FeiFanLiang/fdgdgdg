@@ -187,7 +187,7 @@
   </div>
     </el-dialog>
 
-    <el-dialog title="修改房间状态" v-model="mutip">
+    <el-dialog title="批量修改房间状态" v-model="mutip">
       <el-tabs v-model="singalSonRoomId" @tab-click="handleSingalSonRoomId">
     <el-tab-pane :label="a.SonRoomName" :name="String(a.ID)" v-for="a in mutipList" :key="a.ID">
       <el-form ref="singalStateForm" :model="singalStateForm" label-width="80px">
@@ -217,7 +217,6 @@
   </el-tabs>
   <div slot="footer" class="dialog-footer">
     <el-button type="primary" :loading="!isMutipEditable" @click="mutipSubmit()">{{isMutipEditable?'确认修改':'提交中'}}</el-button>
-    <el-button @click="colseMutip()">更新并关闭</el-button>
     <el-button @click="mutip = false">关闭</el-button>
   </div>
     </el-dialog>
@@ -475,34 +474,37 @@ export default {
     },
     async mutipSubmit() {
       const _self = this
-      _self.isMutipEditable = false
-      let form = []
-      let timeList = _self.dateScope(
-        _self.singalStateForm.date[0],
-        _self.singalStateForm.date[1]
-      )
-      timeList.forEach(time => {
-        form.push({
-          hotelId: _self.singalStateForm.hotelId,
-          roomId: _self.chosenRoom.roomId,
-          sonRoomId: _self.singalStateForm.sonRoomId,
-          roomType: 1,
-          date: time,
-          count: _self.singalStateForm.count,
-          isOpen: _self.singalStateForm.isOpen,
-          updateChannel: _self.singalStateForm.updateChannel
+      try {
+        _self.isMutipEditable = false
+        let form = []
+        let timeList = _self.dateScope(
+          _self.singalStateForm.date[0],
+          _self.singalStateForm.date[1]
+        )
+        timeList.forEach(time => {
+          form.push({
+            hotelId: _self.singalStateForm.hotelId,
+            roomId: _self.chosenRoom.roomId,
+            sonRoomId: _self.singalStateForm.sonRoomId,
+            roomType: 1,
+            date: time,
+            count: _self.singalStateForm.count,
+            isOpen: _self.singalStateForm.isOpen,
+            updateChannel: _self.singalStateForm.updateChannel
+          })
         })
-      })
-      const res = await roomStatPriceApi.UpdateRoomState(form)
-      _self.$message({
-        message: '修改成功',
-        type: 'success'
-      })
-      _self.isMutipEditable = true
-    },
-    colseMutip() {
-      this.mutip = false
-      this.getPriceList()
+        const res = await roomStatPriceApi.UpdateRoomState(form)
+        _self.$message({
+          message: '修改成功',
+          type: 'success'
+        })
+        _self.mutip = false
+        _self.isMutipEditable = true
+        _self.getPriceList()
+      } catch (e) {
+        _self.isMutipEditable = true
+        this.$message.error('修改失败！')
+      }
     },
     async platTimeRange(pid) {
       if (!pid) {
@@ -757,66 +759,77 @@ export default {
     },
     async priceSubmit() {
       const _self = this
-      _self.isEditable = false
-      let priceForm = []
-      let otherPriceForm = []
-      let timeList = _self.dateScope(
-        _self.priceForm.time[0],
-        _self.priceForm.time[1]
-      )
-      timeList.forEach(time => {
-        _self.priceForm.price.forEach(item => {
-          if (item.id === -1) {
-            priceForm.push({
-              sonRoomId: _self.priceForm.sonRoomId,
-              price: item.price,
-              useTime: time
-            })
-          } else {
-            otherPriceForm.push({
-              sonRoomId: _self.priceForm.sonRoomId,
-              price: item.price,
-              useTime: time,
-              threePlatId: item.id,
-              stat: item.stat
-            })
-          }
+      try {
+        _self.isEditable = false
+        let priceForm = []
+        let otherPriceForm = []
+        let timeList = _self.dateScope(
+          _self.priceForm.time[0],
+          _self.priceForm.time[1]
+        )
+        timeList.forEach(time => {
+          _self.priceForm.price.forEach(item => {
+            if (item.id === -1) {
+              priceForm.push({
+                sonRoomId: _self.priceForm.sonRoomId,
+                price: item.price,
+                useTime: time
+              })
+            } else {
+              otherPriceForm.push({
+                sonRoomId: _self.priceForm.sonRoomId,
+                price: item.price,
+                useTime: time,
+                threePlatId: item.id,
+                stat: item.stat || 0
+              })
+            }
+          })
         })
-      })
-      const otherPriceFormRes = await roomStatPriceApi.updateRoomSalePrice(
-        otherPriceForm
-      )
-      const priceFormRes = await roomStatPriceApi.updateRoomPurchasePrice(
-        priceForm
-      )
-      _self.getPriceList()
-      _self.priceChangeForOne = false
-      _self.isEditable = true
+        const otherPriceFormRes = await roomStatPriceApi.updateRoomSalePrice(
+          otherPriceForm
+        )
+        const priceFormRes = await roomStatPriceApi.updateRoomPurchasePrice(
+          priceForm
+        )
+        _self.getPriceList()
+        _self.priceChangeForOne = false
+        _self.isEditable = true
+      } catch (e) {
+        _self.isEditable = true
+        this.$message.error('修改失败！')
+      }
+
     },
     async stateSubmit() {
       const _self = this
-      _self.isEditable = false
-      let stateForm = []
-      let timeList = _self.dateScope(
-        _self.stateForm.date[0],
-        _self.stateForm.date[1]
-      )
-      timeList.forEach(time => {
-        stateForm.push({
-          hotelId: _self.stateForm.hotelId,
-          roomId: _self.chosenRoom.roomId,
-          sonRoomId: _self.stateForm.sonRoomId,
-          roomType: 1,
-          date: time,
-          count: _self.stateForm.count,
-          isOpen: _self.stateForm.isOpen,
-          updateChannel: _self.stateForm.updateChannel
+      try {
+        _self.isEditable = false
+        let stateForm = []
+        let timeList = _self.dateScope(
+          _self.stateForm.date[0],
+          _self.stateForm.date[1]
+        )
+        timeList.forEach(time => {
+          stateForm.push({
+            hotelId: _self.stateForm.hotelId,
+            roomId: _self.chosenRoom.roomId,
+            sonRoomId: _self.stateForm.sonRoomId,
+            roomType: 1,
+            date: time,
+            count: _self.stateForm.count,
+            isOpen: _self.stateForm.isOpen,
+            updateChannel: _self.stateForm.updateChannel
+          })
         })
-      })
-      const res = await roomStatPriceApi.UpdateRoomState(stateForm)
-      _self.getPriceList()
-      _self.priceChangeForOne = false
-      _self.isEditable = true
+        const res = await roomStatPriceApi.UpdateRoomState(stateForm)
+        _self.getPriceList()
+        _self.priceChangeForOne = false
+        _self.isEditable = true
+      } catch (e) {
+        _self.isEditable = true
+        this.$message.error('修改失败！')
+      }
     },
     submit() {
       const _self = this

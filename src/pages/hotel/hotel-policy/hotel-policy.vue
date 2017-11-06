@@ -17,6 +17,73 @@
                     <el-input v-model="form.PurchasingName"></el-input>
                 </el-form-item>
             </el-col>
+            <el-col :span="12" style="margin-top:40px;">
+                <el-form-item label="默认政策" prop="IsDefault">
+                    <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12" style="color:orange;">
+                <h1>财务信息</h1>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="酒店开户行">
+                    <el-input v-model="form.BankName"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="酒店账户">
+                    <el-input v-model="form.AccountName"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="酒店账号">
+                    <el-input v-model="form.AccountNum"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="酒店财务负责人">
+                    <el-input v-model="form.FinanceLinkMan"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="财务联系人电话">
+                    <el-input v-model="form.FinancePhoneNum"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="打款公司">
+                    <el-select v-model="form.PayCompanyID" clearable placeholder="请选择打款公司">
+                        <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="付款周期">
+                    <el-select v-model="form.PayPeriod" clearable placeholder="请选择付款周期">
+                        <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="酒店财务信息备注">
+                    <el-input type="textarea" v-model="form.FinanceRemark"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12" style="color:orange;">
+                <h1>政策信息</h1>
+            </el-col>
         </el-row>
         <el-row :gutter="24">
             <el-col :span="12">
@@ -39,8 +106,8 @@
                 </el-form-item>
             </el-col>
             <el-col :span="12">
-                <el-form-item label="酒店预订方式">
-                    <el-select v-model="form.ReserveModeID" clearable placeholder="请选择预订方式">
+                <el-form-item label="酒店酒店预订方式">
+                    <el-select v-model="form.ReserveModeID" clearable placeholder="请选择酒店预订方式">
                         <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
@@ -48,73 +115,25 @@
         </el-row>
         <el-row :gutter="24">
             <el-col :span="12">
-                <el-form-item label="付款公司">
-                    <el-select v-model="form.PayCompanyID" clearable placeholder="请选择付款公司">
-                        <el-option v-for="(item,index) in payCompanyOptions" :key="index" :label="item.AccountName" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="付款方式">
-                    <el-select v-model="form.PayModeID" clearable placeholder="请选择付款方式">
-                        <el-option v-for="(item,index) in payModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="付款类型">
-                    <el-select v-model="form.PayPeriod" clearable placeholder="请选择付款类型">
+                <el-form-item label="收款周期" prop="PeriodShou">
+                    <el-select v-model="form.PeriodShou" clearable placeholder="请选择收款周期">
                         <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="12">
-                <el-form-item label="酒店财务负责人">
-                    <el-input v-model="form.FinanceLinkMan"></el-input>
+            <!-- <el-col :span="12">
+                <el-form-item label="酒店联系电话" prop="PhoneNum">
+                    <el-input v-model="form.PhoneNum"></el-input>
                 </el-form-item>
-            </el-col>
+            </el-col> -->
         </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="酒店财务电话">
-                    <el-input v-model="form.FinancePhoneNum"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="酒店开户行">
-                    <el-input v-model="form.BankName"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="酒店账户">
-                    <el-input v-model="form.AccountName"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="酒店账号">
-                    <el-input v-model="form.AccountNum"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12" style="margin-top:40px;">
-                <el-form-item label="默认政策" prop="IsDefault">
-                    <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
         <el-row :gutter="24">
             <el-col :span="12" style="color:orange;">
-                <h1>备注信息</h1>
+                <h1>政策图片</h1>
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-col>
         </el-row>
         <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="财务备注">
-                    <el-input type="textarea" v-model="form.FinanceRemark"></el-input>
-                </el-form-item>
-            </el-col>
             <el-col :span="12">
                 <el-form-item label="退改规则备注">
                     <el-input type="textarea" v-model="form.Remark1"></el-input>
@@ -175,14 +194,33 @@
                     <el-input type="textarea" v-model="form.Remark10"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-        <el-row :gutter="24">
-            <el-col :span="12" style="color:orange;">
-                <h1>截图信息</h1>
-                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+            <el-col :span="12">
+                <el-form-item label="备注11">
+                    <el-input type="textarea" v-model="form.Remark11"></el-input>
+                </el-form-item>
             </el-col>
         </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="备注12">
+                    <el-input type="textarea" v-model="form.Remark12"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="备注13">
+                    <el-input type="textarea" v-model="form.Remark13"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="备注14">
+                    <el-input type="textarea" v-model="form.Remark14"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+
         <el-row :gutter="24">
             <el-col :span="12" :offset="12">
                 <!-- <el-button @click="createDialog = false">取 消</el-button> -->
@@ -220,7 +258,6 @@ export default {
         _self.getSecretType()
         _self.getReserveMode()
         _self.getPayCompany()
-        _self.getPayMode()
         _self.fetchData()
         _self.configList = hotelPolicyApi.getConfig()
     },
@@ -230,33 +267,34 @@ export default {
             isEditable: true,
             fileList: [],
             payPeriodList: [{
-                    value: 'Advance',
+                    value: 0,
+                    text: '其他（每单备注）'
+                }, {
+                    value: 1,
                     text: '预付款'
                 },
                 {
-                    value: 'Every',
+                    value: 2,
                     text: '单结'
                 },
                 {
-                    value: 'Day',
+                    value: 3,
                     text: '日结'
                 },
+
                 {
-                    value: 'Week',
-                    text: '周结'
-                },
-                {
-                    value: 'HalfMonth',
-                    text: '半月结'
-                },
-                {
-                    value: 'Month',
+                    value: 4,
                     text: '月结'
                 },
                 {
-                    value: 'None',
-                    text: '其他（每单备注）'
+                    value: 5,
+                    text: '半月结'
+                },
+                {
+                    value: 6,
+                    text: '周结'
                 }
+
             ],
             imageList: [],
             form: {
@@ -270,14 +308,14 @@ export default {
                 AccountNum: '',
                 FinanceLinkMan: '',
                 FinancePhoneNum: '',
-                PayCompanyID: '',
+                PayCompanyID: null,
                 FinanceRemark: '',
                 LinkMan: '',
                 PhoneNum: '',
-                SecretTypeID: '',
-                ReserveModeID: '',
-                PayModeID: '',
-                PayPeriod: '',
+                SecretTypeID: null,
+                ReserveModeID: null,
+                PeriodShou: '',
+                PayPeriod: 0,
                 Remark1: '',
                 Remark2: '',
                 Remark3: '',
@@ -287,9 +325,13 @@ export default {
                 Remark7: '',
                 Remark8: '',
                 Remark9: '',
-                Remark10: ''
+                Remark10: '',
+                Remark11: '',
+                Remark12: '',
+                Remark13: '',
+                Remark14: '',
+                PurchasImg: ''
             },
-            payModeOptions: [],
             payCompanyOptions: [],
             reserveModeOptions: [],
             secretTypeOptions: [],
@@ -309,27 +351,35 @@ export default {
                     required: true,
                     message: '请填写政策采购人姓名',
                     trigger: 'blur'
+                }],
+                PeriodShou: [{
+                    required: true,
+                    type: 'number',
+                    message: '请填写收款周期类型',
+                    trigger: 'blur'
                 }]
             },
             listzzz: []
         }
     },
+    watch: {
+        imageList(newList) {
+            this.form.PurchasImg = newList.join(',')
+        }
+    },
     methods: {
-        async getImageList(id) {
-            const res = await hotelPolicyImageApi.listByPid(id)
-            this.listzzz = res.data
-            let arr = []
-            if (this.listzzz && Array.isArray(this.listzzz)) {
-                this.listzzz.forEach(function(item) {
-                    arr.push(item.Path)
-                })
-                this.imageList = arr
+        async getImageList(list) {
+            if (list) {
+                const images = list.split(',')
+                if (Array.isArray(images)) {
+                    this.imageList = images
+                }
             }
         },
-        async getPayMode() {
-            const res = await hotelPayModeApi.list()
-            this.payModeOptions = res.data
-        },
+        // async getPayMode() {
+        //     const res = await hotelPayModeApi.list()
+        //     this.payModeOptions = res.data
+        // },
         async getPayCompany() {
             const res = await payCompanyApi.list()
             this.payCompanyOptions = res.data
@@ -365,6 +415,8 @@ export default {
                             type: 'success'
                         })
                     } catch (e) {
+                        _self.isEditable = true
+                        this.$message.error('添加失败！')
                         console.error(e)
                     }
                 } else {
@@ -387,6 +439,8 @@ export default {
                             type: 'success'
                         })
                     } catch (e) {
+                        _self.isEditable = true
+                        this.$message.error('编辑失败！')
                         console.error(e)
                     }
                 } else {
@@ -401,59 +455,19 @@ export default {
             const res = await hotelPolicyApi.listByHotelID(hotelID)
             this.hotelpolicy = res.data
             this.hotelpolicy.length ? this.form = this.hotelpolicy[0] : ''
-            this.getImageList(this.form.ID)
+            // this.getImageList(this.form.ID)
             this.loading = false
             console.log(this.hotelpolicy)
         },
-        beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-            if (!isJPG) {
-                this.$message.error('上传图片只能是 JPG/PNG 格式!')
-            }
-            return isJPG
-        },
-        async handleRemove(file, fileList) {
-            if (file) {
-                let id
-                this.listzzz.forEach(async function(item) {
-                    if (file === item.Path) {
-                        id = item.ID
-                    }
-                })
-                try {
-                    await hotelPolicyImageApi.del(id)
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    })
-                    await this.getImageList(this.form.ID)
-                } catch (e) {
-                    this.$message.error('删除失败,请重试！')
-                }
-            }
+        async handleRemove(index, fileList) {
+            this.imageList.splice(index, 1)
         },
         async handleSuccess(response, file, fileList) {
-            try {
-                if (!response) {
-                    this.$message.error('上传失败,请重新上传')
-                    return false
-                }
-                const form = {
-                    policyId: this.form.ID,
-                    path: response
-                }
-                await hotelPolicyImageApi.add(form)
-                this.getImageList(this.form.ID)
-                this.$message({
-                    message: '上传成功',
-                    type: 'success'
-                })
-            } catch (e) {
+            if (!response) {
                 this.$message.error('上传失败,请重新上传')
+                return false
             }
-        },
-        handleError(err, file, fileList) {
-            this.$message.error('上传失败,请重新上传')
+            this.imageList.push(response)
         }
     }
 }
