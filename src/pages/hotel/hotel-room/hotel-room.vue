@@ -161,45 +161,57 @@
   <el-dialog :title="sonForm.id?'编辑子房间信息':'添加子房间信息'" v-model="sonFormDialogVisible" size="small" @close="dialogClose">
     <el-form ref="sonForm" :model="sonForm" :rules="sonRules" label-width="100px">
       <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
+          <el-form-item label="子房间编号" prop="roomCode">
+            <el-input v-model="sonForm.sonRoomCode"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="子房间名称" prop="sonRoomName">
+            <el-input v-model="sonForm.sonRoomName" disabled="disabled"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="售卖床型">
+            <el-select v-model="sonBed" placeholder="请选择售卖床型" multiple>
+              <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="早餐类型">
             <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型" @change="changeBreakfastType">
               <el-option v-for="(item,index) in breakfastTypes " :label="item.name" :value="item.value" :key="index"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="11" :offset="1">
-          <el-form-item label="子房间名称" prop="roomName">
-            <el-input v-model="sonForm.sonRoomName" disabled="disabled"></el-input>
-          </el-form-item>
-        </el-col>
       </el-row>
       <el-row>
-        <el-col :span="11">
-          <el-form-item label="子房间编号" prop="roomCode">
-            <el-input v-model="sonForm.sonRoomCode"></el-input>
+        <el-col :span="12">
+          <el-form-item label="实际入住人数">
+            <el-input v-model="sonForm.maxMan" type="number"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="11" :offset="1">
-          <el-form-item label="备注一">
-            <el-input v-model="sonForm.remark" type="textarea"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
-          <el-form-item label="备注二">
-            <el-input v-model="sonForm.remark2" type="textarea"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="11">
+        <el-col :span="12">
           <div class="grid-content bg-purple">
             <el-form-item label="启用状态">
               <el-switch on-text="开启" off-text="关闭" :on-value="false" :off-value="true" v-model="sonForm.isStop"></el-switch>
             </el-form-item>
           </div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="备注一">
+            <el-input v-model="sonForm.remark" type="textarea"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="备注二">
+            <el-input v-model="sonForm.remark2" type="textarea"></el-input>
+          </el-form-item>
         </el-col>
       </el-row>
     </el-form>
@@ -237,34 +249,35 @@ export default {
       sonRoomId: '',
       breakfastTypes: [{
           name: '未定',
-          value: '未定'
+          value: 0
         },
         {
           name: '无早',
-          value: '无早'
+          value: 1
         },
         {
           name: '一餐',
-          value: '一餐'
+          value: 2
         },
         {
           name: '两餐',
-          value: '两餐'
+          value: 3
         },
         {
           name: '三餐',
-          value: '三餐'
+          value: 4
         },
         {
           name: '四餐',
-          value: '四餐'
+          value: 5
         },
         {
           name: '更多',
-          value: '更多'
+          value: 6
         }
       ],
       bed: [],
+      sonBed: [],
       form: {
         id: '',
         hotelNum: '',
@@ -280,16 +293,22 @@ export default {
         roomID: '',
         sonRoomName: '',
         sonRoomCode: '',
-        roomCount: '',
         remark: '',
         remark2: '',
         breakfastType: '',
-        isStop: false
+        isStop: false,
+        beds: [],
+        maxMan: ''
       },
       rules: {
         roomName: [{
           required: true,
           message: '请填写房间名称',
+          trigger: 'blur'
+        }],
+        roomCount: [{
+          required: true,
+          message: '请填写房间数量',
           trigger: 'blur'
         }]
       },
@@ -386,6 +405,11 @@ export default {
     },
     async handleSonRoomSaveAndEdit() {
       const _self = this
+      for (let item in _self.sonBed) {
+        _self.sonForm.beds.push({
+          ID: _self.sonBed[item]
+        })
+      }
       _self.$refs['sonForm'].validate(async valid => {
         if (valid) {
           try {
@@ -429,16 +453,21 @@ export default {
     },
     hotelSonRoomAdd(row) {
       this.roomName = row.RoomName
+      this.sonFormDialogVisible = true
       this.sonForm = {
         roomID: row.ID,
         breakfastType: this.breakfastTypes.name,
         isStop: false,
-        sonRoomName: this.roomName + '[' + this.breakfastTypesName + ']'
+        sonRoomName: this.roomName + '[' + this.breakfastTypesName + ']',
+        beds: [],
       }
-      this.sonFormDialogVisible = true
+      this.sonBed = []
+
     },
     hotelroomEdit(row) {
+      console.log(row)
       const _self = this
+      _self.bed = []
       _self.form.id = row.ID
       _self.form.hotelId = row.HotelID
       _self.form.roomName = row.RoomName
@@ -455,20 +484,39 @@ export default {
       console.log(sonRooms)
       // const res = await hotelRoomBedApi.details('1')
       const res = await sonRoomApi.detailById(sonRooms.ID)
-      let bedName = res.data.BedName
-      _self.roomName = row.RoomName
-      _self.breakfastTypesName = bedName
+      console.log(res.data.Data)
+      console.log(_self.sonForm)
       _self.sonFormDialogVisible = true
-      _self.sonForm.id = sonRooms.ID
-      _self.sonForm.roomID = sonRooms.RoomID
-      // _self.sonForm.sonRoomName = sonRooms.SonRoomName;
-      _self.sonForm.sonRoomName =
-        this.roomName + '[' + _self.breakfastTypesName + ']'
-      _self.sonForm.sonRoomCode = sonRooms.SonRoomCode
-      _self.sonForm.remark = sonRooms.Remark
-      _self.sonForm.remark2 = sonRooms.Remark2
-      _self.sonForm.breakfastType = bedName
-      _self.sonForm.isStop = sonRooms.IsStop
+      _self.sonBed = []
+      _self.sonForm.beds = res.data.Data.Beds
+      _self.sonForm.breakfastType = res.data.Data.BreakfastType
+      // _self.sonForm.createTime = res.data.Data.CreateTime
+      // _self.sonForm.createUserID = res.data.Data.CreateUserID
+      // _self.sonForm.createUserName = res.data.Data.CreateUserName
+      _self.sonForm.id = res.data.Data.ID
+      // _self.sonForm.isDelete = res.data.Data.IsDelete
+      _self.sonForm.isStop = res.data.Data.IsStop
+      _self.sonForm.remark = res.data.Data.Remark
+      _self.sonForm.remark2 = res.data.Data.Remark2
+      _self.sonForm.roomID = res.data.Data.RoomID
+      _self.sonForm.sonRoomCode = res.data.Data.SonRoomCode
+      _self.sonForm.sonRoomName = res.data.Data.SonRoomName
+      _self.sonForm.maxMan = res.data.Data.MaxMan
+
+      // let bedName = res.data.BedName
+      // _self.roomName = row.RoomName
+      // _self.breakfastTypesName = bedName
+      // _self.sonFormDialogVisible = true
+      // _self.sonForm.id = sonRooms.ID
+      // _self.sonForm.roomID = sonRooms.RoomID
+      // // _self.sonForm.sonRoomName = sonRooms.SonRoomName;
+      // _self.sonForm.sonRoomName =
+      //   this.roomName + '[' + _self.breakfastTypesName + ']'
+      // _self.sonForm.sonRoomCode = sonRooms.SonRoomCode
+      // _self.sonForm.remark = sonRooms.Remark
+      // _self.sonForm.remark2 = sonRooms.Remark2
+      // _self.sonForm.breakfastType = bedName
+      // _self.sonForm.isStop = sonRooms.IsStop
     },
     hotelSonRoomPlatEdit(index, row) {
       if (!row || !row.SonRooms) retrun

@@ -106,7 +106,8 @@ export default {
           ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
           HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
           HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : '',
-          IsForeign: _self.isForeign
+          IsForeign: _self.isForeign,
+          IsDelete:false
         },
       }
       const res = await hotelBaseApi.listAll(options)
