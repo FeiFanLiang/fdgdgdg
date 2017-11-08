@@ -279,6 +279,7 @@ export default {
             }
             const res = await hotelsOrderApi.payhj(select)
             _self.hejiPay = res.data.Data
+            console.log(_self.hejiPay)
             _self.list()
             let s = _self.randomString()
             let amount = 0
