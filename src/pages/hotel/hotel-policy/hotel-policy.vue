@@ -1,9 +1,91 @@
 <template lang="html">
 <div id="hotelPollicyList">
+    <el-form ref="baseForm" :model="baseForm" label-position="top" style="margin-top:25px" v-loading="baseLoading">
+        <el-row :gutter="24">
+            <el-col :span="12" style="color:orange;">
+                <h1>酒店基础信息</h1>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <el-form-item label="酒店ID">
+                    <el-input v-model="baseForm.id" :disabled="true"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店编号">
+                    <el-input v-model="baseForm.hotelNum"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店名称">
+                    <el-input v-model="baseForm.hotelName"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="酒店英文名称">
+                    <el-input v-model="baseForm.hotelName_En"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <el-form-item label="前台电话">
+                    <el-input v-model="baseForm.frontPhone"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="传真号">
+                    <el-input v-model="baseForm.faxNum"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="区域">
+                    <el-select v-model="baseForm.areaId" clearable filterable remote placeholder="请输入酒店所在区域" :remote-method="remoteMethod" :loading="areaLloading">
+                        <el-option v-for="(item,index) in areaOptions" :key="index" :label="item&&item.AreaName" :value="item&&item.ID">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="地址">
+                    <el-input v-model="baseForm.address"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <el-form-item label="星级">
+                    <el-select v-model="baseForm.starNum" clearable placeholder="请选择酒店星级">
+                        <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="国内国外">
+                        <el-switch on-text="国外" off-text="国内" :on-value="true" :off-value="false" v-model="baseForm.isForeign"></el-switch>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="备注">
+                    <el-input type="textarea" v-model="baseForm.remark"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="18">
+                <el-form-item>
+                    <!-- <el-button @click="Cancel">取消</el-button> -->
+                    <el-button type="primary" @click="baseSubmitForm()" :loading="!baseIsEditable">{{baseIsEditable?'保存酒店基础信息':'提交中'}}</el-button>
+                </el-form-item>
+            </el-col>
+        </el-row>
+    </el-form>
+    <hr style="height:3px;border:none;border-top:3px double #8cb8ce;" />
     <el-form ref="form" :model="form" :rules="rules" label-width="110" v-loading="loading">
         <el-row :gutter="24">
             <el-col :span="12" style="color:orange;">
-                <h1>基础信息</h1>
+                <h1>酒店政策信息</h1>
             </el-col>
         </el-row>
         <el-row :gutter="24">
@@ -17,17 +99,55 @@
                     <el-input v-model="form.PurchasingName"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="酒店联系人" prop="LinkMan">
+                    <el-input v-model="form.LinkMan"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="酒店联系电话" prop="PhoneNum">
+                    <el-input v-model="form.PhoneNum"></el-input>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="保密类型">
+                    <el-select v-model="form.SecretTypeID" clearable placeholder="请选择保密类型">
+                        <el-option v-for="(item,index) in secretTypeOptions" :key="index" :label="item.SecretName" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="酒店酒店预订方式">
+                    <el-select v-model="form.ReserveModeID" clearable placeholder="请选择酒店预订方式">
+                        <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
+            <el-col :span="12">
+                <el-form-item label="收款周期" prop="PeriodShou">
+                    <el-select v-model="form.PeriodShou" clearable placeholder="请选择收款周期">
+                        <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
             <el-col :span="12" style="margin-top:40px;">
                 <el-form-item label="默认政策" prop="IsDefault">
                     <el-switch on-text="是" off-text="否" v-model="form.IsDefault"></el-switch>
                 </el-form-item>
             </el-col>
         </el-row>
-        <el-row :gutter="24">
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+        <!-- <el-row :gutter="24">
             <el-col :span="12" style="color:orange;">
                 <h1>财务信息</h1>
             </el-col>
-        </el-row>
+        </el-row> -->
         <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="酒店开户行">
@@ -82,53 +202,6 @@
         </el-row>
         <el-row :gutter="24">
             <el-col :span="12" style="color:orange;">
-                <h1>政策信息</h1>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="酒店联系人" prop="LinkMan">
-                    <el-input v-model="form.LinkMan"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="酒店联系电话" prop="PhoneNum">
-                    <el-input v-model="form.PhoneNum"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="保密类型">
-                    <el-select v-model="form.SecretTypeID" clearable placeholder="请选择保密类型">
-                        <el-option v-for="(item,index) in secretTypeOptions" :key="index" :label="item.SecretName" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="酒店酒店预订方式">
-                    <el-select v-model="form.ReserveModeID" clearable placeholder="请选择酒店预订方式">
-                        <el-option v-for="(item,index) in reserveModeOptions" :label="item.ModeName" :key="index" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12">
-                <el-form-item label="收款周期" prop="PeriodShou">
-                    <el-select v-model="form.PeriodShou" clearable placeholder="请选择收款周期">
-                        <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <!-- <el-col :span="12">
-                <el-form-item label="酒店联系电话" prop="PhoneNum">
-                    <el-input v-model="form.PhoneNum"></el-input>
-                </el-form-item>
-            </el-col> -->
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="12" style="color:orange;">
                 <h1>政策图片</h1>
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-col>
@@ -139,92 +212,88 @@
                     <el-input type="textarea" v-model="form.Remark1"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="费用信息备注">
                     <el-input type="textarea" v-model="form.Remark2"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注3">
                     <el-input type="textarea" v-model="form.Remark3"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注4">
                     <el-input type="textarea" v-model="form.Remark4"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注5">
                     <el-input type="textarea" v-model="form.Remark5"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注6">
                     <el-input type="textarea" v-model="form.Remark6"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注7">
                     <el-input type="textarea" v-model="form.Remark7"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注8">
                     <el-input type="textarea" v-model="form.Remark8"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注9">
                     <el-input type="textarea" v-model="form.Remark9"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注10">
                     <el-input type="textarea" v-model="form.Remark10"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注11">
                     <el-input type="textarea" v-model="form.Remark11"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注12">
                     <el-input type="textarea" v-model="form.Remark12"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注13">
                     <el-input type="textarea" v-model="form.Remark13"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="24">
             <el-col :span="12">
                 <el-form-item label="备注14">
                     <el-input type="textarea" v-model="form.Remark14"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-
         <el-row :gutter="24">
-            <el-col :span="12" :offset="12">
+            <el-col :span="6" :offset="18">
                 <!-- <el-button @click="createDialog = false">取 消</el-button> -->
-                <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
+                <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'保存酒店政策信息':'提交中'}}</el-button>
             </el-col>
         </el-row>
 
@@ -236,6 +305,7 @@ import path from 'api/api'
 import UploadImage from 'components/upload-image'
 
 import {
+    hotelBaseApi,
     hotelPolicyApi,
     secretTypeApi,
     rserveModeApi,
@@ -258,12 +328,14 @@ export default {
         _self.getSecretType()
         _self.getReserveMode()
         _self.getPayCompany()
+        _self.getHotelbaseList()
         _self.fetchData()
         _self.configList = hotelPolicyApi.getConfig()
     },
     data() {
         return {
             loading: false,
+            baseLoading: false,
             isEditable: true,
             fileList: [],
             payPeriodList: [{
@@ -297,6 +369,20 @@ export default {
 
             ],
             imageList: [],
+            baseIsEditable: true,
+            baseForm: {
+                id: '',
+                hotelNum: '',
+                hotelName: '',
+                hotelName_En: '',
+                frontPhone: '',
+                faxNum: '',
+                areaId: '',
+                address: '',
+                starNum: '',
+                isForeign: '',
+                remark: ''
+            },
             form: {
                 ID: 0,
                 HotelID: '',
@@ -330,7 +416,7 @@ export default {
                 Remark12: '',
                 Remark13: '',
                 Remark14: '',
-                PurchasImg: ''
+                PolicyImage: ''
             },
             payCompanyOptions: [],
             reserveModeOptions: [],
@@ -359,15 +445,59 @@ export default {
                     trigger: 'blur'
                 }]
             },
-            listzzz: []
+            listzzz: [],
+            areaLloading: false,
+            areaOptions: [],
+            starOptions: [{
+                ID: 1,
+                StarName: "一星级"
+            }, {
+                ID: 2,
+                StarName: "二星级"
+            }, {
+                ID: 3,
+                StarName: "三星级"
+            }, {
+                ID: 3.5,
+                StarName: "准四星/3.5"
+            }, {
+                ID: 4,
+                StarName: "四星级"
+            }, {
+                ID: 4.5,
+                StarName: "准五星/4.5"
+            }, {
+                ID: 5,
+                StarName: "五星级"
+            }, {
+                ID: 5.5,
+                StarName: "超5星[国内]"
+            }, {
+                ID: 7,
+                StarName: "七星级"
+            }]
         }
     },
     watch: {
         imageList(newList) {
-            this.form.PurchasImg = newList.join(',')
+            this.form.PolicyImage = newList.join(',')
         }
     },
     methods: {
+        async remoteMethod(query) {
+            const _self = this
+            if (query !== '') {
+                _self.areaLloading = true
+                const res = await hotelAreaApi.listByQue(query)
+                _self.list = res.data
+                setTimeout(() => {
+                    _self.areaLloading = false
+                    _self.areaOptions = _self.list.splice(0, 20)
+                }, 200)
+            } else {
+                _self.areaOptions = []
+            }
+        },
         async getImageList(list) {
             if (list) {
                 const images = list.split(',')
@@ -376,10 +506,6 @@ export default {
                 }
             }
         },
-        // async getPayMode() {
-        //     const res = await hotelPayModeApi.list()
-        //     this.payModeOptions = res.data
-        // },
         async getPayCompany() {
             const res = await payCompanyApi.list()
             this.payCompanyOptions = res.data
@@ -448,15 +574,87 @@ export default {
                 }
             })
         },
+        async baseSubmitForm() {
+            const _self = this
+            try {
+                _self.baseIsEditable = false
+                await hotelBaseApi.edit(_self.baseForm)
+                _self.$message({
+                    message: '保存成功',
+                    type: 'success'
+                })
+                _self.getHotelbaseList()
+            } catch (e) {} finally {
+                _self.baseIsEditable = true
+            }
+        },
+        async getHotelbaseList() {
+            const _self = this
+            if (!_self.$route.params.ID) return
+            const hotelID = _self.$route.params.ID
+            _self.baseLoading = true
+            const res = await hotelBaseApi.detailsById(hotelID)
+            if (res && res.data) {
+                const data = res.data
+                _self.baseForm.id = data.ID
+                _self.baseForm.hotelNum = data.HotelNum
+                _self.baseForm.hotelName = data.HotelName
+                _self.baseForm.hotelName_En = data.HotelName_En
+                _self.baseForm.frontPhone = data.FrontPhone
+                _self.baseForm.faxNum = data.FaxNum
+                _self.baseForm.areaId = data.AreaID
+                _self.baseForm.address = data.Address
+                _self.baseForm.starNum = data.StarID
+                _self.baseForm.isForeign = data.IsForeign
+                _self.baseForm.remark = data.Remark
+            }
+            _self.baseLoading = false
+        },
         async fetchData() {
-            if (!this.$route.params.ID) return
-            const hotelID = this.$route.params.ID
-            this.loading = true
+            const _self = this
+            if (!_self.$route.params.ID) return
+            const hotelID = _self.$route.params.ID
+            _self.loading = true
             const res = await hotelPolicyApi.listByHotelID(hotelID)
-            this.hotelpolicy = res.data
-            this.hotelpolicy.length ? this.form = this.hotelpolicy[0] : ''
-            // this.getImageList(this.form.ID)
-            this.loading = false
+            _self.hotelpolicy = res.data
+            if (_self.hotelpolicy.length) {
+                let a = _self.hotelpolicy[0]
+                _self.form.ID = a.ID
+                _self.form.HotelID = a.HotelID
+                _self.form.PersonName = a.PersonName
+                _self.form.PurchasingName = a.PurchasingName
+                _self.form.IsDefault = a.IsDefault
+                _self.form.BankName = a.BankName
+                _self.form.AccountName = a.AccountName
+                _self.form.AccountNum = a.AccountNum
+                _self.form.FinanceLinkMan = a.FinanceLinkMan
+                _self.form.FinancePhoneNum = a.FinancePhoneNum
+                _self.form.PayCompanyID = a.PayCompanyID || null
+                _self.form.FinanceRemark = a.FinanceRemark
+                _self.form.LinkMan = a.LinkMan
+                _self.form.PhoneNum = a.PhoneNum
+                _self.form.SecretTypeID = a.SecretTypeID || null
+                _self.form.ReserveModeID = a.ReserveModeID || null
+                _self.form.PeriodShou = a.PeriodShou
+                _self.form.PayPeriod = a.PayPeriod || 0
+                _self.form.Remark1 = a.Remark1
+                _self.form.Remark2 = a.Remark2
+                _self.form.Remark3 = a.Remark3
+                _self.form.Remark4 = a.Remark4
+                _self.form.Remark5 = a.Remark5
+                _self.form.Remark6 = a.Remark6
+                _self.form.Remark7 = a.Remark7
+                _self.form.Remark8 = a.Remark8
+                _self.form.Remark9 = a.Remark9
+                _self.form.Remark10 = a.Remark10
+                _self.form.Remark11 = a.Remark11
+                _self.form.Remark12 = a.Remark12
+                _self.form.Remark13 = a.Remark13
+                _self.form.Remark14 = a.Remark14
+                _self.form.PolicyImage = a.PolicyImage
+                _self.getImageList(a.PolicyImage)
+            }
+            _self.loading = false
             console.log(this.hotelpolicy)
         },
         async handleRemove(index, fileList) {

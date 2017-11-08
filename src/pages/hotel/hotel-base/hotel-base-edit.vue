@@ -53,7 +53,7 @@
         <el-row :gutter="20">
             <el-col :span="6">
                 <el-form-item label="星级">
-                    <el-select v-model="form.starId" clearable placeholder="请选择酒店星级">
+                    <el-select v-model="form.starNum" clearable placeholder="请选择酒店星级">
                         <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
@@ -97,9 +97,9 @@
         <el-tab-pane label="房型信息" name="room">
             <HotelRoomPage></HotelRoomPage>
         </el-tab-pane>
-        <el-tab-pane label="政策信息" name="policy">
+        <!-- <el-tab-pane label="政策信息" name="policy">
             <HotelPolicyPage></HotelPolicyPage>
-        </el-tab-pane>
+        </el-tab-pane> -->
         <el-tab-pane label="价格信息" name="price">
             <HotelPricePage></HotelPricePage>
         </el-tab-pane>
@@ -110,30 +110,12 @@
             <HotelShowPage></HotelShowPage>
         </el-tab-pane>
     </el-tabs>
-    <!-- <el-collapse v-model="activeNames" @change="handleChange" accordion>
-            <el-collapse-item title="房型信息" name="room">
-                <HotelRoomPage></HotelRoomPage>
-            </el-collapse-item>
-            <el-collapse-item title="政策信息" name="policy">
-                <HotelPolicyPage></HotelPolicyPage>
-            </el-collapse-item>
-            <el-collapse-item title="价格信息" name="price">
-                <HotelPricePage></HotelPricePage>
-            </el-collapse-item>
-            <el-collapse-item title="平台映射" name="platform">
-                <HotelPlatformPage></HotelPlatformPage>
-            </el-collapse-item>
-            <el-collapse-item title="展示信息" name="show">
-                <HotelShowPage></HotelShowPage>
-            </el-collapse-item>
-        </el-collapse> -->
 </div>
 </template>
 <script>
 import {
     hotelPayModeApi,
     hotelBaseApi,
-    hotelStarApi,
     hotelAreaApi
 } from 'api'
 import {
@@ -143,24 +125,19 @@ const HotelRoomPage = () =>
     import ('../hotel-room/hotel-room.vue')
 const HotelPlatformPage = () =>
     import ('../hotel-platform/hotel-platform.vue')
-const HotelPolicyPage = () =>
-    import ('../hotel-policy/hotel-policy.vue')
+// const HotelPolicyPage = () =>
+//     import ('../hotel-policy/hotel-policy.vue')
 const HotelPricePage = () =>
     import ('../hotel-price/hotel-price.vue')
 const HotelShowPage = () =>
     import ('../hotel-show/hotel-show.vue')
-// import HotelRoomPage from '../hotel-room/hotel-room'
-// import HotelPlatformPage from '../hotel-platform/hotel-platform'
-// import HotelPolicyPage from '../hotel-policy/hotel-policy'
-// import HotelPricePage from '../hotel-price/hotel-price'
-// import HotelShowPage from '../hotel-show/hotel-show'
 
 export default {
     components: {
         HotelTopMenu,
         HotelRoomPage,
         HotelPlatformPage,
-        HotelPolicyPage,
+        // HotelPolicyPage,
         HotelPricePage,
         HotelShowPage
     },
@@ -178,7 +155,7 @@ export default {
                 faxNum: '',
                 areaId: '',
                 address: '',
-                starId: '',
+                starNum: '',
                 isForeign: '',
                 remark: ''
             },
@@ -186,7 +163,34 @@ export default {
             isEditable: true,
             list: [],
             areaOptions: [],
-            starOptions: []
+            starOptions: [{
+                ID: 1,
+                StarName: "一星级"
+            }, {
+                ID: 2,
+                StarName: "二星级"
+            }, {
+                ID: 3,
+                StarName: "三星级"
+            }, {
+                ID: 3.5,
+                StarName: "准四星/3.5"
+            }, {
+                ID: 4,
+                StarName: "四星级"
+            }, {
+                ID: 4.5,
+                StarName: "准五星/4.5"
+            }, {
+                ID: 5,
+                StarName: "五星级"
+            }, {
+                ID: 5.5,
+                StarName: "超5星[国内]"
+            }, {
+                ID: 7,
+                StarName: "七星级"
+            }]
         }
     },
     mounted() {
@@ -194,7 +198,6 @@ export default {
         _self.id = _self.$route.params.ID
         if (_self.id) {
             _self.getHotelbaseList()
-            _self.getStarOptions()
         }
         _self.hotelName = _self.$route.query.name
     },
@@ -213,12 +216,6 @@ export default {
                 _self.areaOptions = []
             }
         },
-        async getStarOptions() {
-            const res = await hotelStarApi.list()
-            if (res && res.data && Array.isArray(res.data)) {
-                this.starOptions = res.data
-            }
-        },
         async getHotelbaseList() {
             const _self = this
             const res = await hotelBaseApi.detailsById(_self.id)
@@ -232,7 +229,7 @@ export default {
                 _self.form.faxNum = data.FaxNum
                 _self.form.areaId = data.AreaID
                 _self.form.address = data.Address
-                _self.form.starId = data.StarID
+                _self.form.starNum = data.StarID
                 _self.form.isForeign = data.IsForeign
                 _self.form.remark = data.Remark
             }

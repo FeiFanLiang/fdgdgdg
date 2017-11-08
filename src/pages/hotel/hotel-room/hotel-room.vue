@@ -175,7 +175,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="售卖床型">
-            <el-select v-model="sonBed" placeholder="请选择售卖床型" multiple>
+            <el-select v-model="sonBed" placeholder="请选择售卖床型" multiple disabled>
               <el-option v-for="(item,index) in bedsOptions " :label="item.BedName" :value="item.ID" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -297,7 +297,7 @@ export default {
         remark2: '',
         breakfastType: '',
         isStop: false,
-        beds: [],
+        // beds: [],
         maxMan: ''
       },
       rules: {
@@ -405,11 +405,11 @@ export default {
     },
     async handleSonRoomSaveAndEdit() {
       const _self = this
-      for (let item in _self.sonBed) {
-        _self.sonForm.beds.push({
-          ID: _self.sonBed[item]
-        })
-      }
+      // for (let item in _self.sonBed) {
+      //   _self.sonForm.beds.push({
+      //     ID: _self.sonBed[item]
+      //   })
+      // }
       _self.$refs['sonForm'].validate(async valid => {
         if (valid) {
           try {
@@ -458,8 +458,8 @@ export default {
         roomID: row.ID,
         breakfastType: this.breakfastTypes.name,
         isStop: false,
-        sonRoomName: this.roomName + '[' + this.breakfastTypesName + ']',
-        beds: [],
+        sonRoomName: this.roomName + '[' + this.breakfastTypesName + ']'
+        // beds: [],
       }
       this.sonBed = []
 
@@ -488,13 +488,9 @@ export default {
       console.log(_self.sonForm)
       _self.sonFormDialogVisible = true
       _self.sonBed = []
-      _self.sonForm.beds = res.data.Data.Beds
+      // _self.sonForm.beds = res.data.Data.Beds
       _self.sonForm.breakfastType = res.data.Data.BreakfastType
-      // _self.sonForm.createTime = res.data.Data.CreateTime
-      // _self.sonForm.createUserID = res.data.Data.CreateUserID
-      // _self.sonForm.createUserName = res.data.Data.CreateUserName
       _self.sonForm.id = res.data.Data.ID
-      // _self.sonForm.isDelete = res.data.Data.IsDelete
       _self.sonForm.isStop = res.data.Data.IsStop
       _self.sonForm.remark = res.data.Data.Remark
       _self.sonForm.remark2 = res.data.Data.Remark2
@@ -502,21 +498,6 @@ export default {
       _self.sonForm.sonRoomCode = res.data.Data.SonRoomCode
       _self.sonForm.sonRoomName = res.data.Data.SonRoomName
       _self.sonForm.maxMan = res.data.Data.MaxMan
-
-      // let bedName = res.data.BedName
-      // _self.roomName = row.RoomName
-      // _self.breakfastTypesName = bedName
-      // _self.sonFormDialogVisible = true
-      // _self.sonForm.id = sonRooms.ID
-      // _self.sonForm.roomID = sonRooms.RoomID
-      // // _self.sonForm.sonRoomName = sonRooms.SonRoomName;
-      // _self.sonForm.sonRoomName =
-      //   this.roomName + '[' + _self.breakfastTypesName + ']'
-      // _self.sonForm.sonRoomCode = sonRooms.SonRoomCode
-      // _self.sonForm.remark = sonRooms.Remark
-      // _self.sonForm.remark2 = sonRooms.Remark2
-      // _self.sonForm.breakfastType = bedName
-      // _self.sonForm.isStop = sonRooms.IsStop
     },
     hotelSonRoomPlatEdit(index, row) {
       if (!row || !row.SonRooms) retrun
