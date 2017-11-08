@@ -305,6 +305,7 @@ import path from 'api/api'
 import UploadImage from 'components/upload-image'
 
 import {
+    hotelAreaApi,
     hotelBaseApi,
     hotelPolicyApi,
     secretTypeApi,

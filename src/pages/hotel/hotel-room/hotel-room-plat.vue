@@ -211,7 +211,7 @@ export default {
   },
   data() {
     return {
-      pickerOptions1:{},
+      pickerOptions1: {},
       loading: false,
       isEditable: true,
       list: [],
