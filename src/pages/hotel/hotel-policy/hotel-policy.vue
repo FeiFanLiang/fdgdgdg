@@ -75,7 +75,7 @@
             </el-col>
             <el-col :span="6" :offset="18">
                 <el-form-item>
-                    <!-- <el-button @click="Cancel">取消</el-button> -->
+                    <el-button @click="back">返回</el-button>
                     <el-button type="primary" @click="baseSubmitForm()" :loading="!baseIsEditable">{{baseIsEditable?'保存酒店基础信息':'提交中'}}</el-button>
                 </el-form-item>
             </el-col>
@@ -292,7 +292,7 @@
         </el-row>
         <el-row :gutter="24">
             <el-col :span="6" :offset="18">
-                <!-- <el-button @click="createDialog = false">取 消</el-button> -->
+                <el-button @click="back">返回</el-button>
                 <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'保存酒店政策信息':'提交中'}}</el-button>
             </el-col>
         </el-row>
@@ -484,6 +484,9 @@ export default {
         }
     },
     methods: {
+        back() {
+            this.$router.go(-1)
+        },
         async remoteMethod(query) {
             const _self = this
             if (query !== '') {

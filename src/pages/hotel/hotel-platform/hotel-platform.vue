@@ -1,27 +1,28 @@
 <template lang="html">
-  <div id="hotel-platform-info-page">
-    <el-row>
-      <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-    </el-row>
-    <!-- <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData"
+<div id="hotel-platform-info-page">
+  <el-row>
+    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+  </el-row>
+  <!-- <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData"
     >
       <el-table-column label="平台访问路径" show-overflow-tooltip slot="right-one">
         <template scope="scope">
             <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
-        </template>
+</template>
       </el-table-column>
       <el-table-column label="有效" width="70" align="center" slot="right-two">
-        <template scope="scope">
-          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
-          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-        </template>
+<template scope="scope">
+<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.isValid"></i>
+<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+</template>
       </el-table-column>
 
       <el-table-column  label="操作" width="150" fixed="right" slot="right-three">
-        <template scope="scope">
-          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-        </template>
+<template scope="scope">
+<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+<DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
       </el-table-column>
     </CustomTable> -->
      <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
@@ -32,23 +33,24 @@
       <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
       <el-table-column label="平台访问路径" show-overflow-tooltip>
-        <template scope="scope">
-            <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
-        </template>
+<template scope="scope">
+<a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
+</template>
       </el-table-column>
       <el-table-column label="有效" width="70" align="center">
-        <template scope="scope">
-          <!-- {{scope.row.IsValid}} -->
-           <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-        </template>
+<template scope="scope">
+<!-- {{scope.row.IsValid}} -->
+<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
+<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+</template>
       </el-table-column>
 
       <el-table-column  label="操作" width="150" fixed="right">
-        <template scope="scope">
-          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-        </template>
+<template scope="scope">
+<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+  编辑</el-button>
+<DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+</template>
       </el-table-column>
     </el-table>
     <div class="pagination-wrapper" v-show="!loading&&list.length">
@@ -110,9 +112,14 @@
 </template>
 
 <script>
-import { hotelPlatformApi, hotelThreePlatInfoApi } from 'api'
+import {
+  hotelPlatformApi,
+  hotelThreePlatInfoApi
+} from 'api'
 
-import { HotelTopMenu } from 'components'
+import {
+  HotelTopMenu
+} from 'components'
 
 export default {
   components: {
@@ -146,22 +153,19 @@ export default {
         isValid: ''
       },
       rules: {
-        platformId: [
-          {
-            required: true,
-            message: '请选择平台',
-            type: 'number'
-          }
-        ],
-        platHotelId: [
-          {
+        platformId: [{
+          required: true,
+          message: '请选择平台',
+          type: 'number'
+        }],
+        platHotelId: [{
             required: true,
             message: '请输入平台酒店ID'
-          },
-          {
-            type: 'number',
-            message: '平台酒店ID必须为数字值'
           }
+          // {
+          //   type: 'number',
+          //   message: '平台酒店ID必须为数字值'
+          // }
         ]
       }
     }
@@ -211,7 +215,7 @@ export default {
         _self.form.id = res.data.ID
         _self.form.platformId = res.data.PlatformID
         _self.form.hotelId = res.data.HotelID
-        _self.form.platHotelId = Number(res.data.PlatHotelID)
+        _self.form.platHotelId = res.data.PlatHotelID
         _self.form.platUrl = res.data.PlatURL
         _self.form.platHotelName = res.data.PlatHotelName
         _self.form.platHotelNameEn = res.data.PlatHotelName_En
