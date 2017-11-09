@@ -69,10 +69,12 @@ export default {
       _self.isBtnLoading = true
       try {
         const data = await accountApi.login(loginParams)
-
+        const userInfo = res.data
         _self.isBtnLoading = false
+
         const user = {
-          username: _self.username,
+          username: userInfo.UserName,
+          realname: userInfo.RealName,
           avatar: ''
         }
         // const { msg, code, user } = data;
