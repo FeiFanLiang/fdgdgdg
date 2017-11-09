@@ -19,6 +19,7 @@ export default {
       name: '特价房订单'
     },
     {
+      title:'111',
       path: 'HotelsOrder',
       component: _import('order/hotels-order'),
       name: '酒店订单'
@@ -28,6 +29,21 @@ export default {
     //   component: _import('order/order-otherlist'),
     //   name: '酒店订单列表'
     // },
+    {
+      path: 'Huitian',
+      component: _import('order/huitian'),
+      name: '待回填列表'
+    },
+    {
+      path: 'Shenhe',
+      component: _import('order/shenhe'),
+      name: '待审核列表'
+    },
+    {
+      path: 'Jietu',
+      component: _import('order/jietu'),
+      name: '待截图列表'
+    },
     {
       path: 'PaymentCheck',
       component: _import('order/payment-check'),
@@ -63,21 +79,6 @@ export default {
       path: 'CheckFukuan',
       component: _import('order/check-fukuan'),
       name: '待对账付款列表'
-    },
-    {
-      path: 'Huitian',
-      component: _import('order/huitian'),
-      name: '待回填列表'
-    },
-    {
-      path: 'Shenhe',
-      component: _import('order/shenhe'),
-      name: '待审核列表'
-    },
-    {
-      path: 'Jietu',
-      component: _import('order/jietu'),
-      name: '待截图列表'
     },
     {
       path: 'Wanjie',

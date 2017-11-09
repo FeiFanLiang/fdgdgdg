@@ -100,13 +100,17 @@
               <div>
                 <el-card class="box-card">
                     <h4>预订其他信息</h4>
+                    <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p>
+                    <p><span>房型</span><span class="span-text">{{ props.row.Room }}</span></p>
+                    <p><span>间数</span><span class="span-text">{{ props.row.RoomNum }}</span></p>
+                    <p><span>晚数</span><span class="span-text">{{ props.row.NightNum }}</span></p>
                     <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p>
-                    <p><span>联系固话</span><span class="span-text">{{ props.row.PassengerTel2 }}</span></p>
-                    <p><span>Email</span><span class="span-text">{{ props.row.Email }}</span></p>
-                    <p><span>特殊要求</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
+                    <!-- <p><span>联系固话</span><span class="span-text">{{ props.row.PassengerTel2 }}</span></p>
+                    <p><span>Email</span><span class="span-text">{{ props.row.Email }}</span></p> -->
+                    <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
                     <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
                     <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p>
-                    <p><span>订单号</span><span class="span-text">{{ props.row.PlatOrderNo }}</span></p>
+                    <p><span>订单编号</span><span class="span-text">{{ props.row.OrderNo}}</span></p>
                     <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
                     <p><span>其他订单类型</span><span class="span-text">{{ props.row.PlatOrderType }}</span></p>
                     <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p>
@@ -157,7 +161,14 @@
                     <h4>其他信息</h4>
                     <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
                     <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p>
-                    <p><span>第三方平台ID</span><span class="span-text">{{ props.row.ThreePlatID }}</span></p>
+                    <p>
+                      <span>第三方平台</span>
+                      <span class="span-text">
+                        <span v-for="item in ThreePlatID">
+                          <span v-if="props.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+                        </span>
+                      </span>
+                    </p>
                     <p><span>是否保密</span><span class="span-text" v-if="props.row.Secret === 0">不需要保密</span><span class="span-text" v-if="props.row.Secret === 1">需要保密</span></p>
                     <p><span>保密状态</span><span class="span-text" v-if="props.row.SecretState === 0">未处理</span><span class="span-text" v-if="props.row.SecretState === 1">已经保密</span></p>
                     <p><span>结算周期</span>
@@ -197,55 +208,43 @@
                     <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span></p>
                 </el-card>
               </div>
-</template>
-        </el-table-column>
-        <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
-        <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip>
-            <template scope="scope">
-              <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.OrderNo }}</span>
-              <span v-if="scope.row.SettlementCycle == 1" style="color:#1297E8">{{ scope.row.OrderNo }}</span>
-              <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.OrderNo }}</span>
             </template>
         </el-table-column>
-        <!-- <el-table-column label="订单类型" prop="OrderType" show-overflow-tooltip></el-table-column> -->
-        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="城市" prop="City" width="70"></el-table-column>
-        <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
+        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
+            <template scope="scope">
+              <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.PlatOrderNo }}</span>
+              <span v-if="scope.row.SettlementCycle == 1" style="color:#1297E8">{{ scope.row.PlatOrderNo }}</span>
+              <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.PlatOrderNo }}</span>
+            </template>
+        </el-table-column>
+        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="180"></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
-<template scope="scope">
-<span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
-/
-<span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
-</template>
+          <template scope="scope">
+            <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
+            /
+            <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+          </template>
         </el-table-column>
-        <!-- <el-table-column label="退房日期" prop="StayDateEnd"></el-table-column> -->
-        <el-table-column label="间/晚" prop="RoomNum" width="72">
-<template scope="scope">
-<span>{{ scope.row.RoomNum }}</span>
-/
-<span>{{ scope.row.NightNum }}</span>
-</template>
-        </el-table-column>
-        <!-- <el-table-column label="晚数" prop="NightNum"></el-table-column> -->
         <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
-        <!-- <el-table-column label="联系电话" prop="PassengerTel" width="128"></el-table-column> -->
-        <!-- <el-table-column label="联系固话" prop="PassengerTel2"></el-table-column> -->
-        <el-table-column label="到店时间" prop="ArrivalTime"></el-table-column>
+        <el-table-column label="到店时间" prop="ArrivalTime" width="80"></el-table-column>
         <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
-<template scope="scope">
-<span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
-</template>
+          <template scope="scope">
+            <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
+          </template>
         </el-table-column>
-        <!-- <el-table-column label="货币" prop="Currency"></el-table-column>
-        <el-table-column label="总金额" prop="AmountTotal"></el-table-column>
-        <el-table-column label="订单状态" prop="OrderState"></el-table-column> -->
-
+        <el-table-column label="订单渠道" prop="ThreePlatID" width="80">
+          <template scope="scope">
+              <div v-for="item in ThreePlatID">
+                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+              </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="150">
-<template scope="scope">
-<el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">
-  编辑</el-button>
-<DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
+          <template scope="scope">
+            <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
+            <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+          </template>
         </el-table-column>
     </el-table>
     <div class="pagination-wrapper">
@@ -254,6 +253,13 @@
     <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')" size="full">
         <el-form ref="form" :model="form" label-width="110px">
             <el-row :gutter="24"><el-col :span="24" style="color:orange;"><h1>订单信息</h1></el-col></el-row>
+            <el-row>
+              <el-col :span="8">
+                  <el-form-item label="酒店名称" prop="HotelName">
+                      <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
+                  </el-form-item>
+              </el-col>
+            </el-row>
             <el-row :gutter="24">
               <el-col :span="6">
                     <el-form-item label="订单号" prop="PlatOrderNo">
@@ -268,32 +274,20 @@
                     </el-form-item>
               </el-col>
               <el-col :span="6">
+                  <el-form-item label="房型" prop="Room">
+                      <el-input placeholder="请输入房型" v-model="form.Room"></el-input>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                    <el-form-item label="确认号" prop="PlatOrderNo">
+                        <el-input placeholder="请输入确认号" v-model="form.PlatOrderNo"></el-input>
+                    </el-form-item>
+              </el-col>
+              <!-- <el-col :span="6">
                   <el-form-item label="酒店预订号" prop="HotelBookingNo">
                       <el-input placeholder="请输入酒店预订号" v-model="form.HotelBookingNo"></el-input>
                   </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="6">
-                    <el-form-item label="入住日期" prop="StayDateStart">
-                        <el-date-picker v-model="form.StayDateStart" type="date" placeholder="选择入住日期" style="width:100%;" :picker-options="pickerOptions" @change="ruzhu"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="退房日期" prop="StayDateEnd">
-                        <el-date-picker v-model="form.StayDateEnd" type="date" placeholder="选择退房日期" style="width:100%;" :picker-options="pickerOptions2" @change="tuifang"></el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="间数" prop="RoomNum">
-                        <el-input placeholder="请输入间数" v-model="form.RoomNum" style="width:100%"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="晚数" prop="NightNum">
-                        <el-input placeholder="请输入晚数" v-model="form.NightNum"></el-input>
-                    </el-form-item>
-                </el-col>
+              </el-col> -->
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
@@ -303,32 +297,46 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="联系电话" prop="PassengerTel">
-                        <el-input placeholder="请输入酒店名称" v-model="form.PassengerTel"></el-input>
+                        <el-input placeholder="请输入联系电话" v-model="form.PassengerTel"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="联系固话" prop="PassengerTel2">
-                        <el-input placeholder="请输入联系固话" v-model="form.PassengerTel2"></el-input>
+                    <el-form-item label="入住日期" prop="StayDateStart">
+                        <el-date-picker v-model="form.StayDateStart" type="date" placeholder="选择入住日期" style="width:100%;" :picker-options="pickerOptions" @change="ruzhu"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="Email" prop="Email">
-                        <el-input placeholder="请输入Email" v-model="form.Email"></el-input>
+                    <el-form-item label="退房日期" prop="StayDateEnd">
+                        <el-date-picker v-model="form.StayDateEnd" type="date" placeholder="选择退房日期" style="width:100%;" :picker-options="pickerOptions2" @change="tuifang"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
-                    <el-form-item label="到店时间" prop="ArrivalTime">
-                        <el-time-select v-model="form.ArrivalTime" :picker-options="{start:'00:00',step:'00:15',end:'24:00'}" placeholder="选择时间"></el-time-select>
+                    <el-form-item label="间数" prop="RoomNum">
+                        <el-input placeholder="请输入间数" v-model="form.RoomNum"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="特殊要求" prop="PassengerAsk">
+                    <el-form-item label="晚数" prop="NightNum">
+                        <el-input placeholder="请输入晚数" v-model="form.NightNum"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="到店时间" prop="ArrivalTime">
+                        <el-time-select v-model="form.ArrivalTime" :picker-options="{start:'00:00',step:'00:15',end:'24:00'}" placeholder="选择时间" style="width:100%"></el-time-select>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="24">
+                    <el-form-item label="订单备注" prop="PassengerAsk">
                         <el-input type="textarea" v-model="form.PassengerAsk"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="6">
                     <el-form-item label="订单状态" prop="OrderState">
                         <el-select v-model="form.OrderState" clearable>
                           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -342,23 +350,6 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="6">
-                  <el-form-item label="酒店名称" prop="HotelName">
-                      <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                  <el-form-item label="房型" prop="Room">
-                      <el-input placeholder="请输入房型" v-model="form.Room"></el-input>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                  <el-form-item label="城市名称" prop="City">
-                      <el-input placeholder="请输入城市名称" v-model="form.City"></el-input>
-                  </el-form-item>
-              </el-col>
               <el-col :span="6">
                   <el-form-item label="预定时间" prop="BookTime">
                       <el-date-picker v-model="form.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%;"></el-date-picker>
@@ -366,7 +357,100 @@
               </el-col>
             </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
+            <el-row :gutter="20">
+              <el-col style="margin-left:40px;">
+                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload> -->
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+              </el-col>
+            </el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>处理信息</h1></el-col></el-row>
+            <el-row :gutter="24">
+            <el-col :span="7">
+                  <el-form-item label="回填状态" prop="BackfillState">
+                      <el-radio-group v-model="form.BackfillState">
+                        <el-radio :label="0">未回填</el-radio>
+                        <el-radio :label="1">回填成功</el-radio>
+                        <el-radio :label="2">回填失败</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="17">
+                  <el-form-item label="酒店区域" prop="HotelArea">
+                      <el-radio-group v-model="form.HotelArea">
+                        <el-radio :label="1">国际</el-radio>
+                        <el-radio :label="0">国内</el-radio>
+                        <el-radio :label="3">美国1009</el-radio>
+                        <el-radio :label="3">美国2462</el-radio>
+                        <el-radio :label="3">好订1009</el-radio>
+                        <el-radio :label="3">好订2462</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="7">
+                  <el-form-item label="保密状态" prop="SecretState">
+                      <el-radio-group v-model="form.SecretState">
+                        <el-radio :label="0">未处理</el-radio>
+                        <el-radio :label="1">已经保密</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                  <el-form-item label="是否保密" prop="Secret">
+                      <el-radio-group v-model="form.Secret">
+                        <el-radio :label="0">不需要保密</el-radio>
+                        <el-radio :label="1">需要保密</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="7">
+                    <el-form-item label="订单截图状态" prop="StateScreenshot">
+                        <el-radio-group v-model="form.StateScreenshot">
+                          <el-radio :label="0">未截图</el-radio>
+                          <el-radio :label="1">截图完成</el-radio>
+                          <el-radio :label="2">不截图</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                    <el-form-item label="紧急打款" prop="UrgentPay">
+                        <el-radio-group v-model="form.UrgentPay">
+                          <el-radio :label="1">紧急</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="7">
+                  <el-form-item label="合并打款" prop="UnMergePay">
+                      <el-radio-group v-model="form.UnMergePay">
+                        <el-radio :label="0">可合并</el-radio>
+                        <el-radio :label="1">不可合并</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                  <el-form-item label="是否已开发票">
+                      <el-radio-group>
+                        <el-radio :label="0">未开</el-radio>
+                        <el-radio :label="1">已开</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <div v-show="showEdit">
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="付款货币" prop="CurrencyFuKuan">
@@ -460,87 +544,21 @@
             </el-row>  
             <el-row :gutter="24">
               <el-col>
-                <el-form-item label="备注" prop="Remark">
+                <el-form-item label="财务备注" prop="Remark">
                     <el-input type="textarea" v-model="form.Remark"></el-input>
                 </el-form-item>
               </el-col>
             </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>处理信息</h1></el-col></el-row>
-            <el-row :gutter="24">
-            <el-col :span="7">
-                  <el-form-item label="回填状态" prop="BackfillState">
-                      <el-radio-group v-model="form.BackfillState">
-                        <el-radio :label="0">未回填</el-radio>
-                        <el-radio :label="1">回填成功</el-radio>
-                        <el-radio :label="2">回填失败</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="7">
-                  <el-form-item label="酒店区域" prop="HotelArea">
-                      <el-radio-group v-model="form.HotelArea">
-                        <el-radio :label="1">国际</el-radio>
-                        <el-radio :label="0">国内</el-radio>
-                        <el-radio :label="3">美国</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="7">
-                  <el-form-item label="保密状态" prop="SecretState">
-                      <el-radio-group v-model="form.SecretState">
-                        <el-radio :label="0">未处理</el-radio>
-                        <el-radio :label="1">已经保密</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="7">
-                  <el-form-item label="是否保密" prop="Secret">
-                      <el-radio-group v-model="form.Secret">
-                        <el-radio :label="0">不需要保密</el-radio>
-                        <el-radio :label="1">需要保密</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="7">
-                    <el-form-item label="订单截图状态" prop="StateScreenshot">
-                        <el-radio-group v-model="form.StateScreenshot">
-                          <el-radio :label="0">未截图</el-radio>
-                          <el-radio :label="1">截图完成</el-radio>
-                          <el-radio :label="2">不截图</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                    <el-form-item label="紧急打款" prop="UrgentPay">
-                        <el-radio-group v-model="form.UrgentPay">
-                          <el-radio :label="1">紧急</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                    <el-form-item label="不可合并支付" prop="UnMergePay">
-                        <el-radio-group v-model="form.UnMergePay">
-                          <el-radio :label="1">不可合并</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <div v-show="showEdit">
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
             <el-row :gutter="24">
               <el-col>
                 <el-table :data="money" style="width: 95%;margin-left:40px;">
                   <el-table-column label="类别" prop="PaymentType">
-<template scope="scope">
-<span v-if="scope.row.PaymentType === 0">收款</span>
-<span v-if="scope.row.PaymentType === 1">付款</span>
-</template>
+              <template scope="scope">
+              <span v-if="scope.row.PaymentType === 0">收款</span>
+              <span v-if="scope.row.PaymentType === 1">付款</span>
+              </template>
                   </el-table-column>
                   <el-table-column label="货币类型" prop="Currency"></el-table-column>
                   <el-table-column label="编号" prop="PaymentNo"></el-table-column>
@@ -548,36 +566,24 @@
                   <el-table-column label="收付时间" prop="PaymentDate"></el-table-column>
                   <el-table-column label="收付方式" prop="PaymentModel"></el-table-column>
                   <el-table-column label="状态" prop="State">
-<template scope="scope">
-<span v-if="scope.row.State === 0">待处理</span>
-<span v-if="scope.row.State === 1">已处理，待对账</span>
-<span v-if="scope.row.State === 2">已对账，待结算</span>
-<span v-if="scope.row.State === 3">结算完成</span>
-</template>
+                    <template scope="scope">
+                      <span v-if="scope.row.State === 0">待处理</span>
+                      <span v-if="scope.row.State === 1">已处理，待对账</span>
+                      <span v-if="scope.row.State === 2">已对账，待结算</span>
+                      <span v-if="scope.row.State === 3">结算完成</span>
+                    </template>
                   </el-table-column>
                   <el-table-column label="截图" prop="StateScreenshot">
-<template scope="scope">
-<span v-if="scope.row.StateScreenshot === 0">未截图</span>
-<span v-if="scope.row.StateScreenshot === 1">截图完成</span>
-<span v-if="scope.row.StateScreenshot === 2">不截图</span>
-</template>
+                    <template scope="scope">
+                      <span v-if="scope.row.StateScreenshot === 0">未截图</span>
+                      <span v-if="scope.row.StateScreenshot === 1">截图完成</span>
+                      <span v-if="scope.row.StateScreenshot === 2">不截图</span>
+                    </template>
                   </el-table-column>                  
                 </el-table>
               </el-col>
             </el-row>
             </div>
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>截图信息</h1></el-col></el-row>
-            <el-row :gutter="20">
-              <el-col style="margin-left:40px;">
-                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-                  <i class="el-icon-plus"></i>
-                </el-upload> -->
-                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-              </el-col>
-            </el-row>
             <div v-show="showEdit">
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>附加项目</h1></el-col></el-row>
             <div style="text-align:right;width:95%;margin-top:-30px;">
@@ -587,11 +593,11 @@
               <el-col>
                 <el-table :data="fujia" style="width: 95%;margin-left:40px;">
                   <el-table-column label="订单类型" prop="TypeID">
-<template scope="scope">
-<span v-if="scope.row.TypeID === 0">门票</span>
-<span v-if="scope.row.TypeID === 1">车票</span>
-<span v-if="scope.row.TypeID === 2">自助餐</span>
-</template>
+                    <template scope="scope">
+                      <span v-if="scope.row.TypeID === 0">门票</span>
+                      <span v-if="scope.row.TypeID === 1">车票</span>
+                      <span v-if="scope.row.TypeID === 2">自助餐</span>
+                    </template>
                   </el-table-column>
                   <el-table-column label="金额" prop="Money"></el-table-column>
                   <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
@@ -785,8 +791,20 @@ export default {
           value: 1
         },
         {
-          label: '美国',
+          label: '美国1009',
           value: 2
+        },
+        {
+          label: '美国2462',
+          value: 3
+        },
+        {
+          label: '好订1009',
+          value: 4
+        },
+        {
+          label: '好订2462',
+          value: 5
         }
       ],
       styleObject: {},
@@ -1034,6 +1052,14 @@ export default {
       try {
         const res = await hotelsOrderApi.listByQuery(options)
         _self.hotelsOrder = res.data.Data
+        console.log(_self.hotelsOrder)
+        // for(let i in _self.hotelsOrder){
+        //   for(let j in _self.ThreePlatID){
+        //     if(_self.ThreePlatID[j].ID == _self.hotelsOrder[i].ThreePlatID){
+        //       _self.hotelsOrder[i].ThreePlatID = _self.ThreePlatID[j].PlateName
+        //     }
+        //   }
+        // }
         _self.active = 0
         _self.count = res.data.Count
         _self.loading = false
@@ -1051,6 +1077,7 @@ export default {
         _self.showEdit = true
         const res = await hotelsOrderApi.detail(row.ID)
         _self.form = res.data.Data
+        console.log(_self.form)
         const res2 = await paymentCheckApi.detail(row.ID)
         let a = res2.data.Data
         const options = {
