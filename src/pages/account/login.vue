@@ -68,8 +68,9 @@ export default {
       }
       _self.isBtnLoading = true
       try {
-        const data = await accountApi.login(loginParams)
+        const res = await accountApi.login(loginParams)
         const userInfo = res.data
+
         _self.isBtnLoading = false
 
         const user = {
@@ -77,11 +78,6 @@ export default {
           realname: userInfo.RealName,
           avatar: ''
         }
-        // const { msg, code, user } = data;
-
-        // if (code !== 200) {
-        // _self.$message.error(msg);
-        // } else {
         localStorage.setItem('user', JSON.stringify(user))
         if (_self.$route.query.redirect) {
           _self.$router.push({
@@ -92,13 +88,10 @@ export default {
             path: '/'
           })
         }
-
-        // }
       } catch (e) {
-        //_self.$message.error(e)
         _self.$message.error('用户名或密码错误!!!')
-        //this.username='',
-        ;(this.password = ''), (this.isBtnLoading = false)
+        this.password = ''
+        this.isBtnLoading = false
       }
     },
     async register() {
