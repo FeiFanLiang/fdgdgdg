@@ -23,6 +23,9 @@
             <div class="input-group">
                 <el-button @click.native="login" type="primary" :loading="isBtnLoading">{{btnText}}</el-button>
             </div>
+            <div class="input-group">
+              <p style="font-size: 14px;color: red;text-align: center;">请使用chrome(谷歌浏览器)或者360浏览器(开启极速模式)</p>
+            </div>
         </div>
     </div>
 </template>
