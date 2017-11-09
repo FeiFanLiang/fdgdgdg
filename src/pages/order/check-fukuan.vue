@@ -1,15 +1,15 @@
 <template lang="html">
 <div id="PaymentCheck">
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading">
-        <el-table-column label="财务编号" prop="PaymentNo" width=110></el-table-column>
-        <el-table-column label="打款账户" prop="CompanyAcount"></el-table-column>
-        <el-table-column label="合计金额" prop="Amount"></el-table-column>
         <el-table-column label="类别" prop="PaymentType" width=70>
             <template scope="scope">
                 <span v-if="scope.row.PaymentType === 0">收款</span>
                 <span v-if="scope.row.PaymentType === 1">付款</span>
             </template>
         </el-table-column>
+        <el-table-column label="财务编号" prop="PaymentNo" width=110></el-table-column>
+        <el-table-column label="打款账户" prop="CompanyAcount"></el-table-column>
+        <el-table-column label="合计金额" prop="Amount"></el-table-column>
         <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
         <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
@@ -92,6 +92,7 @@ export default {
       try {
         const res = await hotelsOrderApi.checkOut(options)
         _self.paymentCheck = res.data.Data
+        console.log(_self.paymentCheck)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {

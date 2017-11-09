@@ -1043,11 +1043,11 @@ export default {
     },
     async clickEditBtn($index, row) {
       const _self = this
+      _self.loading = true
       _self.title = '编辑酒店订单信息'
       _self.ID = row.ID
       _self.action = 'http://192.168.10.95:8500/Hotel/Image'
       try {
-        _self.showDialog = true
         _self.showEdit = true
         const res = await hotelsOrderApi.detail(row.ID)
         _self.form = res.data.Data
@@ -1065,6 +1065,8 @@ export default {
         }
         _self.copyForm = Object.assign({}, _self.form)
         _self.getStateList()
+        _self.showDialog = true
+        _self.loading = false
       } catch (e) {
         console.error(e)
       }

@@ -503,7 +503,7 @@ export default {
     async clickEditBtn($index, row) {
       const _self = this
       try {
-        _self.showDialog = true
+        _self.loading = true
         const res = await hotelsOrderApi.detail(row.ID)
         _self.form = res.data.Data
         const res2 = await paymentCheckApi.detail(row.ID)
@@ -514,6 +514,8 @@ export default {
         _self.copyForm = Object.assign({}, _self.form)
         _self.getStateList()
         _self.action = 'http://192.168.10.95:8500/Hotel/Image'
+        _self.showDialog = true
+        _self.loading = false
       } catch (e) {
         console.error(e)
       }
