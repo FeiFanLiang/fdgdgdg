@@ -218,6 +218,13 @@
               <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.PlatOrderNo }}</span>
             </template>
         </el-table-column>
+        <el-table-column label="订单渠道" prop="ThreePlatID" width="80">
+          <template scope="scope">
+              <div v-for="item in ThreePlatID">
+                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+              </div>
+          </template>
+        </el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="180"></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
@@ -231,13 +238,6 @@
         <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
           <template scope="scope">
             <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="订单渠道" prop="ThreePlatID" width="80">
-          <template scope="scope">
-              <div v-for="item in ThreePlatID">
-                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
-              </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="150">
@@ -296,11 +296,6 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="联系电话" prop="PassengerTel">
-                        <el-input placeholder="请输入联系电话" v-model="form.PassengerTel"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
                     <el-form-item label="入住日期" prop="StayDateStart">
                         <el-date-picker v-model="form.StayDateStart" type="date" placeholder="选择入住日期" style="width:100%;" :picker-options="pickerOptions" @change="ruzhu"></el-date-picker>
                     </el-form-item>
@@ -325,6 +320,11 @@
                 <el-col :span="6">
                     <el-form-item label="到店时间" prop="ArrivalTime">
                         <el-time-select v-model="form.ArrivalTime" :picker-options="{start:'00:00',step:'00:15',end:'24:00'}" placeholder="选择时间" style="width:100%"></el-time-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="联系电话" prop="PassengerTel">
+                        <el-input placeholder="请输入联系电话" v-model="form.PassengerTel"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -357,99 +357,6 @@
               </el-col>
             </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
-            <el-row :gutter="20">
-              <el-col style="margin-left:40px;">
-                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-                  <i class="el-icon-plus"></i>
-                </el-upload> -->
-                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-              </el-col>
-            </el-row>
-            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>处理信息</h1></el-col></el-row>
-            <el-row :gutter="24">
-            <el-col :span="7">
-                  <el-form-item label="回填状态" prop="BackfillState">
-                      <el-radio-group v-model="form.BackfillState">
-                        <el-radio :label="0">未回填</el-radio>
-                        <el-radio :label="1">回填成功</el-radio>
-                        <el-radio :label="2">回填失败</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="17">
-                  <el-form-item label="酒店区域" prop="HotelArea">
-                      <el-radio-group v-model="form.HotelArea">
-                        <el-radio :label="1">国际</el-radio>
-                        <el-radio :label="0">国内</el-radio>
-                        <el-radio :label="3">美国1009</el-radio>
-                        <el-radio :label="3">美国2462</el-radio>
-                        <el-radio :label="3">好订1009</el-radio>
-                        <el-radio :label="3">好订2462</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="7">
-                  <el-form-item label="保密状态" prop="SecretState">
-                      <el-radio-group v-model="form.SecretState">
-                        <el-radio :label="0">未处理</el-radio>
-                        <el-radio :label="1">已经保密</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="7">
-                  <el-form-item label="是否保密" prop="Secret">
-                      <el-radio-group v-model="form.Secret">
-                        <el-radio :label="0">不需要保密</el-radio>
-                        <el-radio :label="1">需要保密</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="7">
-                    <el-form-item label="订单截图状态" prop="StateScreenshot">
-                        <el-radio-group v-model="form.StateScreenshot">
-                          <el-radio :label="0">未截图</el-radio>
-                          <el-radio :label="1">截图完成</el-radio>
-                          <el-radio :label="2">不截图</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                    <el-form-item label="紧急打款" prop="UrgentPay">
-                        <el-radio-group v-model="form.UrgentPay">
-                          <el-radio :label="1">紧急</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="7">
-                  <el-form-item label="合并打款" prop="UnMergePay">
-                      <el-radio-group v-model="form.UnMergePay">
-                        <el-radio :label="0">可合并</el-radio>
-                        <el-radio :label="1">不可合并</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-              <el-col :span="7">
-                  <el-form-item label="是否已开发票">
-                      <el-radio-group>
-                        <el-radio :label="0">未开</el-radio>
-                        <el-radio :label="1">已开</el-radio>
-                      </el-radio-group>
-                  </el-form-item>
-              </el-col>
-            </el-row>
-            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-            <div v-show="showEdit">
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
@@ -550,6 +457,99 @@
               </el-col>
             </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
+            <el-row :gutter="20">
+              <el-col style="margin-left:40px;">
+                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload> -->
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                  <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+              </el-col>
+            </el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>处理信息</h1></el-col></el-row>
+            <el-row :gutter="24">
+            <el-col :span="7">
+                  <el-form-item label="回填状态" prop="BackfillState">
+                      <el-radio-group v-model="form.BackfillState">
+                        <el-radio :label="0">未回填</el-radio>
+                        <el-radio :label="1">回填成功</el-radio>
+                        <el-radio :label="2">回填失败</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="17">
+                  <el-form-item label="酒店区域" prop="HotelArea">
+                      <el-radio-group v-model="form.HotelArea">
+                        <el-radio :label="1">国际</el-radio>
+                        <el-radio :label="0">国内</el-radio>
+                        <el-radio :label="3">美国1009</el-radio>
+                        <el-radio :label="3">美国2462</el-radio>
+                        <el-radio :label="3">好订1009</el-radio>
+                        <el-radio :label="3">好订2462</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="7">
+                  <el-form-item label="保密状态" prop="SecretState">
+                      <el-radio-group v-model="form.SecretState">
+                        <el-radio :label="0">未处理</el-radio>
+                        <el-radio :label="1">已经保密</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                  <el-form-item label="是否保密" prop="Secret">
+                      <el-radio-group v-model="form.Secret">
+                        <el-radio :label="0">不需要保密</el-radio>
+                        <el-radio :label="1">需要保密</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="7">
+                    <el-form-item label="订单截图状态" prop="StateScreenshot">
+                        <el-radio-group v-model="form.StateScreenshot">
+                          <el-radio :label="0">未截图</el-radio>
+                          <el-radio :label="1">截图完成</el-radio>
+                          <el-radio :label="2">不截图</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                    <el-form-item label="紧急打款" prop="UrgentPay">
+                        <el-radio-group v-model="form.UrgentPay">
+                          <el-radio :label="1">紧急</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+              <el-col :span="7">
+                  <el-form-item label="合并打款" prop="UnMergePay">
+                      <el-radio-group v-model="form.UnMergePay">
+                        <el-radio :label="0">可合并</el-radio>
+                        <el-radio :label="1">不可合并</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="7">
+                  <el-form-item label="是否已开发票">
+                      <el-radio-group>
+                        <el-radio :label="0">未开</el-radio>
+                        <el-radio :label="1">已开</el-radio>
+                      </el-radio-group>
+                  </el-form-item>
+              </el-col>
+            </el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <div v-show="showEdit">
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
             <el-row :gutter="24">
               <el-col>
