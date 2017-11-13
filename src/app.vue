@@ -10,8 +10,8 @@
            <el-radio-button :label="true"><i class="el-icon-minus"></i></el-radio-button>
         </el-radio-group>
         <db-breadcrumb></db-breadcrumb>
-        <div class="user-info" v-if="user.username"  :style="{'padding-right':!isCollapse?'200px':'80px'}">
-          <span v-text="user.username"></span>
+        <div class="user-info" v-if="user.realname||user.username"  :style="{'padding-right':!isCollapse?'200px':'80px'}">
+          <span v-text="user.realname||user.username"></span>
           <el-dropdown trigger="click">
             <span class="el-dropdown-link">
               <img src="~assets/images/common/hh.png">
@@ -83,6 +83,7 @@ export default {
       hotelName: '',
       user: {
         username: '',
+        realname: '',
         avatar: ''
       },
       activeMenu: ''
