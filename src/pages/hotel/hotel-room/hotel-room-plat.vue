@@ -261,44 +261,45 @@ export default {
       // platHotelId:''
     }
   },
-  computed: {
-    platHotelId: {
-      // getter
-      get: function() {
-        const _self = this
-        let platformId = ''
-        if (
-          _self.form.platformId &&
-          _self.platInfoList &&
-          Array.isArray(_self.platInfoList)
-        ) {
-          _self.platInfoList.forEach(item => {
-            if (
-              item &&
-              item.Platform &&
-              item.Platform.ID === _self.form.platformId
-            ) {
-              platformId = item.PlatHotelID
-            }
-          })
-        }
-        return platformId
-      },
-      // setter
-      set: function(newValue) {
-        this.platformId = newValue
-      }
-    }
-  },
-  watch: {
-    platHotelId: function() {
-      this.form.platHotelId = this.platHotelId
-    }
-  },
+  // computed: {
+  //   platHotelId: {
+  //     // getter
+  //     get: function() {
+  //       const _self = this
+  //       let platformId = ''
+  //       if (
+  //         _self.form.platformId &&
+  //         _self.platInfoList &&
+  //         Array.isArray(_self.platInfoList)
+  //       ) {
+  //         _self.platInfoList.forEach(item => {
+  //           if (
+  //             item &&
+  //             item.Platform &&
+  //             item.Platform.ID === _self.form.platformId
+  //           ) {
+  //             platformId = item.PlatHotelID
+  //           }
+  //         })
+  //       }
+  //       return platformId
+  //     },
+  //     // setter
+  //     set: function(newValue) {
+  //       this.platformId = newValue
+  //     }
+  //   }
+  // },
+  // watch: {
+  //   platHotelId: function() {
+  //     this.form.platHotelId = this.platHotelId
+  //   }
+  // },
   methods: {
     async platformChange(value) {
-      const res = await hotelPlatformApi.detail(value);
-      this.platHotelId = res.data.PlatHotelID;
+      // const res = await hotelPlatformApi.detail(value);
+      // this.platHotelId = res.data.PlatHotelID;
+      // console.log(res.data)
     },
     Cancel() {
       this.$emit('hide')
@@ -337,7 +338,7 @@ export default {
     async edit(index, row) {
       console.log(row)
       const _self = this
-      _self.form.platHotelId = ''
+      // _self.form.platHotelId = ''
       const res = await sonRoomApi.detailById(this.sonRoomId)
       let a = res.data.SonRoomName
       const res2 = await hotelRoomApi.details(this.roomId)
