@@ -1,20 +1,19 @@
 <template lang="html">
 <div id="HotelsOrder">
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border :default-sort = "{prop: 'BookTime', order: 'descending'}">
-        <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
+        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
+        <el-table-column label="订单渠道" prop="ThreePlatID">
+          <template scope="scope">
+              <div v-for="item in ThreePlatID">
+                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+              </div>
+          </template>
+        </el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="城市" prop="City"></el-table-column>
-        <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
             <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="间/晚" prop="RoomNum">
-          <template scope="scope">
-            <span>{{ scope.row.RoomNum }}</span>/
-            <span>{{ scope.row.NightNum }}</span>
           </template>
         </el-table-column>
         <el-table-column label="入住人" prop="Passenger"></el-table-column>

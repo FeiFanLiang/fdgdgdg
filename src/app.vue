@@ -39,9 +39,9 @@
 </svg>
                     <span slot="title">{{route.name}}</span>
                   </template>
-                    <!-- <template v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  >
+                    <template v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children.children"  >
                         <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
-                        </template> -->
+                        </template>
                   <el-menu-item-group v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  :key="cIndex">
                     <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
                   </el-menu-item-group>

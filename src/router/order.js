@@ -19,7 +19,6 @@ export default {
       name: '特价房订单'
     },
     {
-      title:'111',
       path: 'HotelsOrder',
       component: _import('order/hotels-order'),
       name: '酒店订单'
@@ -39,6 +38,11 @@ export default {
       component: _import('order/shenhe'),
       name: '待审核列表'
     },
+    // {
+    //   path: 'Tuigai',
+    //   component: _import('order/tuigai'),
+    //   name: '待退改单列表'
+    // },
     {
       path: 'Jietu',
       component: _import('order/jietu'),
