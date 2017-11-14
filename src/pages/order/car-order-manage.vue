@@ -299,7 +299,7 @@
             <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 30, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
         </div>
-        <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" @close="resetForm('form')">
+        <el-dialog :title="form.id?'编辑线下订单':'添加线下订单'" size="small" v-model="showDialog" :append-to-body="true" @close="resetForm('form')">
             <el-form ref="form" :model="form" :rules="rules" label-width="110px">
                 <el-row :gutter="24" >
                   <el-col :span="12">
@@ -562,7 +562,7 @@
                 </el-row>
                 <p>外采图片</p>
                 <el-row>
-                    <UploadImage  :images="imageList"  @onRemove="handleRemove" @onSuccess="handleSuccess" ></UploadImage>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess" style="z-index:99999999"></UploadImage>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">

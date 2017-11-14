@@ -9,8 +9,10 @@
       </div>
     </li>
   </ul>
-  <el-dialog v-model="dialogVisible" size="small">
-    <img width="100%" :src="dialogImageUrl" alt="">
+  <el-dialog v-model="dialogVisible" size="small" :modal-append-to-body="false" :append-to-body="true">
+    <el-form :model="form" ref="form" label-width="130px">
+      <img width="100%" :src="form.dialogImageUrl" alt="">
+    </el-form>
   </el-dialog>
 </div>
 </template>
@@ -31,14 +33,16 @@ export default {
   },
   data() {
     return {
-      dialogImageUrl: '',
+      form: {
+        dialogImageUrl: ''
+      },
       dialogVisible: false
     }
   },
   methods: {
     view(url) {
       this.dialogVisible = true
-      this.dialogImageUrl = url
+      this.form.dialogImageUrl = url
     },
     del(index) {
       this.$emit('del', index)

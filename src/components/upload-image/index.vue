@@ -1,7 +1,7 @@
 <template>
 <div id="app">
   <div class="write-content" @drop="handleDrag" @dragover="handleDragover" @dragleave="handleDragleave" :class="{focused:isFocus, dragoverd: isDrogover}">
-    <ImgList :lists="images" @del="del" />
+    <ImgList :lists="images" @del="del"/>
     <div style="    display: inline-block;float: left;">
       <textarea @paste="handleTPaste" @focus="handleTFocus" @blur="handleTBlur" v-model="showText" placeholder="" contentEditable="true"></textarea>
       <p class="drag-and-drop">
