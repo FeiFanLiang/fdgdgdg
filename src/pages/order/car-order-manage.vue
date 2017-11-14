@@ -562,7 +562,7 @@
                 </el-row>
                 <p>外采图片</p>
                 <el-row>
-                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess" style="z-index:99999999"></UploadImage>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog-footer">
