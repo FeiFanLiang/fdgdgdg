@@ -58,6 +58,12 @@ export default {
   check2 (id) {
     return axios.post(base + 'SetCheckOrder/' + id)
   },
+  //退改单列表  GET /Hotel/HotelOrder/ListTuiGai
+  tuigai(params){
+    return axios.get(base + 'ListTuiGai',{
+      params: params
+    })
+  },
   //待截图列表    GET /Hotel/HotelOrder/ListDaiFaJieTu
   img(params){
     return axios.get(base + 'ListDaiFaJieTu',{

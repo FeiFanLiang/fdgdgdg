@@ -525,6 +525,7 @@
                 <el-col :span="7">
                     <el-form-item label="紧急打款" prop="UrgentPay">
                         <el-radio-group v-model="form.UrgentPay">
+                          <el-radio :label="0">紧急</el-radio>
                           <el-radio :label="1">紧急</el-radio>
                         </el-radio-group>
                     </el-form-item>
@@ -540,10 +541,11 @@
                   </el-form-item>
               </el-col>
               <el-col :span="7">
-                  <el-form-item label="是否已开发票">
-                      <el-radio-group>
+                  <el-form-item label="是否已开发票" prop="InvoiceState">
+                      <el-radio-group v-model="form.InvoiceState">
                         <el-radio :label="0">未开</el-radio>
                         <el-radio :label="1">已开</el-radio>
+                        <el-radio :label="2">不需要</el-radio>
                       </el-radio-group>
                   </el-form-item>
               </el-col>
@@ -551,6 +553,10 @@
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
             <div v-show="showEdit">
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
+            <div style="width:98%;height:50px;position: relative;">
+              <el-button @click="addCaiwu" style="position:absolute;right:80px;">改退票审核</el-button>
+              <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
+            </div>
             <el-row :gutter="24">
               <el-col>
                 <el-table :data="money" style="width: 95%;margin-left:40px;">
@@ -586,12 +592,13 @@
             </div>
             <div v-show="showEdit">
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>附加项目</h1></el-col></el-row>
-            <div style="text-align:right;width:95%;margin-top:-30px;">
-              <el-button @click="addFujia">添加</el-button>
+            <div style="width:98%;height:50px;position: relative;">
+              <el-button @click="addFujia" style="position:absolute;right:0;">添加</el-button>
             </div>
             <el-row :gutter="24">
               <el-col>
-                <el-table :data="fujia" style="width: 95%;margin-left:40px;">
+                <el-table :data="fujia" style="width: 95%;margin-left:40px;" border>
+                  <el-table-column label="订单号" prop="PlateOrderNo"></el-table-column>
                   <el-table-column label="订单类型" prop="TypeID">
                     <template scope="scope">
                       <span v-if="scope.row.TypeID === 0">门票</span>
@@ -599,12 +606,11 @@
                       <span v-if="scope.row.TypeID === 2">自助餐</span>
                     </template>
                   </el-table-column>
+                  <el-table-column label="订单来源" prop="PlateName"></el-table-column>
                   <el-table-column label="金额" prop="Money"></el-table-column>
+                  <el-table-column label="使用时间" prop="UseDate"></el-table-column>
                   <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
-                  <!-- <el-table-column label="来源" prop="PlateName"></el-table-column>
-                  <el-table-column label="订单编号" prop="PlateOrderNo"></el-table-column>
-                  <el-table-column label="使用时间" prop="UseDate"></el-table-column> -->
-                  <!-- <el-table-column label="创建人" prop="UserID"></el-table-column> -->
+                  <el-table-column label="创建人" prop="UserID"></el-table-column>
                 </el-table>
               </el-col>
             </el-row>
@@ -616,38 +622,68 @@
         </div>
     </el-dialog>
 
-    <el-dialog title="添加附加项目" v-model="showFujia" @close="resetForm('form2')" size="tiny">
-      <el-form ref="form2" :model="form2" label-width="110px">
+    <el-dialog title="添加附加项目" v-model="showFujia" @close="resetForm('formFujia')" size="small">
+      <el-form ref="formFujia" :model="formFujia" label-width="110px">
         <el-form-item label="订单ID" prop="HotelOrderID">
-            <el-input placeholder="请输入订单ID" v-model="form2.HotelOrderID" style="width:100%" :disabled="true"></el-input>
+            <el-input placeholder="请输入订单ID" v-model="formFujia.HotelOrderID" style="width:100%" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="金额" prop="Money">
-            <el-input placeholder="请输入金额" v-model="form2.Money" style="width:100%"></el-input>
+            <el-input placeholder="请输入金额" v-model="formFujia.Money" style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="来源" prop="PlateName">
-            <el-input placeholder="请输入来源" v-model="form2.PlateName" style="width:100%"></el-input>
+        <el-form-item label="订单来源" prop="PlateName">
+            <el-input placeholder="请输入订单来源" v-model="formFujia.PlateName" style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="订单编号" prop="PlateOrderNo">
-            <el-input placeholder="请输入订单编号" v-model="form2.PlateOrderNo" style="width:100%"></el-input>
+        <el-form-item label="订单号" prop="PlateOrderNo">
+            <el-input placeholder="请输入订单号" v-model="formFujia.PlateOrderNo" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="使用时间" prop="UseDate">
-            <el-date-picker v-model="form2.UseDate" type="date" placeholder="选择使用时间" style="width:100%;"></el-date-picker>
+            <el-date-picker v-model="formFujia.UseDate" type="date" placeholder="选择使用时间" style="width:100%;"></el-date-picker>
         </el-form-item>
         <el-form-item label="订单类型" prop="TypeID">
-            <el-select v-model="form2.TypeID" clearable>
+            <el-select v-model="formFujia.TypeID" clearable>
               <el-option v-for="item in TypeID" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="创建时间" prop="CreateDate">
-            <el-input placeholder="请输入创建时间" v-model="form2.CreateDate" style="width:100%" :disabled="true"></el-input>
+            <el-input placeholder="请输入创建时间" v-model="formFujia.CreateDate" style="width:100%" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="Remark">
-            <el-input type="textarea" v-model="form2.Remark" style="width:100%"></el-input>
+            <el-input type="textarea" v-model="formFujia.Remark" style="width:100%"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showFujia = false">取 消</el-button>
         <el-button type="primary" @click="submitForm2()">保存</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="添加财务信息" v-model="showCaiwu" @close="resetForm('formCaiwu')" size="small">
+      <el-form ref="formCaiwu" :model="formCaiwu" label-width="110px">
+        <el-form-item label="订单ID" prop="HotelOrderID">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.HotelOrderID" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="金额" prop="AmountUse">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.AmountUse" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="收/付款" prop="PaymentType">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.PaymentType" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="State">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.State" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="项目类别" prop="TypeID">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.TypeID" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="CreateDate">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.CreateDate" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="Remark">
+            <el-input type="textarea" v-model="formCaiwu.Remark" style="width:100%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showCaiwu = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm3()">保存</el-button>
       </span>
     </el-dialog>
 </div>
@@ -701,6 +737,7 @@ export default {
       },
       copyForm: {},
       showFujia: false,
+      showCaiwu: false,
       showDialog: false,
       showEdit: false,
       isEditable: true,
@@ -881,10 +918,13 @@ export default {
           value: 2
         },
       ],
-      form2: {
+      formFujia: {
         UseDate: '',
         TypeID: '',
         HotelOrderID: ''
+      },
+      formCaiwu: {
+
       },
       TypeID: [{
           label: '门票',
@@ -1053,13 +1093,6 @@ export default {
         const res = await hotelsOrderApi.listByQuery(options)
         _self.hotelsOrder = res.data.Data
         console.log(_self.hotelsOrder)
-        // for(let i in _self.hotelsOrder){
-        //   for(let j in _self.ThreePlatID){
-        //     if(_self.ThreePlatID[j].ID == _self.hotelsOrder[i].ThreePlatID){
-        //       _self.hotelsOrder[i].ThreePlatID = _self.ThreePlatID[j].PlateName
-        //     }
-        //   }
-        // }
         _self.active = 0
         _self.count = res.data.Count
         _self.loading = false
@@ -1102,7 +1135,7 @@ export default {
       const _self = this
       _self.showFujia = true
       let date = new Date().Format('yyyy-MM-dd hh:mm')
-      _self.form2 = {
+      _self.formFujia = {
         HotelOrderID: _self.ID,
         Money: 0,
         PlateName: '',
@@ -1113,10 +1146,16 @@ export default {
         CreateDate: date
       }
     },
+    async addCaiwu() {
+      const _self = this
+      //_self.showCaiwu = true
+    },
+    async submitForm3() {
+    },
     async submitForm2() {
       const _self = this
       try {
-        await paymentCheckApi.addFujia(_self.form2)
+        await paymentCheckApi.addFujia(_self.formFujia)
         _self.showFujia = false
         _self.$message({
           message: '添加成功',

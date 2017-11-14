@@ -46,7 +46,7 @@ import roomStatPriceApi from './room-stat-price'
 import hotelsOrderApi from './hotels-order'
 import paymentCheckApi from './payment-check'
 // import menuApi from './menu'
-
+import wechatUserApi from './wechat-user'
 export {
   accountApi,
   airlineApi,
@@ -95,5 +95,6 @@ export {
   roomStatPriceApi,
   // menuApi,
   hotelsOrderApi,
-  paymentCheckApi
+  paymentCheckApi,
+  wechatUserApi
 }
