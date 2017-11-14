@@ -12,6 +12,7 @@ import evaluateScanRoute from './evaluate-scan'
 import wechatRoute from './wechat'
 import dwz from './dwz'
 import wechatUser from './wechat-user'
+import modifyPrice from './modify-price'
 import test from './test'
 const children = [
   hotelRoute, // 酒店
@@ -24,7 +25,8 @@ const children = [
   roleRoute, // 角色
   userRoute, // 用户
   dwz, // 短链接
-  wechatUser //微信用户
+  wechatUser, // 微信用户
+  modifyPrice // 比价
   // test // 测试专用
 ]
 const root = Vue.component('root', {
