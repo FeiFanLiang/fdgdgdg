@@ -9,7 +9,7 @@
       </div>
     </li>
   </ul>
-  <el-dialog v-model="dialogVisible" size="small" :modal-append-to-body="false" :append-to-body="true">
+  <el-dialog v-model="dialogVisible" size="small" :modal-append-to-body="false" :modal="false" custom-class="custom-class">
     <el-form :model="form" ref="form" label-width="130px">
       <img width="100%" :src="form.dialogImageUrl" alt="">
     </el-form>
@@ -52,6 +52,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.custom-class{
+  border:4px solid 
+}
 #list {
   .el-upload--picture-card {
     display: none !important;
