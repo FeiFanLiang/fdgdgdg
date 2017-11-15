@@ -21,7 +21,6 @@
     "moment": "^2.18.1",
     "nprogress": "^0.2.0",
     "vue": "^2.3.3",
-    "vue-axios": "^1.2.2",
     "vue-router": "^2.3.1",
     "vuex": "2.2.1",
     "zhihu-particle": "^0.0.9"
@@ -82,9 +81,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }
