@@ -58,5 +58,10 @@ export default {
       name: '车的报销',
       component: _import('fleet/car-baoxiao/car-baoxiao')
     },
+    {
+      path: 'car-time',
+      name: '车辆时间',
+      component: _import('fleet/car-time/car-time')
+    }
   ]
 }
