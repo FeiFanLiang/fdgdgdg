@@ -18,8 +18,9 @@ export default {
   add (params) {
     return axios.post(base, params)
   },
-  edit (ID,params) {
-    return axios.put(base + ID, params)
+  //PUT /Hotel/HotelOrder/SaveOrder
+  edit (params) {
+    return axios.post(base + 'SaveOrder', params)
   },
   del (ID) {
     return axios.delete(base + ID)
@@ -29,6 +30,9 @@ export default {
   },
   img(ID){
     return axios.post(base + 'UploadPic/' + ID,ID)
+  },
+  getOrderList(id){
+    return axios.post(base + 'GetOrder/' + id)
   },
   //全部订单 GET /Hotel/HotelOrder/ListOrder
   fetch(params){
