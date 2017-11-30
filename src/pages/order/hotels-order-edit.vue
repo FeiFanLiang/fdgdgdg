@@ -78,28 +78,31 @@
             <el-col :span="17">
             <el-form-item label="采购渠道" prop="HotelArea">
                 <el-radio-group v-model="form.HotelArea">
-                <el-radio :label="1">国际</el-radio>
-                <el-radio :label="0">国内</el-radio>
-                <el-radio :label="2">美国1009</el-radio>
-                <el-radio :label="3">美国2462</el-radio>
-                <el-radio :label="4">好订1009</el-radio>
-                <el-radio :label="5">好订2462</el-radio>
+                    <el-radio :label="1">国际</el-radio>
+                    <el-radio :label="0">国内</el-radio>
+                    <el-radio :label="2">美国1009</el-radio>
+                    <el-radio :label="3">美国2462</el-radio>
+                    <el-radio :label="4">好订1009</el-radio>
+                    <el-radio :label="5">好订2462</el-radio>
                 </el-radio-group>
             </el-form-item>
             </el-col>
         </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:20px;" />
         <el-row :gutter="24">
+            <el-col :span="6">
+                <el-form-item label="回填状态" prop="BackfillState">
+                    <span v-if="form.BackfillState == 0" style="color:orange">未回填</span>
+                    <span v-if="form.BackfillState == 1" style="color:orange">已回填</span>
+                </el-form-item>
+            </el-col>
             <el-col :span="7">
-            <el-form-item label="回填" prop="">
-                <el-radio-group v-model="ht">
-                <el-radio :label="0">回填成功</el-radio>
-                </el-radio-group>
-            </el-form-item>
+                <el-form-item label="审核状态" prop="BackfillState">
+                    <span v-if="form.StateAuditor == 0" style="color:orange">未审核</span>
+                    <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
+                </el-form-item>
             </el-col>
             <el-col :span="6">
-                <el-button @click="shenhe()">审核</el-button>
-                <el-button>保存</el-button>
+                <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
             </el-col>
         </el-row>
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:30px;" />
@@ -385,8 +388,8 @@
         </el-collapse>
     </el-form>
     <div class="dialog-footer" style="text-align:center;margin-top:30px;">
-        <el-button size="large" @click="cancel()">取 消</el-button>
-        <el-button type="primary" @click="submitOrderList()" :loading="!isEditable" size="large">{{isEditable?'确 定':'提交中'}}</el-button>
+        <el-button size="large" @click="cancel()">取消</el-button>
+        <el-button type="primary" @click="submitOrderList()" :loading="!isEditable" size="large">{{isEditable?text:'提交中'}}</el-button>
     </div>
     <el-dialog title="添加附加项目" v-model="showFujia" @close="resetForm('formFujia')" size="small">
       <el-form ref="formFujia" :model="formFujia" label-width="110px">
@@ -442,7 +445,9 @@ export default{
             ID: '',
             POrderID: '',
             HotelName: '',
-            ht:true,
+            type:'',
+            text:'',
+            showTuigaiButton:false,
             imageList: [],
             action: '',
             dialogImageUrl: '',
@@ -595,14 +600,29 @@ export default{
     created() {
         const _self = this
         _self.ID = _self.$route.params.ID
-        _self.HotelName = _self.$route.params.HotelName,
+        _self.getHotel()
+        //_self.HotelName = _self.$route.params.HotelName,
         _self.POrderID = _self.$route.params.POrderID
+        _self.type = _self.$route.params.type  // 0回填 1审核
+        if(_self.type == 0){
+            _self.text = '确定回填'
+        }else if(_self.type == 1){
+            _self.text = '确定审核'
+        }else if(_self.type == 2){
+            _self.showTuigaiButton = true
+            _self.text = '退改保存'
+        }else{
+            _self.text = '保存'
+        }
         if (_self.ID) {
             _self.getHotelOrderList(_self.ID,_self.POrderID)
         }
         _self.ThreePlat()
     },
     methods:{
+        async getHotel(){
+
+        },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
             this.ThreePlatID = res.data
@@ -636,6 +656,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+                _self.HotelName = _self.form.HotelName
                 const res2 = await paymentCheckApi.detail(ID)
                 let a = res2.data.Data
                 const options = {

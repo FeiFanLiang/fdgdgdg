@@ -62,9 +62,9 @@ export default {
   check2 (id) {
     return axios.post(base + 'SetCheckOrder/' + id)
   },
-  //退改单列表  GET /Hotel/HotelOrder/ListTuiGai
+  //退改单列表  GET /Hotel/HotelOrder/ListDaiTuiGai
   tuigai(params){
-    return axios.get(base + 'ListTuiGai',{
+    return axios.get(base + 'ListDaiTuiGai',{
       params: params
     })
   },

@@ -24,7 +24,7 @@ export default {
       name: '酒店订单'
     },
     {
-      path: 'HotelsOrderEdit',
+      path: 'HotelsOrderEdit/:ID/:POrderID',
       component: _import('order/hotels-order-edit'),
       name: '酒店订单信息编辑',
       meta: {
@@ -32,7 +32,7 @@ export default {
       }
     },
     {
-      path: 'ShenheSave',
+      path: 'ShenheSave/:ID',
       component: _import('order/shenhe-save'),
       name: '订单审核',
       meta: {
@@ -54,11 +54,11 @@ export default {
       component: _import('order/shenhe'),
       name: '待审核列表'
     },
-    // {
-    //   path: 'Tuigai',
-    //   component: _import('order/tuigai'),
-    //   name: '待退改单列表'
-    // },
+    {
+      path: 'Tuigai',
+      component: _import('order/tuigai'),
+      name: '待退改单列表'
+    },
     {
       path: 'Jietu',
       component: _import('order/jietu'),

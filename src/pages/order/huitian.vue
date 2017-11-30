@@ -83,14 +83,15 @@ export default {
         _self.loading = false
       }
     },
-    async clickEditBtn($index, row) {
+    clickEditBtn($index, row) {
       const _self = this
       _self.$router.push({
         name: '酒店订单信息编辑',
         params: {
           ID: row.ID,
           POrderID: row.ID,
-          HotelName: row.HotelName
+          HotelName: row.HotelName,
+          type:0 // 回填
         }
       })
     },
