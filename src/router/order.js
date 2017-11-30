@@ -31,6 +31,14 @@ export default {
         hidden: true
       }
     },
+    {
+      path: 'ShenheSave',
+      component: _import('order/shenhe-save'),
+      name: '订单审核',
+      meta: {
+        hidden: true
+      }
+    },
     // {
     //   path: 'OrderOtherList',
     //   component: _import('order/order-otherlist'),

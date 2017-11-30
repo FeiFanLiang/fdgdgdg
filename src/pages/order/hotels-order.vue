@@ -206,7 +206,7 @@
               </div>
             </template>
         </el-table-column>
-        <!--<el-table-column label="ID" prop="ID"></el-table-column>-->
+        <!--<el-table-column label="POrderID" prop="POrderID"></el-table-column>-->
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
             <template scope="scope">
               <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.PlatOrderNo }}</span>
@@ -879,7 +879,6 @@ export default{
       try {
         const res = await hotelsOrderApi.fetch(options)
         _self.hotelsOrder = res.data.Data
-        console.log(_self.hotelsOrder)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
@@ -896,7 +895,6 @@ export default{
           HotelName: row.HotelName
         }
       })
-      console.log(row.POrderID)
     },
     clickAddBtn(){
       const _self = this

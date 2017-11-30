@@ -98,7 +98,7 @@
             </el-form-item>
             </el-col>
             <el-col :span="6">
-                <el-button>审核</el-button>
+                <el-button @click="shenhe()">审核</el-button>
                 <el-button>保存</el-button>
             </el-col>
         </el-row>
@@ -475,8 +475,6 @@ export default{
                 HotelOrderDetail:[]
             },
             copyForm: {},
-            remsgstateList: [],
-            oderstateList: [],
             pickerOptions: {
                 disabledDate(time) {
                 return time.getTime() < Date.now() - 8.64e7;
@@ -631,21 +629,6 @@ export default{
                 this.form.NightNum = days
             }
         },
-        async getStateList() {
-            const _self = this
-            _self.remsgstateList = []
-            _self.oderstateList = []
-            const res = await hotelsOrderApi.getState()
-            let d = res.data.Data
-            for (let i in d) {
-                if (d[i].FCode == 'remsgstate') {
-                _self.remsgstateList.push(d[i].Name)
-                }
-                if (d[i].FCode == 'oderstate') {
-                _self.oderstateList.push(d[i].Name)
-                }
-            }
-        },
         async getHotelOrderList(ID,POrderID){
             const _self = this
             _self.action = 'http://192.168.10.95:8500/Hotel/Image'
@@ -666,7 +649,6 @@ export default{
                 _self.money.push(a[i].HotelPayment)
                 }
                 _self.copyForm = Object.assign({}, _self.form)
-                _self.getStateList()
                 _self.loading = false
             } catch (e) {
                 console.error(e)
@@ -767,6 +749,15 @@ export default{
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
+        },
+        shenhe(){
+            this.$router.push({
+                name:'订单审核',
+                params:{
+                    POrderID:this.POrderID,
+                    HotelPolicyID:this.form.HotelPolicyID
+                }
+            })
         }
 
     }
