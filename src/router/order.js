@@ -24,7 +24,7 @@ export default {
       name: '酒店订单'
     },
     {
-      path: 'HotelsOrderEdit/:ID/:POrderID',
+      path: 'HotelsOrderEdit/:ID/:POrderID/:type',
       component: _import('order/hotels-order-edit'),
       name: '酒店订单信息编辑',
       meta: {
