@@ -99,7 +99,7 @@
             <el-input v-model="form.platHotelNameEn"></el-input>
           </el-form-item>
           <el-form-item label="是否有效">
-           <el-switch v-model="form.isValid" on-text="" off-text=""></el-switch>
+           <el-switch v-model="form.isDisabled" on-text="" off-text=""></el-switch>
          </el-form-item>
         </div>
       </el-form>
@@ -150,7 +150,7 @@ export default {
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isValid: ''
+        isDisabled: ''
       },
       rules: {
         platformId: [{
@@ -202,25 +202,27 @@ export default {
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isValid: true
+        isDisabled: true
       }
     },
     async clickEditBtn($index, row) {
       const _self = this
       try {
         const res = await hotelPlatformApi.detail(row.ID)
+        console.log(res.data.Data)
         _self.showDialog = true
         _self.dialogTag = 2
         _self.dialogTitle = '编辑平台映射信息'
-        _self.form.id = res.data.ID
-        _self.form.platformId = res.data.PlatformID
-        _self.form.hotelId = res.data.HotelID
-        _self.form.platHotelId = res.data.PlatHotelID
-        _self.form.platUrl = res.data.PlatURL
-        _self.form.platHotelName = res.data.PlatHotelName
-        _self.form.platHotelNameEn = res.data.PlatHotelName_En
-        _self.form.remark = res.data.Remark
-        _self.form.isValid = res.data.IsValid
+        _self.form.id = res.data.Data.ID
+        _self.form.platformId = res.data.Data.PlatformID
+        _self.form.hotelId = res.data.Data.HotelID
+        _self.form.platHotelId = res.data.Data.PlatHotelID
+        _self.form.platUrl = res.data.Data.PlatURL
+        _self.form.platHotelName = res.data.Data.PlatHotelName
+        _self.form.platHotelNameEn = res.data.Data.PlatHotelName_En
+        _self.form.remark = res.data.Data.Remark
+        _self.form.isDisabled = res.data.Data.IsDisabled
+        console.log(_self.form)
       } catch (e) {
         console.error(e)
       }
