@@ -1,29 +1,29 @@
 <template lang="html">
-    <div id="car-arrange-page">
-        <el-row :gutter="24">
-            <el-col :span="5">
-                <el-date-picker v-model="filters.beginTime" type="date" placeholder="选择起始日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="5">
-                <el-date-picker v-model="filters.endTime" type="date" placeholder="选择终止日期" :picker-options="pickerOptions">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="4">
-                <el-button type="primary" @click="fetchData">搜索</el-button>
-            </el-col>
-            <el-col :span="10" v-loading="dayloading">
-                <p style="margin:0px;">
-                    <el-button type="primary" @click="getDaypandect" >刷新</el-button>
-                    <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
-                    <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
-                </p>
-                <h3 style="display:inline;">当日订单概括:</h3>
-                <span style="color:red;">{{DayPandect}}</span>
-            </el-col>
-        </el-row>
-        <el-tabs v-model="activeTabName" @tab-click="tabClick">
-          <el-tab-pane label="待派车订单" name="unArrange">
+<div id="car-arrange-page">
+    <el-row :gutter="24">
+        <el-col :span="5">
+            <el-date-picker v-model="filters.beginTime" type="date" placeholder="选择起始日期" :picker-options="pickerOptions">
+            </el-date-picker>
+        </el-col>
+        <el-col :span="5">
+            <el-date-picker v-model="filters.endTime" type="date" placeholder="选择终止日期" :picker-options="pickerOptions">
+            </el-date-picker>
+        </el-col>
+        <el-col :span="4">
+            <el-button type="primary" @click="fetchData">搜索</el-button>
+        </el-col>
+        <el-col :span="10" v-loading="dayloading">
+            <p style="margin:0px;">
+                <el-button type="primary" @click="getDaypandect">刷新</el-button>
+                <el-button type="primary" @click="syncList('xiecheng')">同步携程订单</el-button>
+                <el-button type="primary" @click="syncList('mile')">同步订单里程信息</el-button>
+            </p>
+            <h3 style="display:inline;">当日订单概括:</h3>
+            <span style="color:red;">{{DayPandect}}</span>
+        </el-col>
+    </el-row>
+    <el-tabs v-model="activeTabName" @tab-click="tabClick">
+        <el-tab-pane label="待派车订单" name="unArrange">
             <el-table :data="unArrangeList" @row-dblclick="rowDblclick" ref="table" style="width: 100%;" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="500">
                 <el-table-column type="expand" width="30">
                     <template scope="props" v-if="props.row.CancelTime">
@@ -34,7 +34,7 @@
                                 <p>取消说明：{{props.row.order.CancelRemark}}</p>
                             </el-form-item>
                         </el-form>
-                    </template>
+</template>
                 </el-table-column>
                 <el-table-column prop="order.Channel" label="订单渠道"></el-table-column>
                 <el-table-column prop="order.ExternalOrderID" label="订单编号" width="120"></el-table-column>
@@ -43,65 +43,69 @@
                 <el-table-column prop="order.LinkPhone" label="联系电话" width="125"></el-table-column>
                 <el-table-column prop="order.UseTime" label="用车时间" width="110"></el-table-column>
                 <el-table-column label="接/送" width="45">
-                    <template scope="scope">
-                        <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-                        <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-                        <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-                        <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-                        <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.order.CarTransportType === 0">
+        接机</span>
+<span v-if="scope.row.order.CarTransportType === 1">送机</span>
+<span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+<span v-if="scope.row.order.CarTransportType === 3">接站</span>
+<span v-if="scope.row.order.CarTransportType === 4">送站</span>
+</template>
                 </el-table-column>
                 <el-table-column label="车型">
-                    <template scope="scope">
-                        <span v-if="scope.row.order.CarClassify === 0">经济型</span>
-                        <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
-                        <span v-if="scope.row.order.CarClassify === 2">商务型</span>
-                        <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.order.CarClassify === 0">
+        经济型</span>
+<span v-if="scope.row.order.CarClassify === 1">舒适型</span>
+<span v-if="scope.row.order.CarClassify === 2">商务型</span>
+<span v-if="scope.row.order.CarClassify === 3">豪华型</span>
+</template>
                 </el-table-column>
                 <!-- <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
 
                 <el-table-column label="详细地址" show-overflow-tooltip>
-                    <template scope="scope">
-                        <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
-                        <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+<span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
+</template>
                 </el-table-column> -->
 
                 <el-table-column label="地址详情" width="150">
-                    <template scope="scope">
-                        <span style="color:blue;">{{scope.row.order.Origin}}</span>
-                        <br>
-                        <span style="color:red;">{{scope.row.order.Destination}}</span>
-                        <p style="color:grey;font-size:10px;">
-                            <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
-                            <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
-                        </p>
-                    </template>
+<template scope="scope">
+<span style="color:blue;">
+        {{scope.row.order.Origin}}</span>
+<br>
+<span style="color:red;">{{scope.row.order.Destination}}</span>
+<p style="color:grey;font-size:10px;">
+    <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+    <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
+</p>
+</template>
                 </el-table-column>
 
                 <el-table-column prop="order.PreServiceMileage" label="里程" width="60"></el-table-column>
                 <el-table-column prop="order.ExternalOrderStete" label="状态"></el-table-column>
                 <el-table-column label="操作" fixed="right" width="100">
-                <template scope="scope">
-                    <el-button size="small" @click="dispatch(scope.$index, scope.row,0)" style="margin:5px">派车</el-button>
-                    <el-popover ref="popover2" placement="top" width="200">
-                        <p>{{scope.row.order.Remark}}</p>
-                    </el-popover>
-                    <el-button size="small" v-popover:popover2 style="margin:5px">备注</el-button>
-                    <el-popover ref="popover" placement="top" width="200">
-                        <h5>航班动态</h5>
-                        <p>航班号：{{airInformationList.FlightNo}}</p>
-                        <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
-                        <p>到达时间：{{airInformationList.ArrivalTime}}</p>
-                        <p>状态：{{airInformationList.Stat}}</p>
-                        <p>前序航班状态：{{airInformationList.PreStat}}</p>
-                        <p>更新时间：{{airInformationList.UpdateTime}}</p>
-                        <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
-                    </el-popover>
-                    <el-button size="small" v-popover:popover @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
-                </template>
+<template scope="scope">
+<el-button size="small" @click="dispatch(scope.$index, scope.row,0)" style="margin:5px">
+    派车</el-button>
+<el-popover ref="popover2" placement="top" width="200">
+    <p>{{scope.row.order.Remark}}</p>
+</el-popover>
+<el-button size="small" v-popover:popover2 style="margin:5px">备注</el-button>
+<el-popover ref="popover" placement="top" width="200">
+    <h5>航班动态</h5>
+    <p>航班号：{{airInformationList.FlightNo}}</p>
+    <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+    <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+    <p>状态：{{airInformationList.Stat}}</p>
+    <p>前序航班状态：{{airInformationList.PreStat}}</p>
+    <p>更新时间：{{airInformationList.UpdateTime}}</p>
+    <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+</el-popover>
+<el-button size="small" v-popover:popover @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
+</template>
                 </el-table-column>
             </el-table>
           </el-tab-pane>
@@ -116,15 +120,15 @@
             </el-select>
             <el-table :data="arrangeList"  ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border row-key="ID" max-height="1000">
                 <el-table-column type="expand" width="30">
-                <template scope="props" v-if="props.row.CancelTime">
-                    <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item>
-                            <p>取消时间：{{props.row.arrange.CancelTime}}</p>
-                            <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
-                            <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
-                        </el-form-item>
-                    </el-form>
-                </template>
+<template scope="props" v-if="props.row.CancelTime">
+<el-form label-position="left" inline class="demo-table-expand">
+    <el-form-item>
+        <p>取消时间：{{props.row.arrange.CancelTime}}</p>
+        <p>取消单人员：{{props.row.arrange.CancelUserID}}</p>
+        <p>取消说明：{{props.row.arrange.CancelRemark}}</p>
+    </el-form-item>
+</el-form>
+</template>
                 </el-table-column>
                 <el-table-column prop="order.Channel" label="订单渠道"></el-table-column>
                 <el-table-column prop="order.ExternalOrderID" label="订单编号" width="120"></el-table-column>
@@ -134,68 +138,75 @@
                   <el-table-column prop="arrange.Car.CarNumber" label="车牌号" width="125"></el-table-column>
                 <el-table-column prop="order.UseTime" label="用车时间" width="110"></el-table-column>
                 <el-table-column label="接/送">
-                    <template scope="scope">
-                        <span v-if="scope.row.order.CarTransportType === 0">接机</span>
-                        <span v-if="scope.row.order.CarTransportType === 1">送机</span>
-                        <span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
-                        <span v-if="scope.row.order.CarTransportType === 3">接站</span>
-                        <span v-if="scope.row.order.CarTransportType === 4">送站</span>
-                    </template>
+<template scope="scope">
+<span v-if="scope.row.order.CarTransportType === 0">
+        接机</span>
+<span v-if="scope.row.order.CarTransportType === 1">送机</span>
+<span v-if="scope.row.order.CarTransportType === 2">指定线路</span>
+<span v-if="scope.row.order.CarTransportType === 3">接站</span>
+<span v-if="scope.row.order.CarTransportType === 4">送站</span>
+</template>
                 </el-table-column>
                 <el-table-column prop="arrange.Driver.Name" label="司机姓名"></el-table-column>
-                <el-table-column  label="车型">
-                  <template scope="scope">
-                      <span v-if="scope.row.order.CarClassify === 0">经济型</span>
-                      <span v-if="scope.row.order.CarClassify === 1">舒适型</span>
-                      <span v-if="scope.row.order.CarClassify === 2">商务型</span>
-                      <span v-if="scope.row.order.CarClassify === 3">豪华型</span>
-                  </template>
-                </el-table-column>
+                <!-- <el-table-column  label="车型">
+<template scope="scope">
+<span v-if="scope.row.order.CarClassify === 0">经济型</span>
+<span v-if="scope.row.order.CarClassify === 1">舒适型</span>
+<span v-if="scope.row.order.CarClassify === 2">商务型</span>
+<span v-if="scope.row.order.CarClassify === 3">豪华型</span>
+</template>
+                </el-table-column> -->
                 <!-- <el-table-column prop="arrange.Car.CarNumber" label="车牌号" show-overflow-tooltip></el-table-column> -->
                 <!-- <el-table-column prop="order.Origin" label="始发地" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="order.Destination" label="目的地" show-overflow-tooltip></el-table-column>
                   <el-table-column prop="arrange.ArrangeTime" label="派单时间" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="arrange.Remark" label="备注" show-overflow-tooltip></el-table-column> -->
                 <el-table-column label="地址详情" width="170">
-                    <template scope="scope">
-                        <span style="color:blue;">{{scope.row.order.Origin}}</span><br><span style="color:red;">{{scope.row.order.Destination}}</span>
-                        <!-- <p style="color:grey;font-size:10px;">
-                            <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
-                            <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
-                        </p> -->
-                    </template>
+<template scope="scope">
+<span style="color:blue;">
+        {{scope.row.order.Origin}}</span>
+<br>
+<span style="color:red;">{{scope.row.order.Destination}}</span>
+<!-- <p style="color:grey;font-size:10px;">
+                                <span v-if="scope.row.order.OriginAddress !== null">{{scope.row.order.OriginAddress}}</span>
+                                <span v-if="scope.row.order.DestinationAddress !== null">{{scope.row.order.DestinationAddress}}</span>
+                            </p> -->
+</template>
                 </el-table-column>
                 <el-table-column label="出车状态">
-                    <template scope="scope">
-                    <p v-if="scope.row.arrange.ArrangeStatus ===0 ">准备出车</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===1 ">完成</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===2 ">取消</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===3 ">前往上车地点</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===4 ">到达上车地点</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===5 ">接到客人</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===6 ">前往目的地</p>
-                    <p v-if="scope.row.arrange.ArrangeStatus ===7 ">到达目的地</p>
-                </template>
+<template scope="scope">
+<p v-if="scope.row.arrange.ArrangeStatus ===0 ">
+    准备出车</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===1 ">完成</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===2 ">取消</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===3 ">前往上车地点</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===4 ">到达上车地点</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===5 ">接到客人</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===6 ">前往目的地</p>
+<p v-if="scope.row.arrange.ArrangeStatus ===7 ">到达目的地</p>
+<p>{{scope.row.driverLocation}}</p>
+</template>
                 </el-table-column>
                 <!-- <el-table-column label="操作" fixed="right" width="100">
-                <template scope="scope">
-                    <el-button size="small" @click="dispatch(scope.$index, scope.row,1)" style="margin:5px">改派</el-button>
-                        <el-popover ref="popover4" placement="top" width="200">
-                            <p>{{scope.row.order.Remark}}</p>
-                        </el-popover>
-                        <el-button size="small" v-popover:popover4 style="margin:5px">备注</el-button>
-                        <el-popover ref="popover3" placement="top" width="200">
-                            <h5>航班动态</h5>
-                            <p>航班号：{{airInformationList.FlightNo}}</p>
-                            <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
-                            <p>到达时间：{{airInformationList.ArrivalTime}}</p>
-                            <p>状态：{{airInformationList.Stat}}</p>
-                            <p>前序航班状态：{{airInformationList.PreStat}}</p>
-                            <p>更新时间：{{airInformationList.UpdateTime}}</p>
-                            <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
-                        </el-popover>
-                        <el-button size="small" v-popover:popover3 @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
-                </template>
+<template scope="scope">
+<el-button size="small" @click="dispatch(scope.$index, scope.row,1)" style="margin:5px">
+    改派</el-button>
+<el-popover ref="popover4" placement="top" width="200">
+    <p>{{scope.row.order.Remark}}</p>
+</el-popover>
+<el-button size="small" v-popover:popover4 style="margin:5px">备注</el-button>
+<el-popover ref="popover3" placement="top" width="200">
+    <h5>航班动态</h5>
+    <p>航班号：{{airInformationList.FlightNo}}</p>
+    <p>起飞时间：{{airInformationList.TakeOffTime}}</p>
+    <p>到达时间：{{airInformationList.ArrivalTime}}</p>
+    <p>状态：{{airInformationList.Stat}}</p>
+    <p>前序航班状态：{{airInformationList.PreStat}}</p>
+    <p>更新时间：{{airInformationList.UpdateTime}}</p>
+    <p>最后查询结果：{{airInformationList.LastQueryResult}}</p>
+</el-popover>
+<el-button size="small" v-popover:popover3 @click="showAirInformations(scope.row.order.CarriageNo,scope.row.order.UseTime)" style="margin:5px">查询航班</el-button>
+</template>
                 </el-table-column> -->
             </el-table>
           </el-tab-pane>
@@ -437,6 +448,7 @@ export default {
         const now = new Date()
         now.setDate(now.getDate() + 1)
         this.filters.endTime = now.Format('yyyy-MM-dd')
+        this.getAccessTtoken()
         this.fetchData()
         this.fetchCarList()
         this.configList = carArrangeApi.getConfig()
@@ -482,8 +494,7 @@ export default {
                 preServiceTime: '',
                 specReq: ''
             },
-            carTransportTypeList: [
-                {
+            carTransportTypeList: [{
                     value: 0,
                     label: '接机'
                 },
@@ -504,8 +515,7 @@ export default {
                     label: '送站'
                 }
             ],
-            carClassifyList: [
-                {
+            carClassifyList: [{
                     value: 0,
                     label: '经济型'
                 },
@@ -528,26 +538,24 @@ export default {
                 driverid: ''
             },
             rules: {
-                carId: [
-                    {
-                        required: true,
-                        message: '请选择车辆'
-                    }
-                ],
-                driverId: [
-                    {
-                        required: true,
-                        message: '请选择司机'
-                    }
-                ]
-            }
+                carId: [{
+                    required: true,
+                    message: '请选择车辆'
+                }],
+                driverId: [{
+                    required: true,
+                    message: '请选择司机'
+                }]
+            },
+            accessToken: '',
+            key: "6c5a9b8113b01f67436e82f5f15c208d"
         }
     },
     methods: {
         selectDriverChange(driverId) {
             this.form.phone = this.driverList.find(item => item.ID === driverId).Phone
         },
-        tabClick(tab, event) { },
+        tabClick(tab, event) {},
         rowDblclick(row, event) {
             this.sendCardriverId = ''
             this.isSendCarEditable = true
@@ -653,12 +661,10 @@ export default {
             if (type === 'xiecheng') {
                 try {
                     const form = {
-                        begin: _self.filters.beginTime
-                            ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd')
-                            : '',
-                        end: _self.filters.endTime
-                            ? new Date(_self.filters.endTime).Format('yyyy-MM-dd')
-                            : ''
+                        begin: _self.filters.beginTime ?
+                            new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
+                        end: _self.filters.endTime ?
+                            new Date(_self.filters.endTime).Format('yyyy-MM-dd') : ''
                     }
                     const res = await carOrderManageApi.syncList(form)
                 } catch (e) {
@@ -705,12 +711,10 @@ export default {
             try {
                 _self.loading = true
                 const options = {
-                    beginTime: _self.filters.beginTime
-                        ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd')
-                        : '',
-                    endTime: _self.filters.endTime
-                        ? new Date(_self.filters.endTime).Format('yyyy-MM-dd')
-                        : '',
+                    beginTime: _self.filters.beginTime ?
+                        new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
+                    endTime: _self.filters.endTime ?
+                        new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
                     driverid: _self.filters.driverid
                 }
                 const res = await carArrangeApi.unArrangeOrderList(options)
@@ -734,12 +738,10 @@ export default {
             const _self = this
             _self.loading = true
             const options = {
-                beginTime: _self.filters.beginTime
-                    ? new Date(_self.filters.beginTime).Format('yyyy-MM-dd')
-                    : '',
-                endTime: _self.filters.endTime
-                    ? new Date(_self.filters.endTime).Format('yyyy-MM-dd')
-                    : '',
+                beginTime: _self.filters.beginTime ?
+                    new Date(_self.filters.beginTime).Format('yyyy-MM-dd') : '',
+                endTime: _self.filters.endTime ?
+                    new Date(_self.filters.endTime).Format('yyyy-MM-dd') : '',
                 driverid: _self.filters.driverid
             }
             try {
@@ -753,13 +755,173 @@ export default {
                             _self.arrangeList.push(data[index1][index2])
                         }
                     }
+                    console.log(_self.arrangeList)
                 }
                 _self.loading = false
                 _self.driverList.length === 0 ? _self.fetchDriverList() : ''
+                _self.handlleData()
             } catch (e) {
                 _self.loading2 = false
                 _self.$message.error('已安排订单数据获取失败!!!')
             }
+        },
+        async handlleData() {
+            const _self = this
+            // _self.accessToken = _self.getAccessTtoken()
+            //<p v-if="scope.row.arrange.ArrangeStatus ===0 ">准备出车</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===1 ">完成</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===2 ">取消</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===3 ">前往上车地点</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===4 ">到达上车地点</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===5 ">接到客人</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===6 ">前往目的地</p>
+            // <p v-if="scope.row.arrange.ArrangeStatus ===7 ">到达目的地</p>
+            _self.arrangeList.forEach(function(item) {
+                let arrangeStatus = item.arrange.ArrangeStatus
+                switch (arrangeStatus) {
+                    case 0:
+                        _self.getCoordinate(item, item.arrange.Car.IMEI)
+                        if (item.order.CarTransportType === 0) { //jieji
+                            return _self.getGeo(_self.key, item.order.Destination);
+                        } else if (item.order.CarTransportType === 1) {
+                            return _self.getGeo(_self.key, item.order.Origin);
+                        }
+                        break;
+                    case 1:
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    default:
+                        break;
+                }
+            })
+        },
+        timest() {
+            var tmp = Date.parse(new Date()).toString();
+            tmp = tmp.substr(0, 10);
+            return tmp;
+        },
+        getAccessTtoken() {
+            const _self = this
+            let account = "qdaoxun"
+            let unix = _self.timest()
+            let sign = md5(md5('allwin96555') + unix)
+            let url = `http://api.gpsoo.net/1/auth/access_token?account=${account}&time=${unix}&signature=${sign}`
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "jsonp",
+                success: function(data) {
+                    _self.accessToken = data.access_token
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    _self.$message.error('第三方登陆失败！')
+                }
+            });
+        },
+        async getCoordinate(item, IMEI) {
+            const _self = this
+            if (!IMEI) return
+            let account = "qdaoxun"
+            let unix = _self.timest()
+            let url = `http://api.gpsoo.net/1/devices/tracking?access_token=${_self.accessToken}&map_type=BAIDU&imeis=${IMEI}&account=${account}&time=${unix}`
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "jsonp",
+                success: function(data) {
+                    if (!data.ret) {
+                        // item.coordinate = {
+                        //     lat: data.data[0].lat,
+                        //     lng: data.data[0].lng
+                        // }
+                        item.driverLocation = `${data.data[0].lat},${data.data[0].lng}`
+                    }
+                    console.log(item.coordinate)
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    _self.$message.error('获取坐标失败！')
+                }
+            });
+        },
+        getTwoStageDrivingTime() {
+            const _self = this
+            //得到坐标promise数组
+            let promiseListForGeo = _self.arrangeList.map(function(item) {
+                if (item.order.CarTransportType === 0) { //jieji
+                    return getGeo(_self.key, item.order.Destination);
+                } else if (item.order.CarTransportType === 1) {
+                    return getGeo(_self.key, item.order.Origin);
+                }
+            });
+            console.log(promiseListForGeo)
+            //Promise.all:在所有的Promise对象都执行完成之后resolve。参数是一个数组，数组的每一项都是一个Promise对象
+            new Promise.all(promiseListForGeo).then(function(resArrayForGeo) {
+                //过滤resArrayForGeo无效请求并降低属性层级
+                resArrayForGeo = handleResArrayForGeo(resArrayForGeo);
+
+                //LIST与resArrayForGeo一一对应
+                LIST.forEach(function(item, index) {
+                    item.location = resArrayForGeo[index].location; // resArrayForGeo里面的数据已过滤
+                });
+
+                //得到驾车行驶promise数组
+                var promiseListForDriving = LIST.map(function(item, index) {
+                    if (item.OrderType === "国内接机") {
+                        return getDrivingTime(KEY, AIRPORT_LOCATION, COMPANY_LOCATION, item.location);
+                    }
+                    if (item.OrderType === "国内送机") {
+                        return getDrivingTime(KEY, COMPANY_LOCATION, AIRPORT_LOCATION, item.location);
+                    }
+                });
+
+                new Promise.all(promiseListForDriving).then(function(resArrayForDriving) {
+                    resArrayForDriving = handleResArrayForDriving(resArrayForDriving);
+                    // console.log(resArrayForDriving);
+                    handleList(resArrayForDriving);
+                    console.log("合计请求错误订单------------------------------", INVALID_PROMISE_ARRAY.length);
+                    console.info(INVALID_PROMISE_ARRAY)
+                });
+            });
+        },
+        //地址转换坐标函数
+        getGeo(key, address) {
+            if (!key || !address) return;
+            var url = 'http://restapi.amap.com/v3/geocode/geo?';
+            if (this.isArrays(address)) {
+                address = address.join('|');
+            }
+            var obj = {
+                key: key,
+                address: address, // 查询地址 多个用|分割
+                city: '青岛', // 默认为青岛
+                batch: true // 是否可以批量查询
+            };
+            return fetch(url + this.trans(obj)).then(function(res) {
+                console.log(res.json())
+                return res.json()
+            });
+        },
+        isArrays(o) {
+            return Object.prototype.toString.call(o) === '[object Array]';
+        },
+        trans(obj) {
+            var str = '';
+            for (var i in obj) {
+                if (obj.hasOwnProperty(i)) {
+                    str += i + '=' + obj[i] + '&';
+                }
+            }
+            return str;
         },
         dispatch($index, row, a) {
             const _self = this
