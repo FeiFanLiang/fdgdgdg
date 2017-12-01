@@ -19,7 +19,7 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-table ref="multipleTable" @row-click="tableRowClick" :data="tableData3" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table ref="multipleTable" @row-click="tableRowClick" :data="subRoomList" border tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column label="日期" width="120">
@@ -47,6 +47,35 @@ export default {
       }
       return data
     }
+    const shortcuts = [
+      {
+        text: '最近一周',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+          picker.$emit('pick', [start, end])
+        }
+      },
+      {
+        text: '最近一个月',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+          picker.$emit('pick', [start, end])
+        }
+      },
+      {
+        text: '最近三个月',
+        onClick(picker) {
+          const end = new Date()
+          const start = new Date()
+          start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+          picker.$emit('pick', [start, end])
+        }
+      }
+    ]
     return {
       regions: [
         {
@@ -67,44 +96,16 @@ export default {
       renderFunc(h, option) {
         return (
           <span>
-            {option.key} - {option.label}
+            {option.key} — {option.label}
           </span>
         )
       },
       dialogChooseHotelVisible: false,
       pickerOptions: {
-        shortcuts: [
-          {
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-              picker.$emit('pick', [start, end])
-            }
-          },
-          {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date()
-              const start = new Date()
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-              picker.$emit('pick', [start, end])
-            }
-          }
-        ]
+        shortcuts
       },
       chosenDateRange: '',
-      tableData3: [
+      subRoomList: [
         {
           date: '2016-05-03',
           name: '王小虎',
@@ -145,6 +146,9 @@ export default {
     }
   },
   methods: {
+    getSubRoomList() {},
+    getCityListByCountry() {},
+    getCountryList() {},
     tableRowClick(item) {
       console.log(item)
     },
@@ -163,7 +167,6 @@ export default {
       this.dialogChooseHotelVisible = false
       console.log(this.chosenHotels)
     },
-
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -187,7 +190,6 @@ export default {
       } else {
         hasChild = Math.random() > 0.5
       }
-
       setTimeout(() => {
         var data
         if (hasChild) {
@@ -212,16 +214,6 @@ export default {
 
 <style lang="less" >
 .modify-price{
-
-  // .el-transfer{
-  //   text-align: center;
-  // }
-  // .el-transfer-panel__item .el-checkbox__label{
-  //   text-align: left;
-  // }
-  // .el-transfer-panel .el-transfer-panel__footer{
-  //   text-align: left;
-  // }
   .el-transfer-panel__body{
     height: 500px!important;
   }
@@ -232,6 +224,4 @@ export default {
     width: 400px!important;
   }
 }
-
-
 </style>
