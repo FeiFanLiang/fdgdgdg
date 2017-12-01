@@ -58,9 +58,9 @@ export default {
       params: params
     })
   },
-  //审核
-  check2 (id) {
-    return axios.post(base + 'SetCheckOrder/' + id)
+  //审核保存 POST /Hotel/HotelOrder/ConfirmOrder
+  checkSave (params) {
+    return axios.post(base + 'ConfirmOrder',params)
   },
   //退改单列表  GET /Hotel/HotelOrder/ListDaiTuiGai
   tuigai(params){

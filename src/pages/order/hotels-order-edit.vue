@@ -689,16 +689,20 @@ export default{
                 //     PaymentInfo : _self.money,
                 //     '' : _self.form
                 // }
-                if(_self.type == 0){
+                if(_self.type == '回填'){
                     _self.form.BackfillState = 1
                 }
-                if(_self.type == 1){
+                if(_self.type == '审核'){
                     _self.form.StateAuditor = 1
                 }
                 let datas = _self.form
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
-                await hotelsOrderApi.edit( datas)
+                if(_self.type == '审核'){
+                    await hotelsOrderApi.checkSave(datas)
+                }else{
+                    await hotelsOrderApi.edit(datas)
+                }
                 _self.$message({
                 message: '编辑成功',
                   type: 'success'
@@ -749,6 +753,7 @@ export default{
                 _self.$message.error('添加失败!!!')
             }
         },
+        addCaiwu(){},
         async handleSuccess(response, file, fileList) {
             try {
                 if (!response) {
