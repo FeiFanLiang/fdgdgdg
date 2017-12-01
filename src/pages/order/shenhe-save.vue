@@ -8,7 +8,7 @@
             </template>
         </el-table-column>
         <el-table-column prop="PaymentNo" label="编号"></el-table-column>
-        <el-table-column prop="AmountUse" label="金额">
+        <el-table-column prop="AmountUse" label="金额" width="120">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.AmountUse}}
@@ -58,7 +58,7 @@
                 <span v-if="scope.row.State == 1">已对账</span>
             </template>
         </el-table-column>
-        <el-table-column prop="CompanyAcount" label="公司账号" show-overflow-tooltip>
+        <el-table-column prop="CompanyAcount" label="公司账号" show-overflow-tooltip width="130">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.CompanyAcount}}
@@ -89,7 +89,7 @@
                 </p>
             </template>
         </el-table-column>
-        <el-table-column prop="PartnerAccount" label="对方账号" show-overflow-tooltip>
+        <el-table-column prop="PartnerAccount" label="对方账号" show-overflow-tooltip width="120">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.PartnerAccount}}
@@ -99,7 +99,7 @@
                 </p>
             </template>
         </el-table-column>
-        <el-table-column prop="Partner" label="对方账户名" show-overflow-tooltip>
+        <el-table-column prop="Partner" label="对方账户名" show-overflow-tooltip width="120">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.Partner}}
@@ -109,7 +109,7 @@
                 </p>
             </template>
         </el-table-column>
-        <el-table-column prop="PartnerAccountModel" label="对方开户行">
+        <el-table-column prop="PartnerAccountModel" label="对方开户行" width="120">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.PartnerAccountModel}}
@@ -160,13 +160,13 @@
                 </p>
             </template>
         </el-table-column>
-        <el-table-column prop="Remark" label="备注">
+        <el-table-column prop="Remark" label="备注" width="200">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.Remark}}
                 </p>
                 <p v-if="scope.row.ID == 0">
-                    <el-input v-model="scope.row.Remark"></el-input>
+                    <el-input v-model="scope.row.Remark" type="textarea"></el-input>
                 </p>
             </template>
         </el-table-column>

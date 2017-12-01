@@ -327,7 +327,6 @@
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
                     <div style="width:98%;height:50px;position: relative;">
-                        <el-button @click="addCaiwu" style="position:absolute;right:80px;">改退票审核</el-button>
                         <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
                     </div>
                     <el-row :gutter="24">
@@ -603,12 +602,12 @@ export default{
         _self.getHotel()
         //_self.HotelName = _self.$route.params.HotelName,
         _self.POrderID = _self.$route.params.POrderID
-        _self.type = _self.$route.params.type  // 0回填 1审核
-        if(_self.type == 0){
+        _self.type = _self.$route.params.type
+        if(_self.type == '回填'){
             _self.text = '确定回填'
-        }else if(_self.type == 1){
+        }else if(_self.type == '审核'){
             _self.text = '确定审核'
-        }else if(_self.type == 2){
+        }else if(_self.type == '退改'){
             _self.showTuigaiButton = true
             _self.text = '退改保存'
         }else{
@@ -690,6 +689,12 @@ export default{
                 //     PaymentInfo : _self.money,
                 //     '' : _self.form
                 // }
+                if(_self.type == 0){
+                    _self.form.BackfillState = 1
+                }
+                if(_self.type == 1){
+                    _self.form.StateAuditor = 1
+                }
                 let datas = _self.form
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
@@ -724,7 +729,6 @@ export default{
                 CreateDate: date
             }
         },
-        async addCaiwu() {},
         async submitFormFujia(){
             const _self = this
             try {

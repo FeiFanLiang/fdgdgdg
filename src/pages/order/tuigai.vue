@@ -93,7 +93,7 @@ export default {
           ID: row.ID,
           POrderID: row.ID,
           HotelName: row.HotelName,
-          type:2 // 退改
+          type:'退改'
         }
       })
     }

@@ -93,7 +93,7 @@ export default {
           ID: row.ID,
           POrderID: row.ID,
           HotelName: row.HotelName,
-          type:1 // 审核
+          type:'审核'
         }
       })
     }

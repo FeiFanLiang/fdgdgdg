@@ -91,7 +91,7 @@ export default {
           ID: row.ID,
           POrderID: row.ID,
           HotelName: row.HotelName,
-          type:0 // 回填
+          type:'回填'
         }
       })
     },

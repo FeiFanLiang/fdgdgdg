@@ -892,7 +892,8 @@ export default{
         params: {
           ID: row.ID,
           POrderID: row.POrderID,
-          HotelName: row.HotelName
+          HotelName: row.HotelName,
+          type:'酒店订单'
         }
       })
     },
