@@ -103,6 +103,7 @@
             </el-col>
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
+                <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
             </el-col>
         </el-row>
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:30px;" />
@@ -788,6 +789,17 @@ export default{
                     HotelPolicyID:this.form.HotelPolicyID
                 }
             })
+        },
+        async obsoleteShenhe(){
+            try {
+                await hotelsOrderApi.obsoleteCheck(this.POrderID)
+                this.$message({
+                    message: '审核成功',
+                    type: 'success'
+                })
+            } catch (e) {
+                this.$message.error('审核失败')
+            }
         }
 
     }

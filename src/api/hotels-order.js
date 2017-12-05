@@ -68,6 +68,10 @@ export default {
       params: params
     })
   },
+  //废单审核  POST /Hotel/HotelOrder/SetObsoleteOrder/{id}
+  obsoleteCheck(id){
+    return axios.post(base + 'SetInvalidOrder/' + id)
+  },
   //待截图列表    GET /Hotel/HotelOrder/ListDaiFaJieTu
   img(params){
     return axios.get(base + 'ListDaiFaJieTu',{
