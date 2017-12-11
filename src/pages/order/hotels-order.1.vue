@@ -58,22 +58,25 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="订单渠道">
+            <el-form-item label="酒店区域">
               <el-select v-model="filters.HotelArea" clearable>
                 <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
       </el-row>
-      <el-row :gutter="24"> 
+      <el-row :gutter="24">
         <el-col :span="24">
           <el-form-item label="筛选条件">
               <el-checkbox-group v-model="checkList">
                 <el-checkbox label="已审核未打款"></el-checkbox>
                 <el-checkbox label="未审核"></el-checkbox>
+                <!-- <el-checkbox label="有联系方式"></el-checkbox>
+                <el-checkbox label="需要打款"></el-checkbox>
+                <el-checkbox label="已打款"></el-checkbox> -->
                 <el-checkbox label="紧急打款"></el-checkbox>
               </el-checkbox-group>
-          </el-form-item>
+            </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="24">
@@ -83,7 +86,9 @@
         </el-col>
         <el-col :span="14" style="text-align:right;">
           <el-tag style="background-color:#FD5921;margin:0 10px;">单结</el-tag>
+          <!-- <el-tag style="background-color:#FD1393">日结</el-tag> -->
           <el-tag style="background-color:#1297E8;margin:0 10px;">周结</el-tag>
+          <!-- <el-tag style="background-color:#A127BE">半月结</el-tag> -->
           <el-tag style="background-color:#20A228;margin:0 10px;">月结</el-tag>
         </el-col>
       </el-row>
@@ -100,6 +105,8 @@
                     <p><span>间数</span><span class="span-text">{{ props.row.RoomNum }}</span></p>
                     <p><span>晚数</span><span class="span-text">{{ props.row.NightNum }}</span></p>
                     <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p>
+                    <!-- <p><span>联系固话</span><span class="span-text">{{ props.row.PassengerTel2 }}</span></p>
+                    <p><span>Email</span><span class="span-text">{{ props.row.Email }}</span></p> -->
                     <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
                     <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
                     <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p>
@@ -181,13 +188,10 @@
                     <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
                     <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p>
                     <br>
-                    <p><span>订单渠道</span>
+                    <p><span>酒店区域</span>
                         <span class="span-text" v-if="props.row.HotelArea === 1">国际</span>
                         <span class="span-text" v-if="props.row.HotelArea === 0">国内</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 2">美国1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 3">美国2462</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 4">好订1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 5">好订2462</span>
+                        <span class="span-text" v-if="props.row.HotelArea === 2">美国</span>
                     </p>
                     <p>
                       <span>回填状态</span>
@@ -201,12 +205,12 @@
                       <span class="span-text" v-if="props.row.StateScreenshot === 1">截图完成</span>
                       <span class="span-text" v-if="props.row.StateScreenshot === 2">不截图</span>
                     </p>
-                    <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span><span>锁定</span><span class="span-text" v-if="props.row.LockState === 0">未锁定</span></p>
+                    <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span></p>
                 </el-card>
               </div>
             </template>
         </el-table-column>
-        <!--<el-table-column label="POrderID" prop="POrderID"></el-table-column>-->
+        <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
             <template scope="scope">
               <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.PlatOrderNo }}</span>
@@ -214,7 +218,7 @@
               <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.PlatOrderNo }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="订单平台" prop="ThreePlatID" width="80">
+        <el-table-column label="订单渠道" prop="ThreePlatID" width="80">
           <template scope="scope">
               <div v-for="item in ThreePlatID">
                 <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
@@ -244,9 +248,9 @@
         </el-table-column>
     </el-table>
     <div class="pagination-wrapper">
-      <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog title="添加订单信息" v-model="showDialog" @close="resetForm('form')" size="full">
+    <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')" size="full">
         <el-form ref="form" :model="form" label-width="110px">
             <el-row :gutter="24"><el-col :span="24" style="color:orange;"><h1>订单信息</h1></el-col></el-row>
             <el-row>
@@ -279,6 +283,11 @@
                         <el-input placeholder="请输入确认号" v-model="form.PlatHotelBookingNoNeedOrderNo"></el-input>
                     </el-form-item>
               </el-col>
+              <!-- <el-col :span="6">
+                  <el-form-item label="酒店预订号" prop="HotelBookingNo">
+                      <el-input placeholder="请输入酒店预订号" v-model="form.HotelBookingNo"></el-input>
+                  </el-form-item>
+              </el-col> -->
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
@@ -451,6 +460,9 @@
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
+                <!-- <el-upload :action="action" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
+                  <i class="el-icon-plus"></i>
+                </el-upload> -->
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 <el-dialog v-model="dialogVisible" size="tiny">
                   <img width="100%" :src="dialogImageUrl" alt="">
@@ -538,11 +550,141 @@
                   </el-form-item>
               </el-col>
             </el-row>
+            <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+            <div v-show="showEdit">
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
+            <div style="width:98%;height:50px;position: relative;">
+              <el-button @click="addCaiwu" style="position:absolute;right:80px;">改退票审核</el-button>
+              <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
+            </div>
+            <el-row :gutter="24">
+              <el-col>
+                <el-table :data="money" style="width: 95%;margin-left:40px;">
+                  <el-table-column label="类别" prop="PaymentType">
+              <template scope="scope">
+              <span v-if="scope.row.PaymentType === 0">收款</span>
+              <span v-if="scope.row.PaymentType === 1">付款</span>
+              </template>
+                  </el-table-column>
+                  <el-table-column label="货币类型" prop="Currency"></el-table-column>
+                  <el-table-column label="编号" prop="PaymentNo"></el-table-column>
+                  <el-table-column label="金额" prop="Amount"></el-table-column>
+                  <el-table-column label="收付时间" prop="PaymentDate"></el-table-column>
+                  <el-table-column label="收付方式" prop="PaymentModel"></el-table-column>
+                  <el-table-column label="状态" prop="State">
+                    <template scope="scope">
+                      <span v-if="scope.row.State === 0">待处理</span>
+                      <span v-if="scope.row.State === 1">已处理，待对账</span>
+                      <span v-if="scope.row.State === 2">已对账，待结算</span>
+                      <span v-if="scope.row.State === 3">结算完成</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="截图" prop="StateScreenshot">
+                    <template scope="scope">
+                      <span v-if="scope.row.StateScreenshot === 0">未截图</span>
+                      <span v-if="scope.row.StateScreenshot === 1">截图完成</span>
+                      <span v-if="scope.row.StateScreenshot === 2">不截图</span>
+                    </template>
+                  </el-table-column>                  
+                </el-table>
+              </el-col>
+            </el-row>
+            </div>
+            <div v-show="showEdit">
+            <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>附加项目</h1></el-col></el-row>
+            <div style="width:98%;height:50px;position: relative;">
+              <el-button @click="addFujia" style="position:absolute;right:0;">添加</el-button>
+            </div>
+            <el-row :gutter="24">
+              <el-col>
+                <el-table :data="fujia" style="width: 95%;margin-left:40px;" border>
+                  <el-table-column label="订单号" prop="PlateOrderNo"></el-table-column>
+                  <el-table-column label="订单类型" prop="TypeID">
+                    <template scope="scope">
+                      <span v-if="scope.row.TypeID === 0">门票</span>
+                      <span v-if="scope.row.TypeID === 1">车票</span>
+                      <span v-if="scope.row.TypeID === 2">自助餐</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="订单来源" prop="PlateName"></el-table-column>
+                  <el-table-column label="金额" prop="Money"></el-table-column>
+                  <el-table-column label="使用时间" prop="UseDate"></el-table-column>
+                  <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
+                  <el-table-column label="创建人" prop="UserID"></el-table-column>
+                </el-table>
+              </el-col>
+            </el-row>
+            </div>
         </el-form>
         <div slot="footer" class="dialog-footer" style="text-align:center;">
           <el-button @click="showDialog = false" size="large">取 消</el-button>
           <el-button type="primary" @click="submitForm()" :loading="!isEditable" size="large">{{isEditable?'确 定':'提交中'}}</el-button>
         </div>
+    </el-dialog>
+
+    <el-dialog title="添加附加项目" v-model="showFujia" @close="resetForm('formFujia')" size="small">
+      <el-form ref="formFujia" :model="formFujia" label-width="110px">
+        <el-form-item label="订单ID" prop="HotelOrderID">
+            <el-input placeholder="请输入订单ID" v-model="formFujia.HotelOrderID" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="金额" prop="Money">
+            <el-input placeholder="请输入金额" v-model="formFujia.Money" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="订单来源" prop="PlateName">
+            <el-input placeholder="请输入订单来源" v-model="formFujia.PlateName" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="订单号" prop="PlateOrderNo">
+            <el-input placeholder="请输入订单号" v-model="formFujia.PlateOrderNo" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="使用时间" prop="UseDate">
+            <el-date-picker v-model="formFujia.UseDate" type="date" placeholder="选择使用时间" style="width:100%;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="订单类型" prop="TypeID">
+            <el-select v-model="formFujia.TypeID" clearable>
+              <el-option v-for="item in TypeID" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="CreateDate">
+            <el-input placeholder="请输入创建时间" v-model="formFujia.CreateDate" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="Remark">
+            <el-input type="textarea" v-model="formFujia.Remark" style="width:100%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showFujia = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm2()">保存</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog title="添加财务信息" v-model="showCaiwu" @close="resetForm('formCaiwu')" size="small">
+      <el-form ref="formCaiwu" :model="formCaiwu" label-width="110px">
+        <el-form-item label="订单ID" prop="HotelOrderID">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.HotelOrderID" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="金额" prop="AmountUse">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.AmountUse" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="收/付款" prop="PaymentType">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.PaymentType" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="State">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.State" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="项目类别" prop="TypeID">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.TypeID" style="width:100%"></el-input>
+        </el-form-item>
+        <el-form-item label="创建时间" prop="CreateDate">
+            <el-input placeholder="请输入订单ID" v-model="formCaiwu.CreateDate" style="width:100%" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="Remark">
+            <el-input type="textarea" v-model="formCaiwu.Remark" style="width:100%"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showCaiwu = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm3()">保存</el-button>
+      </span>
     </el-dialog>
 </div>
 </template>
@@ -555,13 +697,14 @@ import {
   hotelImageApi
 } from 'api'
 import UploadImage from 'components/upload-image'
-export default{
+
+export default {
   components: {
     UploadImage
   },
-  data(){
+  data() {
     let that = this;
-    return{
+    return {
       imageList: [],
       action: '',
       dialogImageUrl: '',
@@ -571,33 +714,35 @@ export default{
       pageSize: 10,
       count: 0,
       loading: false,
-      showDialog:false,
-      isEditable:true,
-      form:{
-        ThreePlatID: '',
+      hotelsOrder: [],
+      form: {
         StayDateStart: '',
         StayDateEnd: '',
-        RoomNum: '',
-        NightNum: '',
-        ArrivalTime: '',
         BookTime: '',
         OrderState: '',
         OrderType: '',
-        CurrencyFuKuan: '',
-        CurrencyShouKuan: '',
-        SettlementCycle: '',
-        SettlementCycleFu: '',
-        HotelArea: '',
-        BackfillState: '',
-        SecretState: '',
-        Secret: '',
-        StateScreenshot: '',
         UrgentPay: '',
         UnMergePay: '',
-        InvoiceState:''
+        HotelArea: '',
+        BackfillState: '',
+        StateScreenshot: '',
+        SettlementCycle: '',
+        SettlementCycleFu: '',
+        ThreePlatID: '',
+        OrderNo: '',
+        NightNum: '',
+        RoomNum: '',
+        CurrencyFuKuan: '',
+        CurrencyShouKuan: ''
       },
-      hotelsOrder: [],
-      ID: '',
+      copyForm: {},
+      showFujia: false,
+      showCaiwu: false,
+      showDialog: false,
+      showEdit: false,
+      isEditable: true,
+      title: '',
+      active: 0,
       filters: {
         OrderNo: '',
         HotelName: '',
@@ -615,6 +760,22 @@ export default{
         SecretState: '',
         Secret: ''
       },
+      checkList: [],
+      remsgstateList: [],
+      oderstateList: [],
+      active: 0,
+      ID: '',
+      expandRowKeys: [],
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
+      pickerOptions2: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateStart).getTime();
+        }
+      },
       ThreePlatID: [],
       SettlementCycle: [{
           label: '全部',
@@ -624,10 +785,18 @@ export default{
           label: '单结',
           value: 0
         },
+        // {
+        //   label: '日结',
+        //   value: '日结'
+        // },
         {
           label: '周结',
           value: 1
         },
+        // {
+        //   label: '半月结',
+        //   value: '半月结'
+        // },
         {
           label: '月结',
           value: 2
@@ -675,18 +844,7 @@ export default{
           value: 5
         }
       ],
-      checkList:[],
-      expandRowKeys: [],
-      pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7;
-        }
-      },
-      pickerOptions2: {
-        disabledDate(time) {
-          return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateStart).getTime();
-        }
-      },
+      styleObject: {},
       OrderState: [{
           label: '未处理',
           value: 0
@@ -745,6 +903,8 @@ export default{
           value: 6
         },
       ],
+      money: [],
+      fujia: [],
       SCycle: [{
           label: '单结',
           value: 0
@@ -755,6 +915,27 @@ export default{
         },
         {
           label: '月结',
+          value: 2
+        },
+      ],
+      formFujia: {
+        UseDate: '',
+        TypeID: '',
+        HotelOrderID: ''
+      },
+      formCaiwu: {
+
+      },
+      TypeID: [{
+          label: '门票',
+          value: 0
+        },
+        {
+          label: '车票',
+          value: 1
+        },
+        {
+          label: '自助餐',
           value: 2
         },
       ],
@@ -777,28 +958,72 @@ export default{
     this.fetchData()
     this.ThreePlat()
   },
-  methods:{
+  methods: {
+    async ThreePlat() {
+      const res = await hotelThreePlatInfoApi.getList()
+      this.ThreePlatID = res.data
+    },
     ruzhu(val) {
-        this.form.StayDateStart = val
-        if(this.form.StayDateEnd != ''){
-            let date1= new Date(val);  //开始时间  
-            let date2 = new Date(this.form.StayDateEnd);    //结束时间  
-            let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
-            let days=Math.floor(date3/(24*3600*1000))
-            this.form.RoomNum = 1
-            this.form.NightNum = days
-        }
+      this.form.StayDateStart = val
+      if(this.form.StayDateEnd != ''){
+        let date1= new Date(val);  //开始时间  
+        let date2 = new Date(this.form.StayDateEnd);    //结束时间  
+        let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
+        let days=Math.floor(date3/(24*3600*1000))
+        this.form.RoomNum = 1
+        this.form.NightNum = days
+      }
     },
     tuifang(val) {
-        this.form.StayDateEnd = val
-        if(this.form.StayDateStart != ''){
-            let date1= new Date(this.form.StayDateStart);  //开始时间  
-            let date2 = new Date(val);   //结束时间  
-            let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
-            let days=Math.floor(date3/(24*3600*1000))  
-            this.form.RoomNum = 1
-            this.form.NightNum = days
+      this.form.StayDateEnd = val
+      if(this.form.StayDateStart != ''){
+        let date1= new Date(this.form.StayDateStart);  //开始时间  
+        let date2 = new Date(val);   //结束时间  
+        let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
+        let days=Math.floor(date3/(24*3600*1000))  
+        this.form.RoomNum = 1
+        this.form.NightNum = days
+      }
+    },
+    hotelsOrderSearch() {
+      const _self = this
+      _self.fetchData()
+    },
+    expand(row, expanded) {
+      const _self = this
+      _self.active = 0
+      if (expanded) {
+        _self.expandRowKeys.length = 0
+        _self.expandRowKeys.push(row.ID)
+        _self.ID = row.ID
+        if (row.StateAuditor == '已审核') {
+          _self.active = 1
         }
+        if (row.StateAuditor == '已提交') {
+          _self.active = 2
+        }
+        if (row.StateAuditor == '已打款') {
+          _self.active = 3
+        }
+        if (row.StateAuditor == '已截图') {
+          _self.active = 4
+        }
+      }
+    },
+    async getStateList() {
+      const _self = this
+      _self.remsgstateList = []
+      _self.oderstateList = []
+      const res = await hotelsOrderApi.getState()
+      let d = res.data.Data
+      for (let i in d) {
+        if (d[i].FCode == 'remsgstate') {
+          _self.remsgstateList.push(d[i].Name)
+        }
+        if (d[i].FCode == 'oderstate') {
+          _self.oderstateList.push(d[i].Name)
+        }
+      }
     },
     handleSizeChange(val) {
       this.pageSize = val
@@ -808,21 +1033,9 @@ export default{
       this.currentPage = val
       this.fetchData(this.currentPage)
     },
-    async ThreePlat() {
-      const res = await hotelThreePlatInfoApi.getList()
-      this.ThreePlatID = res.data
-    },
-    expand(row, expanded) {
-      const _self = this
-      if (expanded) {
-        _self.expandRowKeys.length = 0
-        _self.expandRowKeys.push(row.ID)
-        _self.ID = row.ID
-      }
-    },
-    hotelsOrderSearch() {
-      const _self = this
-      _self.fetchData()
+    searchCallback(filters) {
+      this.filters = filters
+      this.fetchData()
     },
     async fetchData(currentPage, pageSize) {
       const _self = this
@@ -879,6 +1092,8 @@ export default{
       try {
         const res = await hotelsOrderApi.fetch(options)
         _self.hotelsOrder = res.data.Data
+        console.log(_self.hotelsOrder)
+        _self.active = 0
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
@@ -887,44 +1102,115 @@ export default{
     },
     async clickEditBtn($index, row) {
       const _self = this
-      _self.$router.push({
-        name: '酒店订单信息编辑',
-        params: {
-          ID: row.ID,
-          POrderID: row.POrderID,
-          HotelName: row.HotelName,
-          type:'酒店订单'
+      _self.loading = true
+      _self.title = '编辑酒店订单信息'
+      _self.ID = row.ID
+      _self.action = 'http://192.168.10.95:8500/Hotel/Image'
+      try {
+        _self.showEdit = true
+        const res = await hotelsOrderApi.detail(row.ID)
+        _self.form = res.data.Data
+        console.log(_self.form)
+        const res2 = await paymentCheckApi.detail(row.ID)
+        let a = res2.data.Data
+        const options = {
+          query: {
+            HotelOrderID: row.ID
+          }
         }
-      })
-    },
-    clickAddBtn(){
-      const _self = this
-      _self.showDialog = true
-      _self.form = {
-        ThreePlatID: '',
-        StayDateStart: '',
-        StayDateEnd: '',
-        RoomNum: '',
-        NightNum: '',
-        ArrivalTime: '',
-        BookTime: '',
-        OrderState: '',
-        OrderType: '',
-        CurrencyFuKuan: '',
-        CurrencyShouKuan: '',
-        SettlementCycle: '',
-        SettlementCycleFu: '',
-        HotelArea: '',
-        BackfillState: '',
-        SecretState: '',
-        Secret: '',
-        StateScreenshot: '',
-        UrgentPay: '',
-        UnMergePay: '',
-        InvoiceState:''
+        const res3 = await paymentCheckApi.fujiaList(options)
+        _self.fujia = res3.data.Data
+        for (let i in a) {
+          _self.money.push(a[i].HotelPayment)
+        }
+        _self.copyForm = Object.assign({}, _self.form)
+        _self.getStateList()
+        _self.showDialog = true
+        _self.loading = false
+      } catch (e) {
+        console.error(e)
       }
     },
-    async submitForm() {
+    async addFujia() {
+      const _self = this
+      _self.showFujia = true
+      let date = new Date().Format('yyyy-MM-dd hh:mm')
+      _self.formFujia = {
+        HotelOrderID: _self.ID,
+        Money: 0,
+        PlateName: '',
+        PlateOrderNo: '',
+        UseDate: '',
+        TypeID: '',
+        Remark: '',
+        CreateDate: date
+      }
+    },
+    async addCaiwu() {
+      const _self = this
+      //_self.showCaiwu = true
+    },
+    async submitForm3() {
+    },
+    async submitForm2() {
+      const _self = this
+      try {
+        await paymentCheckApi.addFujia(_self.formFujia)
+        _self.showFujia = false
+        _self.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        const options = {
+          query: {
+            HotelOrderID: _self.ID
+          }
+        }
+        const res3 = await paymentCheckApi.fujiaList(options)
+        _self.fujia = res3.data.Data
+      } catch (e) {
+        _self.$message.error('添加失败!!!')
+      }
+    },
+    async clickAddBtn() {
+      const _self = this
+      _self.title = '添加酒店订单信息'
+      _self.showDialog = true
+      _self.showEdit = false
+      _self.form = {
+          StayDateStart: '',
+          StayDateEnd: '',
+          BookTime: '',
+          OrderState: '',
+          OrderType: '',
+          UrgentPay: '',
+          UnMergePay: '',
+          HotelArea: '',
+          BackfillState: '',
+          StateScreenshot: '',
+          SettlementCycle: '',
+          SettlementCycleFu: '',
+          SecretState: '',
+          Secret: '',
+          ThreePlatID: '',
+          ArrivalTime: '',
+          OrderNo: '',
+          RoomNum: '',
+          NightNum: '',
+          CurrencyFuKuan: '',
+          CurrencyShouKuan: ''
+        },
+        _self.getStateList()
+    },
+    submitForm() {
+      const _self = this
+      if (_self.form.ID) {
+        _self.editSave()
+      } else {
+        _self.addSave()
+      }
+    },
+    async addSave() {
       const _self = this
       try {
         _self.isEditable = false
@@ -941,37 +1227,59 @@ export default{
         _self.isEditable = true
       }
     },
-    async handleSuccess(response, file, fileList) {
-        try {
-            if (!response) {
-            this.$message.error('上传失败,请重新上传')
-            return false
-            }
-            const form = {
-                hotelId: this.form.HotelID,
-                imageUrl: response
-            }
-            await hotelImageApi.add(form)
-            this.$message({
-            message: '上传成功',
-            type: 'success'
-            })
-        } catch (e) {
-            this.$message.error('上传失败,请重新上传')
+    async editSave() {
+      const _self = this
+      const form = {}
+      for (let [k, v] of Object.entries(_self.form)) {
+        if (_self.form[k] != _self.copyForm[k]) {
+          form[k] = v
         }
+      }
+      try {
+        _self.isEditable = false
+        await hotelsOrderApi.edit(_self.form.ID, form)
+        _self.fetchData()
+        _self.showDialog = false
+        _self.$message({
+          message: '编辑成功',
+          type: 'success'
+        })
+      } catch (e) {
+        console.error(e)
+        _self.$message.error('编辑失败!!!')
+      } finally {
+        _self.isEditable = true
+      }
+    },
+    async handleSuccess(response, file, fileList) {
+      try {
+        if (!response) {
+          this.$message.error('上传失败,请重新上传')
+          return false
+        }
+        const form = {
+          hotelId: this.form.HotelID,
+          imageUrl: response
+        }
+        await hotelImageApi.add(form)
+        this.$message({
+          message: '上传成功',
+          type: 'success'
+        })
+      } catch (e) {
+        this.$message.error('上传失败,请重新上传')
+      }
     },
     handleRemove(file, fileList) {
-        console.log(file, fileList);
+      console.log(file, fileList);
     },
     handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     }
-
   }
 }
 </script>
-
 <style lang="scss">
 #HotelsOrder {
   .pagination-wrapper {

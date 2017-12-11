@@ -45,6 +45,7 @@ import weixinScanCodeApi from './weixin-scan-code'
 import roomStatPriceApi from './room-stat-price'
 import hotelsOrderApi from './hotels-order'
 import paymentCheckApi from './payment-check'
+import hotelPaymentInfoApi from './hotel-payment-info'
 // import menuApi from './menu'
 import wechatUserApi from './wechat-user'
 import spiderSettingApi from './spider-setting'
@@ -98,5 +99,6 @@ export {
   hotelsOrderApi,
   paymentCheckApi,
   wechatUserApi,
+  hotelPaymentInfoApi,
   spiderSettingApi
 }
