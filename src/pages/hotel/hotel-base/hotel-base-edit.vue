@@ -113,145 +113,146 @@
 </div>
 </template>
 <script>
-import {
-    hotelPayModeApi,
-    hotelBaseApi,
-    hotelAreaApi
-} from 'api'
-import {
-    HotelTopMenu
-} from 'components'
-const HotelRoomPage = () =>
-    import ('../hotel-room/hotel-room.vue')
-const HotelPlatformPage = () =>
-    import ('../hotel-platform/hotel-platform.vue')
+import { hotelPayModeApi, hotelBaseApi, hotelAreaApi } from 'api'
+import { HotelTopMenu } from 'components'
+const HotelRoomPage = () => import('../hotel-room/hotel-room.vue')
+const HotelPlatformPage = () => import('../hotel-platform/hotel-platform.vue')
 // const HotelPolicyPage = () =>
 //     import ('../hotel-policy/hotel-policy.vue')
-const HotelPricePage = () =>
-    import ('../hotel-price/hotel-price.vue')
-const HotelShowPage = () =>
-    import ('../hotel-show/hotel-show.vue')
+const HotelPricePage = () => import('../hotel-price/hotel-price.vue')
+const HotelShowPage = () => import('../hotel-show/hotel-show.vue')
 
 export default {
-    components: {
-        HotelTopMenu,
-        HotelRoomPage,
-        HotelPlatformPage,
-        // HotelPolicyPage,
-        HotelPricePage,
-        HotelShowPage
-    },
-    data() {
-        return {
-            activeName: 'room',
-            id: '',
-            hotelName: '',
-            form: {
-                id: '',
-                hotelNum: '',
-                hotelName: '',
-                hotelName_En: '',
-                frontPhone: '',
-                faxNum: '',
-                areaId: '',
-                address: '',
-                starNum: '',
-                isForeign: '',
-                remark: ''
-            },
-            loading: false,
-            isEditable: true,
-            list: [],
-            areaOptions: [],
-            starOptions: [{
-                ID: 1,
-                StarName: "一星级"
-            }, {
-                ID: 2,
-                StarName: "二星级"
-            }, {
-                ID: 3,
-                StarName: "三星级"
-            }, {
-                ID: 3.5,
-                StarName: "准四星/3.5"
-            }, {
-                ID: 4,
-                StarName: "四星级"
-            }, {
-                ID: 4.5,
-                StarName: "准五星/4.5"
-            }, {
-                ID: 5,
-                StarName: "五星级"
-            }, {
-                ID: 5.5,
-                StarName: "超5星[国内]"
-            }, {
-                ID: 7,
-                StarName: "七星级"
-            }]
+  components: {
+    HotelTopMenu,
+    HotelRoomPage,
+    HotelPlatformPage,
+    // HotelPolicyPage,
+    HotelPricePage,
+    HotelShowPage
+  },
+  data() {
+    return {
+      activeName: 'room',
+      id: '',
+      hotelName: '',
+      form: {
+        id: '',
+        hotelNum: '',
+        hotelName: '',
+        hotelName_En: '',
+        frontPhone: '',
+        faxNum: '',
+        areaId: '',
+        address: '',
+        starNum: '',
+        isForeign: '',
+        remark: ''
+      },
+      loading: false,
+      isEditable: true,
+      list: [],
+      areaOptions: [],
+      starOptions: [
+        {
+          ID: 1,
+          StarName: '一星级'
+        },
+        {
+          ID: 2,
+          StarName: '二星级'
+        },
+        {
+          ID: 3,
+          StarName: '三星级'
+        },
+        {
+          ID: 3.5,
+          StarName: '准四星/3.5'
+        },
+        {
+          ID: 4,
+          StarName: '四星级'
+        },
+        {
+          ID: 4.5,
+          StarName: '准五星/4.5'
+        },
+        {
+          ID: 5,
+          StarName: '五星级'
+        },
+        {
+          ID: 5.5,
+          StarName: '超5星[国内]'
+        },
+        {
+          ID: 7,
+          StarName: '七星级'
         }
-    },
-    mounted() {
-        const _self = this
-        _self.id = _self.$route.params.ID
-        if (_self.id) {
-            _self.getHotelbaseList()
-        }
-        _self.hotelName = _self.$route.query.name
-    },
-    methods: {
-        async remoteMethod(query) {
-            const _self = this
-            if (query !== '') {
-                _self.loading = true
-                const res = await hotelAreaApi.listByQue(query)
-                _self.list = res.data
-                setTimeout(() => {
-                    _self.loading = false
-                    _self.areaOptions = _self.list.splice(0, 20)
-                }, 200)
-            } else {
-                _self.areaOptions = []
-            }
-        },
-        async getHotelbaseList() {
-            const _self = this
-            const res = await hotelBaseApi.detailsById(_self.id)
-            if (res && res.data) {
-                const data = res.data
-                _self.form.id = data.ID
-                _self.form.hotelNum = data.HotelNum
-                _self.form.hotelName = data.HotelName
-                _self.form.hotelName_En = data.HotelName_En
-                _self.form.frontPhone = data.FrontPhone
-                _self.form.faxNum = data.FaxNum
-                _self.form.areaId = data.AreaID
-                _self.form.address = data.Address
-                _self.form.starNum = data.StarID
-                _self.form.isForeign = data.IsForeign
-                _self.form.remark = data.Remark
-            }
-        },
-        async submitForm() {
-            const _self = this
-            try {
-                _self.isEditable = false
-                await hotelBaseApi.edit(_self.form)
-                _self.$message({
-                    message: '保存成功',
-                    type: 'success'
-                })
-            } catch (e) {} finally {
-                _self.isEditable = true
-            }
-        },
-        Cancel() {
-            this.$router.go(-1)
-        },
-        handleChange() {}
+      ]
     }
+  },
+  mounted() {
+    const _self = this
+    _self.id = _self.$route.params.ID
+    if (_self.id) {
+      _self.getHotelbaseList()
+    }
+    _self.hotelName = _self.$route.query.name
+  },
+  methods: {
+    async remoteMethod(query) {
+      const _self = this
+      if (query !== '') {
+        _self.loading = true
+        const res = await hotelAreaApi.listByQue(query)
+        _self.list = res.data
+        setTimeout(() => {
+          _self.loading = false
+          _self.areaOptions = _self.list.splice(0, 20)
+        }, 200)
+      } else {
+        _self.areaOptions = []
+      }
+    },
+    async getHotelbaseList() {
+      const _self = this
+      const res = await hotelBaseApi.detailsById(_self.id)
+      if (res && res.data) {
+        const data = res.data
+        _self.form.id = data.ID
+        _self.form.hotelNum = data.HotelNum
+        _self.form.hotelName = data.HotelName
+        _self.form.hotelName_En = data.HotelName_En
+        _self.form.frontPhone = data.FrontPhone
+        _self.form.faxNum = data.FaxNum
+        _self.form.areaId = data.AreaID
+        _self.form.address = data.Address
+        _self.form.starNum = data.StarID
+        _self.form.isForeign = data.IsForeign
+        _self.form.remark = data.Remark
+      }
+    },
+    async submitForm() {
+      const _self = this
+      try {
+        _self.isEditable = false
+        await hotelBaseApi.edit(_self.form)
+        _self.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+      } catch (e) {
+      } finally {
+        _self.isEditable = true
+      }
+    },
+    Cancel() {
+      this.$router.go(-1)
+    },
+    handleChange() {}
+  }
 }
 </script>
 <style lang="scss">
