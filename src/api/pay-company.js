@@ -7,8 +7,9 @@ import {
 
 export default {
   getConfig: payCompanyApi.getConfig,
-  list(params) {
-    return axios.get(base + `All`, params)
+  //GET /Hotel/PayCompany/All
+  list() {
+    return axios.get(base + 'All')
   },
   detail(id) {
     return axios.get(base + id)

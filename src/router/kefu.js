@@ -47,7 +47,7 @@ export default {
     {
       path: 'Jietu',
       component: _import('order/jietu'),
-      name: '待截图列表'
+      name: '待发截图列表'
     }
   ]
 }

@@ -88,46 +88,14 @@ export default {
       params: params
     })
   },
-  //完结
+  //设置完结
   finsh2 (id) {
     return axios.post(base + 'SetOverOrder/' + id)
   },
-  //待付款列表
-  pay(params){
-    return axios.get(base + 'ListDaiFuKuan',{
+  //全部完成订单列表  /Hotel/HotelOrder/ListOverOrder
+  endList(params){
+    return axios.get(base + 'ListOverOrder',{
       params: params
     })
-  },
-  //待对账付款列表
-  checkOut(params){
-    return axios.get(base + 'ListDaiFuKuanCheck',{
-      params: params
-    })
-  },
-  //待对账收款列表
-  checkIn(params){
-    return axios.get(base + 'ListDaiShouKuanCheck',{
-      params: params
-    })
-  },
-  //付款  POST /Hotel/HotelOrder/OrderFuKuan/{ids}
-  payhj(params){
-    return axios.post(base + 'OrderFuKuan/' +params)
-  },
-  //保存付款信息  POST /Hotel/HotelOrder/OrderFuKuanSave
-  paySave(params){
-    return axios.post(base + 'OrderFuKuanSave',params)
-  },
-  //保存截图信息 POST /Hotel/HotelOrderPicture
-  imgSave(params){
-    return axios.post(base + 'HotelOrderPicture',params)
-  },
-  //收款   POST /Hotel/HotelOrder/OrderShouKuan/{ids}
-  collection(params){
-    return axios.post(base + 'OrderShouKuan/' +params)
-  },
-  //保存收款信息   POST /Hotel/HotelOrder/OrderShouKuanSave
-  collectionSave(params){
-    return axios.post(base + 'OrderShouKuanSave',params)
   },
 }
