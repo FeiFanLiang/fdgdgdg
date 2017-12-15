@@ -304,12 +304,12 @@ export default {
             try {
                 await hotelPaymentInfoApi.savePaymentInfo(_self.sheheSaveList)
                 _self.$message({
-                    message: '保存成功',
+                    message: '审核成功',
                     type: 'success'
                 })
                 _self.fetchData()
             }catch(e){
-                _self.$message.error('保存失败!!!')
+                _self.$message.error('审核失败!!!')
             }
         }
     }

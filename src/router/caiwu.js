@@ -49,5 +49,10 @@ export default {
       component: _import('order/wanjie'),
       name: '待完结列表'
     },
+    {
+      path: 'HotelsOrderEnd',
+      component: _import('order/hotels-order-end'),
+      name: '全部完成订单'
+    },
   ]
 }

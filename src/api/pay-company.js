@@ -1,14 +1,15 @@
 import axios from 'axios'
 import path from './api'
-const base = path.apiBaseUrl + 'Hotel/PayCompany/'
+const base = path.apiBaseUrl + 'Hotel/HotelPayCompany/'
 import {
   payCompanyApi
 } from '../config-data'
 
 export default {
   getConfig: payCompanyApi.getConfig,
-  list(params) {
-    return axios.get(base + `All`, params)
+  //GET /Hotel/HotelPayCompany/All
+  list() {
+    return axios.get(base + 'All')
   },
   detail(id) {
     return axios.get(base + id)
