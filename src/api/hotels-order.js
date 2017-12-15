@@ -15,10 +15,15 @@ export default {
   detail (ID) {
     return axios.get(base + ID)
   },
+  //添加订单  POST /Hotel/HotelOrder/AddOrder
   add (params) {
-    return axios.post(base, params)
+    return axios.post(base + 'AddOrder' , params)
   },
-  //PUT /Hotel/HotelOrder/SaveOrder
+  //根据第三方平台订单编号获取订单信息  GET /Hotel/HotelOrder/GetByPlatOrderNo/{PlatOrderNo}
+  getDetail (PlatOrderNo) {
+    return axios.get(base + 'GetByPlatOrderNo/' + PlatOrderNo)
+  },
+  //编辑订单  PUT /Hotel/HotelOrder/SaveOrder
   edit (params) {
     return axios.post(base + 'SaveOrder', params)
   },
@@ -70,7 +75,7 @@ export default {
   },
   //废单审核  POST /Hotel/HotelOrder/SetObsoleteOrder/{id}
   obsoleteCheck(id){
-    return axios.post(base + 'SetInvalidOrder/' + id)
+    return axios.get(base + 'SetInvalidOrder/' + id)
   },
   //待截图列表    GET /Hotel/HotelOrder/ListDaiFaJieTu
   img(params){
@@ -98,4 +103,8 @@ export default {
       params: params
     })
   },
+  // 提示 需要处理的数量  GET /Hotel/HotelOrder/Tips 
+  tips(){
+    return axios.get(base + 'Tips')
+  }
 }

@@ -49,6 +49,7 @@ import hotelPaymentInfoApi from './hotel-payment-info'
 // import menuApi from './menu'
 import wechatUserApi from './wechat-user'
 import spiderSettingApi from './spider-setting'
+import policyApi from './policy'
 export {
   accountApi,
   airlineApi,
@@ -100,5 +101,6 @@ export {
   paymentCheckApi,
   wechatUserApi,
   hotelPaymentInfoApi,
-  spiderSettingApi
+  spiderSettingApi,
+  policyApi
 }

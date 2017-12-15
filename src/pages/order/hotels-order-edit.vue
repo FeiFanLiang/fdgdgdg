@@ -110,7 +110,7 @@
         <el-collapse accordion style="border-right: none;">
             <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" :name="index" style="border-right: none;">
                 <template slot="title">
-                    <span v-if="item.UpdateTime != ''">
+                    <span v-if="item.UpdateTime != null">
                         {{item.PlatOrderType + '单' + item.UpdateTime.substring(5,10)}}
                     </span>
                 </template>
@@ -482,7 +482,7 @@ export default{
             copyForm: {},
             pickerOptions: {
                 disabledDate(time) {
-                return time.getTime() < Date.now() - 8.64e7;
+                return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateEnd).getTime() - 8.64e7;
                 }
             },
             pickerOptions2: {
@@ -600,7 +600,6 @@ export default{
     created() {
         const _self = this
         _self.ID = _self.$route.params.ID
-        _self.getHotel()
         //_self.HotelName = _self.$route.params.HotelName,
         _self.POrderID = _self.$route.params.POrderID
         _self.type = _self.$route.params.type
@@ -620,8 +619,46 @@ export default{
         _self.ThreePlat()
     },
     methods:{
-        async getHotel(){
+        async getImageList(list) {
+            if (list) {
+                const images = list.split(',')
+                if (Array.isArray(images)) {
+                    this.imageList = images
+                }
+            }
+        },
+        async handleSuccess(response, file, fileList) {
+            // try {
+            //     if (!response) {
+            //         this.$message.error('上传失败,请重新上传')
+            //         return false
+            //     }
+            //     // const form = {
+            //     //     hotelId: this.form.HotelID,
+            //     //     imageUrl: response
+            //     // }
+            //     // await hotelImageApi.add(form)
+            //     this.$message({
+            //         message: '上传成功',
+            //         type: 'success'
+            //     })
+            //     //this.imageList = response.data.Data
+            // } catch (e) {
+            //     this.$message.error('上传失败,请重新上传')
+            // }
 
+            if (!response) {
+                this.$message.error('上传失败,请重新上传')
+                return false
+            }
+            this.imageList.push(response)
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
@@ -651,7 +688,8 @@ export default{
         },
         async getHotelOrderList(ID,POrderID){
             const _self = this
-            _self.action = 'http://192.168.10.95:8500/Hotel/Image'
+            //_self.action = 'http://192.168.10.95:8500/Hotel/Image'
+            _self.action = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
             _self.loading = true
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
@@ -755,32 +793,6 @@ export default{
             }
         },
         addCaiwu(){},
-        async handleSuccess(response, file, fileList) {
-            try {
-                if (!response) {
-                this.$message.error('上传失败,请重新上传')
-                return false
-                }
-                const form = {
-                    hotelId: this.form.HotelID,
-                    imageUrl: response
-                }
-                await hotelImageApi.add(form)
-                this.$message({
-                message: '上传成功',
-                type: 'success'
-                })
-            } catch (e) {
-                this.$message.error('上传失败,请重新上传')
-            }
-        },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
-        },
         shenhe(){
             this.$router.push({
                 name:'订单审核',

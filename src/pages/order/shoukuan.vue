@@ -121,6 +121,11 @@ export default {
         this.fetchData()
         this.getPayCompany()
     },
+    watch:{
+        picture(val){
+            this.picture = val
+        }
+    },
     methods:{ 
         imgSuccess(response, file, fileList){
             this.picture = file.name
@@ -220,10 +225,12 @@ export default {
                         Remark:item.Remark
                     })
                 })
+                _self.payCheck.Picture = _self.picture
                 const params = {
                     list:list,
                     payment:_self.payCheck
                 }
+                console.log(params)
                 await hotelPaymentInfoApi.collectionSave(params)
                 _self.$message({
                     message: '收款成功',

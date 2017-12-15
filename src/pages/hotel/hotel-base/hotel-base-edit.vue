@@ -109,6 +109,9 @@
         <el-tab-pane label="展示信息" name="show">
             <HotelShowPage></HotelShowPage>
         </el-tab-pane>
+        <el-tab-pane label="酒店政策" name="policy">
+            <HotelPolicy></HotelPolicy>
+        </el-tab-pane>
     </el-tabs>
 </div>
 </template>
@@ -121,6 +124,7 @@ const HotelPlatformPage = () => import('../hotel-platform/hotel-platform.vue')
 //     import ('../hotel-policy/hotel-policy.vue')
 const HotelPricePage = () => import('../hotel-price/hotel-price.vue')
 const HotelShowPage = () => import('../hotel-show/hotel-show.vue')
+const HotelPolicy = () => import('../policy/policy.vue')
 
 export default {
   components: {
@@ -129,7 +133,8 @@ export default {
     HotelPlatformPage,
     // HotelPolicyPage,
     HotelPricePage,
-    HotelShowPage
+    HotelShowPage,
+    HotelPolicy
   },
   data() {
     return {

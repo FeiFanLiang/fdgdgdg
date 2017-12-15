@@ -2,7 +2,7 @@ import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/HotelPaymentInfo/'
 const base2 = path.apiBaseUrl + 'Hotel/PlatformAccount/'
-const base3 = path.apiBaseUrl + 'Hotel/PayCompany/'
+const base3 = path.apiBaseUrl + 'Hotel/HotelPayCompany/'
 const base4 = path.apiBaseUrl + 'Hotel/HotelPayment/'
 
 export default {
