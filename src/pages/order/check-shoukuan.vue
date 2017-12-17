@@ -25,7 +25,19 @@
             <span v-if="scope.row.HotelOrder.BookTime != null">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
+    <el-table-column label="预计到款时间" prop="ExpectGetMoney" width="80">
+        <template scope="scope">
+            <span v-if="scope.row.ExpectGetMoney != null">{{ scope.row.ExpectGetMoney.substring(5,16) }}</span>
+        </template>
+    </el-table-column>
     <el-table-column label="金额" prop="AmountUse"></el-table-column>
+    <el-table-column label="状态" prop="StateCheck">
+        <template scope="scope">
+            <span v-if="scope.row.StateCheck == 0">未对账</span>
+            <span v-if="scope.row.StateCheck == 1">未到款</span>
+            <span v-if="scope.row.StateCheck == 2">结清</span>
+        </template>
+    </el-table-column>
   </el-table>
   <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>

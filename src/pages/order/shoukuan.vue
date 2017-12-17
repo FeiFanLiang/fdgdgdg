@@ -83,7 +83,9 @@
             </el-form-item>
         </el-form>
     </el-card>
-    <el-button @click="commit">收款完成</el-button>
+    <!--<el-button @click="commit">收款完成</el-button>-->
+    <el-button @click="commit2">收款未到账</el-button>
+    <el-button @click="commit3">收款已到账</el-button>
 </div>
 </template>
 <script>
@@ -114,28 +116,38 @@ export default {
             dialogVisible: false,
             form:{},
             fileList:[],
-            picture:''
+            picture:'',
+            State:''
         }
     },
     mounted(){
         this.fetchData()
         this.getPayCompany()
     },
-    watch:{
-        picture(val){
-            this.picture = val
-        }
-    },
     methods:{ 
         imgSuccess(response, file, fileList){
-            this.picture = file.name
+            if(fileList.length > 1){
+                this.picture += ',' + response.Data
+            }else{
+                this.picture = response.Data
+            }
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            this.picture = ''
+            if(fileList.length > 1){
+                for(let i in fileList){
+                    this.picture += ',' + fileList[i].response.Data
+                }
+                this.picture = this.picture.substring(1,this.picture.length)
+            }else if(fileList.length == 1){
+                this.picture = file.response.Data
+            }else{
+                this.picture = ''
+            }
         },
         async getPayCompany(){
             const res = await payCompanyApi.list()
@@ -214,6 +226,14 @@ export default {
                 _self.loading = false
             }
         },
+        commit2(){
+            this.State = 2
+            this.commit()
+        },
+        commit3(){
+            this.State = 3
+            this.commit()
+        },
         async commit(){
             const _self = this
             try {
@@ -226,6 +246,7 @@ export default {
                     })
                 })
                 _self.payCheck.Picture = _self.picture
+                _self.payCheck.State = _self.State
                 const params = {
                     list:list,
                     payment:_self.payCheck

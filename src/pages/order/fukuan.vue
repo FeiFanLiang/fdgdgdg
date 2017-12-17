@@ -118,14 +118,15 @@ export default {
                 PaymentType:'',
                 Partner:'',
                 PartnerAccount:'',  
-                PartnerAccountModel:''
+                PartnerAccountModel:'',
+                Picture:'',                
             },
             imgUrl:'',
             dialogImageUrl: '',
             dialogVisible: false,
             form:{},
             fileList:[],
-            picture:''
+            picture:'',
         }
     },
     mounted(){
@@ -134,14 +135,28 @@ export default {
     },
     methods:{ 
         imgSuccess(response, file, fileList){
-            this.picture = file.name
+            if(fileList.length > 1){
+                this.picture += ',' + response.Data
+            }else{
+                this.picture = response.Data
+            }
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            this.picture = ''
+            if(fileList.length > 1){
+                for(let i in fileList){
+                    this.picture += ',' + fileList[i].response.Data
+                }
+                this.picture = this.picture.substring(1,this.picture.length)
+            }else if(fileList.length == 1){
+                this.picture = file.response.Data
+            }else{
+                this.picture = ''
+            }
         },
         async getPayCompany(){
             const res = await payCompanyApi.list()
@@ -239,6 +254,7 @@ export default {
                     list:list,
                     payment:_self.payCheck
                 }
+                console.log(params)
                 await hotelPaymentInfoApi.paySave(params)
                 _self.$message({
                     message: '付款成功',

@@ -316,16 +316,6 @@
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-                    <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
-                    <el-row :gutter="20">
-                        <el-col style="margin-left:40px;">
-                            <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                            <el-dialog v-model="dialogVisible" size="tiny">
-                                <img width="100%" :src="dialogImageUrl" alt="">
-                            </el-dialog>
-                        </el-col>
-                    </el-row>
-                    <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
                     <div style="width:98%;height:50px;position: relative;">
                         <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
@@ -386,6 +376,16 @@
                 </el-form>
             </el-collapse-item>
         </el-collapse>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+        <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
+        <el-row :gutter="20">
+            <el-col style="margin-left:40px;">
+                <UploadImageCopy :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageCopy>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+            </el-col>
+        </el-row>
     </el-form>
     <div class="dialog-footer" style="text-align:center;margin-top:30px;">
         <el-button size="large" @click="cancel()">取消</el-button>
@@ -434,10 +434,10 @@ import {
   hotelThreePlatInfoApi,
   hotelImageApi
 } from 'api'
-import UploadImage from 'components/upload-image'
+import UploadImageCopy from 'components/upload-image-copy'
 export default{
     components: {
-        UploadImage
+        UploadImageCopy
     },
     data(){
         let that = this;
@@ -447,6 +447,7 @@ export default{
             HotelName: '',
             type:'',
             text:'',
+            imgSrc:'',
             showTuigaiButton:false,
             imageList: [],
             action: '',
@@ -477,7 +478,8 @@ export default{
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
-                HotelOrderDetail:[]
+                HotelOrderDetail:[],
+                Picture:''
             },
             copyForm: {},
             pickerOptions: {
@@ -628,37 +630,19 @@ export default{
             }
         },
         async handleSuccess(response, file, fileList) {
-            // try {
-            //     if (!response) {
-            //         this.$message.error('上传失败,请重新上传')
-            //         return false
-            //     }
-            //     // const form = {
-            //     //     hotelId: this.form.HotelID,
-            //     //     imageUrl: response
-            //     // }
-            //     // await hotelImageApi.add(form)
-            //     this.$message({
-            //         message: '上传成功',
-            //         type: 'success'
-            //     })
-            //     //this.imageList = response.data.Data
-            // } catch (e) {
-            //     this.$message.error('上传失败,请重新上传')
-            // }
-
             if (!response) {
                 this.$message.error('上传失败,请重新上传')
                 return false
             }
-            this.imageList.push(response)
+            let res = JSON.parse(response)
+            this.imageList.push(res.Data)
+            let f = this.imageList
+            this.form.Picture = f.toString()
         },
         handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
+             let f = fileList.splice(file,1);
+             this.imageList = f
+             this.form.Picture = f.toString()
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
@@ -688,12 +672,13 @@ export default{
         },
         async getHotelOrderList(ID,POrderID){
             const _self = this
-            //_self.action = 'http://192.168.10.95:8500/Hotel/Image'
-            _self.action = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
             _self.loading = true
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+                console.log(_self.form)
+                _self.getImageList(_self.form.Picture)
+                for(let i in _self.form.HotelOrderDetail)
                 _self.HotelName = _self.form.HotelName
                 const res2 = await paymentCheckApi.detail(ID)
                 let a = res2.data.Data
@@ -715,19 +700,8 @@ export default{
         },
         async submitOrderList() {
             const _self = this
-            // const form = {}
-            // for (let [k, v] of Object.entries(_self.form)) {
-            //     if (_self.form[k] != _self.copyForm[k]) {
-            //     form[k] = v
-            //     }
-            // }
             try {
                 _self.isEditable = false
-                // let datas = {
-                //     Addition : _self.fujia,
-                //     PaymentInfo : _self.money,
-                //     '' : _self.form
-                // }
                 if(_self.type == '回填'){
                     _self.form.BackfillState = 1
                 }
@@ -735,6 +709,7 @@ export default{
                     _self.form.StateAuditor = 1
                 }
                 let datas = _self.form
+                console.log(datas)
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){

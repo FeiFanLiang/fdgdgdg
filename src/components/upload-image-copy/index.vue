@@ -47,7 +47,7 @@ export default {
       errorText: '',
       percentText: 0,
       headers: {},
-      action: 'http://192.168.10.95:8500/Hotel/Image/'
+      action: 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
     }
   },
   computed: {
