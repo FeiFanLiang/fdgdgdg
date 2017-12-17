@@ -131,16 +131,12 @@
                         <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <!--
                 <el-form-item label="图片" prop="PolicyImage">
-                    <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
+                    <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                     <el-dialog v-model="dialogVisible" size="tiny">
                         <img width="100%" :src="dialogImageUrl" alt="">
                     </el-dialog>
                 </el-form-item>
-                -->
                 <el-form-item label="备注" prop="Remark">
                     <el-input type="textarea" v-model="form.Remark"></el-input>
                 </el-form-item>
@@ -155,7 +151,11 @@
 </template>
 <script>
 import {policyApi} from 'api'
+import UploadImage from 'components/upload-image'
   export default {
+      components: {
+        UploadImage
+      },
       data(){
         return{
             currentPage: 1,
@@ -167,11 +167,9 @@ import {policyApi} from 'api'
                 HotelID: '',
             },
             //////////////////
-            imgUrl:'',
+            imageList: [],
             dialogImageUrl: '',
             dialogVisible: false,
-            fileList:[],
-            picture:'',
             HotelID:'',
             hotelName:'',
             form:{
@@ -181,6 +179,7 @@ import {policyApi} from 'api'
                 PurchasingName: '',
                 IsDefault: false,
                 Remark:'',
+                PolicyImage:''
             },
             FinancialInfo:{
                 Name:'',
@@ -300,10 +299,31 @@ import {policyApi} from 'api'
         this.HotelID = this.$route.params.ID
         this.hotelName = this.$route.query.hotelName
         console.log(this.hotelName + this.HotelID)
-        //this.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
         this.fetchData()
       },
       methods:{
+        async getImageList(list) {
+            if (list) {
+                const images = list.split(',')
+                if (Array.isArray(images)) {
+                    this.imageList = images
+                }
+            }
+        },
+        async handleSuccess(response, file, fileList) {
+            if (!response) {
+                this.$message.error('上传失败,请重新上传')
+                return false
+            }
+            this.imageList.push(response)
+            let f = this.imageList
+            this.form.PolicyImage = f.toString()
+        },
+        handleRemove(index,file, fileList) {
+            this.imageList.splice(index, 1)
+            let f = this.imageList
+            this.form.PolicyImage = f.toString()
+        },
         handleSizeChange(val) {
             this.pageSize = val
             this.fetchData(1, this.pageSize)
@@ -348,16 +368,6 @@ import {policyApi} from 'api'
             }
         },
         //////////////////////////////////////////////////////////////////////////
-        imgSuccess(response, file, fileList){
-            this.picture = file.name
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
-        },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
         async PayCompany(value){
             const _self = this
             if(value != ''){
@@ -409,11 +419,8 @@ import {policyApi} from 'api'
                     try{
                         _self.isEditable = false
                         if (_self.form.ID) {
-                            console.log(1111111111)
-                            console.log(_self.form)
                             await policyApi.editHotelPolicy(_self.form.ID,_self.form)
                         } else {
-                            console.log(22222222222)
                             _self.form.FinancialInfo = _self.FinancialInfo
                             _self.form.FinancialInfo.ReceiptCompany = _self.ReceiptCompany
                             await policyApi.addHotelPolicy(_self.form)

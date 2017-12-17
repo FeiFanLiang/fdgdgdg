@@ -380,7 +380,7 @@
         <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
         <el-row :gutter="20">
             <el-col style="margin-left:40px;">
-                <UploadImageCopy :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageCopy>
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 <el-dialog v-model="dialogVisible" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
@@ -432,12 +432,11 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
-  hotelImageApi
 } from 'api'
-import UploadImageCopy from 'components/upload-image-copy'
+import UploadImage from 'components/upload-image'
 export default{
     components: {
-        UploadImageCopy
+        UploadImage
     },
     data(){
         let that = this;
@@ -447,13 +446,11 @@ export default{
             HotelName: '',
             type:'',
             text:'',
-            imgSrc:'',
-            showTuigaiButton:false,
             imageList: [],
-            action: '',
             dialogImageUrl: '',
-            loading:false,
             dialogVisible: false,
+            showTuigaiButton:false,
+            loading:false,
             showFujia: false,
             showCaiwu: false,
             isEditable: true,
@@ -634,15 +631,14 @@ export default{
                 this.$message.error('上传失败,请重新上传')
                 return false
             }
-            let res = JSON.parse(response)
-            this.imageList.push(res.Data)
+            this.imageList.push(response)
             let f = this.imageList
             this.form.Picture = f.toString()
         },
-        handleRemove(file, fileList) {
-             let f = fileList.splice(file,1);
-             this.imageList = f
-             this.form.Picture = f.toString()
+        handleRemove(index,file, fileList) {
+            this.imageList.splice(index, 1)
+            let f = this.imageList
+            this.form.Picture = f.toString()
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
@@ -709,7 +705,6 @@ export default{
                     _self.form.StateAuditor = 1
                 }
                 let datas = _self.form
-                console.log(datas)
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){

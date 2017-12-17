@@ -72,7 +72,7 @@
         </el-form>
     </el-card>
     <el-card class="box-card">
-        <el-form ref="form" :model="form" label-width="110px">
+        <el-form label-width="110px">
             <el-form-item label="添加截图">
                 <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
                     <i class="el-icon-plus"></i>
@@ -90,6 +90,7 @@
 </template>
 <script>
 import { hotelPaymentInfoApi,payCompanyApi  } from 'api'
+import path from 'api/api'
 
 export default {
     data() {
@@ -111,43 +112,28 @@ export default {
                 PaymentType:'',
                 Picture:''
             },
+            State:'',
             imgUrl:'',
             dialogImageUrl: '',
             dialogVisible: false,
-            form:{},
-            fileList:[],
-            picture:'',
-            State:''
+            picture:[]
         }
     },
     mounted(){
         this.fetchData()
         this.getPayCompany()
+        this.imgUrl = path.uploadUrl
     },
     methods:{ 
         imgSuccess(response, file, fileList){
-            if(fileList.length > 1){
-                this.picture += ',' + response.Data
-            }else{
-                this.picture = response.Data
-            }
+            this.picture.push(response)
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
-        handleRemove(file, fileList) {
-            this.picture = ''
-            if(fileList.length > 1){
-                for(let i in fileList){
-                    this.picture += ',' + fileList[i].response.Data
-                }
-                this.picture = this.picture.substring(1,this.picture.length)
-            }else if(fileList.length == 1){
-                this.picture = file.response.Data
-            }else{
-                this.picture = ''
-            }
+        handleRemove(index,file, fileList) {
+            this.picture.splice(index, 1)
         },
         async getPayCompany(){
             const res = await payCompanyApi.list()
@@ -183,7 +169,6 @@ export default {
             const _self = this
             _self.loading = true
             _self.showButton = false
-            _self.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
             try {
                 _self.multipleSelection = _self.$route.query.multipleSelection
                 let select = []
@@ -219,7 +204,7 @@ export default {
                     ExpectSettlement: _self.fukuanList[0].ExpectSettlement,
                     CompanyAcount: _self.fukuanList[0].CompanyAcount,
                     Remark: remark,
-                    Picture:_self.picture     
+                    Picture:_self.picture.toString()     
                 }
                 _self.loading = false
             } catch (e) {
@@ -245,7 +230,7 @@ export default {
                         Remark:item.Remark
                     })
                 })
-                _self.payCheck.Picture = _self.picture
+                _self.payCheck.Picture = _self.picture.toString()
                 _self.payCheck.State = _self.State
                 const params = {
                     list:list,

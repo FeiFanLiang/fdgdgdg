@@ -425,20 +425,10 @@
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
-              
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                  <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-              
-              <!--
-                <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
-                    <i class="el-icon-plus"></i>
-                </el-upload>
                 <el-dialog v-model="dialogVisible" size="tiny">
                     <img width="100%" :src="dialogImageUrl" alt="">
                 </el-dialog>
-              -->
               </el-col>
             </el-row>
         </el-form>
@@ -455,7 +445,6 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
-  hotelImageApi
 } from 'api'
 import UploadImage from 'components/upload-image'
 export default{
@@ -465,14 +454,10 @@ export default{
   data(){
     let that = this;
     return{
-      imgUrl:'',
-      picture:'',
-      text:-1,
       imageList: [],
-      action: '',
       dialogImageUrl: '',
       dialogVisible: false,
-      fileList: [],
+      text:-1,
       currentPage: 1,
       pageSize: 10,
       count: 0,
@@ -679,9 +664,26 @@ export default{
   created() {
     this.fetchData()
     this.ThreePlat()
-    this.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
   },
   methods:{
+    async getImageList(list) {
+        if (list) {
+            const images = list.split(',')
+            if (Array.isArray(images)) {
+                this.imageList = images
+            }
+        }
+    },
+    async handleSuccess(response, file, fileList) {
+        if (!response) {
+            this.$message.error('上传失败,请重新上传')
+            return false
+        }
+        this.imageList.push(response)
+    },
+    handleRemove(index,file, fileList) {
+        this.imageList.splice(index, 1)
+    },
     ruzhu(val) {
         this.form.StayDateStart = val
         if(this.form.StayDateEnd != ''){
@@ -854,6 +856,7 @@ export default{
             console.log(_self.detail)
             if(typeof(_self.detail) == 'undefined'){
               var f = {
+                Picture:_self.imageList.toString(),
                 HotelOrderDetail:[
                   _self.form
                 ]
@@ -862,7 +865,7 @@ export default{
               var f = {
                 ID:_self.detail.ID,
                 HotelArea: _self.detail.HotelArea,
-                Picture:_self.picture,
+                Picture:_self.imageList.toString(),
                 HotelOrderDetail:[
                   _self.form
                 ]
@@ -889,35 +892,6 @@ export default{
           });
         }
       })
-    },
-    async handleSuccess(response, file, fileList) {
-        try {
-            if (!response) {
-            this.$message.error('上传失败,请重新上传')
-            return false
-            }
-            const form = {
-                hotelId: this.form.HotelID,
-                imageUrl: response
-            }
-            await hotelImageApi.add(form)
-            this.$message({
-            message: '上传成功',
-            type: 'success'
-            })
-        } catch (e) {
-            this.$message.error('上传失败,请重新上传')
-        }
-    },
-    imgSuccess(response, file, fileList){
-        this.picture = file.name
-    },
-    handleRemove(file, fileList) {
-        console.log(file, fileList);
-    },
-    handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
     }
 
   }
