@@ -82,7 +82,7 @@ export default {
 
   methods: {
     del(index) {
-      this.$emit('onRemove', this.images[index], this.images)
+      this.$emit('onRemove', index, this.images)
     },
     handleTFocus(e) {
       this.isFocus = true
