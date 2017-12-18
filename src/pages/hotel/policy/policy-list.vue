@@ -601,13 +601,13 @@ import UploadImage from 'components/upload-image'
             this.$refs['ReceiptCompany'].validate(async valid => {
                 if (valid) {
                     try{
+                        _self.form.FinancialInfo = _self.FinancialInfo
+                        _self.form.FinancialInfo.ReceiptCompany = _self.ReceiptCompany
                         _self.isEditable = false
                         if (_self.form.ID) {
                             console.log(_self.form)
                             await policyApi.editHotelPolicy(_self.form.ID,_self.form)
                         } else {
-                            _self.form.FinancialInfo = _self.FinancialInfo
-                            _self.form.FinancialInfo.ReceiptCompany = _self.ReceiptCompany
                             console.log(_self.form)
                             await policyApi.addHotelPolicy(_self.form)
                         }
