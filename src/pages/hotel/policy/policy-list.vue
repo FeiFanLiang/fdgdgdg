@@ -49,7 +49,7 @@
     <div class="pagination-wrapper" v-if="typeof(HotelID) == 'undefined'">
       <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog title="酒店政策创建" v-model="dialogShow" @close="resetForm('ReceiptCompany')" size="full">
+    <el-dialog :title=title v-model="dialogShow" @close="resetForm('ReceiptCompany')" size="full">
         <el-form ref="form" :model="form" label-width="110px" :rules="rules">
             <h3 v-if="typeof(hotelName) != 'undefined'">酒店名称：{{hotelName}}</h3>
             <el-row :gutter="24">
@@ -96,23 +96,24 @@
             <el-row :gutter="24"><el-col style="color:orange;"><h3>财务信息</h3></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
-                     <el-form-item label="名称" prop="Name2">
-                        <el-input placeholder="请输入名称" v-model="FinancialInfo.Name"></el-input>
+                    <el-form-item label="付款周期" prop="PayPeriod">
+                        <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
+                            <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="平台用户名" prop="UserName">
-                        <el-input placeholder="请输入平台用户名" v-model="FinancialInfo.UserName"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="平台密码" prop="Password">
-                        <el-input placeholder="请输入平台密码" v-model="FinancialInfo.Password"></el-input>
+                    <el-form-item label="基于结算日" prop="SettlementUnit ">
+                        <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
+                            <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="我方签约公司" prop="Company">
-                        <el-input placeholder="请输入我方签约公司" v-model="FinancialInfo.Company"></el-input>
+                        <el-select v-model="FinancialInfo.Company" clearable placeholder="请选择">
+                            <el-option v-for="item in Company" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>   
@@ -142,8 +143,20 @@
                     </el-col>
                 </el-row>
             </el-form>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
             <el-form ref="FinancialInfo" :model="FinancialInfo" label-width="110px" :rules="rules">
+                <el-row :gutter="24">
+                    <el-col :span="6">
+                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
+                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
+                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
                 <el-form-item label="我方财务信息" prop="PayCompanyID">
                     <el-select v-model="FinancialInfo.PayCompanyID" clearable placeholder="请选择" @change="PayCompany">
                         <el-option v-for="item in PayCompanyID" :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
@@ -170,35 +183,9 @@
                             <el-input placeholder="请输入银行" v-model="form2.Bank"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>    
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
-                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
-                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="付款周期" prop="PayPeriod">
-                            <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
-                                <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="基于结算日" prop="SettlementUnit ">
-                            <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
-                                <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
             </el-form>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
             <el-form-item label="图片" prop="PolicyImage">
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
                 <el-dialog v-model="dialogVisible" size="tiny">
@@ -209,84 +196,84 @@
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注1" prop="Remark1">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark1"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注2" prop="Remark2">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark2"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注3" prop="Remark3">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark3"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="商圈备注" prop="Remark4">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark4"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注5" prop="Remark5">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark5"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注6" prop="Remark6">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark6"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注7" prop="Remark7">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark7"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注8" prop="Remark8">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark8"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注9" prop="Remark9">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark9"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注10" prop="Remark10">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark10"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注11" prop="Remark11">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark11"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注12" prop="Remark12">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark12"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注13" prop="Remark13">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark13"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注14" prop="Remark14">
-                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                        <el-input type="textarea" v-model="form.Remark14"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -315,6 +302,7 @@ import UploadImage from 'components/upload-image'
             filters:{
                 HotelID: '',
             },
+            title:'',
             //////////////////
             imageList: [],
             dialogImageUrl: '',
@@ -332,9 +320,6 @@ import UploadImage from 'components/upload-image'
                 SecretTypeID:''
             },
             FinancialInfo:{
-                Name:'',
-                UserName:'',
-                Password:'',
                 Company:'',
                 PayCompanyID:'',
                 FinanceLinkMan:'',
@@ -430,6 +415,28 @@ import UploadImage from 'components/upload-image'
                 {
                     label:'二次保密',
                     value:3
+                }
+            ],
+            Company:[
+                {
+                    label:'澳迅',
+                    value:'澳迅'
+                },
+                {
+                    label:'鸿源',
+                    value:'鸿源'
+                },
+                {
+                    label:'惠和',
+                    value:'惠和'
+                },
+                {
+                    label:'济南美票',
+                    value:'济南美票'
+                },
+                {
+                    label:'青岛美票',
+                    value:'青岛美票'
                 }
             ],
             rules:{
@@ -552,6 +559,7 @@ import UploadImage from 'components/upload-image'
         },
         async addPolicy(){
             const _self = this
+            _self.title = '酒店政策创建'
             _self.dialogShow = true
             _self.form = {
                 HotelID:_self.HotelID,
@@ -564,18 +572,21 @@ import UploadImage from 'components/upload-image'
                 PayCompanyID:'',
                 SettlementUnit:'',
                 PayPeriod:'',
-                PeriodShou:''
+                Company:''
             }
             _self.ReceiptCompany = {}
             _self.$refs['FinancialInfo'].resetFields()
         },
         async editPolicy(row){
             const _self = this
+            _self.title = '酒店政策编辑'
             _self.dialogShow = true
             try {
                 const res = await policyApi.getPolicyListID(row.ID)
-                _self.FinancialInfo = res.data.Data.FinancialInfo
-                _self.ReceiptCompany = res.data.Data.FinancialInfo.ReceiptCompany
+                if(typeof(res.data.Data.FinancialInfo) != 'undefined'){
+                    _self.FinancialInfo = res.data.Data.FinancialInfo
+                    _self.ReceiptCompany = res.data.Data.FinancialInfo.ReceiptCompany
+                }
                 _self.form = res.data.Data
                 console.log(_self.form)
                 _self.getImageList(_self.form.PolicyImage)
