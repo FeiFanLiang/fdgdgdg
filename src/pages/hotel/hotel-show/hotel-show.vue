@@ -19,7 +19,7 @@
                     <el-option v-for="(item,index) in driverList" :key="index" :label="item.Name" :value="item.ID"></el-option>
                 </el-select>
             </el-col> -->
-        <el-col :offset="2" :span="6">
+        <el-col :span="6">
             <!-- <el-button type="primary" @click="search()">搜索</el-button> -->
             <el-button type="primary" @click="clickAddBtn">创建</el-button>
         </el-col>

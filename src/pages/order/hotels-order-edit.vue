@@ -103,13 +103,14 @@
             </el-col>
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
+                <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
             </el-col>
         </el-row>
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:30px;" />
         <el-collapse accordion style="border-right: none;">
             <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" :name="index" style="border-right: none;">
                 <template slot="title">
-                    <span v-if="item.UpdateTime != ''">
+                    <span v-if="item.UpdateTime != null">
                         {{item.PlatOrderType + '单' + item.UpdateTime.substring(5,10)}}
                     </span>
                 </template>
@@ -315,16 +316,6 @@
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-                    <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
-                    <el-row :gutter="20">
-                        <el-col style="margin-left:40px;">
-                            <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                            <el-dialog v-model="dialogVisible" size="tiny">
-                                <img width="100%" :src="dialogImageUrl" alt="">
-                            </el-dialog>
-                        </el-col>
-                    </el-row>
-                    <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
                     <div style="width:98%;height:50px;position: relative;">
                         <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
@@ -385,6 +376,16 @@
                 </el-form>
             </el-collapse-item>
         </el-collapse>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+        <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
+        <el-row :gutter="20">
+            <el-col style="margin-left:40px;">
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+            </el-col>
+        </el-row>
     </el-form>
     <div class="dialog-footer" style="text-align:center;margin-top:30px;">
         <el-button size="large" @click="cancel()">取消</el-button>
@@ -431,7 +432,6 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
-  hotelImageApi
 } from 'api'
 import UploadImage from 'components/upload-image'
 export default{
@@ -446,12 +446,11 @@ export default{
             HotelName: '',
             type:'',
             text:'',
-            showTuigaiButton:false,
             imageList: [],
-            action: '',
             dialogImageUrl: '',
-            loading:false,
             dialogVisible: false,
+            showTuigaiButton:false,
+            loading:false,
             showFujia: false,
             showCaiwu: false,
             isEditable: true,
@@ -476,12 +475,13 @@ export default{
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
-                HotelOrderDetail:[]
+                HotelOrderDetail:[],
+                Picture:''
             },
             copyForm: {},
             pickerOptions: {
                 disabledDate(time) {
-                return time.getTime() < Date.now() - 8.64e7;
+                return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateEnd).getTime() - 8.64e7;
                 }
             },
             pickerOptions2: {
@@ -599,7 +599,6 @@ export default{
     created() {
         const _self = this
         _self.ID = _self.$route.params.ID
-        _self.getHotel()
         //_self.HotelName = _self.$route.params.HotelName,
         _self.POrderID = _self.$route.params.POrderID
         _self.type = _self.$route.params.type
@@ -619,8 +618,27 @@ export default{
         _self.ThreePlat()
     },
     methods:{
-        async getHotel(){
-
+        async getImageList(list) {
+            if (list) {
+                const images = list.split(',')
+                if (Array.isArray(images)) {
+                    this.imageList = images
+                }
+            }
+        },
+        async handleSuccess(response, file, fileList) {
+            if (!response) {
+                this.$message.error('上传失败,请重新上传')
+                return false
+            }
+            this.imageList.push(response)
+            let f = this.imageList
+            this.form.Picture = f.toString()
+        },
+        handleRemove(index,file, fileList) {
+            this.imageList.splice(index, 1)
+            let f = this.imageList
+            this.form.Picture = f.toString()
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
@@ -650,11 +668,13 @@ export default{
         },
         async getHotelOrderList(ID,POrderID){
             const _self = this
-            _self.action = 'http://192.168.10.95:8500/Hotel/Image'
             _self.loading = true
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+                console.log(_self.form)
+                _self.getImageList(_self.form.Picture)
+                for(let i in _self.form.HotelOrderDetail)
                 _self.HotelName = _self.form.HotelName
                 const res2 = await paymentCheckApi.detail(ID)
                 let a = res2.data.Data
@@ -676,29 +696,22 @@ export default{
         },
         async submitOrderList() {
             const _self = this
-            // const form = {}
-            // for (let [k, v] of Object.entries(_self.form)) {
-            //     if (_self.form[k] != _self.copyForm[k]) {
-            //     form[k] = v
-            //     }
-            // }
             try {
                 _self.isEditable = false
-                // let datas = {
-                //     Addition : _self.fujia,
-                //     PaymentInfo : _self.money,
-                //     '' : _self.form
-                // }
-                if(_self.type == 0){
+                if(_self.type == '回填'){
                     _self.form.BackfillState = 1
                 }
-                if(_self.type == 1){
+                if(_self.type == '审核'){
                     _self.form.StateAuditor = 1
                 }
                 let datas = _self.form
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
-                await hotelsOrderApi.edit( datas)
+                if(_self.type == '审核'){
+                    await hotelsOrderApi.checkSave(datas)
+                }else{
+                    await hotelsOrderApi.edit(datas)
+                }
                 _self.$message({
                 message: '编辑成功',
                   type: 'success'
@@ -749,32 +762,7 @@ export default{
                 _self.$message.error('添加失败!!!')
             }
         },
-        async handleSuccess(response, file, fileList) {
-            try {
-                if (!response) {
-                this.$message.error('上传失败,请重新上传')
-                return false
-                }
-                const form = {
-                    hotelId: this.form.HotelID,
-                    imageUrl: response
-                }
-                await hotelImageApi.add(form)
-                this.$message({
-                message: '上传成功',
-                type: 'success'
-                })
-            } catch (e) {
-                this.$message.error('上传失败,请重新上传')
-            }
-        },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
-        },
+        addCaiwu(){},
         shenhe(){
             this.$router.push({
                 name:'订单审核',
@@ -783,6 +771,17 @@ export default{
                     HotelPolicyID:this.form.HotelPolicyID
                 }
             })
+        },
+        async obsoleteShenhe(){
+            try {
+                await hotelsOrderApi.obsoleteCheck(this.POrderID)
+                this.$message({
+                    message: '审核成功',
+                    type: 'success'
+                })
+            } catch (e) {
+                this.$message.error('审核失败')
+            }
         }
 
     }

@@ -29,7 +29,7 @@
           <!-- :default-active="activeMenu" class="db-menu-bar" router  theme="dark"  -->
 
           <el-menu default-active="activeMenu" :class="[!isCollapse ? 'sidebar-container' : '']" class="" router theme="dark" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-            <template v-for="(route, index) in $router.options.routes[$router.options.routes.length - 2].children" >
+            <template v-for="(route, index) in allRouters" >
               <template v-if="route.children && route.name">
                 <el-submenu :index="route.name">
                   <template slot="title">
@@ -43,7 +43,7 @@
                         <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
                         </template>
                   <el-menu-item-group v-if="!(cRoute.meta&&cRoute.meta.hidden)"  v-for="(cRoute, cIndex) in route.children"  :key="cIndex">
-                    <el-menu-item :route="cRoute" :index="cRoute.name">{{cRoute.name}}</el-menu-item>
+                    <el-menu-item :route="cRoute" :index="cRoute.name">{{cRouteName(cRoute)}}</el-menu-item>
                   </el-menu-item-group>
                 </el-submenu>
               </template>
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { accountApi } from 'api'
+import { accountApi, hotelsOrderApi } from 'api'
 import 'assets/fonts/iconfont'
 export default {
   data() {
@@ -86,12 +86,32 @@ export default {
         realname: '',
         avatar: ''
       },
-      activeMenu: ''
+      activeMenu: '',
+      orderCount: {
+        DaiHuiTian: '',
+        DaiShenHe: '',
+        DaiTuiGai: '',
+        DaiWanJie: '',
+        DaiFuKuan: '',
+        DaiFuKuanDuiZhang: '',
+        DaiShouKuan: '',
+        DaiFaJieTu: ''
+      }
     }
   },
-  computed: {},
+  computed: {
+    allRouters() {
+      const { orderCount } = this
+      let array = this.$router.options.routes[
+        this.$router.options.routes.length - 2
+      ].children
+      return array
+    }
+  },
+
   created() {
     const _self = this
+    _self.getTips()
     _self.activeMenu = _self.$route.name
     _self.hotelName = _self.$route.query.hotelName
     _self.user = JSON.parse(localStorage.getItem('user'))
@@ -105,6 +125,40 @@ export default {
     }
   },
   methods: {
+    cRouteName(cItem) {
+      const { orderCount } = this
+      if (cItem.path === 'Huitian') {
+        return (
+          cItem.name +
+          (orderCount.DaiHuiTian ? `  ( ${orderCount.DaiHuiTian} )` : '')
+        )
+      }
+      if (cItem.path === 'Shenhe') {
+        return (
+          cItem.name +
+          (orderCount.DaiShenHe ? `  ( ${orderCount.DaiShenHe} )` : '')
+        )
+      }
+      if (cItem.path === 'Tuigai') {
+        return (
+          cItem.name +
+          (orderCount.DaiTuiGai ? `  ( ${orderCount.DaiTuiGai} )` : '')
+        )
+      }
+      if (cItem.path === 'Jietu') {
+        return (
+          cItem.name +
+          (orderCount.DaiFaJieTu ? `  ( ${orderCount.DaiFaJieTu} )` : '')
+        )
+      }
+      return cItem.name
+    },
+    async getTips() {
+      const res = await hotelsOrderApi.tips()
+      if (res && res.data) {
+        this.orderCount = res.data
+      }
+    },
     iconName(name) {
       return '#icon-' + name
     },

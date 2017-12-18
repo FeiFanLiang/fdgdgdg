@@ -28,6 +28,7 @@
 
 <script>
 import ImgList from './img-list.vue'
+import path from 'api/api'
 
 let win = window
 export default {
@@ -47,7 +48,8 @@ export default {
       errorText: '',
       percentText: 0,
       headers: {},
-      action: 'http://192.168.10.95:8500/Hotel/Image/'
+      //action: 'http://192.168.10.95:8500/Hotel/Image/'
+      action: path.uploadUrl
     }
   },
   computed: {
