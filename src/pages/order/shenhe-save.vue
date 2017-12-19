@@ -21,8 +21,9 @@
         <el-table-column prop="PaymentType" label="类型" width="115">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
-                    <span v-if="scope.row.PaymentType == 0">收款</span>
-                    <span v-if="scope.row.PaymentType == 1">付款</span>
+                    <!-- <span v-if="scope.row.PaymentType == 0">收款</span>
+                    <span v-if="scope.row.PaymentType == 1">付款</span> -->
+                    {{scope.row.PaymentType}}
                 </p>
                 <p v-if="scope.row.ID == 0">
                     <el-select v-model="scope.row.PaymentType" clearable placeholder="请选择">
@@ -40,10 +41,11 @@
         <el-table-column prop="TypeID" label="项目" width="115">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
-                    <span v-if="scope.row.TypeID == 0">酒店</span>
+                    <!-- <span v-if="scope.row.TypeID == 0">酒店</span>
                     <span v-if="scope.row.TypeID == 1">门票</span>
                     <span v-if="scope.row.TypeID == 2">餐费</span>
-                    <span v-if="scope.row.TypeID == 3">车票</span>
+                    <span v-if="scope.row.TypeID == 3">车票</span> -->
+                    {{scope.row.TypeID}}
                 </p>
                 <p v-if="scope.row.ID == 0">
                     <el-select v-model="scope.row.TypeID" clearable placeholder="请选择">
@@ -264,6 +266,26 @@ export default {
             try{
                 const res = await hotelPaymentInfoApi.getPaymentInfo(_self.POrderID)
                 _self.sheheSaveList = res.data.Data
+                _self.sheheSaveList.forEach(item => {
+                    if(item.PaymentType == 0){
+                        item.PaymentType = '收款'
+                    }
+                    if(item.PaymentType == 1){
+                        item.PaymentType = '付款'
+                    }
+                    switch(item.TypeID)
+                    {
+                        case 0: item.TypeID = '酒店' 
+                        break;
+                        case 1: item.TypeID = '门票' 
+                        break;
+                        case 2: item.TypeID = '餐费' 
+                        break;
+                        case 3: item.TypeID = '车费' 
+                        break;
+                        default: item.TypeID = ''
+                    }
+                });
                 _self.loading = false
             }catch(e){
                 _self.loading = false
@@ -302,6 +324,27 @@ export default {
         async saveShenhe(){
             const _self = this
             try {
+                _self.sheheSaveList.forEach(item => {
+                    if(item.PaymentType == '收款'){
+                        item.PaymentType = 0
+                    }
+                    if(item.PaymentType == '付款'){
+                        item.PaymentType = 1
+                    }
+                    if(item.TypeID == '酒店'){
+                        item.TypeID = 0
+                    }
+                    if(item.TypeID == '门票'){
+                        item.TypeID = 1
+                    }
+                    if(item.TypeID == '餐费'){
+                        item.TypeID = 2
+                    }
+                    if(item.TypeID == '车费'){
+                        item.TypeID = 3
+                    }
+                });
+                console.log(_self.sheheSaveList)
                 await hotelPaymentInfoApi.savePaymentInfo(_self.sheheSaveList)
                 _self.$message({
                     message: '审核成功',

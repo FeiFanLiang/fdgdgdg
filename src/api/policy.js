@@ -8,9 +8,9 @@ export default {
     addHotelPolicy(params){
         return axios.post(base + 'AddPolicy',params)
     },
-    //编辑政策信息
+    //编辑政策信息  POST /Hotel/HotelPolicy/UpdatePolicy/{id}
     editHotelPolicy(id,params){
-        return axios.put(base + id,params)
+        return axios.post(base + 'UpdatePolicy/' + id, params)
     },
     //获取我方账户信息  GET /Hotel/HotelPayCompany/GetMyCompany
     getPayCompany(){
