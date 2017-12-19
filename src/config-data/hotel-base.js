@@ -4,6 +4,7 @@ import { hotelBaseApi } from 'api'
 const listData = [
   ['酒店名称', 'HotelName', true, true, 'string'],
   ['英文名称', 'HotelName_En', true, true, 'string'],
+  ['传真', 'FaxNum', true, true, 'string'],
   ['前台电话', 'FrontPhone', true, true, 'string'],
   ['地址', 'Address', true, true, 'string'],
   ['星级', 'StarNum', true, false, 'string'],
