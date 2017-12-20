@@ -1,6 +1,6 @@
 import axios from 'axios'
 import path from './api'
-const base = 'http://192.168.10.10:8500/' + 'Hotel/HotelArea/'
+const base = path.apiBaseUrl + 'Hotel/HotelArea/'
 export default {
   listByLevel(level) {
     return axios.get(base + `level/${level}`)
