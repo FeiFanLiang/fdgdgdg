@@ -61,8 +61,6 @@
                     <el-input v-model="form.Address"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="20">
             <el-col :span="8">
                 <el-form-item label="结款" prop="PayMode">
                     <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户">
@@ -75,6 +73,8 @@
                     <el-input v-model="form.FrontPhone"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="20">
             <el-col :span="8">
                 <el-form-item label="传真号" prop="FaxNum">
                     <el-input v-model="form.FaxNum"></el-input>

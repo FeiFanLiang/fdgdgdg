@@ -13,20 +13,24 @@
       <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
       <el-input placeholder="请输入酒店前台电话" v-model="filters.FrontPhone" v-show="filters.labelVal == '4'"></el-input>
     </el-col>
-    <el-col :span="5">
-      <el-input placeholder="请输入酒店所属城市" v-model="filters.city"></el-input>
+    <el-col :span="4">
+      <el-select v-model="filters.country" placeholder="请选择国家">
+    <el-option
+      v-for="item in countryOptions"
+      :key="item.AreaName"
+      :label="item.AreaName"
+      :value="item.AreaName">
+    </el-option>
+  </el-select>
+  </el-col>
+  <el-col :span="4">
+      <el-input placeholder="请输入城市" v-model="filters.city"></el-input>
     </el-col>
     <el-col :span="5">
       <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
       <el-button type="primary" @click="dialogTableVisible=true">
         创建
       </el-button>
-    </el-col>
-    <el-col :span="6">
-      <el-radio-group v-model="isForeign" @change="areaTypeChange">
-        <el-radio-button :label="false">国内</el-radio-button>
-        <el-radio-button :label="true">国外</el-radio-button>
-      </el-radio-group>
     </el-col>
   </el-row>
   <div class="eltable">
@@ -88,11 +92,11 @@ export default {
   },
   created() {
     this.getHotelbaseList();
+    this.getCountryOptions();
     this.configList = hotelBaseApi.getConfig();
   },
   data() {
     return {
-      isForeign: false,
       dialogTableVisible: false,
       countryOptions: [],
       hotelbase: [],
@@ -106,6 +110,7 @@ export default {
         HotelName_En: "",
         FrontPhone: "",
         labelVal: "1",
+        country: "",
         city: ""
       },
       selectedOptions: [
@@ -125,11 +130,17 @@ export default {
           value: "4",
           label: "酒店前台电话"
         }
-      ]
+      ],
+      countryOptions: []
     };
   },
 
   methods: {
+    async getCountryOptions() {
+      const _self = this;
+      const res = await hotelAreaApi2.listByLevel("1");
+      _self.countryOptions = res.data;
+    },
     hotelAddHide() {
       this.dialogTableVisible = false;
       this.getHotelbaseList();
@@ -149,10 +160,6 @@ export default {
        this.dialogTableVisible=true;
        this.getHotelbaseList();
     },*/
-
-    areaTypeChange(isForeign) {
-      this.getHotelbaseList();
-    },
     hotelbaseSearch() {
       this.getHotelbaseList();
     },
@@ -173,8 +180,8 @@ export default {
             _self.filters.labelVal === "3" ? _self.filters.HotelName_En : "",
           FrontPhone:
             _self.filters.labelVal === "4" ? _self.filters.FrontPhone : "",
-          IsForeign: _self.isForeign,
           City: _self.filters.city,
+          Country: _self.filters.country,
           IsDelete: false
         }
       };

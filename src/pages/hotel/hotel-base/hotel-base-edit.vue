@@ -73,13 +73,6 @@
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="6">
-                <div class="grid-content bg-purple">
-                    <el-form-item label="国内国外">
-                        <el-switch on-text="国外" off-text="国内" :on-value="true" :off-value="false" v-model="form.isForeign"></el-switch>
-                    </el-form-item>
-                </div>
-            </el-col>
             <!-- <el-col :span="6">
                 <el-form-item label="经纬度">
                     <el-input v-model="form.coordinates"></el-input>
@@ -182,7 +175,6 @@ export default {
         // areaId: "",
         address: "",
         starNum: "",
-        isForeign: "",
         remark: ""
       },
       loading: false,
@@ -283,7 +275,7 @@ export default {
       const _self = this;
       const res = await hotelBaseApi.detailsById(_self.id);
       if (res && res.data) {
-        const data = res.data;
+        const data = res.data.Data;
         _self.form.id = data.ID;
         _self.form.hotelNum = data.HotelNum;
         _self.form.hotelName = data.HotelName;
@@ -295,8 +287,7 @@ export default {
         _self.form.faxNum = data.FaxNum;
         // _self.form.areaId = data.AreaID;
         _self.form.address = data.Address;
-        _self.form.starNum = data.StarID;
-        _self.form.isForeign = data.IsForeign;
+        _self.form.starNum = data.StarNum;
         _self.form.remark = data.Remark;
       }
     },
