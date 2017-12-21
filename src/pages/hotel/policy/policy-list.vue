@@ -49,8 +49,8 @@
     <div class="pagination-wrapper" v-if="typeof(HotelID) == 'undefined'">
       <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog :title=title v-model="dialogShow" @close="resetForm('ReceiptCompany')" size="full">
-        <el-form ref="form" :model="form" label-width="110px" :rules="rules">
+    <el-dialog :title=title v-model="dialogShow" size="full">
+        <el-form ref="form" :model="form" label-width="110px">
             <h3 v-if="typeof(hotelName) != 'undefined'">酒店名称：{{hotelName}}</h3>
             <el-row :gutter="24">
                 <el-col :span="6">
@@ -94,65 +94,39 @@
                 </el-col>
             </el-row>  
             <el-row :gutter="24"><el-col style="color:orange;"><h3>财务信息</h3></el-col></el-row>
-            <el-row :gutter="24">
-                <el-col :span="6">
-                    <el-form-item label="付款周期" prop="PayPeriod">
-                        <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
-                            <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="基于结算日" prop="SettlementUnit ">
-                        <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
-                            <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="我方签约公司" prop="Company">
-                        <el-select v-model="FinancialInfo.Company" clearable placeholder="请选择">
-                            <el-option v-for="item in Company" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>   
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
-            <el-form ref="ReceiptCompany" :model="ReceiptCompany" label-width="110px" :rules="rules2">
-                <el-form-item label="对方财务信息"></el-form-item>
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="简称" prop="ShortName">
-                            <el-input placeholder="请输入简称" v-model="ReceiptCompany.ShortName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="账户名" prop="AccountName">
-                            <el-input placeholder="请输入账户名" v-model="ReceiptCompany.AccountName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="账号" prop="AccountNum">
-                            <el-input placeholder="请输入账号" v-model="ReceiptCompany.AccountNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="银行" prop="Bank">
-                            <el-input placeholder="请输入银行" v-model="ReceiptCompany.Bank"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
             <el-form ref="FinancialInfo" :model="FinancialInfo" label-width="110px" :rules="rules">
                 <el-row :gutter="24">
                     <el-col :span="6">
-                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
-                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
+                        <el-form-item label="付款周期" prop="PayPeriod">
+                            <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
+                                <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
-                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
+                        <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
+                            <el-input v-model="FinancialInfo.PayPeriodTplusN" type="number"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="基于结算日" prop="SettlementUnit">
+                            <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
+                                <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="基于结算日T+N" prop="SettlementUnitTplusN">
+                            <el-input v-model="FinancialInfo.SettlementUnitTplusN" type="number"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="24">
+                    <el-col :span="6">
+                        <el-form-item label="我方签约公司" prop="Company">
+                            <el-select v-model="FinancialInfo.Company" clearable placeholder="请选择">
+                                <el-option v-for="item in Company" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -162,6 +136,7 @@
                         <el-option v-for="item in PayCompanyID" :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
+            </el-form>
                 <el-row :gutter="24">
                     <el-col :span="6">
                         <el-form-item label="简称" prop="ShortName">
@@ -181,6 +156,45 @@
                     <el-col :span="6">
                         <el-form-item label="银行" prop="Bank">
                             <el-input placeholder="请输入银行" v-model="form2.Bank"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
+            <el-form ref="ReceiptCompany" :model="ReceiptCompany" label-width="110px" :rules="rules2">
+                <el-form-item label="对方财务信息"></el-form-item>
+                <el-row :gutter="24">
+                    <el-col :span="6">
+                        <el-form-item label="账户名" prop="AccountName">
+                            <el-input placeholder="请输入账户名" v-model="ReceiptCompany.AccountName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="账号" prop="AccountNum">
+                            <el-input placeholder="请输入账号" v-model="ReceiptCompany.AccountNum"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="银行" prop="Bank">
+                            <el-input placeholder="请输入银行" v-model="ReceiptCompany.Bank"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="简称" prop="ShortName">
+                            <el-input placeholder="请输入简称" v-model="ReceiptCompany.ShortName"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <el-form label-width="110px">
+                <el-row :gutter="24">
+                    <el-col :span="6">
+                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
+                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
+                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -326,7 +340,6 @@ import UploadImage from 'components/upload-image'
                 FinancePhoneNum:'',
                 SettlementUnit:'',
                 PayPeriod:'',
-                PeriodShou:''
             },
             ReceiptCompany:{
                 AccountName:'',
@@ -358,23 +371,15 @@ import UploadImage from 'components/upload-image'
                 },
                 {
                     label:'月结',
-                    value:401
-                },
-                {
-                    label:'月结2',
-                    value:402
+                    value:4
                 },
                 {
                     label:'半月结',
-                    value:501
+                    value:5
                 },
                 {
                     label:'周结',
-                    value:601
-                },
-                {
-                    label:'周结2',
-                    value:602
+                    value:6
                 },
                 {
                     label:'其他',
@@ -446,17 +451,14 @@ import UploadImage from 'components/upload-image'
                 PayPeriod: [
                     { type: 'number', required: true, message: '请选择付款周期', trigger: 'change' }
                 ],
-                PeriodShou: [
-                    { type: 'number', required: true, message: '请选择付款周期', trigger: 'change' }
-                ],
                 SettlementUnit: [
                     { type: 'number', required: true, message: '请选择基于结算日', trigger: 'change' }
-                ]
+                ],
             },
             rules2:{
-                ShortName: [
-                    { required: true, message: '请输入对方财务信息--简称', trigger: 'blur' }
-                ],
+                // ShortName: [
+                //     { required: true, message: '请输入对方财务信息--简称', trigger: 'blur' }
+                // ],
                 AccountName: [
                     { required: true, message: '请输入对方财务信息--账户名', trigger: 'blur' }
                 ],
@@ -466,7 +468,8 @@ import UploadImage from 'components/upload-image'
                 Bank: [
                     { required: true, message: '请输入对方财务信息--银行', trigger: 'blur' }
                 ]
-            }
+            },
+            
         }
       },
       created(){
@@ -560,7 +563,6 @@ import UploadImage from 'components/upload-image'
         async addPolicy(){
             const _self = this
             _self.title = '酒店政策创建'
-            _self.dialogShow = true
             _self.form = {
                 HotelID:_self.HotelID,
                 IsDefault:false,
@@ -574,30 +576,50 @@ import UploadImage from 'components/upload-image'
                 PayPeriod:'',
                 Company:''
             }
-            _self.ReceiptCompany = {}
+            _self.ReceiptCompany = {
+                AccountName:'',
+                AccountNum:'',
+                Bank:'',
+                ShortName:'',
+            }
+            _self.dialogShow = true
             _self.$refs['FinancialInfo'].resetFields()
+            _self.$refs['ReceiptCompany'].resetFields()
         },
         async editPolicy(row){
             const _self = this
             _self.title = '酒店政策编辑'
-            _self.dialogShow = true
             try {
+                _self.FinancialInfo = {
+                    Company:'',
+                    PayCompanyID:'',
+                    SettlementUnit:'',
+                    PayPeriod:'',
+                }
+                _self.ReceiptCompany = {
+                    AccountName:'',
+                    AccountNum:'',
+                    Bank:'',
+                    ShortName:'',
+                }
                 const res = await policyApi.getPolicyListID(row.ID)
                 if(typeof(res.data.Data.FinancialInfo) != 'undefined'){
                     _self.FinancialInfo = res.data.Data.FinancialInfo
                     _self.ReceiptCompany = res.data.Data.FinancialInfo.ReceiptCompany
-                }
+                 }
                 _self.form = res.data.Data
                 console.log(_self.form)
                 _self.getImageList(_self.form.PolicyImage)
-                _self.showDialog = true
+                _self.dialogShow = true
+                _self.$refs['FinancialInfo'].resetFields()
+                _self.$refs['ReceiptCompany'].resetFields()
             } catch (e) {
                 console.error(e)
             }
         },
         async submit(){
             const _self = this
-            this.$refs['FinancialInfo'].validate(async valid => {
+            this.$refs['FinancialInfo'].validate(async valid => {  
             this.$refs['ReceiptCompany'].validate(async valid => {
                 if (valid) {
                     try{
@@ -617,14 +639,16 @@ import UploadImage from 'components/upload-image'
                         })
                         _self.fetchData()
                         _self.dialogShow = false
+                        _self.$refs['FinancialInfo'].resetFields()
+                        _self.$refs['ReceiptCompany'].resetFields()
                     }catch(e){
                         _self.$message.error('保存失败!!!')
                     }finally {
                         _self.isEditable = true
                     }
 
-                } })
-              })
+            } })
+            }) 
         }
         
       }
