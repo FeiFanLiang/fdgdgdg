@@ -27,13 +27,35 @@
                 </el-form-item>
             </el-col>
             <el-col :span="8">
+                <el-form-item label="国家">
+                    <el-autocomplete
+                    class="inline-input"
+                    v-model="form.Country"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入酒店所在国家"
+                    @select="handleSelect"
+                    ></el-autocomplete>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="城市">
+                    <el-autocomplete
+                    class="inline-input"
+                    v-model="form.City"
+                    :fetch-suggestions="querySearch1"
+                    placeholder="请输入酒店所在城市"
+                    @select="handleSelect1"
+                    ></el-autocomplete>
+                </el-form-item>
+            </el-col>
+            <!-- <el-col :span="8">
                 <el-form-item label="区域" prop="AreaID">
                     <el-select v-model="form.AreaID" clearable filterable remote placeholder="请输入酒店所在区域" :remote-method="remoteMethod" :loading="loading">
                         <el-option v-for="(item,index) in areaOptions" :key="index" :label="item&&item.AreaName" :value="item&&item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="8">
                 <el-form-item label="地址" prop="Address">
                     <el-input v-model="form.Address"></el-input>
@@ -85,111 +107,153 @@
 </template>
 <script>
 import {
-    hotelPayModeApi,
-    hotelBaseApi,
-    hotelStarApi,
-    hotelAreaApi
-} from 'api'
+  hotelPayModeApi,
+  hotelBaseApi,
+  hotelStarApi,
+  hotelAreaApi,
+  hotelAreaApi2
+} from "api";
 
 export default {
-    data() {
-        return {
-            labelPosition: 'top',
-            form: {
-                HotelNum: '',
-                HotelName: '',
-                HotelName_En: '',
-                FrontPhone: '',
-                FaxNum: '',
-                AreaID: '',
-                Address: '',
-                StarID: '',
-                PayMode: '',
-                Remark: '',
-                IsForeign: false
-            },
-            loading: false,
-            isEditable: true,
-            list: [],
-            rules: {
-                HotelName: [{
-                    required: true,
-                    message: '请输入酒店名称',
-                    trigger: 'blur'
-                }]
-            },
-            areaOptions: [],
-            starOptions: [],
-            payModeOptions: []
-        }
-    },
-    mounted() {
-        const _self = this
+  data() {
+    return {
+      countryOptions: [],
+      cityOptions: [],
+      labelPosition: "top",
+      form: {
+        HotelNum: "",
+        HotelName: "",
+        HotelName_En: "",
+        FrontPhone: "",
+        FaxNum: "",
+        Country: "",
+        City: "",
+        Address: "",
+        StarID: "",
+        PayMode: "",
+        Remark: "",
+        IsForeign: false
+      },
+      loading: false,
+      isEditable: true,
+      list: [],
+      rules: {},
+      areaOptions: [],
+      starOptions: [],
+      payModeOptions: []
+    };
+  },
+  mounted() {
+    const _self = this;
 
-        _self.getPayModeOptions()
+    _self.getPayModeOptions();
 
-        _self.getStarOptions()
-    },
-    methods: {
-        async remoteMethod(query) {
-            const _self = this
-            if (query !== '') {
-                _self.loading = true
-                const res = await hotelAreaApi.listByQue(query)
-                _self.list = res.data
-                setTimeout(() => {
-                    _self.loading = false
-                    _self.areaOptions = _self.list.splice(0, 20)
-                }, 200)
-            } else {
-                _self.areaOptions = []
-            }
-        },
-        async getPayModeOptions() {
-            try {
-                const res = await hotelPayModeApi.list()
-                this.payModeOptions = res.data
-            } catch (e) {
-                console.error(e)
-            }
-        },
-        async getStarOptions() {
-            try {
-                const res = await hotelStarApi.list()
-                this.starOptions = res.data
-            } catch (e) {
-                console.error(e)
-            }
-        },
-        submitForm() {
-            const _self = this
-            _self.$refs['form'].validate(async valid => {
-                if (valid) {
-                    try {
-                        _self.isEditable = false
-                        const data = await hotelBaseApi.add(_self.form)
-                        _self.$route.params.form
-                        // _self.form = {};
-                        this.$emit('hide')
-                        _self.$refs['form'].resetFields()
-                        _self.$message({
-                            message: '保存成功',
-                            type: 'success'
-                        })
-                    } catch (e) {
-                        console.error(e)
-                    } finally {
-                        _self.isEditable = true
-                    }
-                } else {
-                    return false
-                }
-            })
-        },
-        resetForm() {
-            this.$refs['form'].resetFields()
-            this.$emit('hide')
-        }
+    _self.getStarOptions();
+  },
+  watch: {
+    "form.country": async function(newVal) {
+      const _self = this;
+      if (newVal) {
+        const res = await hotelAreaApi2.listByLevelAndQuery("3", newVal);
+        _self.cityOptions = res.data;
+        console.log(_self.cityOptions);
+      }
     }
-}
+  },
+  methods: {
+    querySearch(queryString, cb) {
+      var restaurants = this.countryOptions;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      cb(results);
+    },
+    querySearch1(queryString, cb) {
+      var restaurants = this.cityOptions;
+      var results = queryString
+        ? restaurants.filter(this.createFilter(queryString))
+        : restaurants;
+      cb(results);
+    },
+    createFilter(queryString) {
+      return restaurant => {
+        return restaurant.AreaName.indexOf(queryString.toLowerCase()) === 0;
+      };
+    },
+    handleSelect(item) {
+      console.log(item);
+    },
+    handleSelect1(item) {
+      console.log(item);
+    },
+    async getCountryOptions() {
+      const _self = this;
+      const res = await hotelAreaApi2.listByLevel("1");
+      _self.countryOptions = res.data;
+    },
+    // async remoteMethod(query) {
+    //   const _self = this;
+    //   if (query !== "") {
+    //     _self.loading = true;
+    //     const res = await hotelAreaApi.listByQue(query);
+    //     _self.list = res.data;
+    //     setTimeout(() => {
+    //       _self.loading = false;
+    //       _self.areaOptions = _self.list.splice(0, 20);
+    //     }, 200);
+    //   } else {
+    //     _self.areaOptions = [];
+    //   }
+    // },
+    async getPayModeOptions() {
+      try {
+        const res = await hotelPayModeApi.list();
+        this.payModeOptions = res.data;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async getStarOptions() {
+      try {
+        const res = await hotelStarApi.list();
+        this.starOptions = res.data;
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    submitForm() {
+      const _self = this;
+      if (!_self.form.HotelName && !_self.form.HotelName_En) {
+        this.$message.error("请填写酒店中文名或英文名");
+      } else {
+        _self.$refs["form"].validate(async valid => {
+          if (valid) {
+            try {
+              _self.isEditable = false;
+              const data = await hotelBaseApi.add(_self.form);
+              _self.$route.params.form;
+              // _self.form = {};
+              this.$emit("hide");
+              _self.$refs["form"].resetFields();
+              _self.$message({
+                message: "保存成功",
+                type: "success"
+              });
+            } catch (e) {
+              console.error(e);
+            } finally {
+              _self.isEditable = true;
+            }
+          } else {
+            return false;
+          }
+        });
+      }
+    },
+    resetForm() {
+      this.$refs["form"].resetFields();
+      this.$emit("hide");
+    }
+  }
+};
 </script>

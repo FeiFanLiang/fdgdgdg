@@ -7,10 +7,14 @@
         </el-option>
       </el-select>
     </el-col>
-    <el-col :span="3">
+    <el-col :span="5">
       <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
       <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
       <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
+      <el-input placeholder="请输入酒店前台电话" v-model="filters.FrontPhone" v-show="filters.labelVal == '4'"></el-input>
+    </el-col>
+    <el-col :span="5">
+      <el-input placeholder="请输入酒店所属城市" v-model="filters.city"></el-input>
     </el-col>
     <el-col :span="5">
       <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
@@ -18,7 +22,7 @@
         创建
       </el-button>
     </el-col>
-    <el-col :span="7">
+    <el-col :span="6">
       <el-radio-group v-model="isForeign" @change="areaTypeChange">
         <el-radio-button :label="false">国内</el-radio-button>
         <el-radio-button :label="true">国外</el-radio-button>
@@ -76,53 +80,59 @@
 </template>
 
 <script>
-import {
-  hotelBaseApi
-} from 'api'
-import HotelBaseAdd from './hotel-base-add.vue'
+import { hotelBaseApi, hotelAreaApi2 } from "api";
+import HotelBaseAdd from "./hotel-base-add.vue";
 export default {
   components: {
     HotelBaseAdd
   },
   created() {
-    this.getHotelbaseList()
-    this.configList = hotelBaseApi.getConfig()
+    this.getHotelbaseList();
+    this.configList = hotelBaseApi.getConfig();
   },
   data() {
     return {
       isForeign: false,
       dialogTableVisible: false,
+      countryOptions: [],
       hotelbase: [],
       currentPage: 1,
       pageSize: 10,
       count: 0,
       loading: false,
       filters: {
-        ID: '',
-        HotelName: '',
-        HotelName_En: '',
-        labelVal: '1'
+        ID: "",
+        HotelName: "",
+        HotelName_En: "",
+        FrontPhone: "",
+        labelVal: "1",
+        city: ""
       },
-      selectedOptions: [{
-          value: '1',
-          label: '酒店ID'
+      selectedOptions: [
+        {
+          value: "1",
+          label: "酒店ID"
         },
         {
-          value: '2',
-          label: '酒店名称'
+          value: "2",
+          label: "酒店名称"
         },
         {
-          value: '3',
-          label: '酒店英文名称'
+          value: "3",
+          label: "酒店英文名称"
+        },
+        {
+          value: "4",
+          label: "酒店前台电话"
         }
       ]
-    }
+    };
   },
 
   methods: {
     hotelAddHide() {
-      this.dialogTableVisible = false
-      this.getHotelbaseList()
+      this.dialogTableVisible = false;
+      this.getHotelbaseList();
     },
     /*addHotelShow(row) {
       this.$router.push({
@@ -141,31 +151,36 @@ export default {
     },*/
 
     areaTypeChange(isForeign) {
-      this.getHotelbaseList()
+      this.getHotelbaseList();
     },
     hotelbaseSearch() {
-      this.getHotelbaseList()
+      this.getHotelbaseList();
     },
     async getHotelbaseList(currentPage, pageSize) {
-      const _self = this
-      this.loading = true
-      _self.currentPage = currentPage || _self.currentPage
-      _self.pageSize = pageSize || _self.pageSize
+      const _self = this;
+      this.loading = true;
+      _self.currentPage = currentPage || _self.currentPage;
+      _self.pageSize = pageSize || _self.pageSize;
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: 'ID',
+        order: "ID",
         query: {
-          ID: _self.filters.labelVal === '1' ? _self.filters.ID : '',
-          HotelName: _self.filters.labelVal === '2' ? _self.filters.HotelName : '',
-          HotelName_En: _self.filters.labelVal === '3' ? _self.filters.HotelName_En : '',
+          ID: _self.filters.labelVal === "1" ? _self.filters.ID : "",
+          HotelName:
+            _self.filters.labelVal === "2" ? _self.filters.HotelName : "",
+          HotelName_En:
+            _self.filters.labelVal === "3" ? _self.filters.HotelName_En : "",
+          FrontPhone:
+            _self.filters.labelVal === "4" ? _self.filters.FrontPhone : "",
           IsForeign: _self.isForeign,
-          IsDelete:false
-        },
-      }
-      const res = await hotelBaseApi.listAll(options)
+          City: _self.filters.city,
+          IsDelete: false
+        }
+      };
+      const res = await hotelBaseApi.listAll(options);
       if (res && res.data && res.data.Data) {
-        let data = res.data.Data
+        let data = res.data.Data;
         for (let item of data) {
           if (
             item.Policys &&
@@ -174,37 +189,37 @@ export default {
           ) {
             for (let n of item.Policys) {
               if (n.IsDefault) {
-                item.Policys = n
+                item.Policys = n;
               }
             }
           }
         }
-        _self.hotelbase = data
-        _self.count = res.data.Count
-        this.loading = false
+        _self.hotelbase = data;
+        _self.count = res.data.Count;
+        this.loading = false;
       }
     },
     handleSizeChange(val) {
-      this.pageSize = val
-      this.getHotelbaseList(1, this.pageSize)
+      this.pageSize = val;
+      this.getHotelbaseList(1, this.pageSize);
     },
     handleCurrentChange(val) {
-      this.currentPage = val
-      this.getHotelbaseList(this.currentPage)
+      this.currentPage = val;
+      this.getHotelbaseList(this.currentPage);
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
-        name: '酒店信息编辑',
+        name: "酒店信息编辑",
         params: {
           ID: row.ID
         },
         query: {
           hotelName: row.HotelName
         }
-      })
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="scss">

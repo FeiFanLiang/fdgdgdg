@@ -12,6 +12,7 @@ import gasolineCardLogApi from './gasoline-card-log'
 import driverBaseApi from './driver-base'
 import driverEvaluateApi from './driver-evaluate'
 import hotelAreaApi from './hotel-area'
+import hotelAreaApi2 from './hotel-area2'
 import hotelBaseApi from './hotel-base'
 import hotelImageApi from './hotel-image'
 import imageApi from './image'
@@ -65,6 +66,7 @@ export {
   driverBaseApi,
   driverEvaluateApi,
   hotelAreaApi,
+  hotelAreaApi2,
   hotelBaseApi,
   hotelImageApi,
   imageApi,
