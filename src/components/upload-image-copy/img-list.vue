@@ -100,7 +100,7 @@ export default {
     -webkit-transition: top ease 200ms;
     transition: top ease 200ms;
     text-align: center;
-    padding-top: 33%;
+    //padding-top: 33%;
   }
   .mask-wrapper:hover .mask-inner {
     top: 0;
@@ -118,7 +118,7 @@ export default {
     width: 60px;
     height: 60px;
     font-size: 30px;
-    padding-top: 10px;
+    padding-top: 5px;
     cursor: pointer;
     color: white;
   }
