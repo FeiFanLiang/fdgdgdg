@@ -2,7 +2,7 @@
 <div>
     <el-row :gutter="24" style="margin-bottom:10px;" v-if="typeof(HotelID) == 'undefined'">
         <el-col :span="6">
-            <el-input placeholder="请输入酒店ID" v-model="filters.HotelID"></el-input>
+            <el-input placeholder="请输入酒店名称" v-model="filters.hotelname"></el-input>
         </el-col>
         <el-col :span="5">
             <el-button type="primary" @click="policySearch(filters)">搜索</el-button>
@@ -39,7 +39,7 @@
             </div>
             </template>
         </el-table-column>
-        <el-table-column prop="Remark1" label="备注"></el-table-column>
+        <el-table-column prop="Remark1" label="备注" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" width=100>
             <template scope="scope">
                 <el-button size="small" @click="editPolicy(scope.row)">编辑</el-button>
@@ -92,202 +92,207 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-            </el-row>  
-            <el-row :gutter="24"><el-col style="color:orange;"><h3>财务信息</h3></el-col></el-row>
-            <el-form ref="FinancialInfo" :model="FinancialInfo" label-width="110px" :rules="rules">
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="付款周期" prop="PayPeriod">
-                            <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
-                                <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
-                            <el-input v-model="FinancialInfo.PayPeriodTplusN" type="number"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="基于结算日" prop="SettlementUnit">
-                            <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
-                                <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="基于结算日T+N" prop="SettlementUnitTplusN">
-                            <el-input v-model="FinancialInfo.SettlementUnitTplusN" type="number"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="我方签约公司" prop="Company">
-                            <el-select v-model="FinancialInfo.Company" clearable placeholder="请选择">
-                                <el-option v-for="item in Company" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
-                <el-form-item label="我方财务信息" prop="PayCompanyID">
-                    <el-select v-model="FinancialInfo.PayCompanyID" clearable placeholder="请选择" @change="PayCompany">
-                        <el-option v-for="item in PayCompanyID" :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="简称" prop="ShortName">
-                            <el-input placeholder="请输入简称" v-model="form2.ShortName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="账户名" prop="AccountName">
-                            <el-input placeholder="请输入账户名" v-model="form2.AccountName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="账号" prop="AccountNum">
-                            <el-input placeholder="请输入账号" v-model="form2.AccountNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="银行" prop="Bank">
-                            <el-input placeholder="请输入银行" v-model="form2.Bank"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
-            <el-form ref="ReceiptCompany" :model="ReceiptCompany" label-width="110px" :rules="rules2">
-                <el-form-item label="对方财务信息"></el-form-item>
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="账户名" prop="AccountName">
-                            <el-input placeholder="请输入账户名" v-model="ReceiptCompany.AccountName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="账号" prop="AccountNum">
-                            <el-input placeholder="请输入账号" v-model="ReceiptCompany.AccountNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="银行" prop="Bank">
-                            <el-input placeholder="请输入银行" v-model="ReceiptCompany.Bank"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="简称" prop="ShortName">
-                            <el-input placeholder="请输入简称" v-model="ReceiptCompany.ShortName"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-            <el-form label-width="110px">
-                <el-row :gutter="24">
-                    <el-col :span="6">
-                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
-                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
-                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
-            <el-form-item label="图片" prop="PolicyImage">
-                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+            </el-row>
+            <!-- 财务信息 -->
+            <el-collapse accordion style="margin:20px 0;">
+                <el-collapse-item>
+                    <template slot="title">
+                        <span style="color:orange;font-size:18px;">财务信息</span>
+                    </template>
+                    <div>
+                        <el-form ref="FinancialInfo" :model="FinancialInfo" label-width="110px" :rules="rules">
+                            <el-row :gutter="24">
+                                <el-col :span="6">
+                                    <el-form-item label="付款周期" prop="PayPeriod">
+                                        <el-select v-model="FinancialInfo.PayPeriod" clearable placeholder="请选择">
+                                            <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
+                                        <el-input v-model="FinancialInfo.PayPeriodTplusN" type="number"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="基于结算日" prop="SettlementUnit">
+                                        <el-select v-model="FinancialInfo.SettlementUnit" clearable placeholder="请选择">
+                                            <el-option v-for="item in SettlementUnit" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="6">
+                                    <el-form-item label="基于结算日T+N" prop="SettlementUnitTplusN">
+                                        <el-input v-model="FinancialInfo.SettlementUnitTplusN" type="number"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row :gutter="24">
+                                <el-col :span="6">
+                                    <el-form-item label="我方签约公司" prop="Company">
+                                        <el-select v-model="FinancialInfo.Company" clearable placeholder="请选择">
+                                            <el-option v-for="item in Company" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
+                            <el-form-item label="我方财务信息" prop="PayCompanyID">
+                                <el-select v-model="FinancialInfo.PayCompanyID" clearable placeholder="请选择" @change="PayCompany">
+                                    <el-option v-for="item in PayCompanyID" :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-form>
+                        <el-row :gutter="24">
+                            <el-col :span="6">
+                                <el-form-item label="简称" prop="ShortName">
+                                    <el-input placeholder="请输入简称" v-model="form2.ShortName"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="账户名" prop="AccountName">
+                                    <el-input placeholder="请输入账户名" v-model="form2.AccountName"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="账号" prop="AccountNum">
+                                    <el-input placeholder="请输入账号" v-model="form2.AccountNum"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="6">
+                                <el-form-item label="银行" prop="Bank">
+                                    <el-input placeholder="请输入银行" v-model="form2.Bank"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
+                            <el-form ref="ReceiptCompany" :model="ReceiptCompany" label-width="110px" :rules="rules2">
+                                <el-form-item label="对方财务信息"></el-form-item>
+                                <el-row :gutter="24">
+                                    <el-col :span="6">
+                                        <el-form-item label="账户名" prop="AccountName">
+                                            <el-input placeholder="请输入账户名" v-model="ReceiptCompany.AccountName"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-form-item label="账号" prop="AccountNum">
+                                            <el-input placeholder="请输入账号" v-model="ReceiptCompany.AccountNum"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-form-item label="银行" prop="Bank">
+                                            <el-input placeholder="请输入银行" v-model="ReceiptCompany.Bank"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-form-item label="简称" prop="ShortName">
+                                            <el-input placeholder="请输入简称" v-model="ReceiptCompany.ShortName"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                            <el-form label-width="110px">
+                                <el-row :gutter="24">
+                                    <el-col :span="6">
+                                        <el-form-item label="财务联系人" prop="FinanceLinkMan">
+                                            <el-input placeholder="请输入财务联系人" v-model="FinancialInfo.FinanceLinkMan"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-form-item label="财务联系电话" prop="FinancePhoneNum">
+                                            <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </el-form>
+                    </div>
+                </el-collapse-item>
+            </el-collapse>
+            <el-form-item label="截图信息" prop="PolicyImage">
+                <UploadImageCopy :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageCopy>
             </el-form-item>
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注1" prop="Remark1">
-                        <el-input type="textarea" v-model="form.Remark1"></el-input>
+                        <el-input type="textarea" v-model="form.Remark1" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注2" prop="Remark2">
-                        <el-input type="textarea" v-model="form.Remark2"></el-input>
+                        <el-input type="textarea" v-model="form.Remark2" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注3" prop="Remark3">
-                        <el-input type="textarea" v-model="form.Remark3"></el-input>
+                        <el-input type="textarea" v-model="form.Remark3" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="商圈备注" prop="Remark4">
-                        <el-input type="textarea" v-model="form.Remark4"></el-input>
+                        <el-input type="textarea" v-model="form.Remark4" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注5" prop="Remark5">
-                        <el-input type="textarea" v-model="form.Remark5"></el-input>
+                        <el-input type="textarea" v-model="form.Remark5" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注6" prop="Remark6">
-                        <el-input type="textarea" v-model="form.Remark6"></el-input>
+                        <el-input type="textarea" v-model="form.Remark6" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注7" prop="Remark7">
-                        <el-input type="textarea" v-model="form.Remark7"></el-input>
+                        <el-input type="textarea" v-model="form.Remark7" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注8" prop="Remark8">
-                        <el-input type="textarea" v-model="form.Remark8"></el-input>
+                        <el-input type="textarea" v-model="form.Remark8" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注9" prop="Remark9">
-                        <el-input type="textarea" v-model="form.Remark9"></el-input>
+                        <el-input type="textarea" v-model="form.Remark9" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注10" prop="Remark10">
-                        <el-input type="textarea" v-model="form.Remark10"></el-input>
+                        <el-input type="textarea" v-model="form.Remark10" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注11" prop="Remark11">
-                        <el-input type="textarea" v-model="form.Remark11"></el-input>
+                        <el-input type="textarea" v-model="form.Remark11" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注12" prop="Remark12">
-                        <el-input type="textarea" v-model="form.Remark12"></el-input>
+                        <el-input type="textarea" v-model="form.Remark12" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注13" prop="Remark13">
-                        <el-input type="textarea" v-model="form.Remark13"></el-input>
+                        <el-input type="textarea" v-model="form.Remark13" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注14" prop="Remark14">
-                        <el-input type="textarea" v-model="form.Remark14"></el-input>
+                        <el-input type="textarea" v-model="form.Remark14" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -301,10 +306,10 @@
 </template>
 <script>
 import {policyApi} from 'api'
-import UploadImage from 'components/upload-image'
+import UploadImageCopy from 'components/upload-image-copy'
   export default {
       components: {
-        UploadImage
+        UploadImageCopy
       },
       data(){
         return{
@@ -314,7 +319,7 @@ import UploadImage from 'components/upload-image'
             policyList:[],
             loading:false,
             filters:{
-                HotelID: '',
+                hotelname: '',
             },
             title:'',
             //////////////////
@@ -524,7 +529,7 @@ import UploadImage from 'components/upload-image'
                 pageSize: _self.pageSize,
                 order: 'ID',
                 query:{
-                    HotelID: _self.filters.HotelID,
+                    hotelname:_self.filters.hotelname,
                 }
             }
             try{
@@ -562,29 +567,37 @@ import UploadImage from 'components/upload-image'
         },
         async addPolicy(){
             const _self = this
-            _self.title = '酒店政策创建'
-            _self.form = {
-                HotelID:_self.HotelID,
-                IsDefault:false,
-                PolicyImage:'',
-                SecretTypeID:''
+            try{
+                _self.title = '酒店政策创建'
+                _self.form = {
+                    HotelID:_self.HotelID,
+                    IsDefault:false,
+                    PolicyImage:'',
+                    SecretTypeID:''
+                }
+                _self.imageList = []
+                _self.FinancialInfo = {
+                    PayCompanyID:'',
+                    SettlementUnit:'',
+                    PayPeriod:'',
+                    Company:''
+                }
+                _self.ReceiptCompany = {
+                    AccountName:'',
+                    AccountNum:'',
+                    Bank:'',
+                    ShortName:'',
+                }
+                _self.dialogShow = true
+                try{
+                    _self.$refs['FinancialInfo'].resetFields()
+                    _self.$refs['ReceiptCompany'].resetFields()
+                }catch(e){
+                    console.log(e)
+                }
+            }catch(e){
+                console.log(e)
             }
-            _self.imageList = []
-            _self.FinancialInfo = {
-                PayCompanyID:'',
-                SettlementUnit:'',
-                PayPeriod:'',
-                Company:''
-            }
-            _self.ReceiptCompany = {
-                AccountName:'',
-                AccountNum:'',
-                Bank:'',
-                ShortName:'',
-            }
-            _self.dialogShow = true
-            _self.$refs['FinancialInfo'].resetFields()
-            _self.$refs['ReceiptCompany'].resetFields()
         },
         async editPolicy(row){
             const _self = this
@@ -611,8 +624,12 @@ import UploadImage from 'components/upload-image'
                 console.log(_self.form)
                 _self.getImageList(_self.form.PolicyImage)
                 _self.dialogShow = true
-                _self.$refs['FinancialInfo'].resetFields()
-                _self.$refs['ReceiptCompany'].resetFields()
+                try{
+                    _self.$refs['FinancialInfo'].resetFields()
+                    _self.$refs['ReceiptCompany'].resetFields()
+                }catch(e){
+                    console.log(e)
+                }
             } catch (e) {
                 console.error(e)
             }
@@ -658,5 +675,8 @@ import UploadImage from 'components/upload-image'
   .pagination-wrapper {
     text-align: center;
     margin: 10px;
+  }
+  .el-tooltip__popper{
+      max-width:500px;
   }
 </style>

@@ -20,9 +20,9 @@ export default {
     getPayCompanyID(id){
         return axios.get(base2 + id)
     },
-    //获取政策信息列表  GET /Hotel/HotelPolicy/list 
+    //获取政策信息列表  GET /Hotel/HotelPolicy/ListPolicy
     getPolicyList(params){
-        return axios.get(base + 'list' , {params,params})
+        return axios.get(base + 'ListPolicy' , {params:params})
     },
     //根据酒店ID获取政策信息  GET /Hotel/HotelPolicy/Hotel/{hotelid}
     getPolicyListByID(hotelid){
