@@ -92,6 +92,13 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+                <el-col :span="6">
+                    <el-form-item label="预定方式" prop="ReserveModeID">
+                        <el-select v-model="form.ReserveModeID" clearable placeholder="请选择">
+                            <el-option v-for="item in ReserveModeID" :key="item.ID" :label="item.ModeName" :value="item.ID"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
             </el-row>
             <!-- 财务信息 -->
             <el-collapse accordion style="margin:20px 0;">
@@ -201,6 +208,19 @@
                                     <el-col :span="6">
                                         <el-form-item label="财务联系电话" prop="FinancePhoneNum">
                                             <el-input placeholder="请输入财务联系电话" v-model="FinancialInfo.FinancePhoneNum"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
+                                <el-row :gutter="24">
+                                    <el-col :span="6">
+                                        <el-form-item label="紧急打款" prop="UrgentPay">
+                                            <el-switch on-text="是" off-text="否" :on-value="1" :off-value="0" v-model="FinancialInfo.UrgentPay"></el-switch>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="6">
+                                        <el-form-item label="不可合并支付" prop="UnMergePay">
+                                            <el-switch on-text="不可" off-text="可合并" :on-value="1" :off-value="0" v-model="FinancialInfo.UnMergePay"></el-switch>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -336,7 +356,8 @@ import UploadImageCopy from 'components/upload-image-copy'
                 IsDefault: false,
                 Remark:'',
                 PolicyImage:'',
-                SecretTypeID:''
+                SecretTypeID:'',
+                ReserveModeID:''
             },
             FinancialInfo:{
                 Company:'',
@@ -345,6 +366,8 @@ import UploadImageCopy from 'components/upload-image-copy'
                 FinancePhoneNum:'',
                 SettlementUnit:'',
                 PayPeriod:'',
+                UrgentPay:'',
+                UnMergePay:''
             },
             ReceiptCompany:{
                 AccountName:'',
@@ -449,6 +472,7 @@ import UploadImageCopy from 'components/upload-image-copy'
                     value:'青岛美票'
                 }
             ],
+            ReserveModeID:[],
             rules:{
                 PayCompanyID: [
                     { type: 'number', required: true, message: '请选择我方财务信息', trigger: 'change' }
@@ -482,8 +506,13 @@ import UploadImageCopy from 'components/upload-image-copy'
         this.hotelName = this.$route.query.hotelName
         console.log(this.hotelName + this.HotelID)
         this.fetchData()
+        this.getRserveMode()
       },
       methods:{
+        async getRserveMode(){
+            const res = await policyApi.getRserveMode()
+            this.ReserveModeID = res.data.Data
+        },
         async getImageList(list) {
             if (list) {
                 const images = list.split(',')
@@ -565,36 +594,43 @@ import UploadImageCopy from 'components/upload-image-copy'
                 this.form2.Bank = ''
             }
         },
+        resetForm(){
+            const _self = this
+            _self.form = {
+                HotelID:_self.HotelID,
+                IsDefault:false,
+                PolicyImage:'',
+                SecretTypeID:'',
+                ReserveModeID:''
+            }
+            _self.imageList = []
+            _self.FinancialInfo = {
+                PayCompanyID:'',
+                SettlementUnit:'',
+                PayPeriod:'',
+                Company:'',
+                UrgentPay:'',
+                UnMergePay:''
+            }
+            _self.ReceiptCompany = {
+                AccountName:'',
+                AccountNum:'',
+                Bank:'',
+                ShortName:'',
+            }
+            try{
+                _self.$refs['FinancialInfo'].resetFields()
+                _self.$refs['ReceiptCompany'].resetFields()
+            }catch(e){
+                console.log(e)
+            }
+        },
         async addPolicy(){
             const _self = this
             try{
                 _self.title = '酒店政策创建'
-                _self.form = {
-                    HotelID:_self.HotelID,
-                    IsDefault:false,
-                    PolicyImage:'',
-                    SecretTypeID:''
-                }
-                _self.imageList = []
-                _self.FinancialInfo = {
-                    PayCompanyID:'',
-                    SettlementUnit:'',
-                    PayPeriod:'',
-                    Company:''
-                }
-                _self.ReceiptCompany = {
-                    AccountName:'',
-                    AccountNum:'',
-                    Bank:'',
-                    ShortName:'',
-                }
+                _self.resetForm()
                 _self.dialogShow = true
-                try{
-                    _self.$refs['FinancialInfo'].resetFields()
-                    _self.$refs['ReceiptCompany'].resetFields()
-                }catch(e){
-                    console.log(e)
-                }
             }catch(e){
                 console.log(e)
             }
@@ -603,18 +639,7 @@ import UploadImageCopy from 'components/upload-image-copy'
             const _self = this
             _self.title = '酒店政策编辑'
             try {
-                _self.FinancialInfo = {
-                    Company:'',
-                    PayCompanyID:'',
-                    SettlementUnit:'',
-                    PayPeriod:'',
-                }
-                _self.ReceiptCompany = {
-                    AccountName:'',
-                    AccountNum:'',
-                    Bank:'',
-                    ShortName:'',
-                }
+                _self.resetForm()
                 const res = await policyApi.getPolicyListID(row.ID)
                 if(typeof(res.data.Data.FinancialInfo) != 'undefined'){
                     _self.FinancialInfo = res.data.Data.FinancialInfo
@@ -624,12 +649,6 @@ import UploadImageCopy from 'components/upload-image-copy'
                 console.log(_self.form)
                 _self.getImageList(_self.form.PolicyImage)
                 _self.dialogShow = true
-                try{
-                    _self.$refs['FinancialInfo'].resetFields()
-                    _self.$refs['ReceiptCompany'].resetFields()
-                }catch(e){
-                    console.log(e)
-                }
             } catch (e) {
                 console.error(e)
             }

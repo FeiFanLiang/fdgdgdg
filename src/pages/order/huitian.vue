@@ -1,7 +1,7 @@
 <template lang="html">
 <div id="HotelsOrder">
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border :default-sort = "{prop: 'BookTime', order: 'descending'}">
-        <el-table-column label="ID" prop="ID"></el-table-column>
+        <!-- <el-table-column label="ID" prop="ID"></el-table-column> -->
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="订单渠道" prop="ThreePlatID" width="120">
           <template scope="scope">

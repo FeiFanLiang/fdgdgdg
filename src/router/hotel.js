@@ -24,6 +24,11 @@ export default {
       name: '酒店政策信息2'
     },
     {
+      path: 'PolicyPlatForm',
+      component: _import('hotel/policy/policy-platform'),
+      name: '平台政策信息'
+    },
+    {
       path: 'HotelBaseAdd',
       component: _import('hotel/hotel-base/hotel-base-add'),
       name: '添加酒店',
