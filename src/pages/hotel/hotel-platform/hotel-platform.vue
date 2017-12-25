@@ -63,6 +63,9 @@
           </el-form-item>
         </div>
         <div>
+          <el-form-item label="平台酒店ID2" prop="platHotelId2">
+            <el-input v-model.number="form.platHotelId2"></el-input>
+          </el-form-item>
           <el-form-item label="酒店ID" v-if="dialogTag === 2">
             <el-input v-model="form.hotelId" :disabled="true"></el-input>
           </el-form-item>
@@ -128,6 +131,7 @@ export default {
         platformId: '',
         hotelId: '',
         platHotelId: '',
+        platHotelId2:'',
         platUrl: '',
         platHotelName: '',
         platHotelNameEn: '',
@@ -196,6 +200,7 @@ export default {
         platformId: '',
         hotelId: this.$route.params.ID,
         platHotelId: '',
+        platHotelId2: '',
         platUrl: '',
         platHotelName: '',
         platHotelNameEn: '',
@@ -215,6 +220,7 @@ export default {
         _self.form.platformId = res.data.Data.PlatformID
         _self.form.hotelId = res.data.Data.HotelID
         _self.form.platHotelId = res.data.Data.PlatHotelID
+        _self.form.platHotelId2 = res.data.Data.PlatHotelID_2
         _self.form.platUrl = res.data.Data.PlatURL
         _self.form.platHotelName = res.data.Data.PlatHotelName
         _self.form.platHotelNameEn = res.data.Data.PlatHotelName_En

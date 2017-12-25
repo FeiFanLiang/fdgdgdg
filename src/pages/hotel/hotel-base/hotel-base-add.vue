@@ -20,8 +20,8 @@
         </el-row>
         <el-row :gutter="20">
             <el-col :span="8">
-                <el-form-item label="星级" prop="StarID">
-                    <el-select v-model="form.StarID" clearable placeholder="请选择酒店星级">
+                <el-form-item label="星级" prop="StarNum">
+                    <el-select v-model="form.StarNum" clearable placeholder="请选择酒店星级">
                         <el-option v-for="(item,index) in starOptions" :key="index" :label="item.StarName" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
@@ -48,6 +48,8 @@
                     ></el-autocomplete>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="20">
             <!-- <el-col :span="8">
                 <el-form-item label="区域" prop="AreaID">
                     <el-select v-model="form.AreaID" clearable filterable remote placeholder="请输入酒店所在区域" :remote-method="remoteMethod" :loading="loading">
@@ -61,25 +63,25 @@
                     <el-input v-model="form.Address"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <!-- <el-col :span="8">
                 <el-form-item label="结款" prop="PayMode">
                     <el-select v-model="form.PayMode" clearable placeholder="请选择结款账户">
                         <el-option v-for="(item,index) in payModeOptions" :key="index" :label="item.ModeName" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="8">
                 <el-form-item label="前台电话" prop="FrontPhone">
                     <el-input v-model="form.FrontPhone"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
-        <el-row :gutter="20">
             <el-col :span="8">
                 <el-form-item label="传真号" prop="FaxNum">
                     <el-input v-model="form.FaxNum"></el-input>
                 </el-form-item>
             </el-col>
+        </el-row>
+        <el-row :gutter="20">
             <el-col :span="8">
                 <div class="grid-content bg-purple">
                     <el-form-item label="国内国外">
@@ -129,7 +131,7 @@ export default {
         Country: "",
         City: "",
         Address: "",
-        StarID: "",
+        StarNum: "",
         PayMode: "",
         Remark: "",
         IsForeign: false
@@ -139,16 +141,53 @@ export default {
       list: [],
       rules: {},
       areaOptions: [],
-      starOptions: [],
-      payModeOptions: []
+      starOptions: [
+        {
+          ID: 1,
+          StarName: "一星级"
+        },
+        {
+          ID: 2,
+          StarName: "二星级"
+        },
+        {
+          ID: 3,
+          StarName: "三星级"
+        },
+        {
+          ID: 3.5,
+          StarName: "准四星/3.5"
+        },
+        {
+          ID: 4,
+          StarName: "四星级"
+        },
+        {
+          ID: 4.5,
+          StarName: "准五星/4.5"
+        },
+        {
+          ID: 5,
+          StarName: "五星级"
+        },
+        {
+          ID: 5.5,
+          StarName: "超5星[国内]"
+        },
+        {
+          ID: 7,
+          StarName: "七星级"
+        }
+      ],
+      //payModeOptions: []
     };
   },
   mounted() {
     const _self = this;
 
-    _self.getPayModeOptions();
+    //_self.getPayModeOptions();
 
-    _self.getStarOptions();
+    //_self.getStarOptions();
   },
   watch: {
     "form.country": async function(newVal) {
@@ -205,22 +244,22 @@ export default {
     //     _self.areaOptions = [];
     //   }
     // },
-    async getPayModeOptions() {
-      try {
-        const res = await hotelPayModeApi.list();
-        this.payModeOptions = res.data;
-      } catch (e) {
-        console.error(e);
-      }
-    },
-    async getStarOptions() {
-      try {
-        const res = await hotelStarApi.list();
-        this.starOptions = res.data;
-      } catch (e) {
-        console.error(e);
-      }
-    },
+    // async getPayModeOptions() {
+    //   try {
+    //     const res = await hotelPayModeApi.list();
+    //     this.payModeOptions = res.data;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
+    // async getStarOptions() {
+    //   try {
+    //     const res = await hotelStarApi.list();
+    //     this.starOptions = res.data;
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // },
     submitForm() {
       const _self = this;
       if (!_self.form.HotelName && !_self.form.HotelName_En) {
