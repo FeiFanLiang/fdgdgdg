@@ -16,6 +16,7 @@ import modifyPrice from './modify-price'
 import test from './test'
 import kefuRoute from './kefu'
 import caiwuRoute from './caiwu'
+
 const children = [
   hotelRoute, // 酒店
   showRoute, // 展示信息
