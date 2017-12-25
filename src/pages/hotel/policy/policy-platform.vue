@@ -82,7 +82,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
-                                    <el-input placeholder="请输入密码" v-model="ReceiptForm.PayPeriodTplusN" type="number"></el-input>
+                                    <el-input v-model="ReceiptForm.PayPeriodTplusN" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
@@ -94,7 +94,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="基于结算日T+N" prop="SettlementUnitTplusN">
-                                    <el-input placeholder="请输入我方签约公司" v-model="ReceiptForm.SettlementUnitTplusN" type="number"></el-input>
+                                    <el-input v-model="ReceiptForm.SettlementUnitTplusN" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -225,7 +225,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
-                                    <el-input placeholder="请输入密码" v-model="PaymentForm.PayPeriodTplusN" type="number"></el-input>
+                                    <el-input v-model="PaymentForm.PayPeriodTplusN" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
@@ -237,7 +237,7 @@
                             </el-col>
                             <el-col :span="6">
                                 <el-form-item label="基于结算日T+N" prop="SettlementUnitTplusN">
-                                    <el-input placeholder="请输入我方签约公司" v-model="PaymentForm.SettlementUnitTplusN" type="number"></el-input>
+                                    <el-input v-model="PaymentForm.SettlementUnitTplusN" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -552,7 +552,7 @@ export default {
     },
     async PayCompany(value){
         const _self = this
-        if(typeof(value) != 'undefined'){
+        if(typeof(value) == 'number'){
             const res = await policyApi.getPayCompanyID(value)
             _self.form2.ShortName = res.data.Data.ShortName
             _self.form2.AccountName = res.data.Data.AccountName
@@ -567,7 +567,7 @@ export default {
     },
     async PayCompany2(value){
         const _self = this
-        if(typeof(value) != 'undefined'){
+        if(typeof(value) == 'number'){
             const res = await policyApi.getPayCompanyID(value)
             _self.form3.ShortName = res.data.Data.ShortName
             _self.form3.AccountName = res.data.Data.AccountName
