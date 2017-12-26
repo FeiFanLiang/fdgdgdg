@@ -211,12 +211,29 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="预定时间" prop="BookTime">
-                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%;"></el-date-picker>
+                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="账户名称" prop="AccountName">
+                                <el-input placeholder="请输入账户名称" v-model="item.AccountName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="预计收款时间" prop="DateReceipt">
+                                <el-date-picker v-model="item.DateReceipt" type="datetime" placeholder="请选择"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="预计付款时间" prop="DatePayment">
+                                <el-date-picker v-model="item.DatePayment" type="datetime" placeholder="请选择"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="付款货币" prop="CurrencyFuKuan">

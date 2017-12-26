@@ -1,5 +1,41 @@
 <template lang="html">
 <div id="HotelsOrder">
+    <el-form label-width="80px">
+      <el-row :gutter="24">
+          <el-col :span="6">
+            <el-form-item label="酒店名称">
+              <el-input v-model="filters.HotelName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="订单号">
+              <el-input v-model="filters.PlatOrderNo"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="入住日期">
+              <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="退房日期">
+              <el-date-picker  v-model="filters.StayDateEnd" type="date"></el-date-picker>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :span="6">
+            <el-form-item label="预定日期">
+              <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border :default-sort = "{prop: 'BookTime', order: 'descending'}">
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="订单渠道" prop="ThreePlatID">
@@ -46,6 +82,13 @@ export default {
       loading: false,
       hotelsOrder: [],
       ThreePlatID: [],
+      filters:{
+        HotelName:'',
+        PlatOrderNo:'',
+        StayDateStart:'',
+        BookTime:'',
+        StayDateEnd:''
+      }
     }
   },
   created() {
@@ -73,7 +116,15 @@ export default {
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: 'BookTime'
+        order: 'BookTime',
+        query:{
+          HotelName:_self.filters.HotelName,
+          PlatOrderNo:_self.filters.PlatOrderNo,
+          StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
+          StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
+          'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
+          'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+        }
       }
       try {
         const res = await hotelsOrderApi.check(options)

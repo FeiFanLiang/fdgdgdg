@@ -750,16 +750,6 @@ export default{
           _self.filters.UrgentPay = 1
         }
       }
-      let d11 = ''
-      let d22 = ''
-      if (_self.filters.BookTime[0] != null) {
-        let d1 = new Date(_self.filters.BookTime[0])
-        let d2 = new Date(_self.filters.BookTime[1])
-        d11 =
-          d1.getFullYear() + '-' + (d1.getMonth() + 1) + '-' + d1.getDate()
-        d22 =
-          d2.getFullYear() + '-' + (d2.getMonth() + 1) + '-' + d2.getDate()
-      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -769,9 +759,9 @@ export default{
           OrderNo:_self.filters.OrderNo,
           HotelName:_self.filters.HotelName,
           Passenger:_self.filters.Passenger,
-          'BookTime>': d11,
-          'BookTime<': d22,
-          StayDateStart: new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd'),
+          StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
+          'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
+          'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
           HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,
