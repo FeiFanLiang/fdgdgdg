@@ -43,6 +43,11 @@ export default {
       meta: {
         hidden: true
       }
-    }
+    },
+    {
+      path: 'visalist',
+      component: _import('weichat/visalist'),
+      name: '签证列表'
+    },
   ]
 }
