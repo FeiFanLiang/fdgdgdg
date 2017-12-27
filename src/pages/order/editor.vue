@@ -1,5 +1,6 @@
 <template>
   <div class="components-container">
+    <el-button @click="back()" style="margin:10px 0">返回</el-button>
     <div>
       <tinymce :height="320" :width="756" v-model="content"></tinymce>
     </div>
@@ -28,15 +29,10 @@ export default {
       RoomNum : '',
       NightNum : '',
       HotelName : '',
+      Company:'',
       isEditable:true,
     }
   },
-  // watch:{
-  //   content(val){
-  //     console.log(1111111111111)
-  //     console.log(val)
-  //   }
-  // },
   created() {
     const _self = this
     _self.ID = _self.$route.params.ID
@@ -44,12 +40,15 @@ export default {
     _self.getData()
   },
   methods:{
+    back(){
+      this.$router.go(-1)
+    },
     setContent(){
       const _self = this
-      _self.stringWX = `<div style="font-size: 18px;"><p>青岛惠和旅行社<br />入住人：`+_self.Passenger+`<br />入离日期：`+_self.StayDateStart+`至`+_self.StayDateEnd+`<br />预订房型：`+_self.Room+`&nbsp; &nbsp;`+_self.RoomNum+`间`+_self.NightNum+`晚<br />早餐类型：含x早<br />房价：xx </p></div>`
+      _self.stringWX = `<div style="font-size: 18px;"><p>`+_self.Company+`<br />入住人：`+_self.Passenger+`<br />入离日期：`+_self.StayDateStart+`至`+_self.StayDateEnd+`<br />预订房型：`+_self.Room+`&nbsp; &nbsp;`+_self.RoomNum+`间`+_self.NightNum+`晚<br />早餐类型：含x早<br />房价：xx </p></div>`
       _self.stringQRH = `<div style="font-size: 18px;">
-        <p style="text-align: center; font-size: 29px;">青岛澳迅航空订房确认函</p>
-        <p style="text-align: left;">&nbsp; &nbsp; &nbsp; From:&nbsp;青岛澳迅航空</p>
+        <p style="text-align: center; font-size: 29px;">`+_self.Company+`订房确认函</p>
+        <p style="text-align: left;">&nbsp; &nbsp; &nbsp; From:&nbsp;`+_self.Company+`</p>
         <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;TO: <span style="font-size: 16px;">`+_self.HotelName+`</span>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;FAX:&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;TEL:</p>
         <p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您好！&nbsp;</p>
         <p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;以下是我司客户订房消息，请查收！</p>
@@ -87,7 +86,7 @@ export default {
         </tbody>
         </table>
         <p><br />&nbsp; &nbsp; &nbsp; 付费方式：网上转账&nbsp;</p>
-        <p>&nbsp; &nbsp; &nbsp; 签发部门：青岛澳迅机票部&nbsp; &nbsp; &nbsp;联系电话：15698161689</p>
+        <p>&nbsp; &nbsp; &nbsp; 签发部门：`+_self.Company+`&nbsp; &nbsp; &nbsp;联系电话：15698161689</p>
         <p>&nbsp; &nbsp; &nbsp; 传&nbsp;&nbsp;&nbsp;&nbsp;真：0532-58715050转801&nbsp; &nbsp; &nbsp;联&nbsp;系&nbsp;人：孙</p>
         <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;签发日期：2017年&nbsp;6月25日</p>
         <p>&nbsp; &nbsp; &nbsp; 如无异议，请于2017年6月25日1200时前确认回执。谢谢！</p>
@@ -111,6 +110,7 @@ export default {
         _self.Room = detail.Room
         _self.RoomNum = detail.RoomNum
         _self.NightNum = detail.NightNum
+        _self.Company = _self.datas.policy.FinancialInfo.Company
         _self.setContent()
         _self.content = _self.stringWX
       }
@@ -122,6 +122,7 @@ export default {
         _self.Room = detail.Room
         _self.RoomNum = detail.RoomNum
         _self.NightNum = detail.NightNum
+        _self.Company = _self.datas.policy.FinancialInfo.Company
         _self.setContent()
         _self.content = _self.stringQRH
       }
