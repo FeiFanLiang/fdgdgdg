@@ -138,17 +138,22 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
+                            <el-form-item label="账户名称" prop="AccountName">
+                                <el-input placeholder="请输入账户名称" v-model="item.AccountName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
                         <el-form-item label="房型" prop="Room">
                             <el-input placeholder="请输入房型" v-model="item.Room"></el-input>
                         </el-form-item>
                         </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="确认号" prop="HotelBookingNoNeed">
                                 <el-input placeholder="请输入确认号" v-model="item.HotelBookingNoNeed"></el-input>
                             </el-form-item>
                         </el-col>
-                    </el-row>
-                    <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="入住人" prop="Passenger">
                                 <el-input placeholder="请输入入住人" v-model="item.Passenger"></el-input>
@@ -218,11 +223,6 @@
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
                     <el-row :gutter="24">
-                        <el-col :span="6">
-                            <el-form-item label="账户名称" prop="AccountName">
-                                <el-input placeholder="请输入账户名称" v-model="item.AccountName"></el-input>
-                            </el-form-item>
-                        </el-col>
                         <el-col :span="6">
                             <el-form-item label="预计收款时间" prop="DateReceipt">
                                 <el-date-picker v-model="item.DateReceipt" type="datetime" placeholder="请选择"></el-date-picker>

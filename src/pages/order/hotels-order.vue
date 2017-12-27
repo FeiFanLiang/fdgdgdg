@@ -93,6 +93,7 @@
         <el-table-column type="expand">
             <template scope="props">
               <div>
+                <p><el-button size="big" @click="qrh(props.row.ID)">确认函</el-button></p>
                 <el-card class="box-card">
                     <h4>预订其他信息</h4>
                     <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p>
@@ -666,6 +667,15 @@ export default{
     this.ThreePlat()
   },
   methods:{
+    qrh(id){
+      const _self = this
+      _self.$router.push({
+        name: '编辑器',
+        params: {
+          ID: id
+        }
+      })
+    },
     async getImageList(list) {
         if (list) {
             const images = list.split(',')
@@ -725,6 +735,7 @@ export default{
         _self.expandRowKeys.push(row.ID)
         _self.ID = row.ID
       }
+      _self.showWeixin = false
     },
     hotelsOrderSearch() {
       const _self = this

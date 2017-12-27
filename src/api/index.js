@@ -52,6 +52,7 @@ import wechatUserApi from './wechat-user'
 import spiderSettingApi from './spider-setting'
 import policyApi from './policy'
 import visaApi from './visa'
+import hotelOrderDetailApi from './hotel-order-detail'
 export {
   accountApi,
   airlineApi,
@@ -106,5 +107,6 @@ export {
   hotelPaymentInfoApi,
   spiderSettingApi,
   policyApi,
-  visaApi
+  visaApi,
+  hotelOrderDetailApi
 }
