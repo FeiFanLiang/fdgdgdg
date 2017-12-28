@@ -26,13 +26,6 @@
           </el-col>
       </el-row>
       <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="结款方式">
-              <el-select v-model="filters.SettlementCycle" clearable>
-                <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
            <el-col :span="6">
             <el-form-item label="入住日期">
               <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
@@ -40,21 +33,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="预定日期">
-              <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
-            </el-form-item>
-          </el-col>
-      </el-row>
-      <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="确认号">
-              <el-input v-model="filters.HotelBookingNoNeed"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="打款账户">
-              <el-select v-model="filters.CompanyAcount" clearable>
-                <el-option v-for="item in CompanyAcount" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
+              <el-date-picker  v-model="filters.BookTime" type="daterange" style="width:103%"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -64,14 +43,25 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="确认号">
+              <el-input v-model="filters.HotelBookingNoNeed"></el-input>
+            </el-form-item>
+          </el-col>
       </el-row>
       <el-row :gutter="24"> 
-        <el-col :span="24">
+        <el-col :span="6">
+          <el-form-item label="结款方式">
+            <el-select v-model="filters.SettlementCycle" clearable>
+              <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label="筛选条件">
               <el-checkbox-group v-model="checkList">
                 <el-checkbox label="已审核未打款"></el-checkbox>
                 <el-checkbox label="未审核"></el-checkbox>
-                <el-checkbox label="紧急打款"></el-checkbox>
               </el-checkbox-group>
           </el-form-item>
         </el-col>
@@ -96,35 +86,36 @@
                 <p><el-button size="big" @click="qrh(props.row.ID)">确认函</el-button></p>
                 <el-card class="box-card">
                     <h4>预订其他信息</h4>
-                    <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p>
+                    <!-- <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p> -->
                     <p><span>房型</span><span class="span-text">{{ props.row.Room }}</span></p>
                     <p><span>间数</span><span class="span-text">{{ props.row.RoomNum }}</span></p>
                     <p><span>晚数</span><span class="span-text">{{ props.row.NightNum }}</span></p>
-                    <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p>
-                    <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
+                    <!-- <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p> -->
                     <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
-                    <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p>
+                    <p><span>平台政策ID</span><span class="span-text">{{ props.row.PlatPolicyID }}</span></p>
+                    <!-- <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p> -->
+                    <p><span>订单号</span><span class="span-text">{{ props.row.PlatOrderNo}}</span></p>
                     <p><span>订单编号</span><span class="span-text">{{ props.row.OrderNo}}</span></p>
-                    <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
+                    <!-- <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
                     <p><span>其他订单类型</span><span class="span-text">{{ props.row.PlatOrderType }}</span></p>
-                    <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p>
+                    <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p> -->
+                    <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
                 </el-card>
                 <el-card class="box-card">
                     <h4>财务付款</h4>
-                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFuKuan }}</span></p>
-                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShouKuan }}</span></p>
-                    <p><span>应收款额</span><span class="span-text">{{ props.row.AmountYingShou }}</span></p>
-                    <p><span>实收款额</span><span class="span-text">{{ props.row.AmountShiShou }}</span></p>
-                    <p><span>应付款额</span><span class="span-text">{{ props.row.AmountYingFu }}</span></p>
-                    <p><span>实付款额</span><span class="span-text">{{ props.row.AmountShiFu }}</span></p>
-                    <p><span>酒店底价</span><span class="span-text">{{ props.row.HotelFee }}</span></p>
+                    <p><span>账户名称</span><span class="span-text">{{ props.row.AccountName }}</span></p>
+                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFu }}</span></p>
+                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShou }}</span></p>
+                    <p><span>收款额</span><span class="span-text">{{ props.row.AmountShou }}</span></p>
+                    <p><span>付款额</span><span class="span-text">{{ props.row.AmountFu }}</span></p>
+                    <!-- <p><span>酒店底价</span><span class="span-text">{{ props.row.HotelFee }}</span></p> -->
                     <p><span>利润</span><span class="span-text">{{ props.row.Profit }}</span></p>
-                    <p><span>优惠金额</span><span class="span-text">{{ props.row.Discounts }}</span></p>
+                    <!-- <p><span>优惠金额</span><span class="span-text">{{ props.row.Discounts }}</span></p>
                     <p><span>其他费用</span><span class="span-text">{{ props.row.OherFee }}</span></p>
                     <p><span>改期费</span><span class="span-text">{{ props.row.FeeChange }}</span></p>
                     <p><span>退票费</span><span class="span-text">{{ props.row.FeeCancel }}</span></p>
                     <p><span>佣金</span><span class="span-text">{{ props.row.Commission }}</span></p>
-                    <p><span>手续费</span><span class="span-text">{{ props.row.Fee }}</span></p>
+                    <p><span>手续费</span><span class="span-text">{{ props.row.Fee }}</span></p> -->
                 </el-card>
                 <el-card class="box-card">
                     <h4>订单状态、发单信息</h4>
@@ -148,13 +139,13 @@
                         <span class="span-text" v-if="props.row.OrderType == 6">改期</span>
                     </p>
                     <p><span>酒店预定号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
-                    <h4>外采、关联消息</h4>
+                    <!-- <h4>外采、关联消息</h4>
                     <p><span>外采类型</span><span class="span-text">{{ props.row.WaiCaiType }}</span></p>
                     <p><span>外采编号</span><span class="span-text">{{ props.row.WaiCaiNo }}</span></p>
-                    <p><span>关联订单</span><span class="span-text">{{ props.row.POrderID }}</span></p>
+                    <p><span>关联订单</span><span class="span-text">{{ props.row.POrderID }}</span></p> -->
                     <h4>其他信息</h4>
-                    <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
-                    <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p>
+                    <!-- <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
+                    <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p> -->
                     <p>
                       <span>第三方平台</span>
                       <span class="span-text">
@@ -165,22 +156,22 @@
                     </p>
                     <p><span>是否保密</span><span class="span-text" v-if="props.row.Secret === 0">不需要保密</span><span class="span-text" v-if="props.row.Secret === 1">需要保密</span></p>
                     <p><span>保密状态</span><span class="span-text" v-if="props.row.SecretState === 0">未处理</span><span class="span-text" v-if="props.row.SecretState === 1">已经保密</span></p>
-                    <p><span>结算周期</span>
+                    <!-- <p><span>结算周期</span>
                         <span class="span-text" v-if="props.row.SettlementCycle == 0">单结</span>
                         <span class="span-text" v-if="props.row.SettlementCycle == 1">周结</span>
                         <span class="span-text" v-if="props.row.SettlementCycle == 2">月结</span>
-                    </p>
+                    </p> -->
                 </el-card>
                 <el-card class="box-card">
                     <h4>财务、对账信息、操作流程</h4>
                     <p><span>审核状态</span><span class="span-text" v-if="props.row.StateAuditor === 1">审核</span><span class="span-text" v-if="props.row.StateAuditor === 2">结束</span></p>
                     <p><span>付款状态</span><span class="span-text" v-if="props.row.StateFuKuan === 0">未付</span><span class="span-text" v-if="props.row.StateFuKuan === 1">已付款</span></p>
                     <p><span>收款状态</span><span class="span-text" v-if="props.row.StateShouKuan === 1">完成</span></p>
-                    <p><span>对账付款</span><span class="span-text" v-if="props.row.StateCheckFuKuan === 1">完成</span></p>
+                    <!-- <p><span>对账付款</span><span class="span-text" v-if="props.row.StateCheckFuKuan === 1">完成</span></p>
                     <p><span>对账收款</span><span class="span-text" v-if="props.row.StateCheckShouKuan === 1">完成</span></p>
                     <p><span>审核对账</span><span class="span-text" v-if="props.row.StateCheckEnd === 1">平</span></p>
                     <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
-                    <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p>
+                    <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p> -->
                     <br>
                     <p><span>订单渠道</span>
                         <span class="span-text" v-if="props.row.HotelArea === 1">国际</span>
@@ -196,12 +187,12 @@
                       <span class="span-text" v-if="props.row.BackfillState === 1">回传成功</span>
                       <span class="span-text" v-if="props.row.BackfillState === 2">回填失败</span>
                     </p>
-                    <p>
+                    <!-- <p>
                       <span>订单截图状态</span>
                       <span class="span-text" v-if="props.row.StateScreenshot === 0">未截图</span>
                       <span class="span-text" v-if="props.row.StateScreenshot === 1">截图完成</span>
                       <span class="span-text" v-if="props.row.StateScreenshot === 2">不截图</span>
-                    </p>
+                    </p> -->
                     <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span><span>锁定</span><span class="span-text" v-if="props.row.LockState === 0">未锁定</span></p>
                 </el-card>
               </div>
@@ -492,13 +483,14 @@ export default{
         ThreePlatID: '',
         SettlementCycle: '',
         HotelBookingNoNeed: '',
-        CompanyAcount: '',
         HotelArea: '',
         StateAuditor: 0,
         StateFuKuan: 0,
-        UrgentPay: 0,
       },
-      ThreePlatID: [],
+      ThreePlatID: [{
+        PlatName: '全部',
+        value: ''
+      }],
       SettlementCycle: [{
           label: '全部',
           value: ''
@@ -515,19 +507,6 @@ export default{
           label: '月结',
           value: 2
         },
-      ],
-      CompanyAcount: [{
-          label: '全部',
-          value: ''
-        },
-        {
-          label: '惠和',
-          value: '惠和'
-        },
-        {
-          label: '奥讯',
-          value: '奥讯'
-        }
       ],
       HotelArea: [{
           label: '全部',
@@ -748,7 +727,6 @@ export default{
       _self.pageSize = pageSize || _self.pageSize
       _self.filters.StateAuditor = ''
       _self.filters.StateFuKuan = ''
-      _self.filters.UrgentPay = ''
       for (let item in _self.checkList) {
         if (_self.checkList[item] == '已审核未打款') {
           _self.filters.StateAuditor = 1
@@ -756,9 +734,6 @@ export default{
         }
         if (_self.checkList[item] == '未审核') {
           _self.filters.StateAuditor = 0
-        }
-        if (_self.checkList[item] == '紧急打款') {
-          _self.filters.UrgentPay = 1
         }
       }
       const options = {
@@ -776,11 +751,9 @@ export default{
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
           HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,
-          CompanyAcount: _self.filters.CompanyAcount,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
-          UrgentPay: _self.filters.UrgentPay,
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       }
@@ -919,7 +892,7 @@ export default{
   }
   .box-card {
     width: 24.7%;
-    height: 50rem;
+    height: 35rem;
     display: inline-block;
   }
   .span-text {

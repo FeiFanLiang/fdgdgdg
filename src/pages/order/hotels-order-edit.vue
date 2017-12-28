@@ -106,7 +106,7 @@
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
             </el-col>
         </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:30px;" />
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:20px;" />
         <el-collapse accordion style="border-right: none;">
             <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" :name="index" style="border-right: none;">
                 <template slot="title">
@@ -393,7 +393,7 @@
                 </el-form>
             </el-collapse-item>
         </el-collapse>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-top:20px;" />
         <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
         <el-row :gutter="20">
             <el-col style="margin-left:40px;">

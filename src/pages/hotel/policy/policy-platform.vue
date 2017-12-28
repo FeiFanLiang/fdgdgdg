@@ -74,14 +74,14 @@
                         </el-row>
                         <el-row :gutter="24">
                             <el-col :span="6">
-                                <el-form-item label="付款周期" prop="PayPeriod">
+                                <el-form-item label="收款周期" prop="PayPeriod">
                                     <el-select v-model="ReceiptForm.PayPeriod" clearable placeholder="请选择">
                                         <el-option v-for="item in PayPeriod" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
-                                <el-form-item label="付款周期T+N" prop="PayPeriodTplusN">
+                                <el-form-item label="收款周期T+N" prop="PayPeriodTplusN">
                                     <el-input v-model="ReceiptForm.PayPeriodTplusN" type="number"></el-input>
                                 </el-form-item>
                             </el-col>
