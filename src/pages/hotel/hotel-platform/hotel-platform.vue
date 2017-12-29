@@ -3,35 +3,34 @@
   <el-row>
     <el-button type="primary" @click="clickAddBtn()">创建</el-button>
   </el-row>
-     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+    <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
-      <el-table-column prop="Hotel.HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Hotel.HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="PlatHotelID" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column label="平台访问路径" show-overflow-tooltip>
-<template scope="scope">
-<a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
-</template>
-      </el-table-column>
-      <el-table-column label="有效" width="70" align="center">
-<template scope="scope">
-<!-- {{scope.row.IsValid}} -->
-<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-</template>
-      </el-table-column>
-
-      <el-table-column  label="操作" width="225" fixed="right">
-<template scope="scope">
-<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
-  编辑</el-button>
-<el-button size="mini" @click="spiderSetting( scope.row)">
-  爬虫设置</el-button>
-<DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
-      </el-table-column>
+        <el-table-column label="平台访问路径" show-overflow-tooltip>
+          <template scope="scope">
+            <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column label="有效" width="70" align="center">
+          <template scope="scope">
+          <!-- {{scope.row.IsValid}} -->
+          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+          </template>
+        </el-table-column>
+        <el-table-column  label="操作" width="225" fixed="right">
+          <template scope="scope">
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+            编辑</el-button>
+          <el-button size="mini" @click="spiderSetting( scope.row)">
+            爬虫设置</el-button>
+          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+          </template>
+        </el-table-column>
     </el-table>
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
