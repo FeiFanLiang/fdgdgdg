@@ -78,6 +78,15 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="平台账号" prop="PlatformAccountID">
+            <el-select class="w193" v-model="form.PlatformAccountID" placeholder="请选择">
+              <el-option v-for="(item,index) in PlatformAccountID"
+                :label="item.ChannelType"
+                :value="item.ID"
+                :key="index">
+              </el-option>
+            </el-select>
+          </el-form-item>
            <el-form-item label="平台酒店英文名">
             <el-input v-model="form.platHotelNameEn"></el-input>
           </el-form-item>
@@ -98,7 +107,7 @@
 </template>
 
 <script>
-import { hotelPlatformApi, hotelThreePlatInfoApi } from 'api'
+import { hotelPlatformApi, hotelThreePlatInfoApi,policyApi } from 'api'
 
 import { HotelTopMenu } from 'components'
 import SpiderSetting from '../spider-setting/index.vue'
@@ -136,7 +145,8 @@ export default {
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isDisabled: ''
+        isDisabled: '',
+        PlatformAccountID:''
       },
       rules: {
         platformId: [
@@ -157,11 +167,18 @@ export default {
           // }
         ]
       },
-      platformHotelId: ''
+      platformHotelId: '',
+      PlatformAccountID:[]
     }
   },
-
+  created(){
+    this.platformAccount()
+  },
   methods: {
+    async platformAccount(){
+      const res = await policyApi.getPolicyPlatform()
+      this.PlatformAccountID = res.data.Data
+    },
     beforeClose(done) {
       this.showSpiderSetting = false
       done()
@@ -205,7 +222,8 @@ export default {
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isDisabled: true
+        isDisabled: true,
+        PlatformAccountID:''
       }
     },
     async clickEditBtn($index, row) {
@@ -226,6 +244,7 @@ export default {
         _self.form.platHotelNameEn = res.data.Data.PlatHotelName_En
         _self.form.remark = res.data.Data.Remark
         _self.form.isDisabled = res.data.Data.IsDisabled
+        _self.form.PlatformAccountID = res.data.Data.PlatformAccountID
         console.log(_self.form)
       } catch (e) {
         console.error(e)
