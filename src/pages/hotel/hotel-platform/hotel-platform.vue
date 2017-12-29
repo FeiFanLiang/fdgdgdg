@@ -121,6 +121,7 @@ export default {
     this.fetchData()
     this.getHotelThreePlatInfoList()
     this.configList = hotelPlatformApi.getConfig()
+    this.platformAccount()
   },
   data() {
     return {
@@ -170,9 +171,6 @@ export default {
       platformHotelId: '',
       PlatformAccountID:[]
     }
-  },
-  created(){
-    this.platformAccount()
   },
   methods: {
     async platformAccount(){
