@@ -220,7 +220,7 @@
                                     </el-col>
                                     <el-col :span="6">
                                         <el-form-item label="不可合并支付" prop="UnMergePay">
-                                            <el-switch on-text="不可" off-text="可合并" :on-value="1" :off-value="0" v-model="FinancialInfo.UnMergePay"></el-switch>
+                                            <el-switch on-text="不可" off-text="可" :on-value="1" :off-value="0" v-model="FinancialInfo.UnMergePay"></el-switch>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>

@@ -98,16 +98,19 @@ export default {
                 PlatOrderNo:'',
                 StayDateStart:'',
                 BookTime:'',
-                StayDateEnd:''
+                StayDateEnd:'',
+                ExpectSettlement:''
             }
         }
     },
     mounted(){
+        this.filters.ExpectSettlement = new Date()
         this.fetchData()
     },
     methods:{
         hotelsOrderSearch() {
             const _self = this
+            this.filters.ExpectSettlement = ''
             _self.fetchData()
         },
         handleSelectionChange(val) {
@@ -136,6 +139,7 @@ export default {
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+                    'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
                 }
             }
             try {

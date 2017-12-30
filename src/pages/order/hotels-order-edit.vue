@@ -221,9 +221,11 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="24">
-                            <tinymce :height="320" :width="756" v-model="item.HotelBookingNote"></tinymce>             
-                            <el-button @click="create(item.ID,index)">生成确认函</el-button>
+                        <el-col :span="20" >
+                            <el-form-item label="确认函">
+                                <tinymce :height="320" :width="756" v-model="item.HotelBookingNote"></tinymce>             
+                                <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
+                            </el-form-item>
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
