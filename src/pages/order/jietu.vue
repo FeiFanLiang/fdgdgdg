@@ -26,7 +26,7 @@
         <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
-        <el-table-column label="截图" prop="Picture" width=90></el-table-column>
+        <el-table-column label="截图" prop="Picture" width=90 show-overflow-tooltip></el-table-column>
         <el-table-column label="状态" prop="State">
             <template scope="scope">
                 <span v-if="scope.row.State === 0">待处理</span>

@@ -106,7 +106,7 @@
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
             </el-col>
         </el-row>
-        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:30px;" />
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:20px;" />
         <el-collapse accordion style="border-right: none;">
             <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" :name="index" style="border-right: none;">
                 <template slot="title">
@@ -138,17 +138,22 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
+                            <el-form-item label="账户名称" prop="AccountName">
+                                <el-input placeholder="请输入账户名称" v-model="item.AccountName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
                         <el-form-item label="房型" prop="Room">
                             <el-input placeholder="请输入房型" v-model="item.Room"></el-input>
                         </el-form-item>
                         </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="确认号" prop="HotelBookingNoNeed">
                                 <el-input placeholder="请输入确认号" v-model="item.HotelBookingNoNeed"></el-input>
                             </el-form-item>
                         </el-col>
-                    </el-row>
-                    <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="入住人" prop="Passenger">
                                 <el-input placeholder="请输入入住人" v-model="item.Passenger"></el-input>
@@ -211,12 +216,32 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="预定时间" prop="BookTime">
-                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%;"></el-date-picker>
+                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="20" >
+                            <el-form-item label="确认函">
+                                <tinymce :height="320" :width="756" v-model="item.HotelBookingNote"></tinymce>             
+                                <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="预计收款时间" prop="DateReceipt">
+                                <el-date-picker v-model="item.DateReceipt" type="datetime" placeholder="请选择"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="预计付款时间" prop="DatePayment">
+                                <el-date-picker v-model="item.DatePayment" type="datetime" placeholder="请选择"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="付款货币" prop="CurrencyFuKuan">
@@ -309,20 +334,22 @@
                         </el-col>
                     </el-row>  
                     <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="财务备注" prop="UrgentPay">
+                                <el-switch on-text="紧急" off-text="否" :on-value="1" :off-value="0" v-model="item.UrgentPay"></el-switch>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="不可合并支付" prop="UnMergePay">
+                                <el-switch on-text="不可" off-text="可" :on-value="1" :off-value="0" v-model="item.UnMergePay"></el-switch>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
                         <el-col>
                             <el-form-item label="财务备注" prop="Remark">
                                 <el-input type="textarea" v-model="item.Remark"></el-input>
                             </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
-                    <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
-                    <el-row :gutter="20">
-                        <el-col style="margin-left:40px;">
-                            <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                            <el-dialog v-model="dialogVisible" size="tiny">
-                                <img width="100%" :src="dialogImageUrl" alt="">
-                            </el-dialog>
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
@@ -386,6 +413,16 @@
                 </el-form>
             </el-collapse-item>
         </el-collapse>
+        <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-top:20px;" />
+        <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
+        <el-row :gutter="20">
+            <el-col style="margin-left:40px;">
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+                <el-dialog v-model="dialogVisible" size="tiny">
+                    <img width="100%" :src="dialogImageUrl" alt="">
+                </el-dialog>
+            </el-col>
+        </el-row>
     </el-form>
     <div class="dialog-footer" style="text-align:center;margin-top:30px;">
         <el-button size="large" @click="cancel()">取消</el-button>
@@ -432,27 +469,39 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
-  hotelImageApi
+  hotelOrderDetailApi
 } from 'api'
 import UploadImage from 'components/upload-image'
+import Tinymce from 'components/Tinymce'
 export default{
     components: {
-        UploadImage
+        UploadImage,
+        Tinymce
     },
     data(){
         let that = this;
         return{
+            stringWX:'',
+            stringQRH:'',
+            Passenger : '',
+            StayDateStart : '',
+            StayDateEnd : '',
+            Room : '',
+            RoomNum : '',
+            NightNum : '',
+            HotelName : '',
+            Company:'',
+            //////////////////////////////
             ID: '',
             POrderID: '',
             HotelName: '',
             type:'',
             text:'',
-            showTuigaiButton:false,
             imageList: [],
-            action: '',
             dialogImageUrl: '',
-            loading:false,
             dialogVisible: false,
+            showTuigaiButton:false,
+            loading:false,
             showFujia: false,
             showCaiwu: false,
             isEditable: true,
@@ -477,7 +526,8 @@ export default{
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
-                HotelOrderDetail:[]
+                HotelOrderDetail:[],
+                Picture:''
             },
             copyForm: {},
             pickerOptions: {
@@ -597,6 +647,12 @@ export default{
             ],
         }
     },
+    watch:{
+        form(val){
+            console.log(222222222222)
+            console.log(val)
+        }
+    },
     created() {
         const _self = this
         _self.ID = _self.$route.params.ID
@@ -619,6 +675,87 @@ export default{
         _self.ThreePlat()
     },
     methods:{
+        setContent(){
+            const _self = this
+            _self.stringWX = `<div style="font-size: 18px;"><p>`+_self.Company+`<br />入住人：`+_self.Passenger+`<br />入离日期：`+_self.StayDateStart+`至`+_self.StayDateEnd+`<br />预订房型：`+_self.Room+`&nbsp; &nbsp;`+_self.RoomNum+`间`+_self.NightNum+`晚<br />早餐类型：含x早<br />房价：xx </p></div>`
+            _self.stringQRH = `<div style="font-size: 18px;">
+                <p style="text-align: center; font-size: 29px;">`+_self.Company+`订房确认函</p>
+                <p style="text-align: left;">&nbsp; &nbsp; &nbsp; From:&nbsp;`+_self.Company+`</p>
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;TO: <span style="font-size: 16px;">`+_self.HotelName+`</span>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;FAX:&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;TEL:</p>
+                <p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 您好！&nbsp;</p>
+                <p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;以下是我司客户订房消息，请查收！</p>
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 顺祝商祺！</p>
+                <p>确认信息：</p>
+                <table style="border: 1px solid black; border-collapse: collapse; width: 756;">
+                <tbody>
+                <tr>
+                <td style="border: solid black 1px;" colspan="2" width="756">
+                <p>客人姓名：&nbsp;`+_self.Passenger+`</p>
+                <p>&nbsp;</p>
+                </td>
+                </tr>
+                <tr>
+                <td style="border: solid black 1px;" width="305">
+                <p>入住日期：<span style="font-size: 12px;">`+_self.StayDateStart+`</span></p>
+                </td>
+                <td style="border: solid black 1px;" width="318">
+                <p>退房日期：<span style="font-size: 12px;">`+_self.StayDateEnd+`</span></p>
+                </td>
+                </tr>
+                <tr>
+                <td style="border: solid black 1px;" width="305">
+                <p>房型名称：<span style="font-size: 14px;">`+_self.Room+`</span></p>
+                </td>
+                <td style="border: solid black 1px;" width="318">
+                <p>间夜数：&nbsp;&nbsp;`+_self.NightNum+` 间`+_self.NightNum+`夜&nbsp;</p>
+                </td>
+                </tr>
+                <tr>
+                <td style="border: solid black 1px;" colspan="2" width="623">
+                <p>房价：</p>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+                <p><br />&nbsp; &nbsp; &nbsp; 付费方式：网上转账&nbsp;</p>
+                <p>&nbsp; &nbsp; &nbsp; 签发部门：`+_self.Company+`&nbsp; &nbsp; &nbsp;联系电话：15698161689</p>
+                <p>&nbsp; &nbsp; &nbsp; 传&nbsp;&nbsp;&nbsp;&nbsp;真：0532-58715050转801&nbsp; &nbsp; &nbsp;联&nbsp;系&nbsp;人：孙</p>
+                <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;签发日期：2017年&nbsp;6月25日</p>
+                <p>&nbsp; &nbsp; &nbsp; 如无异议，请于2017年6月25日1200时前确认回执。谢谢！</p>
+                <p>&nbsp;</p>
+                </div>`;
+        },
+        async create(ID,index){
+            const _self = this
+            const res = await hotelOrderDetailApi.getDetail(_self.ID)
+            _self.datas = res.data.Data
+            console.log(_self.datas)
+            let detail = _self.datas.detail
+            if(_self.datas.policy.ReserveModeID == 1 || _self.datas.policy.ReserveModeID == 2){
+                _self.Passenger = detail.Passenger
+                _self.StayDateStart = detail.StayDateStart ? detail.StayDateStart.substring(0,10) : ''
+                _self.StayDateEnd = detail.StayDateEnd ? detail.StayDateEnd.substring(0,10) : ''
+                _self.Room = detail.Room
+                _self.RoomNum = detail.RoomNum
+                _self.NightNum = detail.NightNum
+                _self.Company = _self.datas.policy.FinancialInfo.Company
+                _self.setContent()
+                tinyMCE.editors[index].setContent(_self.stringWX)
+            }
+            if(_self.datas.policy.ReserveModeID == 3 || _self.datas.policy.ReserveModeID == 4){
+                _self.HotelName = detail.HotelName
+                _self.Passenger = detail.Passenger
+                _self.StayDateStart = detail.StayDateStart ? detail.StayDateStart.substring(0,10) : ''
+                _self.StayDateEnd = detail.StayDateEnd ? detail.StayDateEnd.substring(0,10) : ''
+                _self.Room = detail.Room
+                _self.RoomNum = detail.RoomNum
+                _self.NightNum = detail.NightNum
+                _self.Company = _self.datas.policy.FinancialInfo.Company
+                _self.setContent()
+                tinyMCE.editors[index].setContent(_self.stringQRH)
+            }
+            
+        },
         async getImageList(list) {
             if (list) {
                 const images = list.split(',')
@@ -628,37 +765,18 @@ export default{
             }
         },
         async handleSuccess(response, file, fileList) {
-            // try {
-            //     if (!response) {
-            //         this.$message.error('上传失败,请重新上传')
-            //         return false
-            //     }
-            //     // const form = {
-            //     //     hotelId: this.form.HotelID,
-            //     //     imageUrl: response
-            //     // }
-            //     // await hotelImageApi.add(form)
-            //     this.$message({
-            //         message: '上传成功',
-            //         type: 'success'
-            //     })
-            //     //this.imageList = response.data.Data
-            // } catch (e) {
-            //     this.$message.error('上传失败,请重新上传')
-            // }
-
             if (!response) {
                 this.$message.error('上传失败,请重新上传')
                 return false
             }
             this.imageList.push(response)
+            let f = this.imageList
+            this.form.Picture = f.toString()
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
+        handleRemove(index,file, fileList) {
+            this.imageList.splice(index, 1)
+            let f = this.imageList
+            this.form.Picture = f.toString()
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
@@ -688,12 +806,13 @@ export default{
         },
         async getHotelOrderList(ID,POrderID){
             const _self = this
-            //_self.action = 'http://192.168.10.95:8500/Hotel/Image'
-            _self.action = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
             _self.loading = true
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+                console.log(_self.form)
+                _self.getImageList(_self.form.Picture)
+                for(let i in _self.form.HotelOrderDetail)
                 _self.HotelName = _self.form.HotelName
                 const res2 = await paymentCheckApi.detail(ID)
                 let a = res2.data.Data
@@ -715,19 +834,12 @@ export default{
         },
         async submitOrderList() {
             const _self = this
-            // const form = {}
-            // for (let [k, v] of Object.entries(_self.form)) {
-            //     if (_self.form[k] != _self.copyForm[k]) {
-            //     form[k] = v
-            //     }
-            // }
+            for(let i in _self.form.HotelOrderDetail){
+                _self.form.HotelOrderDetail[i].HotelBookingNote = tinyMCE.editors[i].getContent()
+            }
+            console.log(_self.form)
             try {
                 _self.isEditable = false
-                // let datas = {
-                //     Addition : _self.fujia,
-                //     PaymentInfo : _self.money,
-                //     '' : _self.form
-                // }
                 if(_self.type == '回填'){
                     _self.form.BackfillState = 1
                 }

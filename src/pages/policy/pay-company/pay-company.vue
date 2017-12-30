@@ -13,12 +13,20 @@
          </template>
 
       </el-table-column>
-       <el-table-column sortable prop="State" label="状态" width="180" show-overflow-tooltip slot="right-one">
+      <el-table-column sortable prop="State" label="序号" width="80" show-overflow-tooltip slot="right-one">
            <template scope="scope">
-             {{scope.row.State?'正常':'废除'}}
+             {{scope.row.SortNo}} 
+              </template>
+       </el-table-column>
+      <el-table-column sortable prop="State" label="状态" width="80" show-overflow-tooltip slot="right-one">
+           <template scope="scope">
+             {{scope.row.State?'正常':'废除'}} 
               </template>
        </el-table-column>
     </CustomTable>
+    <div style="text-align:center;margin:10px;">
+      <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+    </div>
        <!-- <el-table :data="list" ref="table" style="width: 100%"
         v-loading="loading"
         border
@@ -35,7 +43,7 @@
   <DeleteButton api="payCompanyApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
 </template>
         </el-table-column>
-      </el-table>  -->
+      </el-table>-->
       <el-dialog :title="form.id?'编辑支付账户':'添加支付账户'" v-model="showDialog" size="tiny" @close="resetForm('form')">
         <el-form :rules="rules" ref="form" :model="form"  >
               <el-row :gutter="20">
@@ -81,6 +89,18 @@
                   </el-form-item>
                 </el-col>
               </el-row>
+              <el-row :gutter="20">
+                <el-col :span="11">
+                  <el-form-item label="是否为我公司账号" prop="Own">
+                    <el-switch on-text="是" off-text="否" :on-value="1" :off-value="0" v-model="form.Own"></el-switch>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="11">
+                  <el-form-item label="银行" prop="Bank">
+                    <el-input placeholder="请输入银行名称" v-model="form.Bank"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-row>
           <el-form-item label="Remark">
             <el-input type="textarea" v-model="form.remark"></el-input>
           </el-form-item>
@@ -102,6 +122,9 @@ export default {
   },
   data() {
     return {
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
       list: [],
       loading: true,
       isEditable: true,
@@ -115,7 +138,9 @@ export default {
         shortName: '',
         sortNo: '',
         company: '',
-        state: ''
+        state: '',
+        Own:'',
+        Bank:''
       },
       rules: {
         accountName: [
@@ -134,15 +159,28 @@ export default {
     }
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(1, this.pageSize)
+    },
     handleCurrentChange(val) {
       this.currentPage = val
+      this.fetchData(this.currentPage)
     },
-    async fetchData() {
+    async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
       try {
-        const res = await payCompanyApi.list()
-        _self.list = res.data
+        const options = {
+          pageIndex: _self.currentPage,
+          pageSize: _self.pageSize,
+          order: 'ID',
+        }
+        const res = await payCompanyApi.list(options)
+        _self.list = res.data.Data
+        _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
         console.error(e)
@@ -167,6 +205,8 @@ export default {
         _self.form.sortNo = res.data.Data.SortNo
         _self.form.company = res.data.Data.Company
         _self.form.state = res.data.Data.State
+        _self.form.Own = res.data.Data.Own,
+        _self.form.Bank = res.data.Data.Bank,
         _self.copyForm = Object.assign({}, _self.form)
       } catch (e) {
         console.error(e)

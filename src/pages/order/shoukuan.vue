@@ -72,7 +72,7 @@
         </el-form>
     </el-card>
     <el-card class="box-card">
-        <el-form ref="form" :model="form" label-width="110px">
+        <el-form label-width="110px">
             <el-form-item label="添加截图">
                 <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
                     <i class="el-icon-plus"></i>
@@ -83,11 +83,14 @@
             </el-form-item>
         </el-form>
     </el-card>
-    <el-button @click="commit">收款完成</el-button>
+    <!--<el-button @click="commit">收款完成</el-button>-->
+    <el-button @click="commit2">收款未到账</el-button>
+    <el-button @click="commit3">收款已到账</el-button>
 </div>
 </template>
 <script>
 import { hotelPaymentInfoApi,payCompanyApi  } from 'api'
+import path from 'api/api'
 
 export default {
     data() {
@@ -109,33 +112,28 @@ export default {
                 PaymentType:'',
                 Picture:''
             },
+            State:'',
             imgUrl:'',
             dialogImageUrl: '',
             dialogVisible: false,
-            form:{},
-            fileList:[],
-            picture:''
+            picture:[]
         }
     },
     mounted(){
         this.fetchData()
         this.getPayCompany()
-    },
-    watch:{
-        picture(val){
-            this.picture = val
-        }
+        this.imgUrl = path.uploadUrl
     },
     methods:{ 
         imgSuccess(response, file, fileList){
-            this.picture = file.name
+            this.picture.push(response)
         },
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
+        handleRemove(index,file, fileList) {
+            this.picture.splice(index, 1)
         },
         async getPayCompany(){
             const res = await payCompanyApi.list()
@@ -171,7 +169,6 @@ export default {
             const _self = this
             _self.loading = true
             _self.showButton = false
-            _self.imgUrl = 'http://liukai.iok.la/Hotel/HotelOrderPicture/UploadFile'
             try {
                 _self.multipleSelection = _self.$route.query.multipleSelection
                 let select = []
@@ -207,12 +204,20 @@ export default {
                     ExpectSettlement: _self.fukuanList[0].ExpectSettlement,
                     CompanyAcount: _self.fukuanList[0].CompanyAcount,
                     Remark: remark,
-                    Picture:_self.picture     
+                    Picture:_self.picture.toString()     
                 }
                 _self.loading = false
             } catch (e) {
                 _self.loading = false
             }
+        },
+        commit2(){
+            this.State = 2
+            this.commit()
+        },
+        commit3(){
+            this.State = 3
+            this.commit()
         },
         async commit(){
             const _self = this
@@ -225,7 +230,8 @@ export default {
                         Remark:item.Remark
                     })
                 })
-                _self.payCheck.Picture = _self.picture
+                _self.payCheck.Picture = _self.picture.toString()
+                _self.payCheck.State = _self.State
                 const params = {
                     list:list,
                     payment:_self.payCheck

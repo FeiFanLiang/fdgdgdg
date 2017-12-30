@@ -12,6 +12,7 @@ import gasolineCardLogApi from './gasoline-card-log'
 import driverBaseApi from './driver-base'
 import driverEvaluateApi from './driver-evaluate'
 import hotelAreaApi from './hotel-area'
+import hotelAreaApi2 from './hotel-area2'
 import hotelBaseApi from './hotel-base'
 import hotelImageApi from './hotel-image'
 import imageApi from './image'
@@ -50,6 +51,8 @@ import hotelPaymentInfoApi from './hotel-payment-info'
 import wechatUserApi from './wechat-user'
 import spiderSettingApi from './spider-setting'
 import policyApi from './policy'
+import visaApi from './visa'
+import hotelOrderDetailApi from './hotel-order-detail'
 export {
   accountApi,
   airlineApi,
@@ -65,6 +68,7 @@ export {
   driverBaseApi,
   driverEvaluateApi,
   hotelAreaApi,
+  hotelAreaApi2,
   hotelBaseApi,
   hotelImageApi,
   imageApi,
@@ -102,5 +106,7 @@ export {
   wechatUserApi,
   hotelPaymentInfoApi,
   spiderSettingApi,
-  policyApi
+  policyApi,
+  visaApi,
+  hotelOrderDetailApi
 }

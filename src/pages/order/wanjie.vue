@@ -1,5 +1,41 @@
 <template lang="html">
 <div id="Wanjie">
+    <el-form label-width="80px">
+      <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="酒店名称">
+              <el-input v-model="filters.HotelName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="订单号">
+              <el-input v-model="filters.PlatOrderNo"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="入住日期">
+              <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="退房日期">
+              <el-date-picker  v-model="filters.StayDateEnd" type="date"></el-date-picker>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :span="6">
+            <el-form-item label="预定日期">
+              <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border>
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
@@ -45,12 +81,23 @@ export default {
       count: 0,
       loading: false,
       hotelsOrder: [],
+      filters:{
+        HotelName:'',
+        PlatOrderNo:'',
+        StayDateStart:'',
+        BookTime:'',
+        StayDateEnd:''
+      }
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    hotelsOrderSearch() {
+      const _self = this
+      _self.fetchData()
+    },
     handleSizeChange(val) {
       this.pageSize = val
       this.fetchData(1, this.pageSize)
@@ -67,7 +114,15 @@ export default {
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: 'ID'
+        order: 'ID',
+        query:{
+          HotelName:_self.filters.HotelName,
+          PlatOrderNo:_self.filters.PlatOrderNo,
+          StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
+          StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
+          'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
+          'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+        }
       }
       try {
         const res = await hotelsOrderApi.finsh(options)

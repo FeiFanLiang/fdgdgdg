@@ -48,6 +48,14 @@ export default {
       path: 'Jietu',
       component: _import('order/jietu'),
       name: '待发截图列表'
+    },
+    {
+      path: 'Editor/:ID',
+      component: _import('order/editor'),
+      name: '编辑器',
+      meta: {
+        hidden: true
+      }
     }
   ]
 }

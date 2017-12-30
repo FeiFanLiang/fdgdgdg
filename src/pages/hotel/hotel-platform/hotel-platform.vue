@@ -3,35 +3,34 @@
   <el-row>
     <el-button type="primary" @click="clickAddBtn()">创建</el-button>
   </el-row>
-     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
+    <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
-      <el-table-column prop="Hotel.HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="Hotel.HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="PlatHotelName" label="平台酒店名称" show-overflow-tooltip></el-table-column>
         <el-table-column prop="PlatHotelID" label="平台酒店ID" width="110"></el-table-column>
-      <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="PlatHotelName_En" label="平台酒店英文名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column>
-      <el-table-column label="平台访问路径" show-overflow-tooltip>
-<template scope="scope">
-<a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
-</template>
-      </el-table-column>
-      <el-table-column label="有效" width="70" align="center">
-<template scope="scope">
-<!-- {{scope.row.IsValid}} -->
-<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
-</template>
-      </el-table-column>
-
-      <el-table-column  label="操作" width="225" fixed="right">
-<template scope="scope">
-<el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
-  编辑</el-button>
-<el-button size="mini" @click="spiderSetting( scope.row)">
-  爬虫设置</el-button>
-<DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
-</template>
-      </el-table-column>
+        <el-table-column label="平台访问路径" show-overflow-tooltip>
+          <template scope="scope">
+            <a target="_blank" :href="scope.row.PlatURL">{{scope.row.PlatURL}}</a>
+          </template>
+        </el-table-column>
+        <el-table-column label="有效" width="70" align="center">
+          <template scope="scope">
+          <!-- {{scope.row.IsValid}} -->
+          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+          </template>
+        </el-table-column>
+        <el-table-column  label="操作" width="225" fixed="right">
+          <template scope="scope">
+          <el-button size="mini" @click="clickEditBtn(scope.$index, scope.row)">
+            编辑</el-button>
+          <el-button size="mini" @click="spiderSetting( scope.row)">
+            爬虫设置</el-button>
+          <DeleteButton api="hotelPlatformApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+          </template>
+        </el-table-column>
     </el-table>
     <div class="pagination-wrapper" v-show="!loading&&list.length">
       <el-pagination
@@ -63,6 +62,9 @@
           </el-form-item>
         </div>
         <div>
+          <el-form-item label="平台酒店ID2" prop="platHotelId2">
+            <el-input v-model.number="form.platHotelId2"></el-input>
+          </el-form-item>
           <el-form-item label="酒店ID" v-if="dialogTag === 2">
             <el-input v-model="form.hotelId" :disabled="true"></el-input>
           </el-form-item>
@@ -70,6 +72,15 @@
             <el-select class="w193" v-model="form.platformId" placeholder="请选择">
               <el-option v-for="(item,index) in platInfoList"
                 :label="item.PlatName"
+                :value="item.ID"
+                :key="index">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="平台账号" prop="PlatformAccountID">
+            <el-select class="w193" v-model="form.PlatformAccountID" placeholder="请选择">
+              <el-option v-for="(item,index) in PlatformAccountID"
+                :label="item.ChannelType"
                 :value="item.ID"
                 :key="index">
               </el-option>
@@ -95,7 +106,7 @@
 </template>
 
 <script>
-import { hotelPlatformApi, hotelThreePlatInfoApi } from 'api'
+import { hotelPlatformApi, hotelThreePlatInfoApi,policyApi } from 'api'
 
 import { HotelTopMenu } from 'components'
 import SpiderSetting from '../spider-setting/index.vue'
@@ -109,6 +120,7 @@ export default {
     this.fetchData()
     this.getHotelThreePlatInfoList()
     this.configList = hotelPlatformApi.getConfig()
+    this.platformAccount()
   },
   data() {
     return {
@@ -128,11 +140,13 @@ export default {
         platformId: '',
         hotelId: '',
         platHotelId: '',
+        platHotelId2:'',
         platUrl: '',
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isDisabled: ''
+        isDisabled: '',
+        PlatformAccountID:''
       },
       rules: {
         platformId: [
@@ -153,11 +167,15 @@ export default {
           // }
         ]
       },
-      platformHotelId: ''
+      platformHotelId: '',
+      PlatformAccountID:[]
     }
   },
-
   methods: {
+    async platformAccount(){
+      const res = await policyApi.getPolicyPlatform()
+      this.PlatformAccountID = res.data.Data
+    },
     beforeClose(done) {
       this.showSpiderSetting = false
       done()
@@ -196,11 +214,13 @@ export default {
         platformId: '',
         hotelId: this.$route.params.ID,
         platHotelId: '',
+        platHotelId2: '',
         platUrl: '',
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
-        isDisabled: true
+        isDisabled: true,
+        PlatformAccountID:''
       }
     },
     async clickEditBtn($index, row) {
@@ -215,11 +235,13 @@ export default {
         _self.form.platformId = res.data.Data.PlatformID
         _self.form.hotelId = res.data.Data.HotelID
         _self.form.platHotelId = res.data.Data.PlatHotelID
+        _self.form.platHotelId2 = res.data.Data.PlatHotelID_2
         _self.form.platUrl = res.data.Data.PlatURL
         _self.form.platHotelName = res.data.Data.PlatHotelName
         _self.form.platHotelNameEn = res.data.Data.PlatHotelName_En
         _self.form.remark = res.data.Data.Remark
         _self.form.isDisabled = res.data.Data.IsDisabled
+        _self.form.PlatformAccountID = res.data.Data.PlatformAccountID
         console.log(_self.form)
       } catch (e) {
         console.error(e)
