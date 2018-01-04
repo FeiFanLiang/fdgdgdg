@@ -144,8 +144,8 @@
               </div>
             </template>
         </el-table-column>
-        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
-        </el-table-column>
+        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
+        <el-table-column label="账户名称" prop="AccountName" width=80></el-table-column>
         <el-table-column label="订单平台" prop="ThreePlatID" width="80">
           <template scope="scope">
               <div v-for="item in ThreePlatID">

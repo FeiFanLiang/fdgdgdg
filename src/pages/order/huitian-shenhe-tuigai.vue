@@ -38,7 +38,8 @@
     </el-form>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border :default-sort = "{prop: 'BookTime', order: 'descending'}">
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
-        <el-table-column label="订单渠道" prop="ThreePlatID">
+        <el-table-column label="账户名称" prop="AccountName" width=80></el-table-column>
+        <el-table-column label="订单渠道" prop="ThreePlatID" width=80>
           <template scope="scope">
               <div v-for="item in ThreePlatID">
                 <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
