@@ -30,18 +30,18 @@ export default {
       }
     },
     {
-      path: 'Huitian',
-      component: _import('order/huitian'),
+      path: 'huitian-shenhe-tuigai/Huitian',
+      component: _import('order/huitian-shenhe-tuigai'),
       name: '待回填列表'
     },
     {
-      path: 'Shenhe',
-      component: _import('order/shenhe'),
+      path: 'huitian-shenhe-tuigai/Shenhe',
+      component: _import('order/huitian-shenhe-tuigai'),
       name: '待审核列表'
     },
     {
-      path: 'Tuigai',
-      component: _import('order/tuigai'),
+      path: 'huitian-shenhe-tuigai/Tuigai',
+      component: _import('order/huitian-shenhe-tuigai'),
       name: '待退改单列表'
     },
     {

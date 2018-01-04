@@ -10,6 +10,7 @@ import DeleteButton from 'components/common/delete-button.vue'
 import CustomTable from 'components/common/custom-table.vue'
 import CustomTableCopy from 'components/common/custom-table-copy.vue'
 import CustomSearch from 'components/common/custom-search.vue'
+import CustomSearchCopy from 'components/common/custom-search-copy.vue'
 
 axios.defaults.withCredentials = true
 
@@ -34,6 +35,7 @@ Vue.component('DeleteButton', DeleteButton)
 Vue.component('CustomTable', CustomTable)
 Vue.component('CustomTableCopy', CustomTableCopy)
 Vue.component('CustomSearch', CustomSearch)
+Vue.component('CustomSearchCopy', CustomSearchCopy)
 
 export const router = new VueRouter({
   routes,

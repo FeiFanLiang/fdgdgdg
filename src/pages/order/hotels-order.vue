@@ -1,83 +1,29 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <el-form label-width="80px">
-      <el-row :gutter="24">
-          <el-col :span="6">
-            <el-form-item label="订单编号">
-              <el-input v-model="filters.OrderNo"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="酒店名称">
-              <el-input v-model="filters.HotelName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="客人姓名">
-              <el-input v-model="filters.Passenger"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="订单平台">
-              <el-select v-model="filters.ThreePlatID" clearable>
-                <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-      </el-row>
-      <el-row :gutter="24">
-           <el-col :span="6">
-            <el-form-item label="入住日期">
-              <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="预定日期">
-              <el-date-picker  v-model="filters.BookTime" type="daterange" style="width:103%"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="订单渠道">
-              <el-select v-model="filters.HotelArea" clearable>
-                <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="确认号">
-              <el-input v-model="filters.HotelBookingNoNeed"></el-input>
-            </el-form-item>
-          </el-col>
-      </el-row>
-      <el-row :gutter="24"> 
-        <el-col :span="6">
-          <el-form-item label="结款方式">
-            <el-select v-model="filters.SettlementCycle" clearable>
-              <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="筛选条件">
-              <el-checkbox-group v-model="checkList">
-                <el-checkbox label="已审核未打款"></el-checkbox>
-                <el-checkbox label="未审核"></el-checkbox>
-              </el-checkbox-group>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="10">
-            <el-button type="primary" @click="clickAddBtn">添加新订单</el-button>
-            <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
-        </el-col>
-        <el-col :span="14" style="text-align:right;">
-          <el-tag style="background-color:#FD5921;margin:0 10px;">单结</el-tag>
-          <el-tag style="background-color:#1297E8;margin:0 10px;">周结</el-tag>
-          <el-tag style="background-color:#20A228;margin:0 10px;">月结</el-tag>
-        </el-col>
-      </el-row>
-    </el-form>
+    <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
+      <el-form-item label="订单平台" slot="ThreePlatID">
+        <el-select v-model="filters.ThreePlatID" clearable>
+          <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="订单区域" slot="HotelArea">
+        <el-select v-model="filters.HotelArea" clearable>
+          <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="结款方式" slot="SettlementCycle">
+        <el-select v-model="filters.SettlementCycle" clearable>
+          <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="筛选条件" slot="checkList">
+        <el-checkbox-group v-model="checkList">
+          <el-checkbox label="已审核未打款"></el-checkbox>
+          <el-checkbox label="未审核"></el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
+    </CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
       :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID">
         <el-table-column type="expand">
@@ -198,15 +144,7 @@
               </div>
             </template>
         </el-table-column>
-        <!--<el-table-column label="POrderID" prop="POrderID"></el-table-column>-->
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
-        <!--
-            <template scope="scope">
-              <span v-if="scope.row.SettlementCycle == 0" style="color:#FD5921">{{ scope.row.PlatOrderNo }}</span>
-              <span v-if="scope.row.SettlementCycle == 1" style="color:#1297E8">{{ scope.row.PlatOrderNo }}</span>
-              <span v-if="scope.row.SettlementCycle == 2" style="color:#20A228">{{ scope.row.PlatOrderNo }}</span>
-            </template>
-        -->
         </el-table-column>
         <el-table-column label="订单平台" prop="ThreePlatID" width="80">
           <template scope="scope">
@@ -644,8 +582,13 @@ export default{
   created() {
     this.fetchData()
     this.ThreePlat()
+    this.configList = hotelsOrderApi.getConfig()
   },
   methods:{
+    searchCallback(filters) {
+      this.filters = filters
+      this.fetchData()
+    },
     qrh(id){
       const _self = this
       _self.$router.push({
@@ -715,10 +658,6 @@ export default{
         _self.ID = row.ID
       }
       _self.showWeixin = false
-    },
-    hotelsOrderSearch() {
-      const _self = this
-      _self.fetchData()
     },
     async fetchData(currentPage, pageSize) {
       const _self = this
@@ -874,6 +813,9 @@ export default{
 
 <style lang="scss">
 #HotelsOrder {
+  p{
+    display: block;
+  }
   .pagination-wrapper {
     text-align: center;
     margin: 10px;

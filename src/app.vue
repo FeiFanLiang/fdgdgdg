@@ -127,25 +127,25 @@ export default {
   methods: {
     cRouteName(cItem) {
       const { orderCount } = this
-      if (cItem.path === 'Huitian') {
+      if (cItem.path === 'huitian-shenhe-tuigai/Huitian' || cItem.path === '/order/huitian-shenhe-tuigai/Huitian') {
         return (
           cItem.name +
           (orderCount.DaiHuiTian ? `  ( ${orderCount.DaiHuiTian} )` : '')
         )
       }
-      if (cItem.path === 'Shenhe') {
+      if (cItem.path === 'huitian-shenhe-tuigai/Shenhe' || cItem.path === '/order/huitian-shenhe-tuigai/Shenhe') {
         return (
           cItem.name +
           (orderCount.DaiShenHe ? `  ( ${orderCount.DaiShenHe} )` : '')
         )
       }
-      if (cItem.path === 'Tuigai') {
+      if (cItem.path === 'huitian-shenhe-tuigai/Tuigai' || cItem.path === '/order/huitian-shenhe-tuigai/Tuigai') {
         return (
           cItem.name +
           (orderCount.DaiTuiGai ? `  ( ${orderCount.DaiTuiGai} )` : '')
         )
       }
-      if (cItem.path === 'Jietu') {
+      if (cItem.path === 'Jietu' || cItem.path === '/order/Jietu') {
         return (
           cItem.name +
           (orderCount.DaiFaJieTu ? `  ( ${orderCount.DaiFaJieTu} )` : '')

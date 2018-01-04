@@ -1,7 +1,7 @@
 <template lang="html">
-<div id="HotelsOrder">
+<div id="HST">
     <el-form label-width="80px">
-      <el-row :gutter="24">
+      <el-row :gutter="20">
           <el-col :span="6">
             <el-form-item label="酒店名称">
               <el-input v-model="filters.HotelName"></el-input>
@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column label="操作" width="100">
             <template scope="scope">
-                <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">审核</el-button>
+                <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -88,14 +88,35 @@ export default {
         StayDateStart:'',
         BookTime:'',
         StayDateEnd:''
-      }
+      },
+      type:''
     }
   },
   created() {
-    this.ThreePlat()
-    this.fetchData()
+    const _self = this
+    _self.type = _self.$route.name
+    _self.ThreePlat()
+    _self.fetchData()
+  },
+  watch:{
+    "$route":function(val){
+        this.type = val.name
+        this.fetchData() 
+        this.filters = {
+          HotelName:'',
+          PlatOrderNo:'',
+          StayDateStart:'',
+          BookTime:'',
+          StayDateEnd:''
+        }
+    }
   },
   methods: {
+    searchCallback(filters) {
+      const _self = this
+      this.filters = filters
+      _self.fetchData()
+    },
     async ThreePlat() {
       const res = await hotelThreePlatInfoApi.getList()
       this.ThreePlatID = res.data
@@ -127,10 +148,21 @@ export default {
         }
       }
       try {
-        const res = await hotelsOrderApi.check(options)
-        _self.hotelsOrder = res.data.Data
-        _self.active = 0
-        _self.count = res.data.Count
+        if(_self.type == '待回填列表'){
+            const res = await hotelsOrderApi.back(options)
+            _self.hotelsOrder = res.data.Data
+            _self.count = res.data.Count
+        }
+        if(_self.type == '待审核列表'){
+            const res = await hotelsOrderApi.check(options)
+            _self.hotelsOrder = res.data.Data
+            _self.count = res.data.Count
+        }
+        if(_self.type == '待退改单列表'){
+            const res = await hotelsOrderApi.tuigai(options)
+            _self.hotelsOrder = res.data.Data
+            _self.count = res.data.Count
+        }
         _self.loading = false
       } catch (e) {
         _self.loading = false
@@ -138,22 +170,31 @@ export default {
     },
     clickEditBtn($index, row) {
       const _self = this
+      let type = ''
+      if(_self.type == '待回填列表'){
+        type = '回填'
+      }
+      if(_self.type == '待审核列表'){
+        type = '审核'
+      }
+      if(_self.type == '待退改单列表'){
+        type = '退改'
+      }
       _self.$router.push({
-        name: '酒店订单信息编辑',
-        params: {
-          ID: row.ID,
-          POrderID: row.ID,
-          HotelName: row.HotelName,
-          type:'审核'
-        }
+          name: '酒店订单信息编辑',
+          params: {
+              ID: row.ID,
+              POrderID: row.ID,
+              HotelName: row.HotelName,
+              type:type
+          }
       })
     }
-
   }
 }
 </script>
 <style lang="scss">
-#HotelsOrder{
+#HST{
     .pagination-wrapper{
       text-align: center;
       margin: 10px;

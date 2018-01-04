@@ -1,42 +1,8 @@
 <template lang="html">
 <div id="CheckShoukuan">
-    <el-form label-width="80px">
-        <el-row :gutter="20">
-            <el-col :span="6">
-            <el-form-item label="酒店名称">
-                <el-input v-model="filters.HotelName"></el-input>
-            </el-form-item>
-            </el-col>
-            <el-col :span="6">
-            <el-form-item label="订单号">
-                <el-input v-model="filters.PlatOrderNo"></el-input>
-            </el-form-item>
-            </el-col>
-            <el-col :span="6">
-            <el-form-item label="入住日期">
-                <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
-            </el-form-item>
-            </el-col>
-            <el-col :span="6">
-                <el-form-item label="退房日期">
-                <el-date-picker  v-model="filters.StayDateEnd" type="date"></el-date-picker>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col :span="6">
-                <el-form-item label="预定日期">
-                <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row :gutter="24">
-            <el-col>
-                <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
-                <el-button size="large" style="margin:10px 0;" @click="collection">收款</el-button>
-            </el-col>
-        </el-row>
-    </el-form>
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
+        <el-button style="margin:10px 0;" @click="collection" slot="button-add">收款</el-button>
+    </CustomSearchCopy>
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
   :default-sort = "{prop: 'BookTime', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
@@ -82,7 +48,7 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi  } from 'api'
+import { hotelPaymentInfoApi,hotelsOrderApi  } from 'api'
 
 export default {
     data() {
@@ -103,15 +69,21 @@ export default {
             }
         }
     },
-    mounted(){
+    created(){
         this.filters.ExpectSettlement = new Date()
         this.fetchData()
+        this.configList = hotelsOrderApi.getConfig()
     },
     methods:{
         hotelsOrderSearch() {
             const _self = this
             this.filters.ExpectSettlement = ''
             _self.fetchData()
+        },
+        searchCallback(filters) {
+            this.filters = filters
+            this.filters.ExpectSettlement = ''
+            this.fetchData()
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;

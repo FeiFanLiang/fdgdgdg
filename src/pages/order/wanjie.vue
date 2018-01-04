@@ -1,41 +1,6 @@
 <template lang="html">
 <div id="Wanjie">
-    <el-form label-width="80px">
-      <el-row :gutter="20">
-          <el-col :span="6">
-            <el-form-item label="酒店名称">
-              <el-input v-model="filters.HotelName"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="订单号">
-              <el-input v-model="filters.PlatOrderNo"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="入住日期">
-              <el-date-picker  v-model="filters.StayDateStart" type="date"></el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="退房日期">
-              <el-date-picker  v-model="filters.StayDateEnd" type="date"></el-date-picker>
-            </el-form-item>
-          </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="6">
-            <el-form-item label="预定日期">
-              <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
-            </el-form-item>
-          </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col>
-          <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
-        </el-col>
-      </el-row>
-    </el-form>
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback"></CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border>
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
@@ -92,11 +57,12 @@ export default {
   },
   created() {
     this.fetchData()
+    this.configList = hotelsOrderApi.getConfig()
   },
   methods: {
-    hotelsOrderSearch() {
-      const _self = this
-      _self.fetchData()
+    searchCallback(filters) {
+      this.filters = filters
+      this.fetchData()
     },
     handleSizeChange(val) {
       this.pageSize = val

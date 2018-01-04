@@ -223,7 +223,7 @@
                     <el-row :gutter="24">
                         <el-col :span="20" >
                             <el-form-item label="确认函">
-                                <tinymce :height="320" :width="756" v-model="item.HotelBookingNote"></tinymce>             
+                                <tinymce :height="0" :width="756" v-model="item.HotelBookingNote"></tinymce>             
                                 <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
                             </el-form-item>
                         </el-col>
@@ -645,12 +645,6 @@ export default{
                 value: 'JPY'
                 },
             ],
-        }
-    },
-    watch:{
-        form(val){
-            console.log(222222222222)
-            console.log(val)
         }
     },
     created() {
