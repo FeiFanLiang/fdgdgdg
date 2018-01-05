@@ -4,7 +4,6 @@
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border>
         <el-table-column label="订单编号" prop="OrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/

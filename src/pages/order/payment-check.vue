@@ -6,7 +6,6 @@
                 备注：{{props.row.Remark}}
                 <el-table :data="orderDetail" border style="width: 100%">
                     <el-table-column prop="HotelOrder.HotelName" label="酒店名称"></el-table-column>
-                    <el-table-column prop="HotelOrder.Room" label="房型"></el-table-column>
                     <el-table-column prop="HotelOrder.Passenger" label="入住人"></el-table-column>
                     <el-table-column prop="AmountUse" label="金额"></el-table-column>
                     <el-table-column prop="HotelOrder.StateShouKuan" label="收款状态">

@@ -8,7 +8,6 @@
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
     <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
-    <el-table-column label="房型" prop="HotelOrder.Room" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
         <span v-if="scope.row.HotelOrder.StayDateStart != null">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/

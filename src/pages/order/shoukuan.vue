@@ -6,7 +6,6 @@
         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
         <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="房型" prop="Room" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
             <template scope="scope">
                 <span v-if="typeof(scope.row.HotelOrder.StayDateStart) != 'undefined'">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/
@@ -25,10 +24,10 @@
                 <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="金额" prop="AmountUse">
-            <template scope="scope">
+        <el-table-column label="收款金额" prop="AmountUse">
+            <!-- <template scope="scope">
                 <input v-model="scope.row.AmountUse" style="width:90%" v-on:input="inputChange">
-            </template>
+            </template> -->
         </el-table-column>
         <el-table-column label="备注" prop="Remark">
             <template scope="scope">
@@ -63,7 +62,7 @@
             -->
             <el-form-item label="支付账户" prop="CompanyAcount">
                 <el-select v-model="payCheck.CompanyAcount" class="input">
-                    <el-option v-for="item in CompanyAcount" :key="item.SortNo" :label="item.ShortName" :value="item.SortNo"></el-option>
+                    <el-option v-for="item in CompanyAcount" :key="item.ID" :label="item.AccountName" :value="item.ID"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="Remark">
@@ -137,7 +136,7 @@ export default {
         },
         async getPayCompany(){
             const res = await payCompanyApi.list()
-            this.CompanyAcount = res.data
+            this.CompanyAcount = res.data.Data
         },
         randomString() {
             var oDate = new Date();
@@ -177,6 +176,7 @@ export default {
                 }
                 const res = await hotelPaymentInfoApi.payhj(select)
                 _self.fukuanList = res.data.Data
+                console.log(_self.fukuanList)
                 this.fukuanList.forEach(item => {
                     this.multipleSelection2.push(item);
                     this.$refs.table.toggleRowSelection(item,true);
@@ -187,13 +187,13 @@ export default {
                     amount+=_self.fukuanList[i].AmountUse
                 }
                 let remark = ''
-                for(let a in _self.multipleSelection){
-                    remark+='【'+'\n'
-                        +'酒店预定号'+':'+_self.multipleSelection[a].HotelOrder.HotelBookingNo+','+'\n'
-                        +'酒店确定号'+':'+_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed+','+'\n'
-                        +'客人姓名'+':'+_self.multipleSelection[a].HotelOrder.Passenger+'\n'
-                        +'】'+'\n'
-                }
+                // for(let a in _self.multipleSelection){
+                //     remark+='【'+'\n'
+                //         +'酒店预定号'+':'+_self.multipleSelection[a].HotelOrder.HotelBookingNo+','+'\n'
+                //         +'酒店确定号'+':'+_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed+','+'\n'
+                //         +'客人姓名'+':'+_self.multipleSelection[a].HotelOrder.Passenger+'\n'
+                //         +'】'+'\n'
+                // }
                 let date = new Date().Format('yyyy-MM-dd')
                 _self.payCheck = {
                     PaymentNo: 'S'+ string,

@@ -12,6 +12,10 @@ export default {
   list(params) {
     return axios.get(base + 'list',{params:params})
   },
+  //GET /Hotel/HotelPayCompany/GetMyCompany
+  getMyCompany(){
+    return axios.get(base + 'GetMyCompany')
+  },
   detail(id) {
     return axios.get(base + id)
   },
