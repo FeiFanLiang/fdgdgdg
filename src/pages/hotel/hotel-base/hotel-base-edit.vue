@@ -123,7 +123,7 @@
         <el-tab-pane label="展示信息" name="show">
             <HotelShowPage></HotelShowPage>
         </el-tab-pane>
-        <el-tab-pane label="酒店政策" name="policy">
+        <el-tab-pane label="酒店协议" name="policy">
             <PolicyList></PolicyList>
         </el-tab-pane>
     </el-tabs>

@@ -234,49 +234,37 @@
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin:20px 0;" />
             <el-row :gutter="24">
                 <el-col :span="10">
-                    <el-form-item label="备注1" prop="Remark1">
-                        <el-input type="textarea" v-model="form.Remark1" autosize></el-input>
+                    <el-form-item label="打款注意事项" prop="PayNote">
+                        <el-input type="textarea" v-model="form.PayNote" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="备注2" prop="Remark2">
-                        <el-input type="textarea" v-model="form.Remark2" autosize></el-input>
+                    <el-form-item label="发票" prop="InvoiceNote">
+                        <el-input type="textarea" v-model="form.InvoiceNote" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="10">
-                    <el-form-item label="备注3" prop="Remark3">
-                        <el-input type="textarea" v-model="form.Remark3" autosize></el-input>
+                    <el-form-item label="控房/团队" prop="GroupNote">
+                        <el-input type="textarea" v-model="form.GroupNote" autosize></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="商圈备注" prop="Remark4">
+                    <el-form-item label="投放渠道" prop="Remark10">
+                        <el-input type="textarea" v-model="form.Remark10" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="10">
+                    <el-form-item label="商圈" prop="Remark4">
                         <el-input type="textarea" v-model="form.Remark4" autosize></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>
-            <el-row :gutter="24">
                 <el-col :span="10">
-                    <el-form-item label="备注5" prop="Remark5">
-                        <el-input type="textarea" v-model="form.Remark5" autosize></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="备注6" prop="Remark6">
-                        <el-input type="textarea" v-model="form.Remark6" autosize></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
-                <el-col :span="10">
-                    <el-form-item label="备注7" prop="Remark7">
-                        <el-input type="textarea" v-model="form.Remark7" autosize></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="10">
-                    <el-form-item label="备注8" prop="Remark8">
-                        <el-input type="textarea" v-model="form.Remark8" autosize></el-input>
+                    <el-form-item label="备注3" prop="Remark3">
+                        <el-input type="textarea" v-model="form.Remark3" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -287,24 +275,53 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="备注10" prop="Remark10">
-                        <el-input type="textarea" v-model="form.Remark10" autosize></el-input>
+                    <el-form-item label="备注1" prop="Remark1">
+                        <el-input type="textarea" v-model="form.Remark1" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
+                <el-col :span="10">
+                    <el-form-item label="备注2" prop="Remark2">
+                        <el-input type="textarea" v-model="form.Remark2" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="备注5" prop="Remark5">
+                        <el-input type="textarea" v-model="form.Remark5" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="10">
+                    <el-form-item label="备注6" prop="Remark6">
+                        <el-input type="textarea" v-model="form.Remark6" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                    <el-form-item label="备注7" prop="Remark7">
+                        <el-input type="textarea" v-model="form.Remark7" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="10">
+                    <el-form-item label="备注8" prop="Remark8">
+                        <el-input type="textarea" v-model="form.Remark8" autosize></el-input>
+                    </el-form-item>
+                </el-col>
                 <el-col :span="10">
                     <el-form-item label="备注11" prop="Remark11">
                         <el-input type="textarea" v-model="form.Remark11" autosize></el-input>
                     </el-form-item>
                 </el-col>
+            </el-row>
+            <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注12" prop="Remark12">
                         <el-input type="textarea" v-model="form.Remark12" autosize></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>
-            <el-row :gutter="24">
                 <el-col :span="10">
                     <el-form-item label="备注13" prop="Remark13">
                         <el-input type="textarea" v-model="form.Remark13" autosize></el-input>
@@ -628,7 +645,7 @@ import UploadImageCopy from 'components/upload-image-copy'
         async addPolicy(){
             const _self = this
             try{
-                _self.title = '酒店政策创建'
+                _self.title = '酒店协议创建'
                 _self.resetForm()
                 _self.dialogShow = true
             }catch(e){
@@ -637,7 +654,7 @@ import UploadImageCopy from 'components/upload-image-copy'
         },
         async editPolicy(row){
             const _self = this
-            _self.title = '酒店政策编辑'
+            _self.title = '酒店协议编辑'
             try {
                 _self.resetForm()
                 const res = await policyApi.getPolicyListID(row.ID)

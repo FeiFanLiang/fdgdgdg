@@ -4,7 +4,7 @@
     <el-table :data="policyPlatformList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
         <el-table-column prop="Account" label="用户名"></el-table-column>
-        <el-table-column prop="Password" label="密码"></el-table-column>
+        <!-- <el-table-column prop="Password" label="密码"></el-table-column> -->
         <el-table-column prop="ChannelType" label="渠道限定"></el-table-column>
         <el-table-column label="操作" width=100>
             <template scope="scope">

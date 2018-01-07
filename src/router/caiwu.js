@@ -9,6 +9,11 @@ export default {
   iconClass: 'dingdan',
   children: [
     {
+      path: 'JietuList',
+      component: _import('order/jietu-list'),
+      name: '待截图列表'
+    },
+    {
       path: 'PaymentCheck',
       component: _import('order/payment-check'),
       name: '财务流水'

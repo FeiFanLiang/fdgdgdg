@@ -26,7 +26,7 @@ export default {
     {
       path: 'PolicyPlatForm',
       component: _import('hotel/policy/policy-platform'),
-      name: '平台政策信息'
+      name: '平台结算信息'
     },
     {
       path: 'HotelBaseAdd',

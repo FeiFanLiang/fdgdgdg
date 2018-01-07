@@ -71,4 +71,18 @@ export default {
     imgState(id){
         return axios.get(base4 + 'SetSendState/' + id)
     },
+    //待截图列表  GET /Hotel/HotelPayment/ListDaiJieTu
+    getImgList(params){
+        return axios.get(base4 + 'ListDaiJieTu',{
+            params:params
+        })
+    },
+    // GET /Hotel/HotelPayment/{id}
+    getImgById(id){
+        return axios.get(base4 + id)
+    },
+    //保存截图信息 PUT /Hotel/HotelPayment/{id}
+    saveImg(params){
+        return axios.put(base4 + params.ID,params)
+    }
 }

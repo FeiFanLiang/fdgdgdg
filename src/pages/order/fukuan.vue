@@ -77,6 +77,12 @@
             <el-form-item label="备注" prop="Remark">
                 <el-input type="textarea" v-model="payCheck.Remark" class="input" autosize></el-input>
             </el-form-item>
+            <el-form-item label="截图状态" prop="StateScreenshot">
+                <el-radio-group v-model="payCheck.StateScreenshot">
+                    <el-radio :label="0">待截图</el-radio>
+                    <el-radio :label="1">截图完成</el-radio>
+                </el-radio-group>
+            </el-form-item>
         </el-form>
     </el-card>
     <el-card class="box-card">

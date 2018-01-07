@@ -8,9 +8,9 @@
       </el-select>
     </el-col>
     <el-col :span="5">
-      <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '1'"></el-input>
-      <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '2'"></el-input>
-      <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '3'"></el-input>
+      <el-input placeholder="请输入酒店名称" v-model="filters.HotelName" v-show="filters.labelVal == '1'"></el-input>
+      <el-input placeholder="请输入酒店英文名称" v-model="filters.HotelName_En" v-show="filters.labelVal == '2'"></el-input>
+      <el-input placeholder="请输入酒店ID" v-model="filters.ID" v-show="filters.labelVal == '3'"></el-input>
       <el-input placeholder="请输入酒店前台电话" v-model="filters.FrontPhone" v-show="filters.labelVal == '4'"></el-input>
     </el-col>
     <el-col :span="4">
@@ -116,15 +116,15 @@ export default {
       selectedOptions: [
         {
           value: "1",
-          label: "酒店ID"
-        },
-        {
-          value: "2",
           label: "酒店名称"
         },
         {
-          value: "3",
+          value: "2",
           label: "酒店英文名称"
+        },
+        {
+          value: "3",
+          label: "酒店ID"
         },
         {
           value: "4",
@@ -173,11 +173,11 @@ export default {
         pageSize: _self.pageSize,
         order: "ID",
         query: {
-          ID: _self.filters.labelVal === "1" ? _self.filters.ID : "",
+          ID: _self.filters.labelVal === "3" ? _self.filters.ID : "",
           HotelName:
-            _self.filters.labelVal === "2" ? _self.filters.HotelName : "",
+            _self.filters.labelVal === "1" ? _self.filters.HotelName : "",
           HotelName_En:
-            _self.filters.labelVal === "3" ? _self.filters.HotelName_En : "",
+            _self.filters.labelVal === "2" ? _self.filters.HotelName_En : "",
           FrontPhone:
             _self.filters.labelVal === "4" ? _self.filters.FrontPhone : "",
           City: _self.filters.city,
