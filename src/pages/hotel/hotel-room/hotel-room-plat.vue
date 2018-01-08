@@ -21,45 +21,24 @@
       </el-table-column>
       <el-table-column label="截止有效期" show-overflow-tooltip>
 <template scope="scope">
-<span>{{ scope.row.EndDate.slice(0,10) }}</span>
+  <span>{{ scope.row.EndDate.slice(0,10) }}</span>
 </template>
       </el-table-column>
       <el-table-column label="是否有效" width="70" align="center">
 <template scope="scope">
-<i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-<i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+  <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
+  <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
 </template>
       </el-table-column>
       <el-table-column  width="150"  label="操作" fixed="right">
 <template scope="scope">
-<el-button size="small" @click="edit(scope.$index, scope.row)">
-  编辑</el-button>
-<el-button size="small" type="danger" @click="del(scope.$index, scope.row)">删除</el-button>
+  <el-button size="small" @click="edit(scope.$index, scope.row)">
+    编辑</el-button>
+  <el-button size="small" type="danger" @click="del(scope.$index, scope.row)">删除</el-button>
 </template>
       </el-table-column>
     </el-table>
     </el-dialog>
-    <!-- public class MP_Platform_SaleRoom
-    {
-        public int ID { get; set; }
-        public int? PlatformID { get; set; }
-        public MP_ThreePlatInfo Platform { get; set; }
-
-        public int? SonRoomID { get; set; }
-
-        public MP_HotelInfoSonRoom SonRoom { get; set; }
-
-        public int? RoomID { get; set; }
-
-        public MP_HotelInfoRoom Room { get; set; }
-
-        public int? PlatHotelID { get; set; }
-
-        public MP_Platform_HotelInfo PlatHotel { get; set; }
-        public int? HotelID { get; set; }
-        public MP_HotelInfo Hotel { get; set; }
-    } -->
-
     <el-dialog :title="form.id?'编辑平台房型信息':'添加平台房型信息'" v-model="platVisible" :modal-append-to-body="false" size="small"  @open="dialogOpen" @close="resetForm('form')">
       <el-form :model="form" ref="form"  :rules="rules" label-width="130px">
         <el-row>
@@ -159,6 +138,42 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="平台床型">
+              <el-input v-model="form.badType" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="平台早餐类型" >
+              <el-input v-model="form.breakfastType"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="最大入住人数">
+              <el-input v-model="form.maxPerson" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="平台取消政策" >
+              <el-input v-model="form.cancelPolicy"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+          <el-row>
+          <el-col :span="12">
+            <el-form-item label="平台政策房型名称(售卖房型/子房型)">
+              <el-input v-model="form.platSaleRoomName" ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="连住天数" >
+              <el-input v-model="form.gebunden"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
           <el-col :span="12" >
             <el-form-item label="备注一">
               <el-input v-model="form.remark" type="textarea"></el-input>
@@ -223,19 +238,25 @@ export default {
              message: '请输入平台酒店ID'
            }
          ], */
-        platformId: [{
-          required: true,
-          message: '请选择平台',
-          type: 'number'
-        }],
-        roomId: [{
-          required: true,
-          message: '请输入房型ID'
-        }],
-        sonRoomId: [{
-          required: true,
-          message: '请输入子房型ID'
-        }]
+        platformId: [
+          {
+            required: true,
+            message: '请选择平台',
+            type: 'number'
+          }
+        ],
+        roomId: [
+          {
+            required: true,
+            message: '请输入房型ID'
+          }
+        ],
+        sonRoomId: [
+          {
+            required: true,
+            message: '请输入子房型ID'
+          }
+        ]
       },
       isEdit: false,
       platVisible: false,
@@ -256,8 +277,14 @@ export default {
         beginDate: '',
         endDate: '',
         sonRoomName: '',
-        roomName: ''
-      },
+        roomName: '',
+        badType: '',
+        breakfastType: '',
+        maxPerson: '',
+        cancelPolicy: '',
+        platSaleRoomName: '',
+        gebunden: ''
+      }
       // platHotelId:''
     }
   },
@@ -330,7 +357,13 @@ export default {
         beginDate: '',
         endDate: '',
         sonRoomName: a,
-        roomName: b
+        roomName: b,
+        badType: '',
+        breakfastType: '',
+        maxPerson: '',
+        cancelPolicy: '',
+        platSaleRoomName: '',
+        gebunden: ''
       }
       this.platVisible = true
       this.isEdit = true
@@ -343,9 +376,9 @@ export default {
       let a = res.data.SonRoomName
       const res2 = await hotelRoomApi.details(this.roomId)
       let b = res2.data.RoomName
-      _self.form.roomId = _self.roomId ? _self.roomId : '',
-        _self.form.sonRoomId = _self.sonRoomId ? _self.sonRoomId : '',
-        _self.form.id = row.ID
+      ;(_self.form.roomId = _self.roomId ? _self.roomId : ''),
+        (_self.form.sonRoomId = _self.sonRoomId ? _self.sonRoomId : ''),
+        (_self.form.id = row.ID)
       //_self.form.roomId = row.RoomID
       //_self.form.sonRoomId = row.SonRoomID
       _self.form.platformId = row.PlatformID
@@ -360,6 +393,12 @@ export default {
       _self.form.platUrl = row.PlatURL
       _self.form.beginDate = row.BeginDate
       _self.form.endDate = row.EndDate
+      _self.form.badType = row.BadType
+      _self.form.breakfastType = row.BreakfastType
+      _self.form.maxPerson = row.maxPerson
+      _self.form.cancelPolicy = row.CancelPolicy
+      _self.form.platSaleRoomName = row.PlatSaleRoomName
+      _self.form.gebunden = row.Gebunden
       _self.platVisible = true
       _self.isEdit = true
       _self.form.sonRoomName = a
@@ -373,7 +412,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         })
-        .then(async() => {
+        .then(async () => {
           try {
             await sonRoomPlatformApi.del(row.ID)
             _self.getList()
@@ -403,6 +442,7 @@ export default {
     },
     async submitForm() {
       const _self = this
+
       _self.$refs['form'].validate(async valid => {
         if (valid) {
           try {
