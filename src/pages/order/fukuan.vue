@@ -47,8 +47,8 @@
             <el-form-item label="货币 类型" prop="Currency">
                 <el-input placeholder="货币类型" v-model="payCheck.Currency" class="input"></el-input>
             </el-form-item>
-            <el-form-item label="支付时间" prop="PaymentDate">
-                <el-date-picker v-model="payCheck.PaymentDate" type="date" placeholder="支付时间" class="input"></el-date-picker>
+            <el-form-item label="付款时间" prop="ExpectSettlement">
+                <el-date-picker v-model="payCheck.ExpectSettlement" type="date" placeholder="支付时间" class="input"></el-date-picker>
             </el-form-item>
             <el-form-item label="到账时间" prop="ExpectGetMoney">
                 <el-date-picker v-model="payCheck.ExpectGetMoney" type="date" placeholder="到账时间" class="input"></el-date-picker>
@@ -116,7 +116,7 @@ export default {
                 PaymentNo: '',
                 Amount: '',
                 Currency: '',
-                PaymentDate: '',
+                ExpectSettlement: '',
                 ExpectGetMoney: '',
                 CompanyAcount: '',
                 PaymentModel: '', 
@@ -191,6 +191,7 @@ export default {
                 }
                 const res = await hotelPaymentInfoApi.payhj(select)
                 _self.fukuanList = res.data.Data
+                console.log(_self.fukuanList)
                 this.fukuanList.forEach(item => {
                     this.multipleSelection2.push(item);
                     this.$refs.table.toggleRowSelection(item,true);
@@ -208,12 +209,11 @@ export default {
                             +_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed
                             +'\n'
                 }
-                let date = new Date().Format('yyyy-MM-dd')
                 _self.payCheck = {
                     PaymentNo: 'F'+ string,
                     Amount: amount,
                     PaymentType: 1,
-                    PaymentDate: date,
+                    ExpectSettlement: _self.fukuanList[0].ExpectSettlement,
                     Currency: _self.fukuanList[0].Currency,
                     ExpectGetMoney: _self.fukuanList[0].ExpectGetMoney,
                     CompanyAcount: _self.fukuanList[0].CompanyAcount,

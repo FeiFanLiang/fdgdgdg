@@ -49,6 +49,11 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="添加截图">
+                <ul style="list-style:none">
+                    <li v-for="(img,index) in images">
+                        <img width="50%" :src="img" alt="" v-if="form.Picture != ''">
+                    </li>
+                </ul>
                 <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
                     <i class="el-icon-plus"></i>
                 </el-upload>
@@ -79,17 +84,25 @@ export default {
           form:{
               ID:'',
               StateScreenshot:'',
+              Picture:''
           },
           imgUrl:'',
           dialogImageUrl: '',
           dialogVisible: false,
           picture:[],
-          ID:''
+          ID:'',
+          url:''
       }
   },
   created() {
     this.fetchData()
     this.imgUrl = path.uploadUrl
+    this.url = path.imageUrl
+  },
+  computed: {
+    images() {
+      return this.picture.map(item => path.imageUrl + item)
+    }
   },
   methods:{
     imgSuccess(response, file, fileList){
@@ -130,9 +143,16 @@ export default {
       }
     },
     async addImg(id){
-        this.dialogShow = true
+        this.picture = []
         const res = await hotelPaymentInfoApi.getImgById(id)
         this.form = res.data.Data
+        let formList = this.form.Picture.split(",")
+        for(let i in formList){
+            this.picture.push(formList[i])
+        }
+        //ss = s.split(",")
+        console.log(this.picture)
+        this.dialogShow = true
     },
     async submit(){
         let f = {

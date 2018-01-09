@@ -1,7 +1,7 @@
 <template lang="html">
 <div id="PaymentCheck">
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
-    @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys">
+    @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
         <el-table-column type="expand" width=25>
             <template scope="props">
                 备注：{{props.row.Remark}}
@@ -17,6 +17,7 @@
                 </el-table>
             </template>
         </el-table-column>
+        <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
         <el-table-column label="类别" prop="PaymentType" width=70>
             <template scope="scope">
                 <span v-if="scope.row.PaymentType === 0">收款</span>
@@ -42,7 +43,11 @@
         <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
-        <el-table-column label="截图" prop="Picture" width=90 show-overflow-tooltip></el-table-column>
+        <el-table-column label="截图" prop="Picture" width=70>
+            <template scope="scope">
+                <el-button type="text" @click="imgShow(scope.row.Picture)">查看</el-button>
+            </template>
+        </el-table-column>
         <el-table-column label="状态" prop="State">
             <template scope="scope">
                 <span v-if="scope.row.State === 0">待处理</span>
@@ -59,20 +64,37 @@
             </template>
         </el-table-column>
         <!--<el-table-column label="备注" prop="Remark" show-overflow-tooltip></el-table-column>-->
-        <el-table-column label="操作" width=120>
+        <!-- <el-table-column label="操作" width=120>
             <template scope="scope">
                 <el-button type="text" size="small" @click="check(scope.row)">对账付款审核</el-button>
             </template>
-        </el-table-column>
+        </el-table-column> -->
     </el-table>
+    <el-card class="box-card">
+        <el-row :gutter="24">
+            <el-col :span="5">
+                <el-button @click="countMoney" size="small">合计</el-button> <span style="margin-left:20px;">{{money}}</span>
+            </el-col>
+            <el-col :span="5">
+                <el-button size="small" @click="check()">对账付款审核</el-button>
+            </el-col>
+        </el-row>
+    </el-card>
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
+    <el-dialog v-model="dialogVisible" size="small">
+        <ImageList :images="imageList"></ImageList>
+    </el-dialog>
 </div>
 </template>
 <script>
 import { hotelPaymentInfoApi } from 'api'
+import ImageList from 'components/imglist'
 export default {
+  components: {
+      ImageList
+  },
   data(){
       return{
           currentPage: 1,
@@ -83,7 +105,11 @@ export default {
           ID: '',
           expandRowKeys: [],
           orderDetail:[],
-          message:''
+          message:'',
+          dialogVisible:false,
+          imageList: [],
+          multipleSelection:[],
+          money:0
       }
   },
   created() {
@@ -109,24 +135,37 @@ export default {
             order: 'ID'
       }
       try {
+        //_self.multipleSelection = _self.$route.query.multipleSelection
         const res = await hotelPaymentInfoApi.checkOut(options)
         _self.paymentCheck = res.data.Data
         _self.count = res.data.Count
+        // _self.paymentCheck.forEach(item => {
+        //     _self.$refs.table.toggleRowSelection(item,true);
+        // });
+        _self.countMoney()
         _self.loading = false
       } catch (e) {
         _self.loading = false
       }
     },
-    check(row){
+    async check(){
+        const _self = this
         try{
-            hotelPaymentInfoApi.checks(row.ID)
-            this.$message({
-                message: '审核成功',
-                type: 'success'
-            })
-            this.fetchData()
+            let ids = []
+            for(let i in _self.multipleSelection){
+                ids.push(_self.multipleSelection[i].ID)
+            }
+            if(ids.length != 0){
+                hotelPaymentInfoApi.checks(ids)
+                _self.$message({
+                    message: '审核成功',
+                    type: 'success'
+                })
+                _self.multipleSelection = []
+            }
+            _self.fetchData()
         }catch(e){
-            this.$message.error('审核失败!!!')
+            _self.$message.error('审核失败!!!')
         }
     },
     async expand(row, expanded){
@@ -138,7 +177,30 @@ export default {
             _self.expandRowKeys.push(row.ID)
             _self.ID = row.ID
         }
-    }
+    },
+    imgShow(img){
+        this.imageList = img.split(',')
+        this.dialogVisible = true
+    },
+    countMoney(){
+        let m = 0
+        for(let i in this.multipleSelection){
+            m += parseInt(this.multipleSelection[i].Amount)
+        }
+        this.money = m
+    },
+    handleSelectionChange(val) {
+        this.multipleSelection = val;
+        this.countMoney()
+    },
   }
 }
 </script>
+<style lang="scss">
+#PaymentCheck{
+.el-card {
+    box-shadow: none;
+}
+}
+</style>
+

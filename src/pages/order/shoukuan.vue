@@ -47,8 +47,8 @@
             <el-form-item label="货币 类型" prop="Currency">
                 <el-input placeholder="货币类型" v-model="payCheck.Currency" class="input"></el-input>
             </el-form-item>
-            <el-form-item label="支付时间" prop="PaymentDate">
-                <el-date-picker v-model="payCheck.PaymentDate" type="date" placeholder="支付时间" class="input"></el-date-picker>
+            <el-form-item label="到账时间" prop="ExpectGetMoney">
+                <el-date-picker v-model="payCheck.ExpectGetMoney" type="date" placeholder="支付时间" class="input"></el-date-picker>
             </el-form-item>
             <el-form-item label="结算日期" prop="ExpectSettlement">
                 <el-date-picker v-model="payCheck.ExpectSettlement" type="date" placeholder="结算日期" class="input"></el-date-picker>
@@ -103,7 +103,7 @@ export default {
                 PaymentNo: '',
                 Amount: '',
                 Currency: '',
-                PaymentDate: '',
+                ExpectGetMoney: '',
                 ExpectGetMoney: '',
                 CompanyAcount: '',
                 PaymentModel: '', 
@@ -194,12 +194,11 @@ export default {
                 //         +'客人姓名'+':'+_self.multipleSelection[a].HotelOrder.Passenger+'\n'
                 //         +'】'+'\n'
                 // }
-                let date = new Date().Format('yyyy-MM-dd')
                 _self.payCheck = {
                     PaymentNo: 'S'+ string,
                     Amount: amount,
                     PaymentType: 0,
-                    PaymentDate: date,
+                    ExpectGetMoney: _self.fukuanList[0].ExpectGetMoney,
                     Currency: _self.fukuanList[0].Currency,
                     ExpectSettlement: _self.fukuanList[0].ExpectSettlement,
                     CompanyAcount: _self.fukuanList[0].CompanyAcount,

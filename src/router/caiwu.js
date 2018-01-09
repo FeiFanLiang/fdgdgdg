@@ -9,14 +9,14 @@ export default {
   iconClass: 'dingdan',
   children: [
     {
-      path: 'JietuList',
-      component: _import('order/jietu-list'),
-      name: '待截图列表'
-    },
-    {
       path: 'PaymentCheck',
       component: _import('order/payment-check'),
       name: '财务流水'
+    },
+    {
+      path: 'FukuanList',
+      component: _import('order/fukuan-list'),
+      name: '待付款列表'
     },
     {
       path: 'Fukuan',
@@ -27,17 +27,14 @@ export default {
       }
     },
     {
-      path: 'Shoukuan',
-      component: _import('order/shoukuan'),
-      name: '收款',
-      meta: {
-        hidden: true
-      }
+      path: 'JietuList',
+      component: _import('order/jietu-list'),
+      name: '待截图列表'
     },
     {
-      path: 'FukuanList',
-      component: _import('order/fukuan-list'),
-      name: '待付款列表'
+      path: 'CheckFukuan',
+      component: _import('order/check-fukuan'),
+      name: '待对账付款列表'
     },
     {
       path: 'CheckShoukuan',
@@ -45,9 +42,12 @@ export default {
       name: '待对账收款列表'
     },
     {
-      path: 'CheckFukuan',
-      component: _import('order/check-fukuan'),
-      name: '待对账付款列表'
+      path: 'Shoukuan',
+      component: _import('order/shoukuan'),
+      name: '收款',
+      meta: {
+        hidden: true
+      }
     },
     {
       path: 'Wanjie',

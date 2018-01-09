@@ -193,13 +193,11 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="24">
-                            <el-form-item label="订单备注" prop="PassengerAsk">
-                                <el-input type="textarea" v-model="item.PassengerAsk"></el-input>
+                        <el-col :span="6">
+                            <el-form-item label="客人要求" prop="PassengerAsk">
+                                <el-input type="textarea" v-model="item.PassengerAsk" autosize></el-input>
                             </el-form-item>
                         </el-col>
-                    </el-row>
-                    <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="订单状态" prop="OrderState">
                                 <el-select v-model="item.OrderState" clearable>
@@ -216,7 +214,14 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="预定时间" prop="BookTime">
-                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间"></el-date-picker>
+                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="24">
+                            <el-form-item label="备注" prop="Remark">
+                                <el-input type="textarea" v-model="item.Remark" autosize></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -335,20 +340,13 @@
                     </el-row>  
                     <el-row :gutter="24">
                         <el-col :span="6">
-                            <el-form-item label="财务备注" prop="UrgentPay">
+                            <el-form-item label="紧急打款" prop="UrgentPay">
                                 <el-switch on-text="紧急" off-text="否" :on-value="1" :off-value="0" v-model="item.UrgentPay"></el-switch>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="不可合并支付" prop="UnMergePay">
                                 <el-switch on-text="不可" off-text="可" :on-value="1" :off-value="0" v-model="item.UnMergePay"></el-switch>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="24">
-                        <el-col>
-                            <el-form-item label="财务备注" prop="Remark">
-                                <el-input type="textarea" v-model="item.Remark"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>

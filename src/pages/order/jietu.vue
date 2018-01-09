@@ -26,7 +26,11 @@
         <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
-        <el-table-column label="截图" prop="Picture" width=90 show-overflow-tooltip></el-table-column>
+        <el-table-column label="截图" prop="Picture" width=70>
+            <template scope="scope">
+                <el-button type="text" @click="imgShow(scope.row.Picture)">查看</el-button>
+            </template>
+        </el-table-column>
         <el-table-column label="状态" prop="State">
             <template scope="scope">
                 <span v-if="scope.row.State === 0">待处理</span>
@@ -52,11 +56,18 @@
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
+    <el-dialog v-model="dialogVisible" size="small" >
+        <ImageList :images="imageList"></ImageList>
+    </el-dialog>
 </div>
 </template>
 <script>
 import { hotelPaymentInfoApi } from 'api'
+import ImageList from 'components/imglist'
 export default {
+  components: {
+    ImageList
+  },
   data(){
       return{
           currentPage: 1,
@@ -66,7 +77,9 @@ export default {
           paymentCheck:[],
           ID: '',
           expandRowKeys: [],
-          orderDetail:[]
+          orderDetail:[],
+          imageList: [],
+          dialogVisible:false
       }
   },
   created() {
@@ -120,6 +133,10 @@ export default {
             _self.expandRowKeys.push(row.ID)
             _self.ID = row.ID
         }
+    },
+    imgShow(img){
+        this.imageList = img.split(',')
+        this.dialogVisible = true
     }
   }
 }
