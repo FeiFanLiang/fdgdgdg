@@ -31,7 +31,7 @@
         <el-table-column label="财务编号" prop="PaymentNo" width=110></el-table-column>
         <el-table-column label="打款账户" prop="CompanyAcount"></el-table-column>
         <el-table-column label="合计金额" prop="Amount"></el-table-column>
-        <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
+        <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>

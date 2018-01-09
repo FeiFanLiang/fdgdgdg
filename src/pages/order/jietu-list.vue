@@ -17,8 +17,14 @@
         <el-table-column label="对方账户名" prop="Partner" show-overflow-tooltip></el-table-column>
         <el-table-column label="对方开户行" prop="PartnerAcountModel"></el-table-column>
         <el-table-column label="合计金额" prop="Amount"></el-table-column>
-        <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
-        <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
+        <el-table-column label="收付时间" prop="PaymentDate" width=115>
+            <template scope="scope">
+                <span v-if="typeof(scope.row.PaymentDate) != 'undefined'">
+                    {{scope.row.PaymentDate.substring(0,10)}}
+                </span>
+            </template>
+        </el-table-column>
+        <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
         <el-table-column label="状态" prop="State">

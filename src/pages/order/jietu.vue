@@ -23,7 +23,7 @@
         <el-table-column label="账户名称" prop="AccountName" width=80></el-table-column>
         <el-table-column label="合计金额" prop="Amount"></el-table-column>
         <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
-        <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column>
+        <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
         <el-table-column label="截图" prop="Picture" width=70>
