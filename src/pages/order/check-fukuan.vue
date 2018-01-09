@@ -1,5 +1,17 @@
 <template lang="html">
 <div id="PaymentCheck">
+    <el-form label-width="80px">
+      <el-row :gutter="24">
+        <el-col :span="6">
+            <el-form-item label="打款账户">
+                <el-input v-model="filters.CompanyAcount"></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
     @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
         <el-table-column type="expand" width=25>
@@ -109,13 +121,19 @@ export default {
           dialogVisible:false,
           imageList: [],
           multipleSelection:[],
-          money:0
+          money:0,
+          filters:{
+              CompanyAcount:''
+          }
       }
   },
   created() {
     this.fetchData()
   },
   methods:{
+    hotelsOrderSearch(){
+        this.fetchData()
+    },
     handleSizeChange(val) {
         this.pageSize = val
         this.fetchData(1, this.pageSize)
@@ -132,7 +150,10 @@ export default {
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
-            order: 'ID'
+            order: 'ID',
+            query:{
+                CompanyAcount:_self.filters.CompanyAcount
+            }
       }
       try {
         //_self.multipleSelection = _self.$route.query.multipleSelection

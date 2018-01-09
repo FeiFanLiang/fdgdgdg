@@ -588,7 +588,7 @@ export default {
         this.currentPage = val
         this.fetchData(this.currentPage)
     },
-    async fetchData(pageSize,currentPage){
+    async fetchData(currentPage,pageSize){
         const _self = this
         _self.loading = true
         _self.currentPage = currentPage || _self.currentPage

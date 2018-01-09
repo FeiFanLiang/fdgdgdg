@@ -36,35 +36,31 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border :default-sort = "{prop: 'BookTime', order: 'descending'}">
-        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
-        <el-table-column label="账户名称" prop="AccountName" width=80></el-table-column>
-        <el-table-column label="订单渠道" prop="ThreePlatID" width=80>
+    <CustomTableCopy :list="hotelsOrder" :loading="loading" :configList="configList.listFields" @successCallBack="fetchData">
+      <el-table-column label="订单渠道" prop="ThreePlatID" width=80 slot="ThreePlatID">
+        <template scope="scope">
+            <div v-for="item in ThreePlatID">
+              <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+            </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="入住/退房日期" width="200" slot="StayDateStart">
+        <template scope="scope">
+          <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
+          <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="预定时间" prop="BookTime" sortable slot="BookTime">
           <template scope="scope">
-              <div v-for="item in ThreePlatID">
-                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
-              </div>
+              <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
           </template>
-        </el-table-column>
-        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
-        <el-table-column label="入住/退房日期" width="200">
+      </el-table-column>
+      <el-table-column label="操作" width="100" slot="right-three">
           <template scope="scope">
-            <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
-            <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
+              <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
           </template>
-        </el-table-column>
-        <el-table-column label="入住人" prop="Passenger"></el-table-column>
-        <el-table-column label="预定时间" prop="BookTime" sortable>
-            <template scope="scope">
-                <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="操作" width="100">
-            <template scope="scope">
-                <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
-            </template>
-        </el-table-column>
-    </el-table>
+      </el-table-column>
+    </CustomTableCopy>
     <div class="pagination-wrapper">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
@@ -98,6 +94,7 @@ export default {
     _self.type = _self.$route.name
     _self.ThreePlat()
     _self.fetchData()
+    _self.configList = hotelsOrderApi.getConfig()
   },
   watch:{
     "$route":function(val){
@@ -113,7 +110,7 @@ export default {
     }
   },
   methods: {
-    searchCallback(filters) {
+    hotelsOrderSearch(filters) {
       const _self = this
       this.filters = filters
       _self.fetchData()

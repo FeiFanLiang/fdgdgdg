@@ -5,7 +5,8 @@ function transTable (listData) {
       name: item[1],
       is: item[2],
       isEditable: item[3],
-      type: item[4]
+      type: item[4],
+      width: item[5],
     }
   })
 }

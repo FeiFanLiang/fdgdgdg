@@ -8,11 +8,8 @@
     <slot name="left-one"></slot>
     <slot name="left-two"></slot>
     <slot name="left-three"></slot>
-    <!-- <el-table-column sortable prop="ID" label="ID" width="180" show-overflow-tooltip></el-table-column>
-    <el-table-column sortable prop="AccountName"  label="账户名称" show-overflow-tooltip></el-table-column>
-    <el-table-column sortable prop="AccountNum"  label="银行帐户" show-overflow-tooltip></el-table-column>
-    <el-table-column prop="Remark" label="备注" show-overflow-tooltip></el-table-column> -->
-    <el-table-column v-if="item.is" v-for="(item,index) in configList" :key="index" :prop="item.name" :label="item.label"  show-overflow-tooltip></el-table-column>
+    <el-table-column v-if="item.is && item.type != 'slot'" v-for="(item,index) in configList" :key="index" :prop="item.name" :label="item.label"  show-overflow-tooltip :width="item.width"></el-table-column>
+    <slot :name="item.name" v-if="item.type == 'slot'" v-for="(item,index) in configList"></slot>
     <slot name="right-one"></slot>
     <slot name="right-two"></slot>
     <slot name="right-three"></slot>
