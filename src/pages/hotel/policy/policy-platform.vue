@@ -41,9 +41,9 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-collapse  style="margin:10px;">      <!-- accordion -->
+            <el-collapse v-model="activeNames" style="margin:10px;">      <!-- accordion -->
                 <!-- 、、、、、、、、、、、、、收款政策、、、、、、、、、、、、、、、、 -->
-                <el-collapse-item title="收款政策">
+                <el-collapse-item title="收款政策" name="1">
                     <el-form ref="ReceiptForm" :model="ReceiptForm" label-width="110px" :rules="rules">
                         <el-form-item label="拆分按天记账" prop="SplitDay">
                             <el-switch on-text="是" off-text="否" :on-value="1" :off-value="0" v-model="ReceiptForm.SplitDay"></el-switch>
@@ -186,7 +186,7 @@
                     </el-form>
                 </el-collapse-item>
                 <!-- 、、、、、、、、、、、、、付款政策、、、、、、、、、、、、、、、、 -->
-                <el-collapse-item title="付款政策">
+                <el-collapse-item title="付款政策" name="2">
                     <el-form ref="PaymentForm" :model="PaymentForm" label-width="110px" :rules="rules">
                         <el-form-item label="拆分按天记账" prop="SplitDay">
                             <el-switch on-text="是" off-text="否" :on-value="1" :off-value="0" v-model="PaymentForm.SplitDay"></el-switch>
@@ -346,6 +346,7 @@ export default {
   },
   data(){
       return{
+        activeNames: '',
         imageList: [],
         imageList2: [],
         currentPage: 1,
@@ -646,12 +647,14 @@ export default {
     addPolicy(){
         const _self = this
         _self.title = '平台政策添加'
+        _self.activeNames = ''
         _self.resetForm()
         _self.dialogShow  =true
     },
     async editPolicy(row){
         const _self = this
         _self.title = '平台政策编辑'
+        _self.activeNames = ''
         _self.resetForm()
         const res = await policyApi.getPolicyPlatformID(row.ID)
         if(typeof(res.data.Data.Receipt) != 'undefined'){

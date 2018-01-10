@@ -101,8 +101,8 @@
                 </el-col>
             </el-row>
             <!-- 财务信息 -->
-            <el-collapse accordion style="margin:20px 0;">
-                <el-collapse-item>
+            <el-collapse style="margin:20px 0;" v-model="activeNames">
+                <el-collapse-item name='1'>
                     <template slot="title">
                         <span style="color:orange;font-size:18px;">财务信息</span>
                     </template>
@@ -350,6 +350,7 @@ import UploadImageCopy from 'components/upload-image-copy'
       },
       data(){
         return{
+            activeNames:'',
             currentPage: 1,
             pageSize: 10,
             count: 0,
@@ -646,6 +647,7 @@ import UploadImageCopy from 'components/upload-image-copy'
             const _self = this
             try{
                 _self.title = '酒店协议创建'
+                _self.activeNames = ''
                 _self.resetForm()
                 _self.dialogShow = true
             }catch(e){
@@ -655,6 +657,7 @@ import UploadImageCopy from 'components/upload-image-copy'
         async editPolicy(row){
             const _self = this
             _self.title = '酒店协议编辑'
+            _self.activeNames = ''
             try {
                 _self.resetForm()
                 const res = await policyApi.getPolicyListID(row.ID)

@@ -6,7 +6,7 @@
   <el-table ref="multipleTable" :data="fukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange" 
   :default-sort = "{prop: 'BookTime', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
+    <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
     <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
@@ -29,7 +29,7 @@
     <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
   </el-table>
   <div class="pagination-wrapper" style="text-align:center;margin:10px;">
-        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+    <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
   </div>
 
 </div>

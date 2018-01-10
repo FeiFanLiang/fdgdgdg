@@ -144,16 +144,23 @@
               </div>
             </template>
         </el-table-column>
-        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
-        <el-table-column label="账户名称" prop="AccountName" width=80></el-table-column>
-        <el-table-column label="订单平台" prop="ThreePlatID" width="80">
+        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
+        <el-table-column label="账户-平台" width="120">
           <template scope="scope">
-              <div v-for="item in ThreePlatID">
+              {{scope.row.AccountName}}--
+              <span v-for="item in ThreePlatID">
                 <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
-              </div>
+              </span>
           </template>
         </el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="180"></el-table-column>
+        <el-table-column label="采购" prop="WaiCaiFlag" width=70>
+          <template scope="scope">
+            <span v-if="scope.row.WaiCaiFlag == 0">自营</span>
+            <span v-if="scope.row.WaiCaiFlag == 1">外采</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
@@ -161,7 +168,6 @@
             <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
         <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
           <template scope="scope">
             <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
@@ -763,7 +769,7 @@ export default{
                 case 4: _self.form.PlatOrderType = "无效"; break;
                 case 5: _self.form.PlatOrderType = "新订+修改"; break;
                 case 6: _self.form.PlatOrderType = "改期"; break;
-                default: _self.form.PlatOrderType=""
+                default: _self.form.PlatOrderType = ""
             }
             _self.form.UpdateTime = time
             console.log(_self.detail)

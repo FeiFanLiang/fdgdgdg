@@ -8,8 +8,7 @@
     <slot name="left-one"></slot>
     <slot name="left-two"></slot>
     <slot name="left-three"></slot>
-    <el-table-column v-if="item.is && item.type != 'slot'" v-for="(item,index) in configList" :key="index" :prop="item.name" :label="item.label"  show-overflow-tooltip :width="item.width"></el-table-column>
-    <slot :name="item.name" v-if="item.type == 'slot'" v-for="(item,index) in configList"></slot>
+    <el-table-column v-if="item.is" v-for="(item,index) in configList" :key="index" :prop="item.name" :label="item.label"  show-overflow-tooltip :width="item.width"></el-table-column>
     <slot name="right-one"></slot>
     <slot name="right-two"></slot>
     <slot name="right-three"></slot>
