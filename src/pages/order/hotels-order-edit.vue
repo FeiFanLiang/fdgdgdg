@@ -4,14 +4,14 @@
     <el-form ref="form" :model="form" label-width="110px" element-loading-text="拼命加载中" v-loading="loading">
         <el-row :gutter="24">
             <el-col :span="6">
-            <el-form-item label="酒店名称" prop="HotelName">
-                <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
-            </el-form-item>
+                <el-form-item label="酒店名称" prop="HotelName">
+                    <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
+                </el-form-item>
             </el-col>
             <el-col :span="6">
-            <el-form-item label="订单编号" prop="OrderNo">
-                <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
-            </el-form-item>
+                <el-form-item label="订单编号" prop="OrderNo">
+                    <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
+                </el-form-item>
             </el-col>
             <el-col :span="6">
                 <el-form-item label="订单状态" prop="OrderState">
@@ -121,6 +121,28 @@
                         <el-col :span="8">
                             <el-form-item label="酒店名称" prop="HotelName">
                                 <el-input placeholder="请输入酒店名称" v-model="item.HotelName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="酒店ID" prop="HotelID">
+                                <el-input placeholder="请输入酒店ID" v-model="item.HotelID"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="平台酒店ID" prop="PlatHotelID">
+                                <el-input placeholder="请输入平台酒店ID" v-model="item.PlatHotelID"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="酒店协议ID" prop="HotelPolicyID">
+                                <el-input placeholder="请输入酒店协议ID" v-model="item.HotelPolicyID"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="平台信息ID" prop="PlatPolicyID">
+                                <el-input placeholder="请输入平台信息ID" v-model="item.PlatPolicyID"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
