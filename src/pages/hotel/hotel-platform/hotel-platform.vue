@@ -17,9 +17,8 @@
         </el-table-column>
         <el-table-column label="有效" width="70" align="center">
           <template scope="scope">
-          <!-- {{scope.row.IsValid}} -->
-          <i class="el-icon-circle-check" style="color:#13CE66" v-if="scope.row.IsValid"></i>
-          <i class="el-icon-circle-cross" style="color:#FF4949" v-else></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-if="scope.row.IsValid"></i>
+          <i class="el-icon-circle-check" style="color:#13CE66" v-else></i>
           </template>
         </el-table-column>
         <el-table-column  label="操作" width="225" fixed="right">
@@ -90,7 +89,7 @@
             <el-input v-model="form.platHotelNameEn"></el-input>
           </el-form-item>
           <el-form-item label="是否有效">
-           <el-switch v-model="form.isDisabled" on-text="" off-text=""></el-switch>
+           <el-switch v-model="form.isDisabled" :on-value="false" :off-value="true" on-text="" off-text=""></el-switch>
          </el-form-item>
         </div>
       </el-form>

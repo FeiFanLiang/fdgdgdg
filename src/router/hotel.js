@@ -14,6 +14,14 @@ export default {
       name: '酒店基础信息'
     },
     {
+      path: 'HotelBaseAdd',
+      component: _import('hotel/hotel-base/hotel-base-add'),
+      name: '添加酒店',
+      meta: {
+        hidden: true
+      }
+    },
+    {
       path: 'HotelBasePolicy',
       component: _import('hotel/hotel-base-policy/hotel-base-policy'),
       name: '酒店政策信息'
@@ -29,12 +37,9 @@ export default {
       name: '平台结算信息'
     },
     {
-      path: 'HotelBaseAdd',
-      component: _import('hotel/hotel-base/hotel-base-add'),
-      name: '添加酒店',
-      meta: {
-        hidden: true
-      }
+      path: 'Advancement',
+      component: _import('hotel/advancement/advancement'),
+      name: '预存款列表'
     },
     {
       path: 'HotelBaseEdit/:ID',

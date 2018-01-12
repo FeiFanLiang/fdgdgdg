@@ -53,6 +53,7 @@ import spiderSettingApi from './spider-setting'
 import policyApi from './policy'
 import visaApi from './visa'
 import hotelOrderDetailApi from './hotel-order-detail'
+import advancementApi from './advancement'
 export {
   accountApi,
   airlineApi,
@@ -108,5 +109,6 @@ export {
   spiderSettingApi,
   policyApi,
   visaApi,
-  hotelOrderDetailApi
+  hotelOrderDetailApi,
+  advancementApi
 }
