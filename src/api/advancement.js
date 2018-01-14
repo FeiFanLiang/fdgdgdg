@@ -13,5 +13,8 @@ export default {
     return axios.get(base2 + 'list', {
       params: params
     })
-  }
+  },
+  add(params) {
+    return axios.post(base2 + 'Add',params)
+  },
 }

@@ -24,14 +24,16 @@
                 <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="收款金额" prop="AmountUse">
+        <el-table-column label="实收" prop="AmountUse">
             <!-- <template scope="scope">
                 <input v-model="scope.row.AmountUse" style="width:90%" v-on:input="inputChange">
             </template> -->
         </el-table-column>
+        <el-table-column label="应收" prop="YingShouFu"></el-table-column>
+        <el-table-column label="对冲" prop="DuiChong"></el-table-column>
         <el-table-column label="备注" prop="Remark">
             <template scope="scope">
-                <el-input v-model="scope.row.Remark" style="width:90%;margin:5px;" type="textarea"></el-input>
+                <el-input v-model="scope.row.Remark" type="textarea" :rows="1"></el-input>
             </template>
         </el-table-column>
     </el-table>

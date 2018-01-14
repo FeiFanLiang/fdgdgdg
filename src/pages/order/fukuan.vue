@@ -24,14 +24,16 @@
                 <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="付款金额" prop="AmountUse">
+        <el-table-column label="实付" prop="AmountUse">
             <!-- <template scope="scope">
                 <input v-model="scope.row.AmountUse" style="width:90%" v-on:input="inputChange">
             </template> -->
         </el-table-column>
+        <el-table-column label="应付" prop="YingShouFu"></el-table-column>
+        <el-table-column label="对冲" prop="DuiChong"></el-table-column>
         <el-table-column label="备注" prop="Remark">
             <template scope="scope">
-                <el-input v-model="scope.row.Remark" style="width:90%;margin:5px;" type="textarea"></el-input>
+                <el-input v-model="scope.row.Remark" type="textarea" :rows="1"></el-input>
             </template>
         </el-table-column>
     </el-table>
@@ -44,7 +46,7 @@
                 <el-input placeholder="合计" v-model="payCheck.Amount" class="input"></el-input>
                 <el-button @click="account">计算</el-button>
             </el-form-item>
-            <el-form-item label="货币 类型" prop="Currency">
+            <el-form-item label="货币类型" prop="Currency">
                 <el-input placeholder="货币类型" v-model="payCheck.Currency" class="input"></el-input>
             </el-form-item>
             <el-form-item label="付款时间" prop="ExpectSettlement">

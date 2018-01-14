@@ -126,6 +126,9 @@
         <el-tab-pane label="酒店协议" name="policy">
             <PolicyList></PolicyList>
         </el-tab-pane>
+        <el-tab-pane label="预存款信息" name="advancement">
+            <Advancement></Advancement>
+        </el-tab-pane>
     </el-tabs>
 </div>
 </template>
@@ -144,6 +147,7 @@ const HotelPlatformPage = () => import("../hotel-platform/hotel-platform.vue");
 const HotelPricePage = () => import("../hotel-price/hotel-price.vue");
 const HotelShowPage = () => import("../hotel-show/hotel-show.vue");
 const PolicyList = () => import("../policy/policy-list.vue");
+const Advancement = () => import("../advancement/advancement.vue");
 
 export default {
   components: {
@@ -153,7 +157,8 @@ export default {
     // HotelPolicyPage,
     HotelPricePage,
     HotelShowPage,
-    PolicyList
+    PolicyList,
+    Advancement
   },
   data() {
     return {
