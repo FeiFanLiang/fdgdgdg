@@ -223,7 +223,7 @@
               </el-col>
               <el-col :span="6">
                       <el-form-item label="确认号" prop="HotelBookingNoNeed">
-                          <el-input placeholder="请输入确认号" v-model="form.PlatHotelBookingNoNeedOrderNo"></el-input>
+                          <el-input placeholder="请输入确认号" v-model="form.HotelBookingNoNeed"></el-input>
                       </el-form-item>
                 </el-col>
             </el-row>
@@ -262,13 +262,6 @@
                 </el-col>
             </el-row>
             <el-row :gutter="24">
-                <el-col :span="24">
-                    <el-form-item label="订单备注" prop="PassengerAsk">
-                        <el-input type="textarea" v-model="form.PassengerAsk"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row :gutter="24">
               <el-col :span="6">
                     <el-form-item label="订单状态" prop="OrderState">
                         <el-select v-model="form.OrderState" clearable>
@@ -289,74 +282,79 @@
                   </el-form-item>
               </el-col>
             </el-row>
+            <el-row :gutter="24">
+                <el-col :span="12">
+                    <el-form-item label="客人要求" prop="PassengerAsk">
+                        <el-input type="textarea" v-model="form.PassengerAsk"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="备注" prop="Remark">
+                        <el-input type="textarea" v-model="form.Remark"></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
-                    <el-form-item label="付款货币" prop="CurrencyFuKuan">
-                        <el-select v-model="form.CurrencyFuKuan" clearable>
+                    <el-form-item label="付款货币" prop="CurrencyFu">
+                        <el-select v-model="form.CurrencyFu" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="收款货币" prop="CurrencyShouKuan">
-                        <el-select v-model="form.CurrencyShouKuan" clearable>
+                    <el-form-item label="收款货币" prop="CurrencyShou">
+                        <el-select v-model="form.CurrencyShou" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="酒店底价" prop="HotelFee">
-                        <el-input placeholder="请输入酒店底价" v-model="form.HotelFee"></el-input>
+                        <el-input placeholder="请输入酒店底价" v-model="HotelOrderDetail.HotelFee"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="应收款额" prop="AmountYingShou">
-                        <el-input placeholder="请输入应收款额" v-model="form.AmountYingShou"></el-input>
+                        <el-input placeholder="请输入应收款额" v-model="HotelOrderDetail.AmountYingShou"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="应付款额" prop="AmountYingFu">
-                        <el-input placeholder="请输入应付款额" v-model="form.AmountYingFu"></el-input>
+                        <el-input placeholder="请输入应付款额" v-model="HotelOrderDetail.AmountYingFu"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="实收款额" prop="AmountShiShou">
-                        <el-input placeholder="请输入实收款额" v-model="form.AmountShiShou"></el-input>
+                        <el-input placeholder="请输入实收款额" v-model="HotelOrderDetail.AmountShiShou"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="实付款额" prop="AmountShiFu">
-                        <el-input placeholder="请输入实付款额" v-model="form.AmountShiFu"></el-input>
+                        <el-input placeholder="请输入实付款额" v-model="HotelOrderDetail.AmountShiFu"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>   
             <el-row :gutter="24">
                 <el-col :span="6">
                     <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
-                        <el-select v-model="form.SettlementCycleFu" clearable>
+                        <el-select v-model="HotelOrderDetail.SettlementCycleFu" clearable>
                           <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（收）" prop="SettlementCycle">
-                        <el-select v-model="form.SettlementCycle" clearable>
+                        <el-select v-model="HotelOrderDetail.SettlementCycle" clearable>
                           <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>  
-            <el-row :gutter="24">
-              <el-col>
-                <el-form-item label="财务备注" prop="Remark">
-                    <el-input type="textarea" v-model="form.Remark"></el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
             <el-row :gutter="20">
@@ -401,20 +399,8 @@ export default{
       showDialog:false,
       isEditable:true,
       form:{
-        BookTime: '',
-        CurrencyFuKuan: '',
-        CurrencyShouKuan: '',
-        RoomNum: '',
-        NightNum: '',
-        OrderState: '',
-        OrderType: '',
-        PlatOrderNo:'',
-        SettlementCycle: '',
-        SettlementCycleFu: '',
-        ThreePlatID: '',
-        StayDateStart: '',
-        StayDateEnd: '',
       },
+      HotelOrderDetail:{},
       hotelsOrder: [],
       ID: '',
       filters: {
@@ -728,6 +714,8 @@ export default{
       //添加订单前判断是否存在
       const res = await hotelsOrderApi.getDetail(_self.form.PlatOrderNo)
       _self.detail = res.data.Data
+      _self.form = _self.detail
+      _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0]
       if(typeof(_self.detail) == 'undefined'){
         _self.text = 0
       }else{
@@ -738,21 +726,8 @@ export default{
       const _self = this
       _self.showDialog = true
       _self.text = -1
-      _self.form = {
-        BookTime: '',
-        CurrencyFuKuan: '',
-        CurrencyShouKuan: '',
-        RoomNum: '',
-        NightNum: '',
-        OrderState: '',
-        OrderType: '',
-        PlatOrderNo:'',
-        SettlementCycle: '',
-        SettlementCycleFu: '',
-        ThreePlatID: '',
-        StayDateStart: '',
-        StayDateEnd: '',
-      }
+      _self.form = {}
+      _self.HotelOrderDetail = {}
     },
     async submitForm() {
       const _self = this
@@ -772,6 +747,7 @@ export default{
                 default: _self.form.PlatOrderType = ""
             }
             _self.form.UpdateTime = time
+            _self.form.HotelOrderDetail = _self.HotelOrderDetail
             console.log(_self.detail)
             if(typeof(_self.detail) == 'undefined'){
               var f = {
@@ -781,8 +757,11 @@ export default{
                 ]
               }
             }else{
+              let id = _self.detail.ID
+              _self.form.ID = ''
+              _self.HotelOrderDetail.ID = ''
               var f = {
-                ID:_self.detail.ID,
+                ID:id,
                 HotelArea: _self.detail.HotelArea,
                 Picture:_self.imageList.toString(),
                 HotelOrderDetail:[

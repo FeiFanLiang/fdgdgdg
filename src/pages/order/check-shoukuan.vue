@@ -1,6 +1,11 @@
 <template lang="html">
 <div id="CheckShoukuan">
     <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
+        <el-form-item label="状态" slot='StateCheck'>
+            <el-select v-model="filters.StateCheck" placeholder="请选择">
+                <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
+            </el-select>
+        </el-form-item>
         <el-button style="margin:10px 0;" @click="collection" slot="button-add">收款</el-button>
     </CustomSearchCopy>
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
@@ -36,7 +41,7 @@
         <template scope="scope">
             <span v-if="scope.row.StateCheck == 0">未对账</span>
             <span v-if="scope.row.StateCheck == 1">未到款</span>
-            <span v-if="scope.row.StateCheck == 2">结清</span>
+            <!-- <span v-if="scope.row.StateCheck == 2">结清</span> -->
         </template>
     </el-table-column>
   </el-table>
@@ -64,8 +69,19 @@ export default {
                 StayDateStart:'',
                 BookTime:'',
                 StayDateEnd:'',
-                ExpectSettlement:''
-            }
+                ExpectSettlement:'',
+                StateCheck:''
+            },
+            StateCheck:[
+                {
+                    label:'未对账',
+                    value:0
+                },
+                {
+                    label:'未到款',
+                    value:1
+                }
+            ]
         }
     },
     created(){
@@ -111,6 +127,7 @@ export default {
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
+                    StateCheck:_self.filters.StateCheck
                 }
             }
             try {

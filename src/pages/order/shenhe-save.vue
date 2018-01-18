@@ -1,6 +1,7 @@
 <template>
 <div id="ShenheSave">
     <el-button @click="returns()">返回</el-button>
+    <p>*注意：对冲款为正数则留作对冲（预存），为负数则使用对冲（预存款）</p>
     <el-table :data="sheheSaveList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column label="操作">
             <template scope="scope">
@@ -8,13 +9,33 @@
             </template>
         </el-table-column>
         <el-table-column prop="PaymentNo" label="编号"></el-table-column>
-        <el-table-column prop="AmountUse" label="金额" width="120">
+        <el-table-column prop="AmountUse" label="实收/付" width="120">
             <template scope="scope">
                 <p v-if="scope.row.ID != 0">
                     {{scope.row.AmountUse}}
                 </p>
                 <p v-if="scope.row.ID == 0">
                     <el-input v-model="scope.row.AmountUse"></el-input>
+                </p>
+            </template>
+        </el-table-column>
+        <el-table-column prop="YingShouFu" label="应收/付" width="120">
+            <template scope="scope">
+                <p v-if="scope.row.ID != 0">
+                    {{scope.row.YingShouFu}}
+                </p>
+                <p v-if="scope.row.ID == 0">
+                    <el-input v-model="scope.row.YingShouFu"></el-input>
+                </p>
+            </template>
+        </el-table-column>
+        <el-table-column prop="DuiChong" label="对冲" width="120">
+            <template scope="scope">
+                <p v-if="scope.row.ID != 0">
+                    {{scope.row.DuiChong}}
+                </p>
+                <p v-if="scope.row.ID == 0">
+                    <el-input v-model="scope.row.DuiChong"></el-input>
                 </p>
             </template>
         </el-table-column>

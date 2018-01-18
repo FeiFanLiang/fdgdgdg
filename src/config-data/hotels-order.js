@@ -17,6 +17,7 @@ const searchData = [
   ['入住日期', 'StayDateStart', 'date', ''],
   ['退房日期', 'StayDateEnd', 'date', ''], 
   ['预定日期', 'BookTime', 'daterange', ''],
+  ['状态', 'StateCheck', 'select', ''],
 ]
 const searchData2 = [
   ['订单号', 'PlatOrderNo', 'input', ''], 

@@ -98,7 +98,7 @@
         <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
     </el-dialog>
-    <el-dialog title="爬虫设置"  :visible.sync="showSpiderDialog" size="small" :modal-append-to-body="false" :before-close="beforeClose" >
+    <el-dialog title="爬虫设置"  :visible.sync="showSpiderDialog" size="full" :modal-append-to-body="false" :before-close="beforeClose" >
        <SpiderSetting :platformHotelId="platformHotelId" :isShow="showSpiderSetting" />
         </el-dialog>
   </div>

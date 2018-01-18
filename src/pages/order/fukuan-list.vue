@@ -4,9 +4,14 @@
         <el-button style="margin:10px 0;" @click="payment" slot="button-add">付款</el-button>
     </CustomSearchCopy>
   <el-table ref="multipleTable" :data="fukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange" 
-  :default-sort = "{prop: 'BookTime', order: 'descending'}">
+  :default-sort = "{prop: 'UrgentPay', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
+    <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip>
+        <template scope="scope">
+            <span v-if="scope.row.UrgentPay == 1" style="color:red;">{{ scope.row.HotelOrder.PlatOrderNo }}</span>
+            <span v-else>{{ scope.row.HotelOrder.PlatOrderNo }}</span>
+        </template>
+    </el-table-column>
     <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
@@ -16,14 +21,20 @@
     </el-table-column>
     <el-table-column label="间/晚" prop="RoomNum" width="80">
         <template scope="scope">
-        <span>{{ scope.row.HotelOrder.RoomNum }}</span>/
-        <span>{{ scope.row.HotelOrder.NightNum }}</span>
+            <span>{{ scope.row.HotelOrder.RoomNum }}</span>/
+            <span>{{ scope.row.HotelOrder.NightNum }}</span>
         </template>
     </el-table-column>
     <el-table-column label="入住人" prop="HotelOrder.Passenger" width="100"></el-table-column>
     <el-table-column label="预定时间" prop="HotelOrder.BookTime" width="150" sortable>
         <template scope="scope">
             <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="不可合并支付" prop="HotelOrder.UnMergePay">
+        <template scope="scope">
+            <span v-if="scope.row.UnMergePay == 1">不可合并</span>
+            <span v-if="scope.row.UnMergePay == 0">可合并</span>
         </template>
     </el-table-column>
     <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
@@ -90,7 +101,7 @@ export default {
             const options = {
                 pageIndex: currentPage || _self.currentPage,
                 pageSize: pageSize || _self.pageSize,
-                order: 'ID',
+                order: 'UrgentPay',
                 query:{
                     HotelName:_self.filters.HotelName,
                     PlatOrderNo:_self.filters.PlatOrderNo,

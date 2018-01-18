@@ -62,9 +62,9 @@
                 </el-select>
             </el-form-item>
             -->
-            <el-form-item label="支付账户" prop="CompanyAcount">
+            <el-form-item label="收款账号" prop="CompanyAcount">
                 <el-select v-model="payCheck.CompanyAcount" class="input">
-                    <el-option v-for="item in CompanyAcount" :key="item.ID" :label="item.AccountName" :value="item.ID"></el-option>
+                    <el-option v-for="item in CompanyAcount" :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="Remark">
@@ -137,7 +137,7 @@ export default {
             this.picture.splice(index, 1)
         },
         async getPayCompany(){
-            const res = await payCompanyApi.list()
+            const res = await payCompanyApi.getMyCompany()
             this.CompanyAcount = res.data.Data
         },
         randomString() {

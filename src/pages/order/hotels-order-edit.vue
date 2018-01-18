@@ -95,10 +95,23 @@
                     <span v-if="form.BackfillState == 1" style="color:orange">已回填</span>
                 </el-form-item>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="6">
                 <el-form-item label="审核状态" prop="BackfillState">
                     <span v-if="form.StateAuditor == 0" style="color:orange">未审核</span>
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="外采标记" prop="WaiCaiFlag">
+                    <span v-if="form.WaiCaiFlag == 0" style="color:orange">自营</span>
+                    <span v-if="form.WaiCaiFlag == 1" style="color:orange">外采</span>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="外采账号" prop="WaiCaiPlatID">
+                    <el-select v-model="form.WaiCaiPlatID" clearable>
+                        <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -117,10 +130,23 @@
                 <!--///////////////////////////////////-->
                 <el-form ref="item" :model="item" label-width="110px">
                     <el-row :gutter="24"><el-col :span="24" style="color:orange;"><h1>订单信息</h1></el-col></el-row>
-                    <el-row>
-                        <el-col :span="8">
+                    <el-row :gutter="24">
+                        <el-col :span="10">
                             <el-form-item label="酒店名称" prop="HotelName">
                                 <el-input placeholder="请输入酒店名称" v-model="item.HotelName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :offset='2' :span="6">
+                            <el-form-item label="外采标记" prop="WaiCaiFlag">
+                                <span v-if="item.WaiCaiFlag == 0" style="color:orange">自营</span>
+                                <span v-if="item.WaiCaiFlag == 1" style="color:orange">外采</span>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="外采账号" prop="WaiCaiPlatID">
+                                <el-select v-model="item.WaiCaiPlatID" clearable>
+                                    <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -489,7 +515,8 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
-  hotelOrderDetailApi
+  hotelOrderDetailApi,
+  policyApi
 } from 'api'
 import UploadImage from 'components/upload-image'
 import Tinymce from 'components/Tinymce'
@@ -547,7 +574,8 @@ export default{
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
                 HotelOrderDetail:[],
-                Picture:''
+                Picture:'',
+                WaiCaiPlatID:''
             },
             copyForm: {},
             pickerOptions: {
@@ -665,6 +693,7 @@ export default{
                 value: 'JPY'
                 },
             ],
+            WaiCaiPlatID:[]
         }
     },
     created() {
@@ -687,8 +716,13 @@ export default{
             _self.getHotelOrderList(_self.ID,_self.POrderID)
         }
         _self.ThreePlat()
+        _self.platformAccount()
     },
     methods:{
+        async platformAccount(){
+            const res = await policyApi.getPolicyPlatform()
+            this.WaiCaiPlatID = res.data.Data
+        },
         setContent(){
             const _self = this
             _self.stringWX = `<div style="font-size: 18px;"><p>`+_self.Company+`<br />入住人：`+_self.Passenger+`<br />入离日期：`+_self.StayDateStart+`至`+_self.StayDateEnd+`<br />预订房型：`+_self.Room+`&nbsp; &nbsp;`+_self.RoomNum+`间`+_self.NightNum+`晚<br />早餐类型：含x早<br />房价：xx </p></div>`
