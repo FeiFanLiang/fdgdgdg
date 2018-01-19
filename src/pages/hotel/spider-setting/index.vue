@@ -47,12 +47,12 @@
         </el-dialog>
       </el-tab-pane>
       <el-tab-pane label="任务列表" name="task">
-        <el-button @click="fresh()" type="primary" style="margin-left:40px;">刷新</el-button>
+        <el-button @click="fresh()" type="primary">刷新</el-button>
         <el-row :gutter="24">
           <el-col :span="9">
             <ul v-for="(item,index) in taskList" style="list-style:none">
               <li>
-                <el-button  @click="getTask(item)">{{item}}</el-button>
+                <el-button  @click="getTask(item)" style="margin:10px 0;">{{item}}</el-button>
               </li>
             </ul>
           </el-col>
@@ -68,12 +68,12 @@
         </el-row>
       </el-tab-pane>
       <el-tab-pane label="当前价格" name="price">
-        <el-button @click="fresh2()" type="primary" style="margin-left:40px;">刷新</el-button>
+        <el-button @click="fresh2()" type="primary">刷新</el-button>
         <el-row :gutter="24">
           <el-col :span="9">
             <ul v-for="(item,index) in priceList" style="list-style:none">
               <li>
-                <el-button  @click="getPrice(item)">{{item}}</el-button>
+                <el-button  @click="getPrice(item)" style="margin:10px 0;">{{item}}</el-button>
               </li>
             </ul>
           </el-col>
@@ -248,7 +248,6 @@ export default {
       _self.getPrice(_self.priceList[0])
     },
     async getPrice(item){
-      console.log(1111111111)
       const res = await spiderSettingApi.GetPrice(item)
       this.priceDetail = res.data
     },
@@ -276,7 +275,7 @@ export default {
     width:55%;
     display: flex;
     border:solid 1px lightgrey;
-    height:650px;
+    height:600px;
   }
   pre{white-space:pre-wrap;word-wrap:break-word;}
 * html pre { word-wrap: break-word;white-space : normal ;}

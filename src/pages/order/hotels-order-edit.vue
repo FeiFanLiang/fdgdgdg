@@ -76,7 +76,7 @@
         </el-row>
         <el-row :gutter="24">
             <el-col :span="17">
-            <el-form-item label="采购渠道" prop="HotelArea">
+            <el-form-item label="酒店区域" prop="HotelArea">
                 <el-radio-group v-model="form.HotelArea">
                     <el-radio :label="1">国际</el-radio>
                     <el-radio :label="0">国内</el-radio>
@@ -108,7 +108,7 @@
                 </el-form-item>
             </el-col>
             <el-col :span="6">
-                <el-form-item label="外采账号" prop="WaiCaiPlatID">
+                <el-form-item label="外采渠道" prop="WaiCaiPlatID">
                     <el-select v-model="form.WaiCaiPlatID" clearable>
                         <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
                     </el-select>
@@ -143,7 +143,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="外采账号" prop="WaiCaiPlatID">
+                            <el-form-item label="外采渠道" prop="WaiCaiPlatID">
                                 <el-select v-model="item.WaiCaiPlatID" clearable>
                                     <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
                                 </el-select>
