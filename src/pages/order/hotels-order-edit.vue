@@ -103,8 +103,11 @@
             </el-col>
             <el-col :span="6">
                 <el-form-item label="外采标记" prop="WaiCaiFlag">
-                    <span v-if="form.WaiCaiFlag == 0" style="color:orange">自营</span>
-                    <span v-if="form.WaiCaiFlag == 1" style="color:orange">外采</span>
+                    <!-- <span v-if="form.WaiCaiFlag == 0" style="color:orange">自营</span>
+                    <span v-if="form.WaiCaiFlag == 1" style="color:orange">外采</span> -->
+                    <el-select v-model="form.WaiCaiFlag" clearable>
+                        <el-option v-for="(item,index) in WaiCaiFlag " :key="index" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -138,8 +141,11 @@
                         </el-col>
                         <el-col :offset='2' :span="6">
                             <el-form-item label="外采标记" prop="WaiCaiFlag">
-                                <span v-if="item.WaiCaiFlag == 0" style="color:orange">自营</span>
-                                <span v-if="item.WaiCaiFlag == 1" style="color:orange">外采</span>
+                                <!-- <span v-if="item.WaiCaiFlag == 0" style="color:orange">自营</span>
+                                <span v-if="item.WaiCaiFlag == 1" style="color:orange">外采</span> -->
+                                <el-select v-model="item.WaiCaiFlag" clearable>
+                                    <el-option v-for="(item,index) in WaiCaiFlag " :key="index" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -693,7 +699,17 @@ export default{
                 value: 'JPY'
                 },
             ],
-            WaiCaiPlatID:[]
+            WaiCaiPlatID:[],
+            WaiCaiFlag:[
+                {
+                    label:'自营',
+                    value:0
+                },
+                {
+                    label:'外采',
+                    value:1
+                }
+            ]
         }
     },
     created() {
