@@ -1,10 +1,32 @@
 <template lang="html">
   <div id="pay-company-page">
-    <el-row>
-      <el-col :span="11">
-        <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-      </el-col>
-    </el-row>
+    <el-form v-model="filters" label-width="110px">
+      <el-row :gutter="24">
+        <el-col :span="6" style="margin-left:-40px;">
+          <el-form-item label="账户名称">
+            <el-input placeholder="请输入账户名称" v-model="filters.accountName"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="状态">
+            <el-select v-model="filters.state" placeholder="请选择">
+              <el-option v-for="item in [{value:1,label:'废除'},{value:0,label:'正常'}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="是否我公司账号">
+            <el-switch on-text="是" off-text="否" :on-value="1" :off-value="0" v-model="filters.Own"></el-switch>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :span="11">
+          <el-button type="primary" @click="search(filters)">搜索</el-button>
+          <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
     <CustomTable :list="list" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" @successCallBack="fetchData" >
       <el-table-column  width="150"  label="操作" fixed="right" slot="right-one">
         <template scope="scope">
@@ -20,7 +42,7 @@
        </el-table-column>
       <el-table-column sortable prop="State" label="状态" width="80" show-overflow-tooltip slot="right-one">
            <template scope="scope">
-             {{scope.row.State?'正常':'废除'}} 
+             {{scope.row.State?'废除':'正常'}} 
               </template>
        </el-table-column>
     </CustomTable>
@@ -80,7 +102,7 @@
                   <el-form-item label="状态" prop="state">
                     <el-select v-model="form.state" placeholder="请选择">
      <el-option
-       v-for="item in [{value:0,label:'废除'},{value:1,label:'正常'}]"
+       v-for="item in [{value:1,label:'废除'},{value:0,label:'正常'}]"
        :key="item.value"
        :label="item.label"
        :value="item.value">
@@ -117,7 +139,7 @@
 import { payCompanyApi } from 'api'
 export default {
   created() {
-    this.fetchData()
+    //this.fetchData()
     this.configList = payCompanyApi.getConfig()
   },
   data() {
@@ -126,7 +148,7 @@ export default {
       pageSize: 10,
       count: 0,
       list: [],
-      loading: true,
+      loading: false,
       isEditable: true,
       showDialog: false,
       copyForm: {},
@@ -155,10 +177,19 @@ export default {
             message: '请输入银行账户'
           }
         ]
+      },
+      filters:{
+        accountName:'',
+        state: '',
+        Own:''
       }
     }
   },
   methods: {
+    search(filters) {
+      this.filters = filters
+      this.fetchData()
+    },
     handleSizeChange(val) {
       this.pageSize = val
       this.fetchData(1, this.pageSize)
@@ -177,6 +208,11 @@ export default {
           pageIndex: _self.currentPage,
           pageSize: _self.pageSize,
           order: 'ID',
+          query: { 
+            AccountName:_self.filters.accountName,
+            State:_self.filters.state,
+            Own:_self.filters.Own,
+          }
         }
         const res = await payCompanyApi.list(options)
         _self.list = res.data.Data
