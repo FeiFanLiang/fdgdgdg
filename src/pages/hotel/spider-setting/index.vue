@@ -52,16 +52,17 @@
           <el-col :span="9">
             <ul v-for="(item,index) in taskList" style="list-style:none">
               <li>
-                <el-button  @click="getTask(item)" style="margin:10px 0;">{{item}}</el-button>
+                <el-button @click="getTask(item)" style="width:100%;margin:10px 0;">{{item}}</el-button>
               </li>
             </ul>
           </el-col>
           <el-col :span="14">
             <div class="searchBar" id="searchBar">
                 <p class="p" :class="searchBarFixed == true ? 'isFixed' :''">
-                 <pre id="songReqJson">
+                 <pre id="songReqJson" style="font-size:18px;">
                    {{taskDetail}}
                  </pre>
+                 <!-- <div v-for="item in taskDetail">{{item}}</div> -->
                 </p>
             </div>
           </el-col>
@@ -73,16 +74,23 @@
           <el-col :span="9">
             <ul v-for="(item,index) in priceList" style="list-style:none">
               <li>
-                <el-button  @click="getPrice(item)" style="margin:10px 0;">{{item}}</el-button>
+                <el-button @click="getPrice(item)" style="width:50%;margin:10px 0;">{{item}}</el-button>
               </li>
             </ul>
           </el-col>
           <el-col :span="14">
-            <div class="searchBar" id="searchBar">
-                <p class="p" :class="searchBarFixed == true ? 'isFixed' :''">
-                 <pre id="songReqJson">
+            <div class="searchBar price" id="searchBar">
+                <p class="p pprice" :class="searchBarFixed == true ? 'isFixed' :''">
+                 <!-- <pre id="songReqJson">
                    {{priceDetail}}
-                 </pre>
+                 </pre> -->
+                 <el-collapse accordion>
+                    <el-collapse-item :title='item.DistributorName' v-for="item in priceDetail" style="width:980px;border-right:none;">
+                      <pre id="songReqJson">
+                        {{item}}
+                      </pre>
+                    </el-collapse-item>
+                  </el-collapse>
                 </p>
             </div>
           </el-col>
@@ -234,7 +242,7 @@ export default {
     async getTaskList(){
       const _self = this
       const res = await spiderSettingApi.GetTaskList(_self.platformHotelId)
-      _self.taskList = res.data
+      _self.taskList = res.data.sort()
       _self.getTask(_self.taskList[0])
     },
     async getTask(item){
@@ -244,7 +252,7 @@ export default {
     async getPriceList(){
       const _self = this
       const res = await spiderSettingApi.GetPriceList(_self.platformHotelId)
-      _self.priceList = res.data
+      _self.priceList = res.data.sort()
       _self.getPrice(_self.priceList[0])
     },
     async getPrice(item){
@@ -279,6 +287,14 @@ export default {
   }
   pre{white-space:pre-wrap;word-wrap:break-word;}
 * html pre { word-wrap: break-word;white-space : normal ;}
+}
+.price{
+  .isFixed{
+    left:25%;
+  }
+  .pprice {
+    width:70%;
+  }
 }
 }
 </style>

@@ -161,7 +161,7 @@ export default {
         sortNo: '',
         company: '',
         state: '',
-        Own:'',
+        Own:1,
         Bank:''
       },
       rules: {
@@ -181,7 +181,7 @@ export default {
       filters:{
         accountName:'',
         state: '',
-        Own:''
+        Own:1
       }
     }
   },
@@ -226,7 +226,9 @@ export default {
     clickAddBtn() {
       const _self = this
       _self.showDialog = true
-      _self.form = {}
+      _self.form = {
+        Own:1
+      }
     },
     async clickEditBtn($index, row) {
       const _self = this

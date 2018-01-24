@@ -373,8 +373,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="佣金" prop="Commission">
-                                <el-input placeholder="请输入佣金" v-model="item.Commission"></el-input>
+                            <el-form-item label="佣金" prop="CommissionStr">
+                                <el-input placeholder="请输入佣金" v-model="item.CommissionStr"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
