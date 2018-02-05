@@ -1,9 +1,53 @@
 <template lang="html">
 <div id="Jietulist">
-    <el-table :data="jietuList" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading">
-        <el-table-column label="操作" width=100>
-            <template scope="scope">
-                <el-button type="primary" size="small" @click="addImg(scope.row.ID)">添加截图</el-button>
+    <el-form label-width="80px">
+      <el-row :gutter="24">
+        <el-col :span="6">
+            <el-form-item label="打款账户">
+                <el-input v-model="filters.CompanyAcount"></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-form-item label="入住人">
+                <el-input v-model="filters.Passenger"></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-form-item label="订单编号">
+                <el-input v-model="filters.PlatOrderNo"></el-input>
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
+    @expand="expand" row-key="ID" ref="table">
+        <el-table-column type="expand" width=25>
+            <template scope="props">
+                备注：{{props.row.Remark}}
+                <el-table :data="orderDetail" border style="width: 100%">
+                    <el-table-column prop="HotelOrder.PlatOrderNo" label="订单号"></el-table-column>
+                    <el-table-column prop="HotelOrder.HotelName" label="酒店名称"></el-table-column>
+                    <el-table-column prop="HotelOrder.Passenger" label="入住人"></el-table-column>
+                    <el-table-column prop="AmountUse" label="金额"></el-table-column>
+                </el-table>
+                <el-row :gutter="24">
+                    <p style="margin:10px;">
+                    <span style="color:orange;">截图状态</span>
+                        <el-radio-group v-model="props.row.StateScreenshot">
+                            <el-radio :label="0">未截图</el-radio>
+                            <el-radio :label="1">截图完成</el-radio>
+                        </el-radio-group>
+                    </p>
+                </el-row>
+                <el-row :gutter="24" style="margin-top:10px;margin-bottom:10px;">
+                    <el-col>
+                        <UploadImageMove :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageMove>
+                    </el-col>
+                </el-row>
+                <el-button type="primary" @click="submitImg(props.row.ID,props.row.StateScreenshot)" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </template>
         </el-table-column>
         <el-table-column label="类别" prop="PaymentType" width=70>
@@ -15,26 +59,21 @@
         <el-table-column label="财务编号" prop="PaymentNo" width=110></el-table-column>
         <el-table-column label="打款账户" prop="CompanyAcount"></el-table-column>
         <el-table-column label="对方账户名" prop="Partner" show-overflow-tooltip></el-table-column>
-        <el-table-column label="对方开户行" prop="PartnerAcountModel"></el-table-column>
-        <el-table-column label="合计金额" prop="Amount"></el-table-column>
-        <el-table-column label="收付时间" prop="PaymentDate" width=115>
+        <el-table-column label="对方账号" prop="PartnerAccount" width=125>
             <template scope="scope">
-                <span v-if="typeof(scope.row.PaymentDate) != 'undefined'">
-                    {{scope.row.PaymentDate.substring(0,10)}}
-                </span>
+                <el-popover trigger="hover" placement="top">
+                    <p>{{ scope.row.PartnerAccount }}</p>
+                    <div slot="reference" class="name-wrapper" v-if="typeof(scope.row.PartnerAccount) != 'undefined'">
+                        {{ scope.row.PartnerAccount.substring(0,4) + '****' + scope.row.PartnerAccount.substring(scope.row.PartnerAccount.length-4,scope.row.PartnerAccount.length+1) }}
+                    </div>
+                </el-popover>
             </template>
         </el-table-column>
-        <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
+        <el-table-column label="入住人" prop="Passenger"></el-table-column>
+        <el-table-column label="合计金额" prop="Amount"></el-table-column>
+        <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
-        <el-table-column label="状态" prop="State">
-            <template scope="scope">
-                <span v-if="scope.row.State === 0">待处理</span>
-                <span v-if="scope.row.State === 1">已处理，待对账</span>
-                <span v-if="scope.row.State === 2">已对账，待结算</span>
-                <span v-if="scope.row.State === 3">结算完成</span>
-            </template>
-        </el-table-column>
         <el-table-column label="预计结算/到款日期" width=110>
             <template scope="scope">
                 <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
@@ -46,80 +85,82 @@
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog title="添加截图" v-model="dialogShow">
-        <el-form v-model="form" label-width="110px">
-            <el-form-item label="截图状态" prop="StateScreenshot">
-                <el-radio-group v-model="form.StateScreenshot">
-                    <el-radio :label="0">待截图</el-radio>
-                    <el-radio :label="1">截图完成</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item label="添加截图">
-                <ul style="list-style:none">
-                    <li v-for="(img,index) in images">
-                        <img width="50%" :src="img" alt="" v-if="form.Picture != ''">
-                    </li>
-                </ul>
-                <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
-                    <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
-            </el-form-item>
-        </el-form>
-        <span slot="footer">
-            <el-button @click="dialogShow = false">取 消</el-button>
-            <el-button type="primary" @click="submit">确 定</el-button>
-        </span>
-    </el-dialog>
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi } from 'api'
-import path from 'api/api'
+import { hotelPaymentInfoApi,paymentCheckApi } from 'api'
+import UploadImageMove from 'components/upload-image-move'
 export default {
+  components: {
+      UploadImageMove
+  },
   data(){
       return{
           currentPage: 1,
           pageSize: 10,
           count: 0,
           loading: false,
-          jietuList:[],
-          dialogShow:false,
-          form:{
-              ID:'',
-              StateScreenshot:'',
-              Picture:''
+          paymentCheck:[],
+          ID: '',
+          orderDetail:[],
+          filters:{
+              CompanyAcount:'',
+              PlatOrderNo:'',
+              Passenger:''
           },
-          imgUrl:'',
-          dialogImageUrl: '',
-          dialogVisible: false,
-          picture:[],
-          ID:'',
-          url:''
+          imageList: [],
+          Picture:'',
+          isEditable:true
       }
   },
   created() {
     this.fetchData()
-    this.imgUrl = path.uploadUrl
-    this.url = path.imageUrl
-  },
-  computed: {
-    images() {
-      return this.picture.map(item => path.imageUrl + item)
-    }
   },
   methods:{
-    imgSuccess(response, file, fileList){
-        this.picture.push(response)
+    async getImageList(list) {
+        if (list) {
+            const images = list.split(',')
+            if (Array.isArray(images)) {
+                this.imageList = images
+            }
+        }
     },
-    handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
+    async handleSuccess(response, file, fileList) {
+        if (!response) {
+            this.$message.error('上传失败,请重新上传')
+            return false
+        }
+        this.imageList.push(response)
+        this.Picture = this.imageList.toString()
     },
     handleRemove(index,file, fileList) {
-        this.picture.splice(index, 1)
+        this.imageList.splice(index, 1)
+        this.Picture = this.imageList.toString()
+    },
+    async submitImg(id,state){
+        const _self = this
+        let params = {
+            ID:id,
+            StateScreenshot:state,
+            Picture:this.Picture   
+        }
+        try{
+            _self.isEditable = false
+            paymentCheckApi.putImg(params)
+            _self.$message({
+                message: '提交成功',
+                type: 'success'
+            })
+            this.fetchData()
+        }catch (e) {
+            console.log(e)
+            _self.$message.error('提交失败!!!')
+        } finally {
+            _self.isEditable = true
+        }
+    },
+    hotelsOrderSearch(){
+        this.fetchData()
     },
     handleSizeChange(val) {
         this.pageSize = val
@@ -137,61 +178,38 @@ export default {
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
-            order: 'ID'
+            order: 'ID',
+            query:{
+                CompanyAcount:_self.filters.CompanyAcount,
+                PlatOrderNo:_self.filters.PlatOrderNo,
+                Passenger:_self.filters.Passenger
+            }
       }
       try {
         const res = await hotelPaymentInfoApi.getImgList(options)
-        _self.jietuList = res.data.Data
+        _self.paymentCheck = res.data.Data
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
         _self.loading = false
       }
     },
-    async addImg(id){
-        this.picture = []
-        const res = await hotelPaymentInfoApi.getImgById(id)
-        this.form = res.data.Data
-        let formList = this.form.Picture.split(",")
-        for(let i in formList){
-            this.picture.push(formList[i])
+    async expand(row, expanded){
+        const _self = this
+        if (expanded) {
+            const res = await hotelPaymentInfoApi.getDetails(row.ID)
+            _self.orderDetail = res.data.Data
+            _self.ID = row.ID
+            _self.getImageList(row.Picture)
         }
-        //ss = s.split(",")
-        console.log(this.picture)
-        this.dialogShow = true
     },
-    async submit(){
-        let f = {
-            ID:this.form.ID,
-            StateScreenshot:this.form.StateScreenshot,
-            Picture:this.picture.toString()
-        }
-        try{
-            console.log(f)
-            await hotelPaymentInfoApi.saveImg(f)
-            this.$message({
-                message: '添加截图成功',
-                type: 'success'
-            })
-            this.dialogShow = false
-            this.fetchData()
-            this.form = {
-                StateScreenshot:''
-            }
-            this.dialogImageUrl = ''
-        }catch(e){
-            console.log(e)
-            this.$message.error('添加截图失败!!!')
-        }
-
-    }
   }
 }
 </script>
 <style lang="scss">
 #Jietulist{
-.el-dialog__footer{
-    text-align:center;
+.el-card {
+    box-shadow: none;
 }
 }
 </style>

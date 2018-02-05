@@ -4,15 +4,15 @@
     <el-table :data="fukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" ref="table" row-key="ID"
     @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
-        <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
-        <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo"></el-table-column>
+        <el-table-column label="酒店名称" prop="HotelOrder.HotelName"></el-table-column>
         <el-table-column label="入住/退房日期" width="200">
             <template scope="scope">
                 <span v-if="typeof(scope.row.HotelOrder.StayDateStart) != 'undefined'">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/
                 <span v-if="typeof(scope.row.HotelOrder.StayDateEnd) != 'undefined'">{{ scope.row.HotelOrder.StayDateEnd.split(' ')[0] }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="间/晚" prop="RoomNum">
+        <el-table-column label="间/晚" prop="RoomNum" width=70>
             <template scope="scope">
             <span>{{ scope.row.HotelOrder.RoomNum }}</span>/
             <span>{{ scope.row.HotelOrder.NightNum }}</span>
@@ -24,13 +24,13 @@
                 <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
             </template>
         </el-table-column>
-        <el-table-column label="实付" prop="AmountUse">
+        <el-table-column label="实付" prop="AmountUse" width=90>
             <!-- <template scope="scope">
                 <input v-model="scope.row.AmountUse" style="width:90%" v-on:input="inputChange">
             </template> -->
         </el-table-column>
-        <el-table-column label="应付" prop="YingShouFu"></el-table-column>
-        <el-table-column label="对冲" prop="DuiChong"></el-table-column>
+        <el-table-column label="应付" prop="YingShouFu" width=90></el-table-column>
+        <el-table-column label="对冲" prop="DuiChong" width=90></el-table-column>
         <el-table-column label="备注" prop="Remark">
             <template scope="scope">
                 <el-input v-model="scope.row.Remark" type="textarea" :rows="1"></el-input>
@@ -90,12 +90,7 @@
     <el-card class="box-card">
         <el-form label-width="110px">
             <el-form-item label="添加截图">
-                <el-upload :action="imgUrl" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :on-success="imgSuccess">
-                    <i class="el-icon-plus"></i>
-                </el-upload>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
+                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
             </el-form-item>
         </el-form>
     </el-card>
@@ -105,8 +100,12 @@
 <script>
 import { hotelPaymentInfoApi,payCompanyApi  } from 'api'
 import path from 'api/api'
+import UploadImage from 'components/upload-image'
 
 export default {
+    components: {
+        UploadImage
+    },
     data() {
         return {
             multipleSelection:[],
@@ -127,11 +126,10 @@ export default {
                 Partner:'',
                 PartnerAccount:'',  
                 PartnerAccountModel:'',
-                Picture:'',                
+                Picture:'',  
+                StateScreenshot:0              
             },
-            imgUrl:'',
-            dialogImageUrl: '',
-            dialogVisible: false,
+            imageList: [],
             picture:[]
         }
     },
@@ -140,16 +138,18 @@ export default {
         this.getPayCompany()
         this.imgUrl = path.uploadUrl
     },
-    methods:{ 
-        imgSuccess(response, file, fileList){
-            this.picture.push(response)
-        },
-        handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
-            this.dialogVisible = true;
+    methods:{
+        async handleSuccess(response, file, fileList) {
+            if (!response) {
+                this.$message.error('上传失败,请重新上传')
+                return false
+            }
+            this.imageList.push(response)
+            this.picture = this.imageList
         },
         handleRemove(index,file, fileList) {
-            this.picture.splice(index, 1)
+            this.imageList.splice(index, 1)
+            this.picture = this.imageList
         },
         async getPayCompany(){
             const res = await payCompanyApi.getMyCompany()
@@ -204,12 +204,15 @@ export default {
                     amount+=_self.fukuanList[i].AmountUse
                 }
                 let remark = ''
+                let passenger = ''
                 for(let a in _self.multipleSelection){
-                    remark+=string.substring(string.length-6,string.length)+','
-                            +_self.multipleSelection[a].HotelOrder.StayDateStart.substring(0,10)+','
-                            +_self.multipleSelection[a].HotelOrder.Passenger+','
-                            +_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed
+                    remark+=_self.multipleSelection[a].HotelOrder.Passenger.replace('/',' ')+' '
+                            +_self.multipleSelection[a].HotelOrder.StayDateStart.substring(0,10)+' '
+                            +_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed+' '
+                            +string.substring(string.length-6,string.length)+' '
                             +'\n'
+                    passenger = _self.multipleSelection[a].HotelOrder.Passenger+'  '
+                    passenger = passenger.trim()
                 }
                 _self.payCheck = {
                     PaymentNo: 'F'+ string,
@@ -220,10 +223,12 @@ export default {
                     ExpectGetMoney: _self.fukuanList[0].ExpectGetMoney,
                     CompanyAcount: _self.fukuanList[0].CompanyAcount,
                     Remark: remark,
+                    Passenger : passenger,
                     Picture:_self.picture.toString(),
                     Partner:_self.fukuanList[0].Partner,
                     PartnerAccount:_self.fukuanList[0].PartnerAccount,  
-                    PartnerAccountModel:_self.fukuanList[0].PartnerAccountModel
+                    PartnerAccountModel:_self.fukuanList[0].PartnerAccountModel,
+                    StateScreenshot:0
                 }
                 _self.loading = false
             } catch (e) {

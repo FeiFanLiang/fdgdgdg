@@ -1,6 +1,6 @@
 <template lang="html">
   <div id="Spider">
-    <el-tabs v-model="activeName">
+    <el-tabs v-model="activeName" @tab-click="task(activeName)">
       <el-tab-pane label="爬虫信息" name="add">
         <el-row>
           <el-button type="primary" @click="clickAddBtn()">创建</el-button>
@@ -46,7 +46,7 @@
             </span>
         </el-dialog>
       </el-tab-pane>
-      <el-tab-pane label="任务列表" name="task">
+      <el-tab-pane label="任务列表" name="task" v-loading="loadingT">
         <el-button @click="fresh()" type="primary">刷新</el-button>
         <el-row :gutter="24">
           <el-col :span="9">
@@ -57,7 +57,7 @@
             </ul>
           </el-col>
           <el-col :span="14">
-            <div class="searchBar" id="searchBar">
+            <div class="searchBar" id="searchBar" v-if="taskList.length != 0">
                 <p class="p" :class="searchBarFixed == true ? 'isFixed' :''">
                  <pre id="songReqJson" style="font-size:18px;">
                    {{taskDetail}}
@@ -68,7 +68,7 @@
           </el-col>
         </el-row>
       </el-tab-pane>
-      <el-tab-pane label="当前价格" name="price">
+      <el-tab-pane label="当前价格" name="price" v-loading="loadingP">
         <el-button @click="fresh2()" type="primary">刷新</el-button>
         <el-row :gutter="24">
           <el-col :span="9">
@@ -79,13 +79,17 @@
             </ul>
           </el-col>
           <el-col :span="14">
-            <div class="searchBar price" id="searchBar">
+            <div class="searchBar price" id="searchBar" v-if="priceList.length != 0">
                 <p class="p pprice" :class="searchBarFixed == true ? 'isFixed' :''">
                  <!-- <pre id="songReqJson">
                    {{priceDetail}}
                  </pre> -->
                  <el-collapse accordion>
-                    <el-collapse-item :title='item.DistributorName' v-for="item in priceDetail" style="width:980px;border-right:none;">
+                    <el-collapse-item v-for="item in priceDetail" style="width:980px;border-right:none;">
+                      <template slot="title">
+                        <!-- {{item.房型+'---'+item.人数+'---'+item.早餐}} -->
+                        {{item.ID}}
+                      </template>
                       <pre id="songReqJson">
                         {{item}}
                       </pre>
@@ -167,7 +171,9 @@ export default {
       searchBarFixed:true,
       taskDetail:{},
       priceDetail:{},
-      priceList:[]
+      priceList:[],
+      loadingT:false,
+      loadingP:false
     }
   },
   mounted () {
@@ -178,6 +184,18 @@ export default {
     this.getPriceList()
   },
   methods: {
+    task(name){
+      if(name == 'task'){
+        if(!this.taskList.length){
+          this.loadingT = true
+        }
+      }
+      if(name == 'price'){
+        if(!this.priceList.length){
+          this.loadingP = true
+        }
+      }
+    },
     handleScroll () {
       var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
       var offsetTop = document.querySelector('#searchBar').offsetTop
@@ -241,9 +259,18 @@ export default {
     },
     async getTaskList(){
       const _self = this
-      const res = await spiderSettingApi.GetTaskList(_self.platformHotelId)
-      _self.taskList = res.data.sort()
-      _self.getTask(_self.taskList[0])
+      try{
+        const res = await spiderSettingApi.GetTaskList(_self.platformHotelId)
+        _self.taskList = res.data.sort()
+        _self.getTask(_self.taskList[0])
+        _self.loadingT = false
+        _self.$message({
+          message: '任务列表获取成功',
+          type: 'success'
+        })
+      }catch(e){
+        _self.$message.error('任务列表获取失败!!!')
+      }
     },
     async getTask(item){
       const res = await spiderSettingApi.GetTask(item)
@@ -251,18 +278,33 @@ export default {
     },
     async getPriceList(){
       const _self = this
-      const res = await spiderSettingApi.GetPriceList(_self.platformHotelId)
-      _self.priceList = res.data.sort()
-      _self.getPrice(_self.priceList[0])
+      try{
+        const res = await spiderSettingApi.GetPriceList(_self.platformHotelId)
+        _self.priceList = res.data.sort()
+        _self.getPrice(_self.priceList[0])
+        _self.loadingP = false
+        _self.$message({
+          message: '价格获取成功',
+          type: 'success'
+        })
+      }catch(e){
+        _self.$message.error('价格获取失败!!!')
+      }
     },
     async getPrice(item){
-      const res = await spiderSettingApi.GetPrice(item)
-      this.priceDetail = res.data
+      try{
+        const res = await spiderSettingApi.GetPrice(item)
+        this.priceDetail = res.data
+      }catch(e){
+        this.$message.error('价格详情获取失败!!!')
+      }
     },
     fresh(){
+      this.loadingT = true
       this.getTaskList()
     },
     fresh2(){
+      this.loadingP = true
       this.getPriceList()
     }
   }

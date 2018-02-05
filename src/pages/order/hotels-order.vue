@@ -360,9 +360,6 @@
             <el-row :gutter="20">
               <el-col style="margin-left:40px;">
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
               </el-col>
             </el-row>
         </el-form>
@@ -389,8 +386,6 @@ export default{
     let that = this;
     return{
       imageList: [],
-      dialogImageUrl: '',
-      dialogVisible: false,
       text:-1,
       currentPage: 1,
       pageSize: 10,

@@ -49,7 +49,7 @@
                 </el-popover>
             </template>
         </el-table-column>
-        <el-table-column label="对方开户行" prop="PartnerAcountModel"></el-table-column>
+        <el-table-column label="入住人" prop="Passenger"></el-table-column>
         <el-table-column label="合计金额" prop="Amount"></el-table-column>
         <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
         <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
@@ -127,7 +127,7 @@ export default {
           }
       }
   },
-  created() {
+  mounted() {
     this.fetchData()
   },
   methods:{
@@ -166,6 +166,7 @@ export default {
         _self.countMoney()
         _self.loading = false
       } catch (e) {
+          console.log(e)
         _self.loading = false
       }
     },
@@ -176,6 +177,12 @@ export default {
             for(let i in _self.multipleSelection){
                 ids.push(_self.multipleSelection[i].ID)
             }
+            if(ids.length == 0){
+                _self.$message({
+                    message: '请选择要审核订单',
+                    type: 'warning'
+                })
+            }
             if(ids.length != 0){
                 hotelPaymentInfoApi.checks(ids)
                 _self.$message({
@@ -183,8 +190,8 @@ export default {
                     type: 'success'
                 })
                 _self.multipleSelection = []
+                _self.fetchData()
             }
-            _self.fetchData()
         }catch(e){
             _self.$message.error('审核失败!!!')
         }
@@ -200,8 +207,12 @@ export default {
         }
     },
     imgShow(img){
-        this.imageList = img.split(',')
-        this.dialogVisible = true
+        try{
+            this.imageList = img.split(',')
+            this.dialogVisible = true
+        }catch(e){
+            this.$message.error('截图获取失败!!!')
+        }
     },
     countMoney(){
         let m = 0

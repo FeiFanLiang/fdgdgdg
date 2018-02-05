@@ -219,8 +219,10 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="6">
-                                        <el-form-item label="不可合并支付" prop="UnMergePay">
-                                            <el-switch on-text="不可" off-text="可" :on-value="1" :off-value="0" v-model="FinancialInfo.UnMergePay"></el-switch>
+                                        <el-form-item label="是否合并支付" prop="UnMergePay">
+                                            <el-switch on-text="是" off-text="否" :on-value="0" :off-value="1" v-model="FinancialInfo.UnMergePay"></el-switch>
+                                            <span v-if="FinancialInfo.UnMergePay == 0" style="color:orange">可合并支付</span>
+                                            <span v-if="FinancialInfo.UnMergePay == 1" style="color:orange">不可合并支付</span>
                                         </el-form-item>
                                     </el-col>
                                 </el-row>
@@ -362,8 +364,6 @@ import UploadImageCopy from 'components/upload-image-copy'
             title:'',
             //////////////////
             imageList: [],
-            dialogImageUrl: '',
-            dialogVisible: false,
             HotelID:'',
             hotelName:'',
             form:{

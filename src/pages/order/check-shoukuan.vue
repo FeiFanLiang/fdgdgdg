@@ -6,6 +6,11 @@
                 <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="平台信息" slot="PlatPolicyID">
+            <el-select v-model="filters.PlatPolicyID">
+                <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+            </el-select>
+        </el-form-item>
         <el-button style="margin:10px 0;" @click="collection" slot="button-add">收款</el-button>
     </CustomSearchCopy>
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
@@ -52,7 +57,7 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi,hotelsOrderApi  } from 'api'
+import { hotelPaymentInfoApi,hotelsOrderApi,policyApi  } from 'api'
 
 export default {
     data() {
@@ -70,7 +75,8 @@ export default {
                 BookTime:'',
                 StayDateEnd:'',
                 ExpectSettlement:'',
-                StateCheck:''
+                StateCheck:'',
+                PlatPolicyID:''
             },
             StateCheck:[
                 {
@@ -81,15 +87,29 @@ export default {
                     label:'未到款',
                     value:1
                 }
-            ]
+            ],
+            PlatPolicyID:[]
         }
     },
     created(){
         this.filters.ExpectSettlement = new Date()
         this.fetchData()
         this.configList = hotelsOrderApi.getConfig()
+        this.platformAccount()
     },
     methods:{
+        async platformAccount(){
+            const options = {
+                pageSize: 1000,
+                order: 'ID'
+            }
+            const res = await policyApi.getPolicyPlatform(options)
+            this.PlatPolicyID = res.data.Data
+            this.PlatPolicyID.splice(0, 0, {
+                Account:'全部',
+                ID:''
+            })
+        },
         hotelsOrderSearch() {
             const _self = this
             this.filters.ExpectSettlement = ''
@@ -127,7 +147,8 @@ export default {
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
-                    StateCheck:_self.filters.StateCheck
+                    StateCheck:_self.filters.StateCheck,
+                    PlatPolicyID:_self.filters.PlatPolicyID
                 }
             }
             try {

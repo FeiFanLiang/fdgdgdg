@@ -113,7 +113,7 @@
             <el-col :span="6">
                 <el-form-item label="外采渠道" prop="WaiCaiPlatID">
                     <el-select v-model="form.WaiCaiPlatID" clearable>
-                        <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
+                        <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
@@ -123,8 +123,8 @@
             </el-col>
         </el-row>
         <hr style="height:3px;border:none;border-top:3px double #DEE5EB;margin-bottom:20px;" />
-        <el-collapse accordion style="border-right: none;">
-            <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" :name="index" style="border-right: none;">
+        <el-collapse accordion style="border-right: none;" @change="caiwuDetail(activeName)" v-model="activeName">
+            <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" style="border-right: none;" :name="item.ID">
                 <template slot="title">
                     <span v-if="item.UpdateTime != null">
                         {{item.PlatOrderType + '单' + item.UpdateTime.substring(5,10)}}
@@ -151,12 +151,17 @@
                         <el-col :span="6">
                             <el-form-item label="外采渠道" prop="WaiCaiPlatID">
                                 <el-select v-model="item.WaiCaiPlatID" clearable>
-                                    <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.ChannelType" :value="item.ID"></el-option>
+                                    <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="订单号" prop="PlatOrderNo">
+                                <el-input placeholder="请输入订单号" v-model="item.PlatOrderNo"></el-input>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="6">
                             <el-form-item label="酒店ID" prop="HotelID">
                                 <el-input placeholder="请输入酒店ID" v-model="item.HotelID"></el-input>
@@ -172,16 +177,13 @@
                                 <el-input placeholder="请输入酒店协议ID" v-model="item.HotelPolicyID"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="平台信息ID" prop="PlatPolicyID">
-                                <el-input placeholder="请输入平台信息ID" v-model="item.PlatPolicyID"></el-input>
-                            </el-form-item>
-                        </el-col>
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
-                            <el-form-item label="订单号" prop="PlatOrderNo">
-                                <el-input placeholder="请输入订单号" v-model="item.PlatOrderNo"></el-input>
+                            <el-form-item label="平台信息" prop="PlatPolicyID">
+                                <el-select v-model="item.PlatPolicyID" clearable>
+                                    <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -226,13 +228,9 @@
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
-                            <el-form-item label="间数" prop="RoomNum">
-                                <el-input placeholder="请输入间数" v-model="item.RoomNum"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="晚数" prop="NightNum">
-                                <el-input placeholder="请输入晚数" v-model="item.NightNum"></el-input>
+                            <el-form-item label="间/夜">
+                                <el-input placeholder="请输入间数" v-model="item.RoomNum" style="width:40%;"></el-input>/
+                                <el-input placeholder="请输入晚数" v-model="item.NightNum" style="width:40%;"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -290,12 +288,12 @@
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
                     <el-row :gutter="24">
-                        <el-col :span="6">
+                        <el-col :span="8">
                             <el-form-item label="预计收款时间" prop="DateReceipt">
                                 <el-date-picker v-model="item.DateReceipt" type="datetime" placeholder="请选择"></el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="12">
                             <el-form-item label="预计付款时间" prop="DatePayment">
                                 <el-date-picker v-model="item.DatePayment" type="datetime" placeholder="请选择"></el-date-picker>
                             </el-form-item>
@@ -322,12 +320,20 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
+                            <el-form-item label="酒店底价" prop="HotelFee">
+                                <el-input placeholder="请输入酒店底价" v-model="item.HotelFee"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <!--
+                        <el-col :span="6">
                             <el-form-item label="应付款额" prop="AmountYingFu">
                                 <el-input placeholder="请输入应付款额" v-model="item.AmountYingFu"></el-input>
                             </el-form-item>
                         </el-col>
+                        -->
                     </el-row>
                     <el-row :gutter="24">
+                        <!--
                         <el-col :span="6">
                             <el-form-item label="实收款额" prop="AmountShiShou">
                                 <el-input placeholder="请输入实收款额" v-model="item.AmountShiShou"></el-input>
@@ -338,23 +344,17 @@
                                 <el-input placeholder="请输入实付款额" v-model="item.AmountShiFu"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="酒店底价" prop="HotelFee">
-                                <el-input placeholder="请输入酒店底价" v-model="item.HotelFee"></el-input>
-                            </el-form-item>
-                        </el-col>
+                        -->
+                        <!--
                         <el-col :span="6">
                             <el-form-item label="利润" prop="Profit">
                                 <el-input placeholder="请输入利润" v-model="item.Profit"></el-input>
                             </el-form-item>
                         </el-col>
+                        -->
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="6">
-                            <el-form-item label="其他费用" prop="OherFee">
-                                <el-input placeholder="请输入其他费用" v-model="item.OherFee"></el-input>
-                            </el-form-item>
-                        </el-col>
+                        <!--
                         <el-col :span="6">
                             <el-form-item label="改期费" prop="FeeChange">
                                 <el-input placeholder="请输入改期费" v-model="item.FeeChange"></el-input>
@@ -365,11 +365,19 @@
                                 <el-input placeholder="请输入退票费" v-model="item.FeeCancel"></el-input>
                             </el-form-item>
                         </el-col>
+                        -->
                     </el-row>
                     <el-row :gutter="24">
+                        <!--
                         <el-col :span="6">
                             <el-form-item label="优惠金额" prop="Discounts">
                                 <el-input placeholder="请输入优惠金额" v-model="item.Discounts"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        -->
+                        <el-col :span="6">
+                            <el-form-item label="其他费用" prop="OherFee">
+                                <el-input placeholder="请输入其他费用" v-model="item.OherFee"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -399,8 +407,10 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="不可合并支付" prop="UnMergePay">
-                                <el-switch on-text="不可" off-text="可" :on-value="1" :off-value="0" v-model="item.UnMergePay"></el-switch>
+                            <el-form-item label="是否合并支付" prop="UnMergePay">
+                                <el-switch on-text="是" off-text="否" :on-value="0" :off-value="1" v-model="item.UnMergePay"></el-switch>
+                                <span v-if="item.UnMergePay == 0" style="color:orange">可合并支付</span>
+                                <span v-if="item.UnMergePay == 1" style="color:orange">不可合并支付</span>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -470,9 +480,6 @@
         <el-row :gutter="20">
             <el-col style="margin-left:40px;">
                 <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
-                <el-dialog v-model="dialogVisible" size="tiny">
-                    <img width="100%" :src="dialogImageUrl" alt="">
-                </el-dialog>
             </el-col>
         </el-row>
     </el-form>
@@ -551,8 +558,6 @@ export default{
             type:'',
             text:'',
             imageList: [],
-            dialogImageUrl: '',
-            dialogVisible: false,
             showTuigaiButton:false,
             loading:false,
             showFujia: false,
@@ -709,7 +714,8 @@ export default{
                     label:'外采',
                     value:1
                 }
-            ]
+            ],
+            activeName:''
         }
     },
     created() {
@@ -735,8 +741,16 @@ export default{
         _self.platformAccount()
     },
     methods:{
+        async caiwuDetail(id){
+            const res = await paymentCheckApi.getAccount(id)
+            this.money = res.data.Data
+        },
         async platformAccount(){
-            const res = await policyApi.getPolicyPlatform()
+            const options = {
+                pageSize: 1000,
+                order: 'Sort'
+            }
+            const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
         },
         setContent(){
@@ -878,18 +892,13 @@ export default{
                 _self.getImageList(_self.form.Picture)
                 for(let i in _self.form.HotelOrderDetail)
                 _self.HotelName = _self.form.HotelName
-                const res2 = await paymentCheckApi.detail(ID)
-                let a = res2.data.Data
                 const options = {
-                query: {
-                    HotelOrderID: ID
-                }
+                    query: {
+                        HotelOrderID: ID
+                    }
                 }
                 const res3 = await paymentCheckApi.fujiaList(options)
                 _self.fujia = res3.data.Data
-                for (let i in a) {
-                _self.money.push(a[i].HotelPayment)
-                }
                 _self.copyForm = Object.assign({}, _self.form)
                 _self.loading = false
             } catch (e) {
