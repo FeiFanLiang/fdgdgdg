@@ -184,13 +184,17 @@ export default {
                 })
             }
             if(ids.length != 0){
-                hotelPaymentInfoApi.checks(ids)
-                _self.$message({
+                const res = await hotelPaymentInfoApi.checks(ids)
+                if(res.data.State){
+                    _self.$message({
                     message: '审核成功',
-                    type: 'success'
-                })
-                _self.multipleSelection = []
-                _self.fetchData()
+                        type: 'success'
+                    })
+                    _self.multipleSelection = []
+                    _self.fetchData()
+                }else{
+                    _self.$message.error('审核失败!!!')
+                }
             }
         }catch(e){
             _self.$message.error('审核失败!!!')

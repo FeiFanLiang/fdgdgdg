@@ -146,7 +146,7 @@ export default {
         }
         try{
             _self.isEditable = false
-            paymentCheckApi.putImg(params)
+            await paymentCheckApi.putImg(params)
             _self.$message({
                 message: '提交成功',
                 type: 'success'
