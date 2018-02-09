@@ -26,6 +26,7 @@ import roomShowApi from './room-show'
 // import sonRoomSalePriceApi from './son-room-sale-price'
 // import userApi from './user'
 import hotelsOrderApi from './hotels-order'
+import tripOrderApi from './trip-order'
 
 export {
   bargainsRoomApi,
@@ -55,5 +56,6 @@ export {
   // sonRoomPlatformApi,
   // sonRoomSalePriceApi,
   // userApi,
-  hotelsOrderApi
+  hotelsOrderApi,
+  tripOrderApi
 }

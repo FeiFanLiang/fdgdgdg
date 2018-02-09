@@ -142,7 +142,7 @@ export default {
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: 'BookTime',
+        order: 'UrgentPay desc,BookTime desc',
         query:{
           HotelName:_self.filters.HotelName,
           PlatOrderNo:_self.filters.PlatOrderNo,

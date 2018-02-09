@@ -56,6 +56,11 @@ export default {
       meta: {
         hidden: true
       }
+    },
+    {
+      path: 'TripOrder',
+      component: _import('order/trip-order'),
+      name: '票单列表'
     }
   ]
 }

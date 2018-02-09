@@ -54,6 +54,7 @@ import policyApi from './policy'
 import visaApi from './visa'
 import hotelOrderDetailApi from './hotel-order-detail'
 import advancementApi from './advancement'
+import tripOrderApi from './trip-order'
 export {
   accountApi,
   airlineApi,
@@ -110,5 +111,6 @@ export {
   policyApi,
   visaApi,
   hotelOrderDetailApi,
-  advancementApi
+  advancementApi,
+  tripOrderApi
 }

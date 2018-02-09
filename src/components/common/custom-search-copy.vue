@@ -1,7 +1,7 @@
 <template lang="html">
   <el-row :gutter="24" class="align-center">
-      <template v-for="(item,index) in configList" >
-        <el-form label-width="80px">
+      <template v-for="(item,index) in configList">
+        <el-form label-width="80px" style="margin-left:-20px;">
           <el-col :span="6" v-if="item.type==='input'">
             <el-form-item :label="item.label">
               <el-input v-model="filters[item.name]"></el-input>
