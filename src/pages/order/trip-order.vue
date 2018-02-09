@@ -101,8 +101,8 @@
         </el-row>
         <el-row :gutter="24">
           <el-col :span="12">
-            <el-form-item label="预定时间" prop="HotelName">
-              <el-date-picker v-model="form.HotelName" type="date" placeholder="选择日期" style="width:100%;"></el-date-picker>
+            <el-form-item label="预定时间" prop="Booktime">
+              <el-date-picker v-model="form.Booktime" type="date" placeholder="选择日期" style="width:100%;"></el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="12">
