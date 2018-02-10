@@ -88,7 +88,9 @@
                     <el-collapse-item v-for="item in priceDetail" style="width:980px;border-right:none;">
                       <template slot="title">
                         <!-- {{item.房型+'---'+item.人数+'---'+item.早餐}} -->
-                        {{item.ID}}
+                        <span v-if="flag == 'agoda'">{{item.roomName+'---'+item.maxAdults+'---'+item.benefits}}</span>
+                        <span v-if="flag == 'haoding'">{{item.PlatRoomName+'---'+item.GuestsNum+'---'+item.Breakfast}}</span>
+                        <span v-if="flag == ''">{{item.ID}}</span>
                       </template>
                       <pre id="songReqJson">
                         {{item}}
@@ -173,7 +175,8 @@ export default {
       priceDetail:{},
       priceList:[],
       loadingT:false,
-      loadingP:false
+      loadingP:false,
+      flag:''
     }
   },
   mounted () {
@@ -294,6 +297,12 @@ export default {
     async getPrice(item){
       try{
         const res = await spiderSettingApi.GetPrice(item)
+        if(item.substring(0,1) == 9){
+          this.flag = 'agoda'
+        }
+        if(item.substring(0,1) == 5){
+          this.flag = 'haoding'
+        }
         this.priceDetail = res.data
       }catch(e){
         this.$message.error('价格详情获取失败!!!')
