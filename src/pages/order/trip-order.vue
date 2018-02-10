@@ -1,18 +1,18 @@
 <template>
 <div id="TripOrder">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback(filters)">
       <el-form-item label="付款状态" prop="StateFu" slot="StateFu">
-        <el-select v-model="filters.StateFu">
+        <el-select v-model="filters.StateFu" clearable>
           <el-option v-for="item in [{label:'未付',value:0},{label:'已付',value:1},{label:'付款对账',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="收款状态" prop="StateShou" slot="StateShou">
-        <el-select v-model="filters.StateShou">
+        <el-select v-model="filters.StateShou" clearable>
           <el-option v-for="item in [{label:'未收',value:0},{label:'已收',value:1},{label:'收款对账',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="是否忽略" prop="StateIgnore" slot="StateIgnore">
-        <el-select v-model="filters.StateIgnore">
+        <el-select v-model="filters.StateIgnore" clearable>
           <el-option v-for="item in [{label:'正常',value:0},{label:'刷单',value:1}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
@@ -45,139 +45,126 @@
     <div style="text-align:center;margin:10px;">
       <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')">
-      <el-form ref="form" :model="form" label-width="110px">
+    <el-dialog :title="title" v-model="showDialog" @close="resetForm('form')" size="full">
+      <el-form ref="form" :model="form" label-width="110px" style="padding:20px;">
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="订单名称" prop="Title">
                 <el-input placeholder="请输入订单名称" v-model="form.Title"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="订单号" prop="PlatOrderNo">
                 <el-input placeholder="请输入订单号" v-model="form.PlatOrderNo"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="采购单号" prop="PurchaseNo">
                 <el-input placeholder="请输入采购单号" v-model="form.PurchaseNo"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row :gutter="24">
+        <el-col :span="8">
             <el-form-item label="总收款金额" prop="AmountShou">
                 <el-input placeholder="请输入总收款金额" v-model="form.AmountShou"></el-input>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="总付款金额" prop="AmountFu">
                 <el-input placeholder="请输入总付款金额" v-model="form.AmountFu"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="利润" prop="Profit">
                 <el-input placeholder="请输入利润" v-model="form.Profit"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="订单来源" prop="SourcePlatID">
-              <el-select v-model="form.SourcePlatID" clearable>
+              <el-select v-model="form.SourcePlatID" clearable style="width:100%;">
                 <el-option v-for="(item,index) in SourcePlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="采购平台" prop="PurchasePlatID">
-              <el-select v-model="form.PurchasePlatID" clearable>
+              <el-select v-model="form.PurchasePlatID" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'远洋',value:1},{label:'悠游',value:2}]" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="预定时间" prop="Booktime">
               <el-date-picker v-model="form.Booktime" type="date" placeholder="选择日期" style="width:100%;"></el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="8">
             <el-form-item label="使用时间" prop="UseDate">
               <el-date-picker v-model="form.UseDate" type="date" placeholder="选择日期" style="width:100%;"></el-date-picker>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="关联的订单ID" prop="HotelOrderID">
                 <el-input placeholder="请输入关联的订单ID" v-model="form.HotelOrderID"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="订单类型" prop="TypeID">
-              <el-select v-model="form.TypeID" clearable>
+              <el-select v-model="form.TypeID" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'门票',value:1},{label:'餐费',value:2},{label:'车票',value:3}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <!--
-          <el-col :span="12">
-            <el-form-item label="图片" prop="Picture">
-                <el-input placeholder="请输入图片" v-model="form.Picture"></el-input>
-            </el-form-item>
-          </el-col>
-         -->
         </el-row>
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="订单状态" prop="OrderState">
-              <el-select v-model="form.OrderState" clearable>
+              <el-select v-model="form.OrderState" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'正常',value:1},{label:'退票',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="付款状态" prop="StateFu">
-              <el-select v-model="form.StateFu" clearable>
+              <el-select v-model="form.StateFu" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'未付',value:0},{label:'已付',value:1},{label:'付款对账',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="收款状态" prop="StateShou">
-              <el-select v-model="form.StateShou" clearable>
+              <el-select v-model="form.StateShou" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'未收',value:0},{label:'已收',value:1},{label:'收款对账',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row :gutter="24">
+          <el-col :span="8">
             <el-form-item label="收款到账时间" prop="ShouDate">
               <el-date-picker v-model="form.ShouDate" type="date" placeholder="选择日期" style="width:100%;"></el-date-picker>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="是否忽略" prop="StateIgnore">
-              <el-select v-model="form.StateIgnore" clearable>
+              <el-select v-model="form.StateIgnore" clearable style="width:100%;">
                 <el-option v-for="item in [{label:'正常',value:0},{label:'刷单',value:1}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="客人姓名" prop="Passenger">
               <el-input placeholder="请输入客人姓名" v-model="form.Passenger"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="24">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="联系电话" prop="Tel">
               <el-input placeholder="请输入联系电话" v-model="form.Tel"></el-input>
             </el-form-item>
@@ -189,10 +176,10 @@
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <div slot="footer" style="text-align:center;">
         <el-button @click="showDialog = false">取 消</el-button>
           <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
-      </span>
+      </div>
     </el-dialog>
 </div>
 </template>
@@ -226,9 +213,9 @@ import { tripOrderApi,policyApi } from 'api'
       }
     },
     created() {
+      this.platformAccount()
       this.fetchData()
       this.configList = tripOrderApi.getConfig()
-      this.platformAccount()
     },
     methods:{
       async platformAccount(){
@@ -248,7 +235,7 @@ import { tripOrderApi,policyApi } from 'api'
         this.fetchData(this.currentPage)
       },
       searchCallback(filters) {
-          this.filters = filters
+          Object.assign(this.filters, filters, this.filters)
           this.fetchData()
       },
       async fetchData(currentPage, pageSize) {
@@ -283,7 +270,13 @@ import { tripOrderApi,policyApi } from 'api'
         const _self = this
         _self.title = '添加票单信息'
         _self.showDialog = true
-        _self.form = {}
+        _self.form = {
+          TypeID:1,
+          OrderState:1,
+          StateFu:1,
+          StateShou:1,
+          StateIgnore:0
+        }
       },
       async clickEditBtn($index, row) {
         const _self = this

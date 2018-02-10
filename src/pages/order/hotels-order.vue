@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
+    <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback(filters)">
       <el-form-item label="订单平台" slot="ThreePlatID">
         <el-select v-model="filters.ThreePlatID" clearable>
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
@@ -573,7 +573,7 @@ export default{
   },
   methods:{
     searchCallback(filters) {
-      this.filters = filters
+      Object.assign(this.filters, filters, this.filters)
       this.fetchData()
     },
     qrh(id){

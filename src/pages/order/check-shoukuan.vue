@@ -1,8 +1,8 @@
 <template lang="html">
 <div id="CheckShoukuan">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback(filters)">
         <el-form-item label="状态" slot='StateCheck'>
-            <el-select v-model="filters.StateCheck" placeholder="请选择">
+            <el-select v-model="filters.StateCheck" placeholder="请选择" clearable>
                 <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
             </el-select>
         </el-form-item>
@@ -110,13 +110,8 @@ export default {
                 ID:''
             })
         },
-        hotelsOrderSearch() {
-            const _self = this
-            this.filters.ExpectSettlement = ''
-            _self.fetchData()
-        },
         searchCallback(filters) {
-            this.filters = filters
+            Object.assign(this.filters, filters, this.filters)
             this.filters.ExpectSettlement = ''
             this.fetchData()
         },
