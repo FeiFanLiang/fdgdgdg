@@ -125,6 +125,14 @@ export default {
             const _self = this
             _self.loading = true
             _self.showButton = false
+            let time1 = ''
+            let time2 = ''
+            if(typeof(_self.filters.BookTime)!='undefined'){
+                if(_self.filters.BookTime[0] != null){
+                    time1 = new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd')
+                    time2 = new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd')
+                }
+            }
             const options = {
                 pageIndex: currentPage || _self.currentPage,
                 pageSize: pageSize || _self.pageSize,
@@ -134,8 +142,8 @@ export default {
                     PlatOrderNo:_self.filters.PlatOrderNo,
                     StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
-                    'BookTime>':_self.filters.BookTime ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
-                    'BookTime<':_self.filters.BookTime ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+                    'BookTime>':time1,
+                    'BookTime<':time2,
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
                     StateCheck:_self.filters.StateCheck,
                     PlatPolicyID:_self.filters.PlatPolicyID

@@ -655,6 +655,14 @@ export default{
           _self.filters.StateAuditor = 0
         }
       }
+      let time1 = ''
+      let time2 = ''
+      if(typeof(_self.filters.BookTime)!='undefined'){
+          if(_self.filters.BookTime[0] != null){
+              time1 = new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd')
+              time2 = new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd')
+          }
+      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -665,8 +673,8 @@ export default{
           HotelName:_self.filters.HotelName,
           Passenger:_self.filters.Passenger,
           StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
-          'BookTime>':_self.filters.BookTime ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
-          'BookTime<':_self.filters.BookTime ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+          'BookTime>':time1,
+          'BookTime<':time2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
           HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,
