@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="CheckShoukuan">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback(filters)">
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
         <el-form-item label="状态" slot='StateCheck'>
             <el-select v-model="filters.StateCheck" placeholder="请选择" clearable>
                 <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
@@ -69,12 +69,6 @@ export default {
             loading:false,
             multipleSelection: [],
             filters:{
-                HotelName:'',
-                PlatOrderNo:'',
-                StayDateStart:'',
-                BookTime:'',
-                StayDateEnd:'',
-                ExpectSettlement:'',
                 StateCheck:'',
                 PlatPolicyID:''
             },
@@ -111,7 +105,8 @@ export default {
             })
         },
         searchCallback(filters) {
-            Object.assign(this.filters, filters, this.filters)
+            Object.assign(filters, filters, this.filters)
+            this.filters = filters
             this.filters.ExpectSettlement = ''
             this.fetchData()
         },
@@ -139,8 +134,8 @@ export default {
                     PlatOrderNo:_self.filters.PlatOrderNo,
                     StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
-                    'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
-                    'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+                    'BookTime>':_self.filters.BookTime ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
+                    'BookTime<':_self.filters.BookTime ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
                     StateCheck:_self.filters.StateCheck,
                     PlatPolicyID:_self.filters.PlatPolicyID

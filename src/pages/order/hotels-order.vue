@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback(filters)">
+    <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
       <el-form-item label="订单平台" slot="ThreePlatID">
         <el-select v-model="filters.ThreePlatID" clearable>
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
@@ -399,18 +399,10 @@ export default{
       hotelsOrder: [],
       ID: '',
       filters: {
-        PlatOrderNo:'',
-        OrderNo: '',
-        HotelName: '',
-        Passenger: '',
-        BookTime: '',
-        StayDateStart: '',
         ThreePlatID: '',
         SettlementCycle: '',
-        HotelBookingNoNeed: '',
-        HotelArea: '',
-        StateAuditor: 0,
-        StateFuKuan: 0,
+        checkList: '',
+        HotelArea: ''
       },
       ThreePlatID: [{
         PlatName: '全部',
@@ -573,7 +565,8 @@ export default{
   },
   methods:{
     searchCallback(filters) {
-      Object.assign(this.filters, filters, this.filters)
+      Object.assign(filters, filters, this.filters)
+      this.filters = filters
       this.fetchData()
     },
     qrh(id){
@@ -672,8 +665,8 @@ export default{
           HotelName:_self.filters.HotelName,
           Passenger:_self.filters.Passenger,
           StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
-          'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
-          'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+          'BookTime>':_self.filters.BookTime ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
+          'BookTime<':_self.filters.BookTime ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
           HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,

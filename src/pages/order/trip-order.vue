@@ -1,6 +1,6 @@
 <template>
 <div id="TripOrder">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback(filters)">
+    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
       <el-form-item label="付款状态" prop="StateFu" slot="StateFu">
         <el-select v-model="filters.StateFu" clearable>
           <el-option v-for="item in [{label:'未付',value:0},{label:'已付',value:1},{label:'付款对账',value:2}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -193,10 +193,6 @@ import { tripOrderApi,policyApi } from 'api'
         count: 0,
         tripOrder: [],
         filters:{
-          Title:'',
-          PlatOrderNo:'',
-          Passenger:'',
-          StateFu:'',
           StateShou:'',
           StateIgnore:''
         },
@@ -235,7 +231,8 @@ import { tripOrderApi,policyApi } from 'api'
         this.fetchData(this.currentPage)
       },
       searchCallback(filters) {
-          Object.assign(this.filters, filters, this.filters)
+          Object.assign(filters, filters, this.filters)
+          this.filters = filters
           this.fetchData()
       },
       async fetchData(currentPage, pageSize) {
