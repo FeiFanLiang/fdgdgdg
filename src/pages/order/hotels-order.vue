@@ -50,8 +50,8 @@
                 <el-card class="box-card">
                     <h4>财务付款</h4>
                     <p><span>账户名称</span><span class="span-text">{{ props.row.AccountName }}</span></p>
-                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFu }}</span></p>
-                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShou }}</span></p>
+                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFuKuan }}</span></p>
+                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShouKuan }}</span></p>
                     <p><span>收款额</span><span class="span-text">{{ props.row.AmountShou }}</span></p>
                     <p><span>付款额</span><span class="span-text">{{ props.row.AmountFu }}</span></p>
                     <!-- <p><span>酒店底价</span><span class="span-text">{{ props.row.HotelFee }}</span></p> -->
@@ -222,8 +222,8 @@
                   </el-form-item>
               </el-col>
               <el-col :span="6">
-                      <el-form-item label="确认号" prop="HotelBookingNoNeed">
-                          <el-input placeholder="请输入确认号" v-model="form.HotelBookingNoNeed"></el-input>
+                      <el-form-item label="确认号" prop="HotelBookingNo">
+                          <el-input placeholder="请输入确认号" v-model="form.HotelBookingNo"></el-input>
                       </el-form-item>
                 </el-col>
             </el-row>
@@ -298,15 +298,15 @@
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息</h1></el-col></el-row>
             <el-row :gutter="24">
                 <el-col :span="6">
-                    <el-form-item label="付款货币" prop="CurrencyFu">
-                        <el-select v-model="form.CurrencyFu" clearable>
+                    <el-form-item label="付款货币" prop="CurrencyFuKuan">
+                        <el-select v-model="form.CurrencyFuKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="收款货币" prop="CurrencyShou">
-                        <el-select v-model="form.CurrencyShou" clearable>
+                    <el-form-item label="收款货币" prop="CurrencyShouKuan">
+                        <el-select v-model="form.CurrencyShouKuan" clearable>
                           <el-option v-for="item in Currency" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -318,17 +318,13 @@
                 </el-col>
             </el-row>
             <el-row :gutter="24">
-                <el-col :span="6">
-                    <el-form-item label="应收款额" prop="AmountYingShou">
-                        <el-input placeholder="请输入应收款额" v-model="HotelOrderDetail.AmountYingShou"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
+                
+                <!-- <el-col :span="6">
                     <el-form-item label="应付款额" prop="AmountYingFu">
                         <el-input placeholder="请输入应付款额" v-model="HotelOrderDetail.AmountYingFu"></el-input>
                     </el-form-item>
-                </el-col>
-                <el-col :span="6">
+                </el-col> -->
+                <!-- <el-col :span="6">
                     <el-form-item label="实收款额" prop="AmountShiShou">
                         <el-input placeholder="请输入实收款额" v-model="HotelOrderDetail.AmountShiShou"></el-input>
                     </el-form-item>
@@ -337,9 +333,14 @@
                     <el-form-item label="实付款额" prop="AmountShiFu">
                         <el-input placeholder="请输入实付款额" v-model="HotelOrderDetail.AmountShiFu"></el-input>
                     </el-form-item>
-                </el-col>
+                </el-col> -->
             </el-row>   
             <el-row :gutter="24">
+              <el-col :span="6">
+                    <el-form-item label="应收款额" prop="AmountYingShou">
+                        <el-input placeholder="请输入应收款额" v-model="HotelOrderDetail.AmountYingShou"></el-input>
+                    </el-form-item>
+                </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
                         <el-select v-model="HotelOrderDetail.SettlementCycleFu" clearable>
@@ -395,7 +396,7 @@ export default {
         OrderNo: "",
         ThreePlatID: "",
         Room: "",
-        HotelBookingNoNeed: "",
+        HotelBookingNo: "",
         Passenger: "",
         StayDateStart: "",
         StayDateEnd: "",
@@ -407,8 +408,8 @@ export default {
         BookTime: "",
         PassengerAsk: "",
         Remark: "",
-        CurrencyFu: "",
-        CurrencyShou: ""
+        CurrencyFuKuan: "",
+        CurrencyShouKuan: ""
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
@@ -709,7 +710,7 @@ export default {
           "BookTime<": time2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
-          HotelBookingNoNeed: _self.filters.HotelBookingNoNeed,
+          HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
@@ -793,7 +794,8 @@ export default {
                 _self.form.PlatOrderType = "";
             }
             _self.form.UpdateTime = time;
-            _self.form.HotelOrderDetail = _self.HotelOrderDetail;
+            // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
+            _self.form = { ..._self.form, ..._self.HotelOrderDetail };
             console.log(_self.detail);
             if (typeof _self.detail == "undefined") {
               var f = {

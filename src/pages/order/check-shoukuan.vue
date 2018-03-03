@@ -11,8 +11,17 @@
                 <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
             </el-select>
         </el-form-item>
+        <el-form-item label="收款日期" slot="ExpectSettlement">
+            <el-date-picker
+                v-model="filters.ExpectSettlement"
+                type="date"
+                placeholder="选择日期"
+                format="yyyy 年 MM 月 dd 日">
+            </el-date-picker>
+      </el-form-item>
         <el-button style="margin:10px 0;" @click="collection" slot="button-add">收款</el-button>
     </CustomSearchCopy>
+     
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
   :default-sort = "{prop: 'BookTime', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
@@ -57,125 +66,134 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi,hotelsOrderApi,policyApi  } from 'api'
+import { hotelPaymentInfoApi, hotelsOrderApi, policyApi } from "api";
 
 export default {
-    data() {
-        return {
-            currentPage: 1,
-            pageSize: 10,
-            count: 0,
-            shoukuanList: [],
-            loading:false,
-            multipleSelection: [],
-            filters:{
-                StateCheck:'',
-                PlatPolicyID:''
-            },
-            StateCheck:[
-                {
-                    label:'未对账',
-                    value:0
-                },
-                {
-                    label:'未到款',
-                    value:1
-                }
-            ],
-            PlatPolicyID:[]
+  data() {
+    return {
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
+      shoukuanList: [],
+      loading: false,
+      multipleSelection: [],
+      filters: {
+        StateCheck: "",
+        PlatPolicyID: "",
+        ExpectSettlement: ""
+      },
+      StateCheck: [
+        {
+          label: "未对账",
+          value: 0
+        },
+        {
+          label: "未到款",
+          value: 1
         }
+      ],
+      PlatPolicyID: []
+    };
+  },
+  created() {
+    var dd = new Date();
+    let y = dd.setDate(dd.getDate() + 1);
+    // this.filters.ExpectSettlement = new Date(y).Format("yyyy-MM-dd");
+    this.fetchData();
+    this.configList = hotelsOrderApi.getConfig();
+    this.platformAccount();
+  },
+  methods: {
+    async platformAccount() {
+      const options = {
+        pageSize: 1000,
+        order: "ID"
+      };
+      const res = await policyApi.getPolicyPlatform(options);
+      this.PlatPolicyID = res.data.Data;
+      this.PlatPolicyID.splice(0, 0, {
+        Account: "全部",
+        ID: ""
+      });
     },
-    created(){
-        this.filters.ExpectSettlement = new Date()
-        this.fetchData()
-        this.configList = hotelsOrderApi.getConfig()
-        this.platformAccount()
+    searchCallback(filters) {
+      Object.assign(filters, filters, this.filters);
+      this.filters = filters;
+      this.filters.ExpectSettlement = "";
+      this.fetchData();
     },
-    methods:{
-        async platformAccount(){
-            const options = {
-                pageSize: 1000,
-                order: 'ID'
-            }
-            const res = await policyApi.getPolicyPlatform(options)
-            this.PlatPolicyID = res.data.Data
-            this.PlatPolicyID.splice(0, 0, {
-                Account:'全部',
-                ID:''
-            })
-        },
-        searchCallback(filters) {
-            Object.assign(filters, filters, this.filters)
-            this.filters = filters
-            this.filters.ExpectSettlement = ''
-            this.fetchData()
-        },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
-        },
-        handleSizeChange(val) {
-            this.pageSize = val
-            this.fetchData(1, this.pageSize)
-        },
-        handleCurrentChange(val) {
-            this.currentPage = val
-            this.fetchData(this.currentPage)
-        },
-        async fetchData(currentPage,pageSize) {
-            const _self = this
-            _self.loading = true
-            _self.showButton = false
-            let time1 = ''
-            let time2 = ''
-            if(typeof(_self.filters.BookTime)!='undefined'){
-                if(_self.filters.BookTime[0] != null){
-                    time1 = new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd')
-                    time2 = new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd')
-                }
-            }
-            const options = {
-                pageIndex: currentPage || _self.currentPage,
-                pageSize: pageSize || _self.pageSize,
-                order: 'ID',
-                query:{
-                    HotelName:_self.filters.HotelName,
-                    PlatOrderNo:_self.filters.PlatOrderNo,
-                    StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
-                    StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
-                    'BookTime>':time1,
-                    'BookTime<':time2,
-                    'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
-                    StateCheck:_self.filters.StateCheck,
-                    PlatPolicyID:_self.filters.PlatPolicyID
-                }
-            }
-            try {
-                const res = await hotelPaymentInfoApi.checkIn(options)
-                _self.shoukuanList = res.data.Data
-                _self.count = res.data.Count
-                _self.loading = false
-            } catch (e) {
-                _self.loading = false
-            }
-        },
-        async collection(){
-            const _self = this;
-            if(_self.multipleSelection.length!=0){
-                this.$router.push({
-                    path: 'Shoukuan',
-                    query: {
-                        multipleSelection: _self.multipleSelection
-                    }
-                })
-            }else{
-                this.$message({
-                    message: '请选择收款订单',
-                    type: 'warning'
-                });
-            }
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.fetchData(1, this.pageSize);
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.fetchData(this.currentPage);
+    },
+    async fetchData(currentPage, pageSize) {
+      const _self = this;
+      _self.loading = true;
+      _self.showButton = false;
+      let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.BookTime != "undefined") {
+        if (_self.filters.BookTime[0] != null) {
+          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
         }
+      }
+      const options = {
+        pageIndex: currentPage || _self.currentPage,
+        pageSize: pageSize || _self.pageSize,
+        order: "ID",
+        query: {
+          HotelName: _self.filters.HotelName,
+          PlatOrderNo: _self.filters.PlatOrderNo,
+          StayDateStart: _self.filters.StayDateStart
+            ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
+            : "",
+          StayDateEnd: _self.filters.StayDateEnd
+            ? new Date(_self.filters.StayDateEnd).Format("yyyy-MM-dd")
+            : "",
+          "BookTime>": time1,
+          "BookTime<": time2,
+          "ExpectSettlement<=": _self.filters.ExpectSettlement
+            ? _self.filters.ExpectSettlement.Format("yyyy-MM-dd")
+            : "",
+          StateCheck: _self.filters.StateCheck,
+          PlatPolicyID: _self.filters.PlatPolicyID
+        }
+      };
+      try {
+        const res = await hotelPaymentInfoApi.checkIn(options);
+        _self.shoukuanList = res.data.Data;
+        _self.count = res.data.Count;
+        _self.loading = false;
+      } catch (e) {
+        _self.loading = false;
+      }
+    },
+    async collection() {
+      const _self = this;
+      if (_self.multipleSelection.length != 0) {
+        this.$router.push({
+          path: "Shoukuan",
+          query: {
+            multipleSelection: _self.multipleSelection
+          }
+        });
+      } else {
+        this.$message({
+          message: "请选择收款订单",
+          type: "warning"
+        });
+      }
     }
-}
+  }
+};
 </script>
 
 

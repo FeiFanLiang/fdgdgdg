@@ -19,6 +19,7 @@ const searchData = [
   ['预定日期', 'BookTime', 'daterange', ''],
   ['状态', 'StateCheck', 'select', ''],
   ['平台信息', 'PlatPolicyID', 'select', ''],
+  ['收款日期', 'ExpectSettlement', 'select', ''],
 ]
 const searchData2 = [
   ['订单号', 'PlatOrderNo', 'input', ''], 

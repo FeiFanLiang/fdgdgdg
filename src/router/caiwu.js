@@ -59,5 +59,10 @@ export default {
       component: _import('order/hotels-order-end'),
       name: '全部完成订单'
     },
+    {
+      path: 'down',
+      component: _import('order/down'),
+      name: '新下载页面'
+    },
   ]
 }
