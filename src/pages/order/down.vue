@@ -31,7 +31,7 @@
         <el-table-column prop="HotelOrderId" label="订单ID" show-overflow-tooltip></el-table-column>
         <el-table-column prop="HotelOrderDetailId" label="订单详单ID" show-overflow-tooltip></el-table-column>
          <el-table-column prop="HotelID" label="酒店ID" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="AmountUse" label="实付/实收" show-overflow-tooltip width="150"></el-table-column>
+            <el-table-column prop="AmountUse" label="实付/实收" show-overflow-tooltip></el-table-column>
             <el-table-column prop="CompanyAcount" label="公司账户" show-overflow-tooltip></el-table-column>
             <!-- <el-table-column prop="CreateDate" label="CreateDate" show-overflow-tooltip></el-table-column> -->
             <el-table-column prop="Currency" label="币种" show-overflow-tooltip></el-table-column>
@@ -43,12 +43,45 @@
             <el-table-column prop="PaymentDate" label="预计收付时间" show-overflow-tooltip></el-table-column>
             <el-table-column prop="PaymentModel" label="收付方式" show-overflow-tooltip></el-table-column>
             <el-table-column prop="PaymentNo" label="财务编号" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="PaymentType" label="收款/付款" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="State" label="状态" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="StateCheck" label="对账" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="TypeID" label="项目类别" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="UnMergePay" label="不可合并支付" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="UrgentPay" label="紧急打款" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="PaymentType" label="收款/付款" show-overflow-tooltip>
+                <template scope="scope">
+                            <p v-if="scope.row.PaymentType === 0">收款</p>
+                            <p v-if="scope.row.PaymentType === 1">付款</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="State" label="状态" show-overflow-tooltip>
+                <template scope="scope">
+                            <p v-if="scope.row.State === 0">未处理</p>
+                            <p v-if="scope.row.State === 1">已处理</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="StateCheck" label="对账" show-overflow-tooltip>
+                 <template scope="scope">
+                            <p v-if="scope.row.StateCheck === 0">未对账</p>
+                            <p v-if="scope.row.StateCheck === 1">已对账,未到账</p>
+                            <p v-if="scope.row.StateCheck === 2">结清到账</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="TypeID" label="项目类别" show-overflow-tooltip>
+                 <template scope="scope">
+                            <p v-if="scope.row.TypeID === 0">酒店</p>
+                            <p v-if="scope.row.TypeID === 1">门票</p>
+                            <p v-if="scope.row.TypeID === 2">餐费</p>
+                            <p v-if="scope.row.TypeID === 3">车票</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="UnMergePay" label="不可合并支付" show-overflow-tooltip>
+                <template scope="scope">
+                            <p v-if="scope.row.UnMergePay === 0">可合并</p>
+                            <p v-if="scope.row.UnMergePay === 1">不可合并</p>
+                </template>
+            </el-table-column>
+            <el-table-column prop="UrgentPay" label="紧急打款" show-overflow-tooltip>
+                 <template scope="scope">
+                            <p v-if="scope.row.UrgentPay === 0">不紧急</p>
+                            <p v-if="scope.row.UrgentPay === 1">紧急</p>
+                </template>
+            </el-table-column>
             <el-table-column prop="YingShouFu" label="应收/应付" show-overflow-tooltip></el-table-column>
             <el-table-column prop="ExpectSettlement" label="预计 结算日期/付款日期"  width="65" show-overflow-tooltip></el-table-column>
         </el-table>
