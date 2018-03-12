@@ -106,5 +106,10 @@ export default {
   // 提示 需要处理的数量  GET /Hotel/HotelOrder/Tips
   tips () {
     return axios.get(base + 'Tips')
+  },
+  downloadList(params) {
+    return axios.get(base + 'DownLoadList', {
+      params: params
+    })
   }
 }

@@ -20,10 +20,10 @@
                 </el-select>
             </el-col> -->
             <el-col :span="10">
-                <el-button type="primary" @click="fetchData(filters)">搜索</el-button>
+                <!-- <el-button type="primary" @click="fetchData(filters)">搜索</el-button> -->
                 <!-- <el-button type="primary" @click="clickAddBtn">添加加油记录</el-button>
                 <el-button type="primary" @click="recharge">加油卡充值</el-button> -->
-                <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button>
+                <!-- <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button> -->
             </el-col >
         </el-row>
         <el-table :data="list" ref="table" style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" border>
@@ -86,7 +86,7 @@
             <el-table-column prop="ExpectSettlement" label="预计 结算日期/付款日期"  width="65" show-overflow-tooltip></el-table-column>
         </el-table>
         <div class="pagination-wrapper">
-            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
+            <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30,50,100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count">
             </el-pagination>
         </div>
     </div>
