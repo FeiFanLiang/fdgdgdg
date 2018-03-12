@@ -280,7 +280,7 @@
                     <el-row :gutter="24">
                         <el-col :span="20" >
                             <el-form-item label="确认函">
-                                <tinymce :height="0" :width="756" v-model="item.HotelBookingNote"></tinymce>             
+                                <tinymce :height="0" :width="756" v-model="item.HotelBookingNote"></tinymce>
                                 <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
                             </el-form-item>
                         </el-col>
@@ -399,7 +399,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                    </el-row>  
+                    </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="紧急打款" prop="UrgentPay">
@@ -447,7 +447,7 @@
                                         <span v-if="scope.row.StateScreenshot === 1">截图完成</span>
                                         <span v-if="scope.row.StateScreenshot === 2">不截图</span>
                                     </template>
-                                </el-table-column>                  
+                                </el-table-column>
                             </el-table>
                         </el-col>
                     </el-row>
@@ -521,6 +521,32 @@
         <el-button type="primary" @click="submitFormFujia()">保存</el-button>
       </span>
     </el-dialog>
+    <div>
+  <span>上单金额:</span><span>1020</span><span>-手续费</span><el-input v-model="shouxufei" style="width:50px" placeholder="手续费"></el-input><span>=利润</span><span>{{lirun}} </span>
+
+  </div>
+  <div>
+  <span>支付酒店</span><span>980。 </span>
+  <span>退还金额：</span>
+  <el-input  style="width:50px" placeholder="退款"></el-input>
+  <span>     对冲金额：</span><el-input  style="width:50px" placeholder="对冲"></el-input>
+
+  </div>
+  <div>
+  退款方式
+  <el-select  v-model="tuikuanfangshival" clearable>
+    <el-option v-for="item in tuikuanfangshi" :key="item.value" :label="item.label" :value="item.value"></el-option>
+  </el-select>
+  </div>
+  <div>
+  <span>渠道/银行:</span><el-input style="width:500px"   placeholder="渠道/银行"></el-input>
+  </div>
+  <div>
+  <span>对方账户/姓名:</span><el-input style="width:500px"    placeholder="账户/姓名"></el-input>
+  </div>
+  <div>
+  <span>对方账号:</span><el-input style="width:500px"   placeholder="账号"></el-input>
+  </div>
 </div>
 </template>
 <script>
@@ -832,7 +858,7 @@ export default{
                 _self.setContent()
                 tinyMCE.editors[index].setContent(_self.stringQRH)
             }
-            
+
         },
         async getImageList(list) {
             if (list) {
@@ -863,9 +889,9 @@ export default{
         ruzhu(val) {
             this.form.StayDateStart = val
             if(this.form.StayDateEnd != ''){
-                let date1= new Date(val);  //开始时间  
-                let date2 = new Date(this.form.StayDateEnd);    //结束时间  
-                let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
+                let date1= new Date(val);  //开始时间
+                let date2 = new Date(this.form.StayDateEnd);    //结束时间
+                let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数
                 let days=Math.floor(date3/(24*3600*1000))
                 this.form.RoomNum = 1
                 this.form.NightNum = days
@@ -874,10 +900,10 @@ export default{
         tuifang(val) {
             this.form.StayDateEnd = val
             if(this.form.StayDateStart != ''){
-                let date1= new Date(this.form.StayDateStart);  //开始时间  
-                let date2 = new Date(val);   //结束时间  
-                let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数        
-                let days=Math.floor(date3/(24*3600*1000))  
+                let date1= new Date(this.form.StayDateStart);  //开始时间
+                let date2 = new Date(val);   //结束时间
+                let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数
+                let days=Math.floor(date3/(24*3600*1000))
                 this.form.RoomNum = 1
                 this.form.NightNum = days
             }

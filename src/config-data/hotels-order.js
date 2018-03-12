@@ -2,30 +2,42 @@ import lib from './lib'
 import { hotelsOrderApi } from 'api'
 
 const listData = [
-  ['订单号', 'PlatOrderNo', true, false,'',''], 
+  ['订单号', 'PlatOrderNo', true, false,'',''],
   ['账户名称', 'AccountName', true, false,'','80'],
-  ['订单渠道', 'ThreePlatID', true, false,'slot',''], 
+  ['订单渠道', 'ThreePlatID', true, false,'slot',''],
   ['酒店名称', 'HotelName', true, false,'',''],
   ['入住/退房日期', 'StayDateStart', true, false,'slot',''],
   ['入住人', 'Passenger', true, false,'',''],
   ['预定时间', 'BookTime', true, false,'slot',''],
 ]
 
+//暂时只对收款对账使用,其他地方暂时不使用
 const searchData = [
-  ['酒店名称', 'HotelName', 'input', ''], 
+
+  //> 酒店名称,订单号,客人姓名,酒店国家,城市
+  //> 采购平台,销售平台,
+  //> 预定日期,入住日期,退房日期,收款日期
+  //> 外采/自营
+  ['酒店名称', 'HotelName', 'input', ''],
   ['订单号', 'PlatOrderNo', 'input', ''],
+  ['客人姓名', 'Passenger', 'input', ''],
+
   ['入住日期', 'StayDateStart', 'date', ''],
-  ['退房日期', 'StayDateEnd', 'date', ''], 
+  ['退房日期', 'StayDateEnd', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
-  ['状态', 'StateCheck', 'select', ''],
-  ['平台信息', 'PlatPolicyID', 'select', ''],
-  ['收款日期', 'ExpectSettlement', 'select', ''],
+  ['收款日期', 'ExpectSettlement', 'daterange', ''],
+
+  ['销售平台', 'PlatPolicyID', 'select', ''],
+  //['采购平台', 'PlatPolicyID', 'select', ''],
+  ['打款账户', 'CompanyAcount', 'select', ''],
+  ['收款状态', 'StateCheck', 'select', ''],
 ]
+
 const searchData2 = [
-  ['订单号', 'PlatOrderNo', 'input', ''], 
+  ['订单号', 'PlatOrderNo', 'input', ''],
   ['酒店名称', 'HotelName', 'input', ''],
   ['客人姓名', 'Passenger', 'input', ''],
-  ['订单平台', 'ThreePlatID', 'select', ''], 
+  ['订单平台', 'ThreePlatID', 'select', ''],
   ['入住日期', 'StayDateStart', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
   ['订单渠道', 'HotelArea', 'select', ''],

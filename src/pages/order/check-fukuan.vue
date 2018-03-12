@@ -1,17 +1,42 @@
 <template lang="html">
+  <!-- 付款对账 -->
 <div id="PaymentCheck">
-    <el-form label-width="80px">
-      <el-row :gutter="24">
-        <el-col :span="6">
-            <el-form-item label="打款账户">
-                <el-input v-model="filters.CompanyAcount"></el-input>
-            </el-form-item>
-        </el-col>
-        <el-col :span="6">
-            <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
-        </el-col>
-      </el-row>
-    </el-form>
+  <CustomSearchCopy :configList="searchFields" @searchCallback="searchCallback">
+      <!--  <el-form-item label="销售平台" slot="PlatPolicyID">
+          <el-select v-model="filters.PlatPolicyID">
+              <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+          </el-select>
+      </el-form-item>
+      <el-form-item label="付款日期" slot="ExpectSettlement">
+          <el-date-picker
+              v-model="filters.ExpectSettlement"
+              type="date"
+              placeholder="选择日期"
+              format="yyyy 年 MM 月 dd 日">
+          </el-date-picker>
+      </el-form-item>
+      <el-form-item label="打款账户" slot="CompanyAcount">
+          <el-select v-model="filters.CompanyAcount" clearable>
+              <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
+          </el-select>
+      </el-form-item>-->
+  </CustomSearchCopy>
+
+<!--
+预计显示字段:
+酒店名称(查询)
+订单号(查询)
+入住人(查询)
+付款状态(查询)
+
+财务编号
+打款账户
+对方账户
+对方账号
+合计金额
+
+ -->
+
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
     @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
         <el-table-column type="expand" width=25>
@@ -82,6 +107,11 @@
             </template>
         </el-table-column> -->
     </el-table>
+
+
+
+
+
     <el-card class="box-card">
         <el-row :gutter="24">
             <el-col :span="5">
@@ -93,7 +123,7 @@
         </el-row>
     </el-card>
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
-        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30,50,100,200]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
     <el-dialog v-model="dialogVisible" size="small">
         <ImageList :images="imageList"></ImageList>
@@ -101,8 +131,39 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi } from 'api'
+import { hotelPaymentInfoApi, hotelsOrderApi, policyApi } from 'api'
 import ImageList from 'components/imglist'
+
+const searchData = [
+     ['客人姓名', 'Passenger', 'input', ''],
+
+     ['财务编号', 'PaymentNo', 'input', ''],
+
+     ['打款账户', 'CompanyAcount', 'select', ''],
+     ['收款账户', 'Partner', 'input', ''],
+     ['收款账号', 'PartnerAccount', 'input', ''],
+     ['收款开户行', 'PartnerAccountModel', 'input', ''],
+
+     ['金额', 'Amount', 'input', ''],
+     ['打款日期', '', 'daterange', ''],
+     ['货币', 'Currency', 'select', ''],
+
+     ['打款状态', 'State', 'select', '']
+
+]
+const searchFields = transSearch(searchData)
+
+function transSearch (listData) {
+  return listData.map(item => {
+    return {
+      label: item[0],
+      name: item[1],
+      type: item[2],
+      data: item[3]
+    }
+  })
+}
+
 export default {
   components: {
       ImageList
@@ -121,16 +182,64 @@ export default {
           dialogVisible:false,
           imageList: [],
           multipleSelection:[],
+          PaymentForm:{
+          },
+          searchFields:[],
           money:0,
-          filters:{
-              CompanyAcount:''
-          }
+          filters: {
+            StateCheck: "",
+            PlatPolicyID: "",
+            ExpectSettlement: "",
+            CompanyAcount:''
+          },
+          PlatPolicyID: [],
+          PayCompanyID:[]
       }
+  },
+  created() {
+    this.configList = hotelsOrderApi.getConfig()
+
+    this.searchFields = searchFields
+
+  //  this.searchFields =  [
+  //    ['客人姓名', 'Passenger', 'input', ''],
+
+    //  ['财务编号', 'PaymentNo', 'input', ''],
+
+    //  ['打款账户', 'CompanyAcount', 'select', ''],
+    //  ['收款账户', 'Partner', 'input', ''],
+    //  ['收款账号', 'PartnerAccount', 'input', ''],
+  //    ['收款开户行', 'PartnerAccountModel', 'input', ''],
+
+    //  ['金额', 'Amount', 'input', ''],
+    //  ['打款日期', '', 'daterange', ''],
+    //  ['货币', 'Currency', 'select', ''],
+
+    //  ['打款状态', 'State', 'select', '']
+  //  ]
   },
   mounted() {
     this.fetchData()
+    this.getPayCompany()
+    this.platformAccount()
   },
   methods:{
+    async getPayCompany(){
+       const res = await policyApi.getPayCompany()
+       this.PayCompanyID = res.data.Data
+    },
+    async platformAccount() {
+      const options = {
+        pageSize: 1000,
+        order: "ID"
+      };
+      const res = await policyApi.getPolicyPlatform(options);
+      this.PlatPolicyID = res.data.Data;
+      this.PlatPolicyID.splice(0, 0, {
+        Account: "全部",
+        ID: ""
+      });
+    },
     hotelsOrderSearch(){
         this.fetchData()
     },
@@ -141,6 +250,12 @@ export default {
     handleCurrentChange(val) {
         this.currentPage = val
         this.fetchData(this.currentPage)
+    },
+    searchCallback(filters) {
+      Object.assign(filters, filters, this.filters);
+      this.filters = filters;
+      this.filters.ExpectSettlement = "";
+      this.fetchData();
     },
     async fetchData(currentPage, pageSize) {
       const _self = this
@@ -239,4 +354,3 @@ export default {
 }
 }
 </style>
-
