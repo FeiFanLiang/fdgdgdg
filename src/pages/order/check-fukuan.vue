@@ -39,67 +39,35 @@
 
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
     @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
-        <el-table-column type="expand" width=25>
-            <template scope="props">
-                备注：{{props.row.Remark}}
-                <el-table :data="orderDetail" border style="width: 100%">
-                    <el-table-column prop="HotelOrder.HotelName" label="酒店名称"></el-table-column>
-                    <el-table-column prop="HotelOrder.Passenger" label="入住人"></el-table-column>
-                    <el-table-column prop="AmountUse" label="金额"></el-table-column>
-                    <el-table-column prop="HotelOrder.StateFuKuan" label="付款状态">
-                        <template scope="scope">
-                            <span v-if="scope.row.HotelOrder.StateFuKuan == 0">未付</span>
-                            <span v-if="scope.row.HotelOrder.StateFuKuan == 1">已付款</span>
-                        </template></el-table-column>
-                </el-table>
-            </template>
-        </el-table-column>
+        
         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
-        <el-table-column label="类别" prop="PaymentType" width=70>
+        <el-table-column label="财务编号" prop="PaymentNo" width=170></el-table-column>
+        <el-table-column label="入住人" prop="HotelOrder.Passenger" width=150></el-table-column>
+        <el-table-column label="预定日期"  width=150>
             <template scope="scope">
-                <span v-if="scope.row.PaymentType === 0">收款</span>
-                <span v-if="scope.row.PaymentType === 1">付款</span>
+                <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
             </template>
         </el-table-column>
-        <el-table-column label="财务编号" prop="PaymentNo" width=110></el-table-column>
-        <el-table-column label="打款账户" prop="CompanyAcount"></el-table-column>
-        <el-table-column label="对方账户名" prop="Partner" show-overflow-tooltip></el-table-column>
-        <el-table-column label="对方账号" prop="PartnerAccount" width=125>
+        <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="收款账户" prop="Partner" width=125 show-overflow-tooltip></el-table-column>
+        <el-table-column label="打款账户" prop="CompanyAcount" show-overflow-tooltip></el-table-column>
+        <el-table-column label="打款日期" prop="PaymentDate" width=150>
             <template scope="scope">
-                <el-popover trigger="hover" placement="top">
-                    <p>{{ scope.row.PartnerAccount }}</p>
-                    <div slot="reference" class="name-wrapper" v-if="typeof(scope.row.PartnerAccount) != 'undefined'">
-                        {{ scope.row.PartnerAccount.substring(0,4) + '****' + scope.row.PartnerAccount.substring(scope.row.PartnerAccount.length-4,scope.row.PartnerAccount.length+1) }}
-                    </div>
-                </el-popover>
-            </template>
-        </el-table-column>
-        <el-table-column label="入住人" prop="Passenger"></el-table-column>
-        <el-table-column label="合计金额" prop="Amount"></el-table-column>
-        <el-table-column label="收付时间" prop="PaymentDate" width=110></el-table-column>
-        <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
-        <el-table-column label="货币类型" prop="Currency"></el-table-column>
-        <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
+                <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
+            </template></el-table-column>
+        <el-table-column label="金额" prop="AmountUse"></el-table-column>
         <el-table-column label="截图" prop="Picture" width=70>
             <template scope="scope">
                 <el-button type="text" @click="imgShow(scope.row.Picture)">查看</el-button>
             </template>
         </el-table-column>
-        <el-table-column label="状态" prop="State">
-            <template scope="scope">
-                <span v-if="scope.row.State === 0">待处理</span>
-                <span v-if="scope.row.State === 1">已处理，待对账</span>
-                <span v-if="scope.row.State === 2">已对账，待结算</span>
-                <span v-if="scope.row.State === 3">结算完成</span>
-            </template>
-        </el-table-column>
-        <el-table-column label="预计结算/到款日期" width=110>
+        <!--<el-table-column label="预计结算/到款日期" width=110>
             <template scope="scope">
                 <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
                 <hr style="border:none;border-top:1px dotted lightgray;margin:0;" />
                 <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
             </template>
-        </el-table-column>
+        </el-table-column>-->
         <!--<el-table-column label="备注" prop="Remark" show-overflow-tooltip></el-table-column>-->
         <!-- <el-table-column label="操作" width=120>
             <template scope="scope">
@@ -151,8 +119,8 @@ const searchData = [
     ['收款账号', 'PartnerAccount', 'input', ''],
     ['收款开户行', 'PartnerAccountModel', 'input', ''],
 
-    ['金额', 'Amount', 'input', ''],
-    ['打款日期', '', 'daterange', ''],
+    ['金额', 'AmountUse', 'input', ''],
+    ['打款日期', 'ExpectSettlement', 'daterange', ''],
     ['货币', 'Currency', 'select', ''],
 
     ['打款状态', 'State', 'select', '']
@@ -219,7 +187,7 @@ export default {
   //    ['收款开户行', 'PartnerAccountModel', 'input', ''],
 
     //  ['金额', 'Amount', 'input', ''],
-    //  ['打款日期', '', 'daterange', ''],
+    //  ['打款日期', 'PaymentDate', 'daterange', ''],
     //  ['货币', 'Currency', 'select', ''],
 
     //  ['打款状态', 'State', 'select', '']
@@ -269,18 +237,40 @@ export default {
       _self.loading = true
       _self.currentPage = currentPage || _self.currentPage
       _self.pageSize = pageSize || _self.pageSize
+      let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.PaymentDate != "undefined") {
+        if (_self.filters.PaymentDate[0] != null) {
+          time1 = new Date(_self.filters.PaymentDate[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.PaymentDate[1]).Format("yyyy-MM-dd");
+        }
+      }
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
             order: 'ID',
             query:{
-                CompanyAcount:_self.filters.CompanyAcount
+                CompanyAcount:_self.filters.CompanyAcount,
+                HotelName: _self.filters.HotelName,
+                PlatOrderNo: _self.filters.PlatOrderNo,
+                AmountUse:_self.filters.AmountUse,
+                Partner:_self.filters.Partner,
+                PartnerAccount:_self.filters.PartnerAccount,
+                PartnerAccountModel:_self.filters.PartnerAccountModel,
+                PaymentNo:_self.filters.PaymentNo,
+                StayDateStart: _self.filters.StayDateStart
+                 ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
+                 : "",
+                "PaymentDate>": time1,
+                "PaymentDate<": time2
+                             
             }
       }
       try {
         //_self.multipleSelection = _self.$route.query.multipleSelection
         const res = await hotelPaymentInfoApi.checkOut(options)
         _self.paymentCheck = res.data.Data
+        console.log(_self.paymentCheck)
         _self.count = res.data.Count
         // _self.paymentCheck.forEach(item => {
         //     _self.$refs.table.toggleRowSelection(item,true);
@@ -295,10 +285,11 @@ export default {
     async check(){
         const _self = this
         try{
-            let ids = []
+            let ids = []          
             for(let i in _self.multipleSelection){
                 ids.push(_self.multipleSelection[i].ID)
             }
+            ids=Array.from(new Set(ids))
             if(ids.length == 0){
                 _self.$message({
                     message: '请选择要审核订单',
@@ -314,7 +305,7 @@ export default {
                     })
                     _self.multipleSelection = []
                     _self.fetchData()
-                }else{
+                }else{                   
                     _self.$message.error('审核失败!!!')
                 }
             }
@@ -326,7 +317,8 @@ export default {
         const _self = this
         if (expanded) {
             const res = await hotelPaymentInfoApi.getDetails(row.ID)
-            _self.orderDetail = res.data.Data
+            _self.orderDetail = res.data.Data  
+            console.log(row.ID)               
             _self.expandRowKeys.length = 0
             _self.expandRowKeys.push(row.ID)
             _self.ID = row.ID
@@ -343,7 +335,7 @@ export default {
     countMoney(){
         let m = 0
         for(let i in this.multipleSelection){
-            m += parseInt(this.multipleSelection[i].Amount)
+            m += parseInt(this.multipleSelection[i].AmountUse)
         }
         this.money = m
     },
