@@ -85,6 +85,33 @@
 <script>
 import { hotelPaymentInfoApi, hotelsOrderApi, policyApi } from "api";
 
+const searchData = [
+  ['酒店名称', 'HotelName', 'input', ''],
+  ['订单号', 'PlatOrderNo', 'input', ''],
+  ['客人姓名', 'Passenger', 'input', ''],
+
+  ['入住日期', 'StayDateStart', 'date', ''],
+  ['退房日期', 'StayDateEnd', 'date', ''],
+  ['预定日期', 'BookTime', 'daterange', ''],
+  ['收款日期', 'ExpectSettlement', 'daterange', ''],
+
+  ['销售平台', 'PlatPolicyID', 'select', ''],
+  ['打款账户', 'CompanyAcount', 'select', ''],
+  ['收款状态', 'StateCheck', 'select', ''],
+]
+const searchFields = transSearch(searchData)
+
+function transSearch (listData) {
+  return listData.map(item => {
+    return {
+      label: item[0],
+      name: item[1],
+      type: item[2],
+      data: item[3]
+    }
+  })
+}
+
 export default {
   data() {
     return {
@@ -124,7 +151,8 @@ export default {
     async platformAccount() {
       const options = {
         pageSize: 1000,
-        order: "ID"
+        order: "ID",
+        query:'{"CanSale":"true"}'
       };
       const res = await policyApi.getPolicyPlatform(options);
       this.PlatPolicyID = res.data.Data;

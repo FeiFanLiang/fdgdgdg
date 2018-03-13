@@ -14,12 +14,12 @@
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日">
           </el-date-picker>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="打款账户" slot="CompanyAcount">
           <el-select v-model="filters.CompanyAcount" clearable>
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
           </el-select>
-      </el-form-item>-->
+      </el-form-item>
   </CustomSearchCopy>
 
 <!--
@@ -135,20 +135,27 @@ import { hotelPaymentInfoApi, hotelsOrderApi, policyApi } from 'api'
 import ImageList from 'components/imglist'
 
 const searchData = [
-     ['客人姓名', 'Passenger', 'input', ''],
+    //订单
+    ['酒店名称', 'HotelName', 'input', ''],
+    ['订单号', 'PlatOrderNo', 'input', ''],
+    ['客人姓名', 'Passenger', 'input', ''],
+    ['入住日期', 'StayDateStart', 'date', ''],
 
-     ['财务编号', 'PaymentNo', 'input', ''],
+    //财务
+    ['财务编号', 'PaymentNo', 'input', ''],
 
-     ['打款账户', 'CompanyAcount', 'select', ''],
-     ['收款账户', 'Partner', 'input', ''],
-     ['收款账号', 'PartnerAccount', 'input', ''],
-     ['收款开户行', 'PartnerAccountModel', 'input', ''],
+    ['打款账户', 'CompanyAcount', 'select', ''],
+    ['收款账户', 'Partner', 'input', ''],
 
-     ['金额', 'Amount', 'input', ''],
-     ['打款日期', '', 'daterange', ''],
-     ['货币', 'Currency', 'select', ''],
 
-     ['打款状态', 'State', 'select', '']
+    ['收款账号', 'PartnerAccount', 'input', ''],
+    ['收款开户行', 'PartnerAccountModel', 'input', ''],
+
+    ['金额', 'Amount', 'input', ''],
+    ['打款日期', '', 'daterange', ''],
+    ['货币', 'Currency', 'select', ''],
+
+    ['打款状态', 'State', 'select', '']
 
 ]
 const searchFields = transSearch(searchData)

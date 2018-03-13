@@ -1,8 +1,9 @@
 <template lang="html">
+  <!-- / 财务 / 待付款列表 -->
 <div id="FukuanList">
     <CustomSearchCopy :configList="searchFields" @searchCallback="searchCallback">
-      <el-form-item label="销售平台" slot="PlatPolicyID">
-          <el-select v-model="filters.PlatPolicyID">
+      <el-form-item label="外采平台" slot="WaiCaiPlatID">
+          <el-select v-model="filters.WaiCaiPlatID">
               <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
           </el-select>
       </el-form-item>
@@ -11,8 +12,8 @@
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="付款周期" slot="PayPeriod" >
-          <el-select v-model="filters.PayPeriod" clearable placeholder="请选择付款周期">
+      <el-form-item label="付款周期" slot="SettlementCycleFu" >
+          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期">
               <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
           </el-select>
       </el-form-item>
@@ -73,13 +74,12 @@ const searchData = [
   ['入住日期', 'StayDateStart', 'date', ''],
   ['退房日期', 'StayDateEnd', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
-  ['收款日期', 'ExpectSettlement', 'daterange', ''],
 
-  ['销售平台', 'PlatPolicyID', 'select', ''],
-  //['采购平台', 'PlatPolicyID', 'select', ''],
-['打款账户', 'CompanyAcount', 'select', ''],
-  ['付款周期', 'PayPeriod', 'select', ''],
 
+  ['外采平台', 'WaiCaiPlatID', 'select', ''],
+
+  ['打款账户', 'CompanyAcount', 'select', ''],
+  ['付款周期', 'SettlementCycleFu', 'select', ''],
 ]
 const searchFields = transSearch(searchData)
 
@@ -95,8 +95,6 @@ function transSearch (listData) {
 }
 
 
-
-
 export default {
     data() {
         return {
@@ -109,18 +107,25 @@ export default {
             filters:{
                 HotelName:'',
                 PlatOrderNo:'',
+                Passenger:'',
                 StayDateStart:'',
                 BookTime:'',
                 StayDateEnd:'',
                 ExpectSettlement:'',
-                PlatPolicyID: '',
+                WaiCaiPlatID: '',
                 CompanyAcount:'',
-                PayPeriod:'',
+                SettlementCycleFu:'',
 
             },
             PlatPolicyID: [],
             CompanyAcount:[],
             PayCompanyID:[],
+            ThreePlatID: [
+              {
+                PlatName: "全部",
+                value: ""
+              }
+            ],
             payPeriodList: [{
                     value: 0,
                     text: '其他（每单备注）'
@@ -168,7 +173,8 @@ export default {
         async platformAccount() {
           const options = {
             pageSize: 1000,
-            order: "ID"
+            order: "ID",
+            query:'{"CanPurchase":"true"}'
           };
           const res = await policyApi.getPolicyPlatform(options);
           this.PlatPolicyID = res.data.Data;
@@ -209,6 +215,10 @@ export default {
                 query:{
                     HotelName:_self.filters.HotelName,
                     PlatOrderNo:_self.filters.PlatOrderNo,
+                    Passenger:_self.filters.Passenger,
+                    WaiCaiPlatID:_self.filters.WaiCaiPlatID,
+                    CompanyAcount:_self.filters.CompanyAcount,
+                    SettlementCycleFu:_self.filters.SettlementCycleFu,
                     StayDateStart:_self.filters.StayDateStart ? new Date(_self.filters.StayDateStart).Format('yyyy-MM-dd') : '',
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
