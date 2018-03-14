@@ -55,6 +55,7 @@ import visaApi from './visa'
 import hotelOrderDetailApi from './hotel-order-detail'
 import advancementApi from './advancement'
 import tripOrderApi from './trip-order'
+import singlePriceRatioLogApi from './single-price-ratio-log'
 export {
   accountApi,
   airlineApi,
@@ -112,5 +113,6 @@ export {
   visaApi,
   hotelOrderDetailApi,
   advancementApi,
-  tripOrderApi
+  tripOrderApi,
+  singlePriceRatioLogApi
 }

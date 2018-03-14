@@ -4,19 +4,12 @@
     <el-col :span="5">
         <el-input placeholder="请输入酒店ID" v-model="hotelId" ></el-input>
     </el-col>
+     <el-col :span="5">
+        <el-input placeholder="请输入需要过滤的日期" v-model="filterDate" ></el-input>
+    </el-col>
     <el-col :span="5">
       <el-button type="primary" @click="search()">搜索--(默认依次按照日期-房型-早餐-人数排序)</el-button>
     </el-col>
-   <!--  <el-col :span="7">
-      <el-select v-model="value" placeholder="请选择">
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
-     </el-col> -->
   </el-row>
     <el-table ref="multipleTable"  :data="logs" border tooltip-effect="dark" style="width: 100%" >
       <el-table-column prop="hotelName" label="酒店名称" width="120" show-overflow-tooltip>
@@ -76,47 +69,25 @@ export default {
   data() {
     return {
       hotelId: '',
-      logs: [],
-      allLogs: [],
-      options: [
-        {
-          value: 'all',
-          label: '全部'
-        },
-        {
-          value: 'normal',
-          label: '普通任务'
-        },
-        {
-          value: 'once',
-          label: '一次性任务'
-        }
-      ],
-      value: ''
+      filterDate: '',
+      logs: []
     }
   },
-  watch: {
-    value() {
-      if (this.value === 'all') {
-        this.logs = this.allLogs
-      }
-      if (this.value === 'normal') {
-        this.logs = this.allLogs.filter(item => item.isPriceComparison)
-      }
-      if (this.value === 'once') {
-        this.logs = this.allLogs.filter(item => !item.isPriceComparison)
-      }
-    }
-  },
+
   methods: {
     async getLogs(hotelId) {
       const res = await spiderSettingApi.HGETALL(hotelId)
-      this.allLogs = []
+      let array = []
       for (let [key, value] of Object.entries(res.data)) {
-        this.allLogs.push(JSON.parse(value))
+        array.push(JSON.parse(value))
       }
-      this.allLogs = multisort(this.allLogs, compairers)
-      this.value = 'all'
+      array = multisort(array, compairers)
+      if (this.filterDate) {
+        this.logs = array.filter(item => item.useTime === this.filterDate)
+        console.log(this.logs)
+      } else {
+        this.logs = array
+      }
     },
     async search() {
       if (!this.hotelId) return

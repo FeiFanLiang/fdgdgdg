@@ -4,7 +4,7 @@
             <el-tab-pane label="爬虫信息" name="add">
                 <el-row>
                     <el-button type="primary" @click="clickAddBtn()">创建</el-button>
-                    <el-button type="primary" @click="clickAddBtnOnce()">创建一次性比价</el-button>
+                    <!-- <el-button type="primary" @click="clickAddBtnOnce()">创建一次性比价</el-button>-->
                 </el-row>
                 <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
                     <el-table-column prop="PlatformHotelID" label="平台酒店ID" show-overflow-tooltip></el-table-column>
@@ -86,7 +86,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <el-form-item label="保底">
-                                    <el-input-number size="small" v-model="basePrice" :min="0"></el-input-number>
+                                    <el-input-number size="small" v-model="basePrice" ></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
