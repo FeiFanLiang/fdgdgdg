@@ -120,7 +120,7 @@ const searchData = [
     ['收款开户行', 'PartnerAccountModel', 'input', ''],
 
     ['金额', 'AmountUse', 'input', ''],
-    ['打款日期', 'ExpectSettlement', 'daterange', ''],
+    ['打款日期', 'PaymentDate', 'daterange', ''],
     ['货币', 'Currency', 'select', ''],
 
     ['打款状态', 'State', 'select', '']
@@ -244,7 +244,7 @@ export default {
           time1 = new Date(_self.filters.PaymentDate[0]).Format("yyyy-MM-dd");
           time2 = new Date(_self.filters.PaymentDate[1]).Format("yyyy-MM-dd");
         }
-      }
+      }      
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
@@ -261,8 +261,8 @@ export default {
                 StayDateStart: _self.filters.StayDateStart
                  ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
                  : "",
-                "PaymentDate>": time1,
-                "PaymentDate<": time2
+                "ExpectSettlement>": time1,
+                "ExpectSettlement<": time2
                              
             }
       }
