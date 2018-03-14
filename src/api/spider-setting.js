@@ -10,6 +10,12 @@ export default {
   del(id) {
     return axios.delete(base + `${id}`)
   },
+  details(id) {
+    return axios.get(base + `${id}`)
+  },
+  edit(id, params) {
+    return axios.put(base + `${id}`, params)
+  },
   listByHotel(id) {
     return axios.get(base + 'PlatformHotel/' + id)
   },

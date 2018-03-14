@@ -5,8 +5,18 @@
         <el-input placeholder="请输入酒店ID" v-model="hotelId" ></el-input>
     </el-col>
     <el-col :span="5">
-      <el-button type="primary" @click="search()">搜索</el-button>
+      <el-button type="primary" @click="search()">搜索--(默认依次按照日期-房型-早餐-人数排序)</el-button>
     </el-col>
+   <!--  <el-col :span="7">
+      <el-select v-model="value" placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
+     </el-col> -->
   </el-row>
     <el-table ref="multipleTable"  :data="logs" border tooltip-effect="dark" style="width: 100%" >
       <el-table-column prop="hotelName" label="酒店名称" width="120" show-overflow-tooltip>
@@ -39,37 +49,79 @@
       </el-table-column>
       <el-table-column prop="logTime" label="比价时间" show-overflow-tooltip sortable width="120">
       </el-table-column>
-      
     </el-table>
   </div>
 </template>
 
 <script>
+function multisort(array, compairers) {
+  return array.sort((a, b) => {
+    for (const c of compairers) {
+      const r = c(a, b)
+      if (r !== 0) {
+        return r
+      }
+    }
+  })
+}
+const compairers = [
+  (a, b) => +new Date(a.useTime) - +new Date(b.useTime),
+  (a, b) => a.roomName.localeCompare(b.roomName),
+  (a, b) => a.breakfastType.localeCompare(b.breakfastType),
+  (a, b) => a - b
+]
+
 import { spiderSettingApi } from 'api'
 export default {
   data() {
     return {
       hotelId: '',
-      logs: []
+      logs: [],
+      allLogs: [],
+      options: [
+        {
+          value: 'all',
+          label: '全部'
+        },
+        {
+          value: 'normal',
+          label: '普通任务'
+        },
+        {
+          value: 'once',
+          label: '一次性任务'
+        }
+      ],
+      value: ''
+    }
+  },
+  watch: {
+    value() {
+      if (this.value === 'all') {
+        this.logs = this.allLogs
+      }
+      if (this.value === 'normal') {
+        this.logs = this.allLogs.filter(item => item.isPriceComparison)
+      }
+      if (this.value === 'once') {
+        this.logs = this.allLogs.filter(item => !item.isPriceComparison)
+      }
     }
   },
   methods: {
     async getLogs(hotelId) {
       const res = await spiderSettingApi.HGETALL(hotelId)
-      const array = []
+      this.allLogs = []
       for (let [key, value] of Object.entries(res.data)) {
-        array.push(JSON.parse(value))
+        this.allLogs.push(JSON.parse(value))
       }
-      console.log(array)
-      this.logs = array
+      this.allLogs = multisort(this.allLogs, compairers)
+      this.value = 'all'
     },
     async search() {
       if (!this.hotelId) return
       await this.getLogs(this.hotelId)
-    },
-     filterTag(value, row) {
-        return row.isPriceComparison === value;
-      }
+    }
   }
 }
 </script>

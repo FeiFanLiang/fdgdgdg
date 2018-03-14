@@ -22,6 +22,7 @@
                     <el-table-column prop="ComparisonRule" label="比价规则" width="600" show-overflow-tooltip></el-table-column>
                     <el-table-column label="操作" width="150" fixed="right" show-overflow-tooltip>
                         <template scope="scope">
+                          <el-button type="primary" size="small" @click="edit(scope.row.ID)">编辑</el-button>
                             <DeleteButton api="spiderSettingApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
                         </template>
                     </el-table-column>
@@ -30,12 +31,13 @@
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total">
                     </el-pagination>
                 </div>
-                <el-dialog title="爬虫配置" v-model="showDialog" :modal-append-to-body="false" @close="resetForm('form')" :modal="false">
+                <el-dialog title="爬虫配置" v-model="showDialog" :modal-append-to-body="false"  :modal="false">
                     <el-form label-position="right">
+
                         <el-row>
                             <el-col :span="24">
                                 <el-form-item label="状态" v-if="addType==='normal'">
-                                    <el-switch on-text="开始" off-text="停止" v-model="isStop"></el-switch>
+                                    <el-switch on-text="开始" off-text="停止" v-model="isStop" :on-value="false" :off-value="true"></el-switch>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="24" v-if="addType==='once'">
@@ -105,7 +107,7 @@
                     </el-form>
                     <span slot="footer" class="dialog-footer">
               <el-button @click="closeDialog()">取 消</el-button>
-              <el-button type="primary" @click="addSave()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
+              <el-button type="primary" @click="save()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
                 </el-dialog>
             </el-tab-pane>
@@ -195,6 +197,7 @@ export default {
   },
   data() {
     return {
+      taskId: '',
       list: [],
       total: 0,
       currentPage: 1,
@@ -202,43 +205,6 @@ export default {
       isEditable: true,
       showDialog: false,
       addType: 'normal',
-      rules: {
-        period: [
-          {
-            required: true,
-            message: '请选择周期',
-            type: 'number'
-          }
-        ],
-        startDateAbs: [
-          {
-            required: true,
-            message: '请选择周期',
-            type: 'date'
-          }
-        ],
-        endDateAbs: [
-          {
-            required: true,
-            message: '请选择周期',
-            type: 'date'
-          }
-        ],
-        startDate: [
-          {
-            required: true,
-            message: '请选择周期',
-            type: 'number'
-          }
-        ],
-        endDate: [
-          {
-            required: true,
-            message: '请选择周期',
-            type: 'number'
-          }
-        ]
-      },
       activeName: 'add',
       taskList: [],
       styleObject: {},
@@ -329,11 +295,13 @@ export default {
       const _self = this
       _self.showDialog = false
     },
-    async addSave() {
-      this.addType === 'normal' && this.addSaveNormal()
-      this.addType === 'once' && this.addSaveOnce()
+    async save() {
+      const _self = this
+
+      _self.addType === 'normal' && _self.saveNormal()
+      _self.addType === 'once' && _self.saveOnce()
     },
-    async addSaveNormal() {
+    async saveNormal() {
       const {
         isDateTypeNum,
         startDateAbs,
@@ -355,11 +323,6 @@ export default {
         PlatformID: spiderData.PlatformID,
         PlatformAccountID: spiderData.PlatformAccountID,
         period,
-        // startDateAbs: isDateTypeNum ? '' : startDateAbs.Format('yyyy-MM-dd'),
-        // endDateAbs: isDateTypeNum ? '' : endDateAbs.Format('yyyy-MM-dd'),
-        // startDate: isDateTypeNum ? startDate : 0,
-        // endDate: isDateTypeNum ? endDate : 0,
-        UpdateTime: '',
         ComparisonRule: JSON.stringify({
           basePrice,
           addPriceType,
@@ -380,8 +343,12 @@ export default {
       const _self = this
       try {
         _self.isEditable = false
-
-        await spiderSettingApi.setPeriod(form)
+        if (_self.flag === 'add') {
+          await spiderSettingApi.setPeriod(form)
+        }
+        if (_self.flag === 'edit') {
+          await spiderSettingApi.edit(_self.taskId, form)
+        }
         _self.fetchData()
         _self.showDialog = false
         _self.$message({
@@ -395,7 +362,7 @@ export default {
         _self.isEditable = true
       }
     },
-    async addSaveOnce() {
+    async saveOnce() {
       const {
         isDateTypeNum,
         hotelIds,
@@ -411,10 +378,6 @@ export default {
       const form = {
         hotelIds: hotelIds ? hotelIds.split(',') : [],
         platformHotelCarwlerPeriod: {
-          // startDateAbs: isDateTypeNum ? '' : startDateAbs.Format('yyyy-MM-dd'),
-          // endDateAbs: isDateTypeNum ? '' : endDateAbs.Format('yyyy-MM-dd'),
-          // startDate: isDateTypeNum ? startDate : 0,
-          // endDate: isDateTypeNum ? endDate : 0,
           isPriceComparison: false,
           comparisonRule: JSON.stringify({
             basePrice,
@@ -435,7 +398,6 @@ export default {
           'yyyy-MM-dd'
         )
       }
-      console.log(form)
 
       const _self = this
       try {
@@ -456,6 +418,32 @@ export default {
       } finally {
         _self.isEditable = true
       }
+    },
+    async edit(id) {
+      const _self = this
+      _self.addType = 'normal'
+      _self.flag = 'edit'
+      _self.resetForm()
+      const res = await spiderSettingApi.details(id)
+
+      const data = res.data.Data
+      _self.taskId = data.ID
+      _self.period = data.Period
+      _self.startDate = data.StartDate
+      _self.endDate = data.EndDate
+      _self.startDateAbs = data.StartDateAbs ? new Date(data.StartDateAbs) : ''
+      _self.endDateAbs = data.EndDateAbs ? new Date(data.EndDateAbs) : ''
+      _self.guestNum = data.GuestNum
+      _self.isStop = data.IsStop
+      const comparisonRule = data.ComparisonRule
+        ? JSON.parse(data.ComparisonRule)
+        : {}
+      _self.basePrice = comparisonRule.basePrice
+      _self.addPriceType = comparisonRule.addPriceType
+      _self.percentPrice = comparisonRule.percentPrice
+      _self.personPrice = comparisonRule.personPrice
+      _self.isDateTypeNum = !data.StartDate && !data.EndDate ? false : true
+      _self.showDialog = true
     },
     async getTaskList() {
       const _self = this
@@ -515,6 +503,7 @@ export default {
     },
     resetForm() {
       const _self = this
+      _self.taskId = ''
       _self.isDateTypeNum = true
       _self.hotelIds = ''
       _self.period = ''
