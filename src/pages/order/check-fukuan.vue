@@ -262,7 +262,10 @@ export default {
                  ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
                  : "",
                 "ExpectSettlement>": time1,
-                "ExpectSettlement<": time2
+                "ExpectSettlement<": time2,
+                PaymentState:0,
+                PaymentType:1,
+                "StateScreenshot>":0
                              
             }
       }
