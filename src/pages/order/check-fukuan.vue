@@ -263,8 +263,8 @@ export default {
                  : "",
                 "ExpectSettlement>": time1,
                 "ExpectSettlement<": time2，
-                PaymentState ：0,
-                PaymentType ：1,
+                PaymentState:0,
+                PaymentType:1,
                 "StateScreenshot>":0
                              
             }
