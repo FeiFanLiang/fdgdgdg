@@ -13,7 +13,6 @@ import wechatRoute from './wechat'
 import dwz from './dwz'
 import wechatUser from './wechat-user'
 import modifyPrice from './modify-price'
-import test from './test'
 import kefuRoute from './kefu'
 import caiwuRoute from './caiwu'
 
@@ -21,8 +20,8 @@ const children = [
   hotelRoute, // 酒店
   showRoute, // 展示信息
   orderRoute, // 订单
-  kefuRoute,  //客服
-  caiwuRoute,  //财务
+  kefuRoute, //客服
+  caiwuRoute, //财务
   fleetRoute, // 车队
   evaluateScanRoute, // 扫码 链接
   wechatRoute, // 微信
@@ -31,8 +30,7 @@ const children = [
   userRoute, // 用户
   dwz, // 短链接
   wechatUser, // 微信用户
-  modifyPrice, // 比价
-  // test // 测试专用
+  modifyPrice // 比价
 ]
 const root = Vue.component('root', {
   template: '<router-view></router-view>'

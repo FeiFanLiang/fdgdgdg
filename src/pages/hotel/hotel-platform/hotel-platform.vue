@@ -99,13 +99,13 @@
       </span>
     </el-dialog>
     <el-dialog title="爬虫设置"  :visible.sync="showSpiderDialog" size="full" :modal-append-to-body="false" :before-close="beforeClose" >
-       <SpiderSetting :platformHotelId="platformHotelId" :isShow="showSpiderSetting" />
+       <SpiderSetting :spiderData="spiderData" :isShow="showSpiderSetting" />
         </el-dialog>
   </div>
 </template>
 
 <script>
-import { hotelPlatformApi, hotelThreePlatInfoApi,policyApi } from 'api'
+import { hotelPlatformApi, hotelThreePlatInfoApi, policyApi } from 'api'
 
 import { HotelTopMenu } from 'components'
 import SpiderSetting from '../spider-setting/index.vue'
@@ -139,13 +139,13 @@ export default {
         platformId: '',
         hotelId: '',
         platHotelId: '',
-        platHotelId2:'',
+        platHotelId2: '',
         platUrl: '',
         platHotelName: '',
         platHotelNameEn: '',
         remark: '',
         isDisabled: '',
-        PlatformAccountID:''
+        PlatformAccountID: ''
       },
       rules: {
         platformId: [
@@ -166,12 +166,12 @@ export default {
           // }
         ]
       },
-      platformHotelId: '',
-      PlatformAccountID:[]
+      spiderData: '',
+      PlatformAccountID: []
     }
   },
   methods: {
-    async platformAccount(){
+    async platformAccount() {
       const res = await policyApi.getPolicyPlatform()
       this.PlatformAccountID = res.data.Data
     },
@@ -181,7 +181,7 @@ export default {
     },
     spiderSetting(row) {
       console.log(row.ID)
-      this.platformHotelId = row.ID
+      this.spiderData = row
       this.showSpiderDialog = true
       setTimeout(() => {
         this.showSpiderSetting = true
@@ -219,7 +219,7 @@ export default {
         platHotelNameEn: '',
         remark: '',
         isDisabled: true,
-        PlatformAccountID:''
+        PlatformAccountID: ''
       }
     },
     async clickEditBtn($index, row) {
@@ -313,22 +313,22 @@ export default {
 </script>
 <style lang="scss">
 #hotel-platform-info-page {
-    .pagination-wrapper {
-        text-align: center;
-        padding: 30px;
-    }
-    .around {
-        display: flex;
-        justify-content: space-around;
-    }
-    .el-form-item {
-        margin-bottom: 22px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-    }
-    .w193 {
-        width: 193px;
-    }
+  .pagination-wrapper {
+    text-align: center;
+    padding: 30px;
+  }
+  .around {
+    display: flex;
+    justify-content: space-around;
+  }
+  .el-form-item {
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .w193 {
+    width: 193px;
+  }
 }
 </style>

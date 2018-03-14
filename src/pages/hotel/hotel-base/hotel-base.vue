@@ -84,16 +84,16 @@
 </template>
 
 <script>
-import { hotelBaseApi, hotelAreaApi2 } from "api";
-import HotelBaseAdd from "./hotel-base-add.vue";
+import { hotelBaseApi, hotelAreaApi2 } from 'api'
+import HotelBaseAdd from './hotel-base-add.vue'
 export default {
   components: {
     HotelBaseAdd
   },
   created() {
-    this.getHotelbaseList();
-    this.getCountryOptions();
-    this.configList = hotelBaseApi.getConfig();
+    this.getHotelbaseList()
+    this.getCountryOptions()
+    this.configList = hotelBaseApi.getConfig()
   },
   data() {
     return {
@@ -105,45 +105,45 @@ export default {
       count: 0,
       loading: false,
       filters: {
-        ID: "",
-        HotelName: "",
-        HotelName_En: "",
-        FrontPhone: "",
-        labelVal: "1",
-        country: "",
-        city: ""
+        ID: '',
+        HotelName: '',
+        HotelName_En: '',
+        FrontPhone: '',
+        labelVal: '1',
+        country: '',
+        city: ''
       },
       selectedOptions: [
         {
-          value: "1",
-          label: "酒店名称"
+          value: '1',
+          label: '酒店名称'
         },
         {
-          value: "2",
-          label: "酒店英文名称"
+          value: '2',
+          label: '酒店英文名称'
         },
         {
-          value: "3",
-          label: "酒店ID"
+          value: '3',
+          label: '酒店ID'
         },
         {
-          value: "4",
-          label: "酒店前台电话"
+          value: '4',
+          label: '酒店前台电话'
         }
       ],
       countryOptions: []
-    };
+    }
   },
 
   methods: {
     async getCountryOptions() {
-      const _self = this;
-      const res = await hotelAreaApi2.listByLevel("1");
-      _self.countryOptions = res.data;
+      const _self = this
+      const res = await hotelAreaApi2.listByLevel('1')
+      _self.countryOptions = res.data
     },
     hotelAddHide() {
-      this.dialogTableVisible = false;
-      this.getHotelbaseList();
+      this.dialogTableVisible = false
+      this.getHotelbaseList()
     },
     /*addHotelShow(row) {
       this.$router.push({
@@ -161,33 +161,33 @@ export default {
        this.getHotelbaseList();
     },*/
     hotelbaseSearch() {
-      this.getHotelbaseList();
+      this.getHotelbaseList()
     },
     async getHotelbaseList(currentPage, pageSize) {
-      const _self = this;
-      this.loading = true;
-      _self.currentPage = currentPage || _self.currentPage;
-      _self.pageSize = pageSize || _self.pageSize;
+      const _self = this
+      this.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
-        order: "ID",
+        order: 'ID',
         query: {
-          ID: _self.filters.labelVal === "3" ? _self.filters.ID : "",
+          ID: _self.filters.labelVal === '3' ? _self.filters.ID : '',
           HotelName:
-            _self.filters.labelVal === "1" ? _self.filters.HotelName : "",
+            _self.filters.labelVal === '1' ? _self.filters.HotelName : '',
           HotelName_En:
-            _self.filters.labelVal === "2" ? _self.filters.HotelName_En : "",
+            _self.filters.labelVal === '2' ? _self.filters.HotelName_En : '',
           FrontPhone:
-            _self.filters.labelVal === "4" ? _self.filters.FrontPhone : "",
+            _self.filters.labelVal === '4' ? _self.filters.FrontPhone : '',
           City: _self.filters.city,
           Country: _self.filters.country,
           IsDelete: false
         }
-      };
-      const res = await hotelBaseApi.listAll(options);
+      }
+      const res = await hotelBaseApi.listAll(options)
       if (res && res.data && res.data.Data) {
-        let data = res.data.Data;
+        let data = res.data.Data
         for (let item of data) {
           if (
             item.Policys &&
@@ -196,37 +196,37 @@ export default {
           ) {
             for (let n of item.Policys) {
               if (n.IsDefault) {
-                item.Policys = n;
+                item.Policys = n
               }
             }
           }
         }
-        _self.hotelbase = data;
-        _self.count = res.data.Count;
-        this.loading = false;
+        _self.hotelbase = data
+        _self.count = res.data.Count
+        this.loading = false
       }
     },
     handleSizeChange(val) {
-      this.pageSize = val;
-      this.getHotelbaseList(1, this.pageSize);
+      this.pageSize = val
+      this.getHotelbaseList(1, this.pageSize)
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      this.getHotelbaseList(this.currentPage);
+      this.currentPage = val
+      this.getHotelbaseList(this.currentPage)
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
-        name: "酒店信息编辑",
+        name: '酒店信息编辑',
         params: {
           ID: row.ID
         },
         query: {
           hotelName: row.HotelName
         }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss">

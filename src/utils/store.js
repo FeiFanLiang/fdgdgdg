@@ -1,11 +1,9 @@
-import { gbs } from 'config/settings.js'
-
 class Store {
-  constructor () {
+  constructor() {
     this.store = window.localStorage
-    this.prefix = gbs.db_prefix
+    this.prefix = 'meipiao_admin_'
   }
-  set (key, value, fn) {
+  set(key, value, fn) {
     try {
       value = JSON.stringify(value)
     } catch (e) {
@@ -16,7 +14,7 @@ class Store {
 
     fn && fn()
   }
-  get (key, fn) {
+  get(key, fn) {
     if (!key) {
       throw new Error('没有找到key。')
     }
@@ -34,7 +32,7 @@ class Store {
 
     return value
   }
-  remove (key) {
+  remove(key) {
     this.store.removeItem(this.prefix + key)
   }
 }
