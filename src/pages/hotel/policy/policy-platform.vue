@@ -41,6 +41,18 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <el-row :gutter="24" style="margin:10px;">
+              <el-col :span="6">
+                  <el-form-item label="采购渠道" prop="CanPurchase">
+                      <el-switch on-text="采购" off-text="否" v-model="form.CanPurchase"></el-switch>
+                  </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                  <el-form-item label="销售渠道" prop="CanSale">
+                      <el-switch on-text="采购" off-text="否" v-model="form.CanSale"></el-switch>
+                  </el-form-item>
+              </el-col>
+            </el-row>
             <el-collapse v-model="activeNames" style="margin:10px;">      <!-- accordion -->
                 <!-- 、、、、、、、、、、、、、收款政策、、、、、、、、、、、、、、、、 -->
                 <el-collapse-item title="收款政策" name="1">
@@ -365,7 +377,7 @@ export default {
         ReceiptForm:{
             PolicyImage:''
         },
-        PaymentForm:{    
+        PaymentForm:{
         },
         form2:{
             AccountName: '',
@@ -668,16 +680,17 @@ export default {
             _self.getImageList('',res.data.Data.Payment.PolicyImage)
         }
         _self.form = res.data.Data
+        console.log(_self.form.CanSale)
         _self.dialogShow  =true
     },
     async submit(){
         const _self = this
-        this.$refs['ReceiptForm'].validate(async valid => {  
+        this.$refs['ReceiptForm'].validate(async valid => {
         this.$refs['ReceiptCompany'].validate(async valid => {
-        this.$refs['PaymentForm'].validate(async valid => {  
+        this.$refs['PaymentForm'].validate(async valid => {
         this.$refs['ReceiptCompany2'].validate(async valid => {
         if (valid) {
-            try{               
+            try{
                 if(_self.imageList2.length != 0){
                     _self.form.Payment.PolicyImage = _self.imageList2.toString()
                 }
@@ -689,7 +702,7 @@ export default {
                 _self.form.Payment = _self.PaymentForm
                 _self.form.Payment.ReceiptCompany = _self.ReceiptCompany2
                 _self.isEditable = false
-                
+
                 if (_self.form.ID) {
                     console.log(_self.form)
                     await policyApi.editPlatformPolicy(_self.form.ID,_self.form)
@@ -713,9 +726,9 @@ export default {
                 _self.isEditable = true
             }
 
-        } 
+        }
         })
-        }) 
+        })
         })
         })
     }

@@ -1,4 +1,5 @@
 <template lang="html">
+  <!-- 酒店订单总表(状态) -->
 <div id="HotelsOrder">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
       <el-form-item label="订单平台" slot="ThreePlatID">
@@ -23,7 +24,6 @@
         </el-checkbox-group>
       </el-form-item>
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
-      <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
     </CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
       :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID">
@@ -188,19 +188,11 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="110px">
             <el-row :gutter="24"><el-col :span="24" style="color:orange;"><h1>订单信息</h1></el-col></el-row>
             <el-row :gutter="24">
-              <!-- <el-col :span="8">
+              <el-col :span="8">
                 <el-form-item label="酒店名称" prop="HotelName">
                     <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
                 </el-form-item>
-              </el-col> -->
-              <el-col :span="8">
-                        <el-form-item label="酒店名称" prop="HotelName">
-                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel">
-                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.HotelName">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+              </el-col>
               <el-col :span="6">
                 <el-form-item label="第三方订单号" prop="PlatOrderNo">
                     <el-input placeholder="请输入第三方订单号" v-model="form.PlatOrderNo"></el-input>
@@ -214,8 +206,8 @@
             </el-row>
             <el-row :gutter="24">
               <el-col :span="6">
-                <el-form-item label="酒店id" prop="HotelID">
-                    <el-input placeholder="请输入酒店id" v-model="form.HotelID" disabled></el-input>
+                <el-form-item label="订单号" prop="OrderNo">
+                    <el-input placeholder="请输入订单号" v-model="form.OrderNo"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -263,7 +255,7 @@
                     <el-form-item label="晚数" prop="NightNum">
                         <el-input placeholder="请输入晚数" v-model="form.NightNum"></el-input>
                     </el-form-item>
-                </el-col>                
+                </el-col>
                 <el-col :span="6">
                     <el-form-item label="联系电话" prop="PassengerTel">
                         <el-input placeholder="请输入联系电话" v-model="form.PassengerTel"></el-input>
@@ -327,7 +319,7 @@
                 </el-col>
             </el-row>
             <el-row :gutter="24">
-                
+
                 <!-- <el-col :span="6">
                     <el-form-item label="应付款额" prop="AmountYingFu">
                         <el-input placeholder="请输入应付款额" v-model="HotelOrderDetail.AmountYingFu"></el-input>
@@ -343,7 +335,7 @@
                         <el-input placeholder="请输入实付款额" v-model="HotelOrderDetail.AmountShiFu"></el-input>
                     </el-form-item>
                 </el-col> -->
-            </el-row>   
+            </el-row>
             <el-row :gutter="24">
               <el-col :span="6">
                     <el-form-item label="应收款额" prop="AmountYingShou">
@@ -364,7 +356,7 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-            </el-row>  
+            </el-row>
             <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
             <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>订单截图</h1></el-col></el-row>
             <el-row :gutter="20">
@@ -382,12 +374,7 @@
 </template>
 
 <script>
-import {
-  hotelsOrderApi,
-  paymentCheckApi,
-  hotelThreePlatInfoApi,
-  hotelBaseApi
-} from "api";
+import { hotelsOrderApi, paymentCheckApi, hotelThreePlatInfoApi } from "api";
 import UploadImage from "components/upload-image";
 export default {
   components: {
@@ -396,8 +383,6 @@ export default {
   data() {
     let that = this;
     return {
-      loadingHotel: false,
-      hotelList: [],
       imageList: [],
       text: -1,
       currentPage: 1,
@@ -409,7 +394,7 @@ export default {
       form: {
         PlatOrderNo: "",
         HotelName: "",
-        HotelID: "",
+        OrderNo: "",
         ThreePlatID: "",
         Room: "",
         HotelBookingNo: "",
@@ -598,45 +583,9 @@ export default {
         }
       ],
       rules: {
-        HotelName: [
-          { required: true, message: "请输入酒店名称", trigger: "blur" }
-        ],
         PlatOrderNo: [
-          { required: true, message: "请输入第三方订单号", trigger: "blur" }
+          { required: true, message: "请输入第三方平台账号", trigger: "blur" }
         ]
-        // ThreePlatID: [
-        //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }
-        // ],
-        // Room: [
-        //   { required: true, message: "请输入房型", trigger: "blur" }
-        //   ],
-        // Passenger: [
-        //   { required: true, message: "请输入入住人", trigger: "blur" }
-        // ],
-        // StayDateStart: [
-        //   { required: true, message: "请输入入住日期", trigger: "blur" }
-        // ],
-        // StayDateEnd: [
-        //   { required: true, message: "请输入退房日期", trigger: "blur" }
-        // ],
-        // RoomNum: [
-        //   { required: true, message: "请输入间数", trigger: "blur" }
-        // ],
-        // NightNum: [
-        //   { required: true, message: "请输入晚数", trigger: "blur" }
-        // ],
-        // PassengerTel: [
-        //   { required: true, message: "请输入联系电话", trigger: "blur" }
-        // ],
-        // OrderState: [
-        //   { required: true, message: "请输入订单状态", trigger: "blur" }
-        // ],
-        // OrderType: [
-        //   { required: true, message: "请输入订单类型", trigger: "blur" }
-        // ],
-        // BookTime: [
-        //   { required: true, message: "请输入预定时间", trigger: "blur" }
-        // ]
       },
       detail: {}
     };
@@ -647,72 +596,6 @@ export default {
     this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
-    async downloadList() {
-      const _self = this;
-      let time1 = "";
-      let time2 = "";
-      if (typeof _self.filters.BookTime != "undefined") {
-        if (_self.filters.BookTime[0] != null) {
-          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
-        }
-      }
-      const options = {
-        pageIndex: _self.currentPage,
-        pageSize: _self.pageSize,
-        order: "BookTime",
-        desc: true,
-        query: {
-          OrderNo: _self.filters.OrderNo,
-          HotelName: _self.filters.HotelName,
-          Passenger: _self.filters.Passenger,
-          StayDateStart: _self.filters.StayDateStart
-            ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
-            : "",
-          "BookTime>": time1,
-          "BookTime<": time2,
-          ThreePlatID: _self.filters.ThreePlatID,
-          SettlementCycle: _self.filters.SettlementCycle,
-          HotelBookingNo: _self.filters.HotelBookingNo,
-          HotelArea: _self.filters.HotelArea,
-          StateAuditor: _self.filters.StateAuditor,
-          StateFuKuan: _self.filters.StateFuKuan,
-          PlatOrderNo: _self.filters.PlatOrderNo
-        }
-      };
-      try {
-        const res = await hotelsOrderApi.downloadList(options);
-        if (res.request.responseURL) {
-          window.location.href = res.request.responseURL;
-        }
-      } catch (e) {
-        _self.$message.error("数据下载失败!!!");
-      }
-    },
-    async remoteHotelList(querys) {
-      const _self = this;
-      if (querys !== "") {
-        _self.loadingHotel = true;
-        const options = {
-          pageIndex: 1,
-          pageSize: 20,
-          order: "ID",
-          query: {
-            HotelName: querys
-          }
-        };
-        const res = await hotelBaseApi.listAll(options);
-        if (res && res.data && res.data.Data) {
-          _self.hotelList = res.data.Data;
-          _self.form.HotelID = _self.hotelList[0].ID;
-          _self.form.HotelName = _self.hotelList[0].HotelName;
-
-          _self.loadingHotel = false;
-        }
-      } else {
-        _self.hotelList = [];
-      }
-    },
     searchCallback(filters) {
       Object.assign(filters, filters, this.filters);
       this.filters = filters;

@@ -69,7 +69,7 @@
       </el-table-column>
     </el-table>
     <div class="pagination-wrapper">
-        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30,50,100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
 </div>
 </template>
@@ -106,7 +106,7 @@ export default {
   watch:{
     "$route":function(val){
         this.type = val.name
-        this.fetchData() 
+        this.fetchData()
         this.filters = {
           HotelName:'',
           PlatOrderNo:'',

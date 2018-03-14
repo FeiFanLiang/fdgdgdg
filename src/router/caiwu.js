@@ -9,9 +9,9 @@ export default {
   iconClass: 'dingdan',
   children: [
     {
-      path: 'PaymentCheck',
-      component: _import('order/payment-check'),
-      name: '财务流水'
+      path: 'HotelsOrder',
+      component: _import('order/hotels-order'),
+      name: '酒店订单'
     },
     {
       path: 'FukuanList',
@@ -62,7 +62,12 @@ export default {
     {
       path: 'down',
       component: _import('order/down'),
-      name: '新下载页面'
+      name: '支付明细'
     },
+    {
+      path: 'PaymentCheck',
+      component: _import('order/payment-check'),
+      name: '财务流水'
+    }
   ]
 }

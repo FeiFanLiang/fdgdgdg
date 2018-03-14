@@ -26,13 +26,6 @@
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
   :default-sort = "{prop: 'BookTime', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="销售渠道">
-        <template scope="scope">
-          <span v-for="item in PlatPolicyID">
-            <span v-if="scope.row.HotelOrder.PlatPolicyID==item.ID">{{item.Account}}</span>
-          </span>
-        </template>
-    </el-table-column>
     <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
     <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
@@ -53,26 +46,25 @@
             <span v-if="scope.row.HotelOrder.BookTime != null">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
-
+    <el-table-column label="销售渠道">
+        <template scope="scope">
+          <span v-for="item in PlatPolicyID">
+            <span v-if="scope.row.HotelOrder.PlatPolicyID==item.ID">{{item.Account}}</span>
+          </span>
+        </template>
+    </el-table-column>
     <el-table-column label="预计到款时间" prop="ExpectGetMoney" width="80">
         <template scope="scope">
             <span v-if="scope.row.ExpectGetMoney != null">{{ scope.row.ExpectGetMoney.substring(5,16) }}</span>
         </template>
     </el-table-column>
     <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
-
+    <el-table-column label="对冲" prop="DuiChong" width="100"></el-table-column>
     <el-table-column label="状态" prop="StateCheck">
         <template scope="scope">
             <span v-if="scope.row.StateCheck == 0">未对账</span>
             <span v-if="scope.row.StateCheck == 1">未到款</span>
             <!-- <span v-if="scope.row.StateCheck == 2">结清</span> -->
-        </template>
-    </el-table-column>
-    <el-table-column label="预计结算/到款日期" width=110>
-        <template scope="scope">
-            <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
-            <hr style="border:none;border-top:1px dotted lightgray;margin:0;" />
-            <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
         </template>
     </el-table-column>
   </el-table>
@@ -84,33 +76,6 @@
 </template>
 <script>
 import { hotelPaymentInfoApi, hotelsOrderApi, policyApi } from "api";
-
-const searchData = [
-  ['酒店名称', 'HotelName', 'input', ''],
-  ['订单号', 'PlatOrderNo', 'input', ''],
-  ['客人姓名', 'Passenger', 'input', ''],
-
-  ['入住日期', 'StayDateStart', 'date', ''],
-  ['退房日期', 'StayDateEnd', 'date', ''],
-  ['预定日期', 'BookTime', 'daterange', ''],
-  ['收款日期', 'ExpectSettlement', 'daterange', ''],
-
-  ['销售平台', 'PlatPolicyID', 'select', ''],
-  ['打款账户', 'CompanyAcount', 'select', ''],
-  ['收款状态', 'StateCheck', 'select', ''],
-]
-const searchFields = transSearch(searchData)
-
-function transSearch (listData) {
-  return listData.map(item => {
-    return {
-      label: item[0],
-      name: item[1],
-      type: item[2],
-      data: item[3]
-    }
-  })
-}
 
 export default {
   data() {
@@ -151,8 +116,7 @@ export default {
     async platformAccount() {
       const options = {
         pageSize: 1000,
-        order: "ID",
-        query:'{"CanSale":"true"}'
+        order: "ID"
       };
       const res = await policyApi.getPolicyPlatform(options);
       this.PlatPolicyID = res.data.Data;
