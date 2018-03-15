@@ -27,7 +27,7 @@
                 </el-row>
                 <div>
                 <el-form-item label="退款方式" prop="BackTypeID">
-                    <el-select v-model="form.BackTypeID" clearable style="width:500px;">
+                    <el-select v-model="form.BackTypeID"  style="width:500px;">
                         <el-option v-for="item in [{label:'线上',value:0},{label:'线下',value:1}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
