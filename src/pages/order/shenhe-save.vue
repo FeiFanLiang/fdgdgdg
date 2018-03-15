@@ -156,7 +156,7 @@ export default {
                             }
                             console.log(form)
                         
-                            await hotelPaymentInfoApi.savePaymentInfo(_self.POrderID,form)
+                            await hotelPaymentInfoApi.savePaymentInfo(form)
                             _self.$message({
                                 message: '审核成功',
                                 type: 'success'
