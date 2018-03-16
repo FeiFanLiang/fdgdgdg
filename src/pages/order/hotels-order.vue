@@ -22,9 +22,13 @@
           <el-checkbox label="未审核"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+      
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
+      <el-button  slot="button-add" style="cursor:default">{{Room}}间</el-button>
+      <el-button  slot="button-add" style="cursor:default">{{Night}}夜</el-button>
     </CustomSearchCopy>
+    
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
       :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID">
         <el-table-column type="expand">
@@ -397,6 +401,8 @@ export default {
     let that = this;
     return {
       loadingHotel: false,
+      Room:"",
+      Night:"",
       hotelList: [],
       imageList: [],
       text: -1,
@@ -838,6 +844,9 @@ export default {
       try {
         const res = await hotelsOrderApi.fetch(options);
         _self.hotelsOrder = res.data.Data;
+         _self.Room = res.data.room;
+         _self.Night = res.data.night;         
+        console.log(res.data)
         _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {

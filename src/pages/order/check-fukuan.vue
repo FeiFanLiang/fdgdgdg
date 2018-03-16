@@ -17,7 +17,7 @@
       </el-form-item>-->
       <el-form-item label="打款账户" slot="CompanyAcount">
           <el-select v-model="filters.CompanyAcount" clearable>
-              <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
+              <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
       </el-form-item>
   </CustomSearchCopy>
@@ -290,9 +290,10 @@ export default {
         try{
             let ids = []          
             for(let i in _self.multipleSelection){
-                ids.push(_self.multipleSelection[i].ID)
+                ids.push(_self.multipleSelection[i].HotelPaymentId)
             }
             ids=Array.from(new Set(ids))
+            return false
             if(ids.length == 0){
                 _self.$message({
                     message: '请选择要审核订单',

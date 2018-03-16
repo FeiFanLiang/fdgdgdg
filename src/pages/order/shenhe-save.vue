@@ -2,7 +2,7 @@
 <div id="ShenheSave">
     <el-button @click="returns()">返回</el-button>
     <p>*注意：对冲款为正数则留作对冲（预存），为负数则使用对冲（预存款）</p>
-    <el-form ref="form" :model="form" :rules="rules" label-width="110px" element-loading-text="拼命加载中" v-loading="loading" :inline="true" style="width:40%;">
+    <el-form ref="form" :model="form" :rules="rules" label-width="110px" element-loading-text="拼命加载中" v-loading="loading" :inline="true" style="width:650px;">
     <el-row :gutter="20">
                 <div>
                 <el-form-item label="上单金额" prop="AmountYingShou"><span style="display:inline-block">{{AmountYingShou}}</span></el-form-item>

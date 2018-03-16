@@ -75,6 +75,27 @@
             </el-col>
         </el-row>
         <el-row :gutter="24">
+            <el-col :span="6">
+                <el-form-item label="人工处理状态" prop="HandState">
+                <el-select v-model="form.HandState" clearable style="width:100%;">
+                    <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="外采订单号" prop="WaiCaiNo">
+                    <el-input placeholder="请输入外采订单号" v-model="form.WaiCaiNo"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="外采支付账户" prop="WaiCaiPayAccount">
+                    <el-select v-model="form.WaiCaiPayAccount" clearable>
+                        <el-option v-for="(item,index) in WaiCaiPayAccount " :key="index" :label="item.ShortName" :value="item.ID"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row :gutter="24">
             <el-col :span="17">
             <el-form-item label="酒店区域" prop="HotelArea">
                 <el-radio-group v-model="form.HotelArea">
@@ -271,10 +292,13 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="24">
-                            <el-form-item label="备注" prop="Remark">
-                                <el-input type="textarea" v-model="item.Remark" autosize></el-input>
-                            </el-form-item>
+                        <el-col :span="17">
+                            <el-form-item label="备注" prop="BookTime">
+                                <el-input  type="textarea" v-model="item.BookTime" autosize></el-input>
+                            </el-form-item>       
+                            <el-button @click="addtext($event,index)">无房拒单</el-button>
+                            <el-button @click="addtext($event,index)">政策不符</el-button>
+                            <el-button @click="addtext($event,index)">赔钱拒单</el-button>                                                        
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
@@ -529,6 +553,7 @@ import {
   paymentCheckApi,
   hotelThreePlatInfoApi,
   hotelOrderDetailApi,
+  payCompanyApi,
   policyApi
 } from 'api'
 import UploadImage from 'components/upload-image'
@@ -558,6 +583,7 @@ export default{
             type:'',
             text:'',
             imageList: [],
+            HandRemarks: '',
             showTuigaiButton:false,
             loading:false,
             showFujia: false,
@@ -570,6 +596,7 @@ export default{
                 StayDateEnd: '',
                 BookTime: '',
                 OrderState: '',
+                HandState: '',
                 OrderType: '',
                 UrgentPay: '',
                 UnMergePay: '',
@@ -580,13 +607,17 @@ export default{
                 SettlementCycleFu: '',
                 ThreePlatID: '',
                 OrderNo: '',
+                WaiCaiNo: '',
                 NightNum: '',
+                Remark: '',
+                HandRemark:'',
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
                 HotelOrderDetail:[],
                 Picture:'',
-                WaiCaiPlatID:''
+                WaiCaiPlatID:'',
+                WaiCaiPayAccount:''
             },
             copyForm: {},
             pickerOptions: {
@@ -704,7 +735,26 @@ export default{
                 value: 'JPY'
                 },
             ],
+            HandState: [{
+                label: '未处理',
+                value: 0
+                },
+                {
+                label: '处理中',
+                value: 1
+                },
+                {
+                label: '处理完成',
+                value: 2
+                },
+                {
+                label: '处理失败',
+                value: 3
+                },
+            ],
             WaiCaiPlatID:[],
+            WaiCaiPayAccount:[],
+            Beizhu:[],
             WaiCaiFlag:[
                 {
                     label:'自营',
@@ -719,6 +769,7 @@ export default{
         }
     },
     created() {
+        
         const _self = this
         _self.ID = _self.$route.params.ID
         //_self.HotelName = _self.$route.params.HotelName,
@@ -739,19 +790,32 @@ export default{
         }
         _self.ThreePlat()
         _self.platformAccount()
+        _self.fetchData()
     },
     methods:{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
         },
+        async fetchData() {
+            const options = {
+                query: { 
+                    Own:1
+                }
+                }
+            const res = await payCompanyApi.list(options)
+            this.WaiCaiPayAccount = res.data.Data
+            console.log(this.WaiCaiPayAccount)
+                
+        },
         async platformAccount(){
             const options = {
                 pageSize: 1000,
                 order: 'Sort'
-            }
+            }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
+            console.log(this.WaiCaiPlatID)
         },
         setContent(){
             const _self = this
@@ -999,7 +1063,44 @@ export default{
             } catch (e) {
                 this.$message.error('审核失败')
             }
+        },
+        remove(arr,val){
+            for(var i=0; i<arr.length; i++) {
+                if(arr[i] == val) {
+                arr.splice(i, 1);
+                break;
+                }
+            }
         }
+        //  addtext(e,index){
+        //     const _self = this
+        //     const ntes = e.target.innerText 
+        //     const ntess = ntes + ntes
+        //         // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
+        //         //      _self.Beizhu.push(_self.HandRemarks)  
+        //         // }else{
+        //         //   _self.remove(_self.Beizhu,_self.HandRemarks);
+                  
+        //         // }
+        //  //  let str =  _self.Beizhu.toString()
+           
+        //     _self.form.HotelOrderDetail[index].BookTime +=  ntes
+        //     let up = _self.form.HotelOrderDetail[index].BookTime
+                     
+        //     let ss = "31231231231321"
+        //      if(up.indexOf(ntes) != -1){
+        //          console.log(ntes)
+        //         up = up.replace("ntes","")
+        //           console.log(up)
+        //               console.log("有")
+        //         }else{
+        //            console.log("没有")
+                  
+        //         }
+                
+                
+            
+        // }
 
     }
 }

@@ -28,7 +28,11 @@
             <span v-else>{{ scope.row.HotelOrder.PlatOrderNo }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
+    <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip >
+        <template slot-scope="scope" >
+        <p @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" >{{scope.row.HotelOrder.HotelName}}</p>
+        </template>     
+    </el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
             <span v-if="typeof(scope.row.HotelOrder.StayDateStart) != 'undefined'">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/
@@ -44,6 +48,7 @@
     <el-table-column label="入住人" prop="HotelOrder.Passenger" width="100"></el-table-column>
       <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
         <el-table-column label="对冲金额" prop="DuiChong" width="100"></el-table-column>
+        <el-table-column label="支付账户" prop="CompanyAcount" width="100"></el-table-column>        
     <el-table-column label="预定时间" prop="HotelOrder.BookTime" width="150" sortable>
         <template scope="scope">
             <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
@@ -104,6 +109,7 @@ export default {
             fukuanList: [],
             loading:false,
             multipleSelection: [],
+            multipleSelectioni: '',            
             filters:{
                 HotelName:'',
                 PlatOrderNo:'',
@@ -195,6 +201,7 @@ export default {
         },
         handleSelectionChange(val) {
             this.multipleSelection = val;
+            
         },
         handleSizeChange(val) {
             this.pageSize = val
@@ -245,6 +252,7 @@ export default {
                         multipleSelection: _self.multipleSelection
                     }
                 })
+                console.log(_self.multipleSelection)
             }else{
                 this.$message({
                     message: '请选择付款订单',
@@ -252,6 +260,17 @@ export default {
                 });
             }
         },
+        async paymento($index, row){
+           this.multipleSelection.push(row)
+            const _self = this;
+                this.$router.push({
+                    path: 'FuKuan',
+                    query: {
+                        multipleSelection: _self.multipleSelection
+                    }
+                })
+            
+        }
     }
 }
 </script>
