@@ -83,7 +83,7 @@ export default {
       }
       array = multisort(array, compairers)
       if (this.filterDate) {
-        this.logs = array.filter(item => item.useTime === this.filterDate)
+        this.logs = array.filter(item => item.useTime.includes(this.filterDate))
         console.log(this.logs)
       } else {
         this.logs = array
