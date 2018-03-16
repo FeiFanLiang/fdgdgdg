@@ -293,8 +293,8 @@
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="17">
-                            <el-form-item label="备注" prop="BookTime">
-                                <el-input  type="textarea" v-model="item.BookTime" autosize></el-input>
+                            <el-form-item label="备注" prop="HandRemark">
+                                <el-input  type="textarea" v-model="item.HandRemark" autosize></el-input>
                             </el-form-item>       
                             <el-button @click="addtext($event,index)">无房拒单</el-button>
                             <el-button @click="addtext($event,index)">政策不符</el-button>
@@ -1071,11 +1071,10 @@ export default{
                 break;
                 }
             }
-        }
-        //  addtext(e,index){
+        },
+         addtext(e,index){
         //     const _self = this
         //     const ntes = e.target.innerText 
-        //     const ntess = ntes + ntes
         //         // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
         //         //      _self.Beizhu.push(_self.HandRemarks)  
         //         // }else{
@@ -1084,23 +1083,25 @@ export default{
         //         // }
         //  //  let str =  _self.Beizhu.toString()
            
-        //     _self.form.HotelOrderDetail[index].BookTime +=  ntes
-        //     let up = _self.form.HotelOrderDetail[index].BookTime
-                     
-        //     let ss = "31231231231321"
-        //      if(up.indexOf(ntes) != -1){
+        //    // _self.form.HotelOrderDetail[index].BookTime +=  ntes
+        //     let up = _self.form.HotelOrderDetail[index].BookTime += ntes
+        //     console.log(up)
+          
+        //      if(up.indexOf(ntes) == -1){
         //          console.log(ntes)
-        //         up = up.replace("ntes","")
-        //           console.log(up)
+                
         //               console.log("有")
         //         }else{
+        //             up = up.replace(ntes,'')                                        
+        //             console.log(up)
+        //          _self.form.HotelOrderDetail[index].BookTime = up 
         //            console.log("没有")
                   
-        //         }
+                }
                 
                 
             
-        // }
+        }
 
     }
 }
