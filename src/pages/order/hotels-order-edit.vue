@@ -1071,8 +1071,8 @@ export default{
                 break;
                 }
             }
-        },
-         addtext(e,index){
+        }
+        //  addtext(e,index){
         //     const _self = this
         //     const ntes = e.target.innerText 
         //         // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
@@ -1097,11 +1097,11 @@ export default{
         //          _self.form.HotelOrderDetail[index].BookTime = up 
         //            console.log("没有")
                   
-        //        }
+        //         }
                 
                 
             
-        }
+        // }
 
     }
 }

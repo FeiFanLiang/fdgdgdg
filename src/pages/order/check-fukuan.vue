@@ -268,7 +268,7 @@ export default {
                 "StateScreenshot>":0
                              
             }
-      }
+      } 
       try {
         //_self.multipleSelection = _self.$route.query.multipleSelection
         const res = await hotelPaymentInfoApi.checkOut(options)
@@ -291,9 +291,8 @@ export default {
             let ids = []          
             for(let i in _self.multipleSelection){
                 ids.push(_self.multipleSelection[i].HotelPaymentId)
-            }
+            }         
             ids=Array.from(new Set(ids))
-            return false
             if(ids.length == 0){
                 _self.$message({
                     message: '请选择要审核订单',
@@ -301,7 +300,7 @@ export default {
                 })
             }
             if(ids.length != 0){
-                const res = await hotelPaymentInfoApi.checks(ids)
+                const res = await hotelPaymentInfoApi.checks(ids)          
                 if(res.data.State){
                     _self.$message({
                     message: '审核成功',
