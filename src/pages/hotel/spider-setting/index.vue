@@ -12,14 +12,26 @@
                     <el-table-column prop="PlatformID" label="平台酒店ID" show-overflow-tooltip></el-table-column>
                     <el-table-column prop="PlatformAccountID" label="平台酒店ID" show-overflow-tooltip></el-table-column>
                     <el-table-column prop="Period" label="抓取频率" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="StartDate" label="开始日期" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="EndDate" label="结束日期" width="110" show-overflow-tooltip></el-table-column>
+                    <el-table-column  label="开始日期" width="200" show-overflow-tooltip>
+                     <template scope="scope">
+                            <span>{{!scope.row.StartDate && !scope.row.EndDate?scope.row.StartDateAbs:scope.row.StartDate}}</span>
+                        </template>
+                        </el-table-column>
+                    <el-table-column  label="结束日期" width="200" show-overflow-tooltip>
+                     <template scope="scope">
+                            <span>{{!scope.row.StartDate && !scope.row.EndDate?scope.row.EndDateAbs:scope.row.EndDate}}</span>
+                        </template>
+                        </el-table-column>
                     <el-table-column prop="IsStop" label="状态" width="110" show-overflow-tooltip>
                         <template scope="scope">
                             <span>{{scope.row.IsStop?'停止':'开始'}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ComparisonRule" label="比价规则" width="600" show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="ComparisonRule" label="比价规则" width="600" show-overflow-tooltip>
+                        <template scope="scope">
+                            <span>{{getComparisonRuleStr(JSON.parse(scope.row.ComparisonRule))}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" width="150" fixed="right" show-overflow-tooltip>
                         <template scope="scope">
                           <el-button type="primary" size="small" @click="edit(scope.row.ID)">编辑</el-button>
@@ -238,6 +250,20 @@ export default {
     this.getPriceList()
   },
   methods: {
+    getComparisonRuleStr(comparisonRule) {
+      if (!comparisonRule || !comparisonRule.addPriceType) return ''
+      if (comparisonRule.addPriceType === 'person') {
+        return `基础加价${comparisonRule.basePrice},每人加价${
+          comparisonRule.personPrice
+        }`
+      }
+      if (comparisonRule.addPriceType === 'percent') {
+        return `基础加价${comparisonRule.basePrice},加价百分比${
+          comparisonRule.percentPrice
+        }`
+      }
+      return ''
+    },
     task(name) {
       if (name == 'task') {
         if (!this.taskList.length) {
@@ -315,8 +341,18 @@ export default {
         guestNum,
         period,
         isStop,
-        spiderData
+        spiderData,
+        $message
       } = this
+
+      if (isDateTypeNum && (!startDate || !endDate)) {
+        $message.error('请输入日期')
+        return
+      }
+      if (!isDateTypeNum && (!startDateAbs || !endDateAbs)) {
+        $message.error('请输入日期')
+        return
+      }
       const form = {
         PlatformHotelID: spiderData.ID,
         HotelID: spiderData.HotelID,

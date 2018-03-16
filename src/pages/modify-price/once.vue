@@ -1,17 +1,45 @@
 <template lang="html">
     <div id="Spider">
-        <el-row>
+        <el-row :gutter="20">
                     <el-button type="primary" @click="clickAddBtnOnce()">创建一次性比价</el-button>
+     <el-col :span="5">
+        <el-input placeholder="请输入要搜索的名字" v-model="filterName" ></el-input>
+    </el-col>
+    <el-col :span="5">
+      <el-button type="primary" @click="fetchData()">搜索</el-button>
+    </el-col>
                 </el-row>
-                <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @row-click="edit">
-                    <el-table-column prop="StartDate" label="开始日期" width="200" show-overflow-tooltip></el-table-column>
-                    <el-table-column prop="EndDate" label="结束日期" width="200" show-overflow-tooltip></el-table-column>
+                <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" >
+                 <el-table-column prop="Name" label="名字" width="200" show-overflow-tooltip>
+                    </el-table-column>
+                      <el-table-column prop="CreateTime" label="创建时间" width="200" show-overflow-tooltip>
+                    </el-table-column>
+                    <el-table-column  label="开始日期" width="200" show-overflow-tooltip>
+                     <template scope="scope">
+                            <span>{{!scope.row.StartDate && !scope.row.EndDate?scope.row.StartDateAbs:scope.row.StartDate}}</span>
+                        </template>
+                        </el-table-column>
+                    <el-table-column  label="结束日期" width="200" show-overflow-tooltip>
+                     <template scope="scope">
+                            <span>{{!scope.row.StartDate && !scope.row.EndDate?scope.row.EndDateAbs:scope.row.EndDate}}</span>
+                        </template>
+                        </el-table-column>
                     <el-table-column prop="IsStop" label="状态" width="100" show-overflow-tooltip>
                         <template scope="scope">
                             <span>{{scope.row.IsStop?'停止':'开始'}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ComparisonRule" label="比价规则"  show-overflow-tooltip></el-table-column>
+                    <el-table-column prop="ComparisonRule" label="比价规则"  show-overflow-tooltip>
+                     <template scope="scope">
+                            <span>{{getComparisonRuleStr(JSON.parse(scope.row.ComparisonRule))}}</span>
+                        </template>
+                    </el-table-column>
+                     <el-table-column label="操作" width="200" fixed="right" show-overflow-tooltip>
+                        <template scope="scope">
+                          <el-button type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
+                            <DeleteButton api="singlePriceRatioLogApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                        </template>
+                    </el-table-column>
                 </el-table>
                 <div class="pagination-wrapper" v-show="!loading&&list.length">
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total">
@@ -28,6 +56,11 @@
                             <el-col :span="24" >
                                 <el-form-item label="">
                                     <el-input v-model="hotelIds" placeholder="酒店id,逗号分隔" type="textarea" > </el-input>
+                                </el-form-item>
+                            </el-col>
+                             <el-col :span="24">
+                                <el-form-item label="是否改价">
+                                    <el-switch on-text="是" off-text="否" v-model="isPriceComparison"></el-switch>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="24">
@@ -115,23 +148,54 @@ export default {
       percentPrice: 100,
       personPrice: 0,
       guestNum: '',
-      isStop: false
+      isStop: false,
+      isPriceComparison: false,
+      filterName: ''
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    getComparisonRuleStr(comparisonRule) {
+      if (!comparisonRule || !comparisonRule.addPriceType) return ''
+      if (comparisonRule.addPriceType === 'person') {
+        return `基础加价${comparisonRule.basePrice},每人加价${
+          comparisonRule.personPrice
+        }`
+      }
+      if (comparisonRule.addPriceType === 'percent') {
+        return `基础加价${comparisonRule.basePrice},加价百分比${
+          comparisonRule.percentPrice
+        }`
+      }
+      return ''
+    },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(1, this.pageSize)
+    },
     handleCurrentChange(val) {
       this.currentPage = val
+      this.fetchData(this.currentPage)
     },
-    async fetchData() {
+    async fetchData(currentPage, pageSize) {
       const _self = this
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        query: {
+          name: _self.filterName
+        }
+      }
+
       _self.loading = true
       try {
-        const res = await singlePriceRatioLogApi.list()
+        const res = await singlePriceRatioLogApi.list(options)
         _self.list = res.data.Data
-        _self.total = _self.list.length
+        _self.total = res.data.Count
       } catch (e) {
         _self.list = []
         _self.total = 0
@@ -157,13 +221,27 @@ export default {
         addPriceType,
         percentPrice,
         personPrice,
-        platformID
+        platformID,
+        isPriceComparison,
+        $message
       } = this
+      if (!hotelIds) {
+        $message.error('请输入酒店id!!!')
+        return
+      }
+      if (isDateTypeNum && (!startDate || !endDate)) {
+        $message.error('请输入日期')
+        return
+      }
+      if (!isDateTypeNum && (!startDateAbs || !endDateAbs)) {
+        $message.error('请输入日期')
+        return
+      }
       const form = {
         name,
-        hotelIds: hotelIds ? hotelIds.split(',') : [],
+        hotelIds: hotelIds ? hotelIds.split(',').filter(item => !!item) : [],
         platformHotelCarwlerPeriod: {
-          isPriceComparison: false,
+          isPriceComparison,
           comparisonRule: JSON.stringify({
             basePrice,
             addPriceType,
@@ -172,6 +250,7 @@ export default {
           })
         }
       }
+
       if (isDateTypeNum) {
         form.platformHotelCarwlerPeriod.startDate = startDate
         form.platformHotelCarwlerPeriod.endDate = endDate
@@ -240,6 +319,7 @@ export default {
       _self.personPrice = 0
       _self.guestNum = ''
       _self.isStop = false
+      _self.isPriceComparison = false
     }
   }
 }
