@@ -171,12 +171,21 @@ export default {
       }
       return ''
     },
+    handleSizeChange(val) {
+      this.pageSize = val
+      this.fetchData(1, this.pageSize)
+    },
     handleCurrentChange(val) {
       this.currentPage = val
+      this.fetchData(this.currentPage)
     },
-    async fetchData() {
+    async fetchData(currentPage, pageSize) {
       const _self = this
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
       const options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
         query: {
           name: _self.filterName
         }
