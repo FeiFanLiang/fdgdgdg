@@ -521,32 +521,6 @@
         <el-button type="primary" @click="submitFormFujia()">保存</el-button>
       </span>
     </el-dialog>
-    <div>
-  <span>上单金额:</span><span>1020</span><span>-手续费</span><el-input v-model="shouxufei" style="width:50px" placeholder="手续费"></el-input><span>=利润</span><span>{{lirun}} </span>
-
-  </div>
-  <div>
-  <span>支付酒店</span><span>980。 </span>
-  <span>退还金额：</span>
-  <el-input  style="width:50px" placeholder="退款"></el-input>
-  <span>     对冲金额：</span><el-input  style="width:50px" placeholder="对冲"></el-input>
-
-  </div>
-  <div>
-  退款方式
-  <el-select  v-model="tuikuanfangshival" clearable>
-    <el-option v-for="item in tuikuanfangshi" :key="item.value" :label="item.label" :value="item.value"></el-option>
-  </el-select>
-  </div>
-  <div>
-  <span>渠道/银行:</span><el-input style="width:500px"   placeholder="渠道/银行"></el-input>
-  </div>
-  <div>
-  <span>对方账户/姓名:</span><el-input style="width:500px"    placeholder="账户/姓名"></el-input>
-  </div>
-  <div>
-  <span>对方账号:</span><el-input style="width:500px"   placeholder="账号"></el-input>
-  </div>
 </div>
 </template>
 <script>
@@ -748,7 +722,7 @@ export default{
         const _self = this
         _self.ID = _self.$route.params.ID
         //_self.HotelName = _self.$route.params.HotelName,
-        _self.POrderID = _self.$route.params.POrderID
+        _self.POrderID = _self.$route.params.POrderID      
         _self.type = _self.$route.params.type
         if(_self.type == '回填'){
             _self.text = '确定回填'
@@ -1009,7 +983,9 @@ export default{
                 name:'订单审核',
                 params:{
                     POrderID:this.POrderID,
-                    HotelPolicyID:this.form.HotelPolicyID
+                    HotelPolicyID:this.form.HotelPolicyID,
+                    AmountYingShou:this.form.AmountYingShou,
+                    HotelFee:this.form.HotelFee
                 }
             })
         },
