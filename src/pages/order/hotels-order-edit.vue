@@ -293,7 +293,14 @@
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="17">
-                            <el-form-item label="备注" prop="HandRemark">
+                            <el-form-item label="备注" prop="Remark">
+                                <el-input  type="textarea" v-model="item.Remark" autosize></el-input>
+                            </el-form-item>                                                          
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="17">
+                            <el-form-item label="处理备注" prop="HandRemark">
                                 <el-input  type="textarea" v-model="item.HandRemark" autosize></el-input>
                             </el-form-item>       
                             <el-button @click="addtext($event,index)">无房拒单</el-button>
@@ -583,7 +590,7 @@ export default{
             type:'',
             text:'',
             imageList: [],
-            HandRemarks: '',
+            HandRemark: '',
             showTuigaiButton:false,
             loading:false,
             showFujia: false,
@@ -614,7 +621,10 @@ export default{
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
-                HotelOrderDetail:[],
+                HotelOrderDetail:[{
+HandRemark:''
+
+                }],
                 Picture:'',
                 WaiCaiPlatID:'',
                 WaiCaiPayAccount:''
@@ -974,7 +984,7 @@ export default{
             for(let i in _self.form.HotelOrderDetail){
                 _self.form.HotelOrderDetail[i].HotelBookingNote = tinyMCE.editors[i].getContent()
             }
-            console.log(_self.form)
+            
             try {
                 _self.isEditable = false
                 if(_self.type == '回填'){
@@ -983,6 +993,7 @@ export default{
                 if(_self.type == '审核'){
                     _self.form.StateAuditor = 1
                 }
+                console.log(_self.form)
                 let datas = _self.form
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
@@ -1071,37 +1082,54 @@ export default{
                 break;
                 }
             }
-        }
-        //  addtext(e,index){
-        //     const _self = this
-        //     const ntes = e.target.innerText 
-        //         // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
-        //         //      _self.Beizhu.push(_self.HandRemarks)  
-        //         // }else{
-        //         //   _self.remove(_self.Beizhu,_self.HandRemarks);
+        },
+         addtext(e,index){
+            const _self = this
+            const ntes = e.target.innerText 
+                // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
+                //      _self.Beizhu.push(_self.HandRemarks)  
+                // }else{
+                //   _self.remove(_self.Beizhu,_self.HandRemarks);
                   
-        //         // }
-        //  //  let str =  _self.Beizhu.toString()
+                // }
+         //  let str =  _self.Beizhu.toString()
            
-        //    // _self.form.HotelOrderDetail[index].BookTime +=  ntes
-        //     let up = _self.form.HotelOrderDetail[index].BookTime += ntes
-        //     console.log(up)
-          
-        //      if(up.indexOf(ntes) == -1){
-        //          console.log(ntes)
-                
-        //               console.log("有")
-        //         }else{
-        //             up = up.replace(ntes,'')                                        
-        //             console.log(up)
-        //          _self.form.HotelOrderDetail[index].BookTime = up 
-        //            console.log("没有")
+           // _self.form.HotelOrderDetail[index].BookTime +=  ntes
+           console.log(_self.form.HotelOrderDetail)
+
+  console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
+_self.form.HotelOrderDetail[index].qweqrqwe=1
+ console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
+            _self.form.HotelOrderDetail[index].HandRemark = "asdasd"
+console.log(_self.form.HotelOrderDetail[index].HandRemark)
+
+
+            // console.log(typeof(up))
+            // if(up.indexOf("undefined") == -1){
+            //     _self.form.HotelOrderDetail[index].HandRemark = ntes
+            //         console.log(up)
+               
+            // }else{
+            //      _self.form.HotelOrderDetail[index].HandRemark = ntes
+            //     console.log(up)
+            // }
+            
+            // console.log(_self.form.HotelOrderDetail[index].HandRemark)
+            // console.log(up)
+            //  if(up.indexOf(ntes) == -1){
+            //      console.log(ntes)
+            //           console.log("没有")
+            //     }else{
+            //         up = up.replace(ntes,'')                                        
+            //         console.log(up)
+            //      _self.form.HotelOrderDetail[index].HandRemark = up 
+            //        console.log("有")
                   
-        //         }
+            //     }
                 
                 
             
-        // }
+        }
 
     }
 }

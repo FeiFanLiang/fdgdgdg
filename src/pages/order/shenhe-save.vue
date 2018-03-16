@@ -32,6 +32,7 @@
                     </el-select>
                 </el-form-item>
                 </div>       
+                <div v-show="isShow">
                 <el-form-item label="渠道/银行" prop="PartnerAccountModel">
                     <el-input  v-model="form.PartnerAccountModel" style="width:500px;"></el-input>
                 </el-form-item>
@@ -43,6 +44,7 @@
                 <el-form-item label="对方帐号" prop="PartnerAccount">
                     <el-input  v-model="form.PartnerAccount" style="width:500px;"></el-input>
                 </el-form-item>
+                </div>
                 
  
     
@@ -61,6 +63,7 @@ export default {
     data(){
         return{
             POrderID:'',
+            isShow:true,
             HotelPolicyID:'',
             AmountYingShou:'',
             sheheSaveList:[],
