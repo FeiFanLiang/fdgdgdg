@@ -200,6 +200,8 @@ export default {
           StayDateStart: _self.filters.StayDateStart
             ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
             : "",
+         " StateCheck<": 2,
+          PaymentType : 0,
           StayDateEnd: _self.filters.StayDateEnd
             ? new Date(_self.filters.StayDateEnd).Format("yyyy-MM-dd")
             : "",

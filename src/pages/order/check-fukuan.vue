@@ -45,7 +45,7 @@
         <el-table-column label="入住人" prop="HotelOrder.Passenger" width=150></el-table-column>
         <el-table-column label="预定日期"  width=150>
             <template scope="scope">
-                <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+                <span style="color:red" v-if="scope.row.HotelOrder.BookTime != null">{{scope.row.HotelOrder.BookTime.substring(0,10)}}</span>
             </template>
         </el-table-column>
         <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>

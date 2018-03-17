@@ -222,6 +222,8 @@ export default {
                 order: 'UrgentPay',
                 query:{
                     HotelName:_self.filters.HotelName,
+                    State:0,
+                    PaymentType:1,
                     PlatOrderNo:_self.filters.PlatOrderNo,
                     Passenger:_self.filters.Passenger,
                     WaiCaiPlatID:_self.filters.WaiCaiPlatID,

@@ -182,6 +182,8 @@ export default {
             query:{
                 CompanyAcount:_self.filters.CompanyAcount,
                 PlatOrderNo:_self.filters.PlatOrderNo,
+                StateScreenshot:0,
+                PaymentType:1,
                 Passenger:_self.filters.Passenger
             }
       }
