@@ -58,7 +58,7 @@
         <el-table-column label="金额" prop="AmountUse"></el-table-column>
         <el-table-column label="截图" prop="Picture" width=70>
             <template scope="scope">
-                <el-button type="text" @click="imgShow(scope.row.Picture)">查看</el-button>
+                <el-button type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
             </template>
         </el-table-column>
         <!--<el-table-column label="预计结算/到款日期" width=110>
@@ -332,6 +332,7 @@ export default {
             this.imageList = img.split(',')
             this.dialogVisible = true
         }catch(e){
+            debugger;
             this.$message.error('截图获取失败!!!')
         }
     },
