@@ -24,6 +24,7 @@
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip>
         <template scope="scope">
+        <!--    <img src="~assets/images/common/urgent.png" v-if="" style="width:20px;height:23px"> -->
             <span v-if="scope.row.UrgentPay == 1" style="color:red;">{{ scope.row.HotelOrder.PlatOrderNo }}</span>
             <span v-else>{{ scope.row.HotelOrder.PlatOrderNo }}</span>
         </template>

@@ -83,28 +83,32 @@
                 <el-radio-group v-model="payCheck.StateScreenshot">
                     <el-radio :label="0">待截图</el-radio>
                     <el-radio :label="1">截图完成</el-radio>
-                </el-radio-group>
+                </el-radio-group> 
             </el-form-item>
         </el-form>
     </el-card>
     <el-card class="box-card">
         <el-form label-width="110px">
             <el-form-item label="添加截图">
-                <UploadImage :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImage>
+             <el-col>
+                <UploadImageMove :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageMove>
+                 </el-col>
             </el-form-item>
         </el-form>
     </el-card>
+
+    
     <el-button @click="commit">付款完成</el-button>
 </div>
 </template>
 <script>
 import { hotelPaymentInfoApi,payCompanyApi  } from 'api'
 import path from 'api/api'
-import UploadImage from 'components/upload-image'
+import UploadImageMove from 'components/upload-image-move'
 
 export default {
     components: {
-        UploadImage
+        UploadImageMove
     },
     data() {
         return {

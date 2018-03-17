@@ -5,9 +5,9 @@
         <el-row :gutter="24">
             <el-col :span="6">
                 <el-form-item label="酒店名称" prop="HotelName">
-                    <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>
-                </el-form-item>
-            </el-col>
+                    <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>                  
+                </el-form-item> 
+            </el-col> 
             <el-col :span="6">
                 <el-form-item label="订单编号" prop="OrderNo">
                     <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
@@ -302,10 +302,19 @@
                         <el-col :span="17">
                             <el-form-item label="处理备注" prop="HandRemark">
                                 <el-input  type="textarea" v-model="item.HandRemark" autosize></el-input>
-                            </el-form-item>       
-                            <el-button @click="addtext($event,index)">无房拒单</el-button>
+                            </el-form-item>
+                                  
+                            <el-button @click="addtext($event,index)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
                             <el-button @click="addtext($event,index)">政策不符</el-button>
-                            <el-button @click="addtext($event,index)">赔钱拒单</el-button>                                                        
+                            <el-button @click="addtext($event,index)">赔钱拒单</el-button>
+                             
+                          <!---    <div>
+                                <el-checkbox-group  @change="handleChecked(index)" v-model="check">
+                                     <el-checkbox-button  label="无房拒单" ></el-checkbox-button>
+                                     <el-checkbox-button  label="政策不符" ></el-checkbox-button>
+                                     <el-checkbox-button  label="赔钱拒单" ></el-checkbox-button>                                                                     
+                                </el-checkbox-group>
+                            </div>         -->                                          
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
@@ -574,6 +583,7 @@ export default{
         let that = this;
         return{
             stringWX:'',
+            check:[],
             stringQRH:'',
             Passenger : '',
             StayDateStart : '',
@@ -1085,7 +1095,7 @@ HandRemark:''
         },
          addtext(e,index){
             const _self = this
-            const ntes = e.target.innerText 
+             const ntes = e.target.innerText 
                 // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
                 //      _self.Beizhu.push(_self.HandRemarks)  
                 // }else{
@@ -1095,13 +1105,35 @@ HandRemark:''
          //  let str =  _self.Beizhu.toString()
            
            // _self.form.HotelOrderDetail[index].BookTime +=  ntes
-           console.log(_self.form.HotelOrderDetail)
-
-  console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
-_self.form.HotelOrderDetail[index].qweqrqwe=1
- console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
-            _self.form.HotelOrderDetail[index].HandRemark = "asdasd"
-console.log(_self.form.HotelOrderDetail[index].HandRemark)
+           
+           if(_self.form.HotelOrderDetail[index].HandRemark == undefined){
+               _self.form.HotelOrderDetail[index].HandRemark = ''
+           }
+           const now  = _self.form.HotelOrderDetail[index].HandRemark
+        let up = _self.form.HotelOrderDetail[index].BookTime += ntes
+         let num = ''                                 
+                    
+                up = _self.form.HotelOrderDetail[index].HandRemark +=`,`+ntes
+                //console.log(up.length)
+                 if(up.indexOf(ntes) == -1){
+                
+                }else{
+                    num = up.split(ntes)
+                    console.log(up.length)                                        
+                    if(num.length-1 == 2){
+                        up = up.replace(ntes,'')
+                        up = up.replace(",",'')
+                        
+                    }
+                 _self.form.HotelOrderDetail[index].HandRemark = up 
+                   
+                  
+                }
+//   console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
+// _self.form.HotelOrderDetail[index].qweqrqwe=1
+//  console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
+           
+// console.log(_self.form.HotelOrderDetail[index].HandRemark)
 
 
             // console.log(typeof(up))
@@ -1116,16 +1148,7 @@ console.log(_self.form.HotelOrderDetail[index].HandRemark)
             
             // console.log(_self.form.HotelOrderDetail[index].HandRemark)
             // console.log(up)
-            //  if(up.indexOf(ntes) == -1){
-            //      console.log(ntes)
-            //           console.log("没有")
-            //     }else{
-            //         up = up.replace(ntes,'')                                        
-            //         console.log(up)
-            //      _self.form.HotelOrderDetail[index].HandRemark = up 
-            //        console.log("有")
-                  
-            //     }
+            
                 
                 
             

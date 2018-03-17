@@ -27,12 +27,12 @@
                 </el-row>
                 <div>
                 <el-form-item label="退款方式" prop="BackTypeID">
-                    <el-select v-model="form.BackTypeID"  style="width:500px;">
-                        <el-option v-for="item in [{label:'线上',value:0},{label:'线下',value:1}]" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-select v-model="form.BackTypeID"  style="width:500px;" @change="changeValue">
+                        <el-option v-for="item in [{label:'线上',value:0},{label:'线下',value:1}]" :key="item.value" :label="item.label" :value="item.value" ></el-option>
                     </el-select>
                 </el-form-item>
                 </div>       
-                <div v-show="isShow">
+                <div v-if="isShow">
                 <el-form-item label="渠道/银行" prop="PartnerAccountModel">
                     <el-input  v-model="form.PartnerAccountModel" style="width:500px;"></el-input>
                 </el-form-item>
@@ -172,6 +172,15 @@ export default {
                  }
              })
             
+        },
+        changeValue(value) {
+            var _self =this
+            if(value == "1"){
+                _self.isShow = true
+            }else{
+                _self.isShow = false
+            }
+     
         }
     },
      computed:{

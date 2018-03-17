@@ -846,7 +846,6 @@ export default {
         _self.hotelsOrder = res.data.Data;
          _self.Room = res.data.room;
          _self.Night = res.data.night;         
-        console.log(res.data)
         _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {
