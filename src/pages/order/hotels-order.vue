@@ -795,7 +795,9 @@ export default {
       _self.showWeixin = false;
     },
     trim(s){
+      if(s){
     return s.replace(/(^\s*)|(\s*$)/g, '');
+      }
     },
     async fetchData(currentPage, pageSize) {
       const _self = this;
@@ -827,9 +829,9 @@ export default {
         order: "BookTime",
         desc: true,
         query: {
-          OrderNo:_self.filters.OrderNo,
+          OrderNo:_self.trim( _self.filters.OrderNo),
           HotelName:_self.trim( _self.filters.HotelName),
-          Passenger:_self.filters.Passenger,
+          Passenger:_self.trim(_self.filters.Passenger),
           StayDateStart: _self.filters.StayDateStart
             ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
             : "",

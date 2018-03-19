@@ -232,6 +232,11 @@ export default {
       this.filters.ExpectSettlement = "";
       this.fetchData();
     },
+    trim(s){
+            if(s){
+                return s.replace(/(^\s*)|(\s*$)/g, '');
+            }
+        },
     async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true
@@ -251,7 +256,7 @@ export default {
             order: 'ID',
             query:{
                 CompanyAcount:_self.filters.CompanyAcount,
-                HotelName: _self.filters.HotelName,
+                HotelName: _self.trim(_self.filters.HotelName),
                 PlatOrderNo: _self.filters.PlatOrderNo,
                 AmountUse:_self.filters.AmountUse,
                 Partner:_self.filters.Partner,

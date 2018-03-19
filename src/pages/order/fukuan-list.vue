@@ -9,7 +9,7 @@
       </el-form-item>
       <el-form-item label="打款账户" slot="CompanyAcount">
           <el-select v-model="filters.CompanyAcount" clearable>
-              <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ID"></el-option>
+              <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
       </el-form-item>
       <el-form-item label="付款周期" slot="SettlementCycleFu" >
@@ -125,7 +125,7 @@ export default {
 
             },
             PlatPolicyID: [],
-            CompanyAcount:[],
+          
             PayCompanyID:[],
             ThreePlatID: [
               {
@@ -167,7 +167,7 @@ export default {
     },
     created(){
         this.filters.ExpectSettlement = new Date()
-        this.fetchData()
+        this.fetchData()    
         this.searchFields = searchFields
         this.platformAccount()
         this.getPayCompany()
@@ -195,7 +195,7 @@ export default {
             this.filters.ExpectSettlement = ''
             _self.fetchData()
         },
-        searchCallback(filters) {
+        searchCallback(filters) {          
             this.filters = filters
             this.filters.ExpectSettlement = ''
             this.fetchData()
@@ -212,6 +212,11 @@ export default {
             this.currentPage = val
             this.fetchData(this.currentPage)
         },
+        trim(s){
+            if(s){
+                return s.replace(/(^\s*)|(\s*$)/g, '');
+            }
+        },
         async fetchData(currentPage,pageSize) {
             const _self = this
             _self.loading = true
@@ -221,11 +226,11 @@ export default {
                 pageSize: pageSize || _self.pageSize,
                 order: 'UrgentPay',
                 query:{
-                    HotelName:_self.filters.HotelName,
+                    HotelName:_self.trim(_self.filters.HotelName),
                     State:0,
                     PaymentType:1,
                     PlatOrderNo:_self.filters.PlatOrderNo,
-                    Passenger:_self.filters.Passenger,
+                    Passenger:_self.trim(_self.filters.Passenger),
                     WaiCaiPlatID:_self.filters.WaiCaiPlatID,
                     CompanyAcount:_self.filters.CompanyAcount,
                     SettlementCycleFu:_self.filters.SettlementCycleFu,
@@ -237,7 +242,8 @@ export default {
                 }
             }
             try {
-                const res = await hotelPaymentInfoApi.pay(options)
+            console.log(options)              
+                const res = await hotelPaymentInfoApi.pay(options)                 
                 _self.fukuanList = res.data.Data
                 console.log(_self.fukuanList)
                 _self.count = res.data.Count

@@ -178,6 +178,11 @@ export default {
       this.currentPage = val;
       this.fetchData(this.currentPage);
     },
+    trim(s){
+            if(s){
+                return s.replace(/(^\s*)|(\s*$)/g, '');
+            }
+        },
     async fetchData(currentPage, pageSize) {
       const _self = this;
       _self.loading = true;
@@ -195,7 +200,7 @@ export default {
         pageSize: pageSize || _self.pageSize,
         order: "ID",
         query: {
-          HotelName: _self.filters.HotelName,
+          HotelName: _self.trim(_self.filters.HotelName),
           PlatOrderNo: _self.filters.PlatOrderNo,
           StayDateStart: _self.filters.StayDateStart
             ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")

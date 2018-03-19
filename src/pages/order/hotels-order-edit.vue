@@ -82,18 +82,23 @@
                 </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="6">
-                <el-form-item label="外采订单号" prop="WaiCaiNo">
-                    <el-input placeholder="请输入外采订单号" v-model="form.WaiCaiNo"></el-input>
-                </el-form-item>
+            <el-col :span="12">
+                            <el-form-item label="处理备注" prop="HandRemark">
+                                <el-input  type="textarea" v-model="form.HandRemark" autosize></el-input>
+                            </el-form-item>     
+                            <el-button @click="addtext($event)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
+                            <el-button @click="addtext($event)">政策不符</el-button>
+                            <el-button @click="addtext($event)">赔钱拒单</el-button>
+                             
+                          <!---    <div>
+                                <el-checkbox-group  @change="handleChecked(index)" v-model="check">
+                                     <el-checkbox-button  label="无房拒单" ></el-checkbox-button>
+                                     <el-checkbox-button  label="政策不符" ></el-checkbox-button>
+                                     <el-checkbox-button  label="赔钱拒单" ></el-checkbox-button>                                                                     
+                                </el-checkbox-group>
+                            </div>         -->                                          
             </el-col>
-            <el-col :span="6">
-                <el-form-item label="外采支付账户" prop="WaiCaiPayAccount">
-                    <el-select v-model="form.WaiCaiPayAccount" clearable>
-                        <el-option v-for="(item,index) in WaiCaiPayAccount " :key="index" :label="item.ShortName" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
+            
         </el-row>
         <el-row :gutter="24">
             <el-col :span="17">
@@ -122,22 +127,7 @@
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
                 </el-form-item>
             </el-col>
-            <el-col :span="6">
-                <el-form-item label="外采标记" prop="WaiCaiFlag">
-                    <!-- <span v-if="form.WaiCaiFlag == 0" style="color:orange">自营</span>
-                    <span v-if="form.WaiCaiFlag == 1" style="color:orange">外采</span> -->
-                    <el-select v-model="form.WaiCaiFlag" clearable>
-                        <el-option v-for="(item,index) in WaiCaiFlag " :key="index" :label="item.label" :value="item.value"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="6">
-                <el-form-item label="外采渠道" prop="WaiCaiPlatID">
-                    <el-select v-model="form.WaiCaiPlatID" clearable>
-                        <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
+            
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
@@ -184,6 +174,26 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
+                            <el-form-item label="确认号" prop="HotelBookingNoNeed">
+                                <el-input placeholder="请输入确认号" v-model="item.HotelBookingNoNeed"></el-input>
+                            </el-form-item>
+                        </el-col>
+                       <el-col :span="6">
+                            <el-form-item label="外采订单号" prop="WaiCaiNo">
+                                <el-input placeholder="请输入外采订单号" v-model="item.WaiCaiNo"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="外采支付账户" prop="WaiCaiPayAccount">
+                                <el-select v-model="item.WaiCaiPayAccount" clearable>
+                                    <el-option v-for="(item,index) in WaiCaiPayAccount " :key="index" :label="item.ShortName" :value="item.ShortName"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        
+                        <el-col :span="6">
                             <el-form-item label="酒店ID" prop="HotelID">
                                 <el-input placeholder="请输入酒店ID" v-model="item.HotelID"></el-input>
                             </el-form-item>
@@ -226,11 +236,7 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="6">
-                            <el-form-item label="确认号" prop="HotelBookingNoNeed">
-                                <el-input placeholder="请输入确认号" v-model="item.HotelBookingNoNeed"></el-input>
-                            </el-form-item>
-                        </el-col>
+                        
                         <el-col :span="6">
                             <el-form-item label="入住人" prop="Passenger">
                                 <el-input placeholder="请输入入住人" v-model="item.Passenger"></el-input>
@@ -292,29 +298,22 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="17">
-                            <el-form-item label="备注" prop="Remark">
-                                <el-input  type="textarea" v-model="item.Remark" autosize></el-input>
+                        <el-col :span="6">
+                            <el-form-item label="床型" prop="Bed">
+                                <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
+                            </el-form-item>                                                          
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="早餐" prop="Breakfast">
+                                <el-input  placeholder="请输入早餐" v-model="item.Breakfast" autosize></el-input>
                             </el-form-item>                                                          
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="17">
-                            <el-form-item label="处理备注" prop="HandRemark">
-                                <el-input  type="textarea" v-model="item.HandRemark" autosize></el-input>
-                            </el-form-item>
-                                  
-                            <el-button @click="addtext($event,index)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
-                            <el-button @click="addtext($event,index)">政策不符</el-button>
-                            <el-button @click="addtext($event,index)">赔钱拒单</el-button>
-                             
-                          <!---    <div>
-                                <el-checkbox-group  @change="handleChecked(index)" v-model="check">
-                                     <el-checkbox-button  label="无房拒单" ></el-checkbox-button>
-                                     <el-checkbox-button  label="政策不符" ></el-checkbox-button>
-                                     <el-checkbox-button  label="赔钱拒单" ></el-checkbox-button>                                                                     
-                                </el-checkbox-group>
-                            </div>         -->                                          
+                            <el-form-item label="备注" prop="Remark">
+                                <el-input  type="textarea" v-model="item.Remark" autosize></el-input>
+                            </el-form-item>                                                          
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
@@ -615,6 +614,8 @@ export default{
                 OrderState: '',
                 HandState: '',
                 OrderType: '',
+                Bed:'',
+                Breakfast:'',
                 UrgentPay: '',
                 UnMergePay: '',
                 HotelArea: '',
@@ -637,6 +638,7 @@ HandRemark:''
                 }],
                 Picture:'',
                 WaiCaiPlatID:'',
+                WaiCaiNo:'',
                 WaiCaiPayAccount:''
             },
             copyForm: {},
@@ -1003,7 +1005,9 @@ HandRemark:''
                 if(_self.type == '审核'){
                     _self.form.StateAuditor = 1
                 }
-                console.log(_self.form)
+              
+
+                
                 let datas = _self.form
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
@@ -1093,29 +1097,19 @@ HandRemark:''
                 }
             }
         },
-         addtext(e,index){
-            const _self = this
-             const ntes = e.target.innerText 
-                // if(_self.Beizhu.indexOf(_self.HandRemarks) == -1){
-                //      _self.Beizhu.push(_self.HandRemarks)  
-                // }else{
-                //   _self.remove(_self.Beizhu,_self.HandRemarks);
-                  
-                // }
-         //  let str =  _self.Beizhu.toString()
-           
-           // _self.form.HotelOrderDetail[index].BookTime +=  ntes
-           
-           if(_self.form.HotelOrderDetail[index].HandRemark == undefined){
-               _self.form.HotelOrderDetail[index].HandRemark = ''
-           }
-           const now  = _self.form.HotelOrderDetail[index].HandRemark
-        let up = _self.form.HotelOrderDetail[index].BookTime += ntes
-         let num = ''                                 
-                    
-                up = _self.form.HotelOrderDetail[index].HandRemark +=`,`+ntes
+         addtext(e){
+             const _self = this
+             const ntes = e.target.innerText    
+             const tim =  _self.form.BookTime
+                if(_self.form.HandRemark == undefined){
+                    _self.form.HandRemark = ''
+                }
+                const now  = _self.form.HandRemark
+                let up = _self.form.BookTime += ntes
+                let num = ''                                        
+                up = _self.form.HandRemark +=`,`+ntes
                 //console.log(up.length)
-                 if(up.indexOf(ntes) == -1){
+                if(up.indexOf(ntes) == -1){
                 
                 }else{
                     num = up.split(ntes)
@@ -1125,32 +1119,11 @@ HandRemark:''
                         up = up.replace(",",'')
                         
                     }
-                 _self.form.HotelOrderDetail[index].HandRemark = up 
-                   
-                  
+                _self.form.HandRemark = up
+                _self.form.BookTime = tim                                
                 }
 //   console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
-// _self.form.HotelOrderDetail[index].qweqrqwe=1
-//  console.log(_self.form.HotelOrderDetail[index].qweqrqwe)
-           
-// console.log(_self.form.HotelOrderDetail[index].HandRemark)
-
-
-            // console.log(typeof(up))
-            // if(up.indexOf("undefined") == -1){
-            //     _self.form.HotelOrderDetail[index].HandRemark = ntes
-            //         console.log(up)
-               
-            // }else{
-            //      _self.form.HotelOrderDetail[index].HandRemark = ntes
-            //     console.log(up)
-            // }
-            
-            // console.log(_self.form.HotelOrderDetail[index].HandRemark)
-            // console.log(up)
-            
-                
-                
+         
             
         }
 
