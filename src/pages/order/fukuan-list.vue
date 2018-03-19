@@ -80,11 +80,11 @@ const searchData = [
   ['入住日期', 'StayDateStart', 'date', ''],
   ['退房日期', 'StayDateEnd', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
+  ['打款账户', 'CompanyAcount', 'select', ''],
 
 
   ['外采平台', 'WaiCaiPlatID', 'select', ''],
 
-  ['打款账户', 'CompanyAcount', 'select', ''],
   ['付款周期', 'SettlementCycleFu', 'select', ''],
 ]
 const searchFields = transSearch(searchData)

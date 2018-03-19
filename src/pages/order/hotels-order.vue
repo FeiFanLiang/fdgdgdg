@@ -11,11 +11,17 @@
           <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="人工处理状态" slot="HandState">
+        <el-select v-model="filters.HandState" clearable>
+          <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="结款方式" slot="SettlementCycle">
         <el-select v-model="filters.SettlementCycle" clearable>
           <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
+      
       <el-form-item label="筛选条件" slot="checkList">
         <el-checkbox-group v-model="checkList">
           <el-checkbox label="已审核未打款"></el-checkbox>
@@ -27,6 +33,7 @@
       <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button  slot="button-add" style="cursor:default">{{Room}}间</el-button>
       <el-button  slot="button-add" style="cursor:default">{{Night}}夜</el-button>
+      
     </CustomSearchCopy>
     
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
@@ -441,6 +448,7 @@ export default {
         ThreePlatID: "",
         SettlementCycle: "",
         checkList: "",
+        HandState:"",
         HotelArea: ""
       },
       ThreePlatID: [
@@ -466,6 +474,23 @@ export default {
           label: "月结",
           value: 2
         }
+      ],
+      HandState: [{
+                label: '未处理',
+                value: 0
+                },
+                {
+                label: '处理中',
+                value: 1
+                },
+                {
+                label: '处理成功',
+                value: 2
+                },
+                {
+                label: '处理失败',
+                value: 3
+                }
       ],
       HotelArea: [
         {
@@ -672,6 +697,7 @@ export default {
           OrderNo: _self.filters.OrderNo,
           HotelName: _self.filters.HotelName,
           Passenger: _self.filters.Passenger,
+          HandState:_self.filters.HandState,
           StayDateStart: _self.filters.StayDateStart
             ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
             : "",
@@ -839,6 +865,7 @@ export default {
           "BookTime<": time2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
+          HandState:_self.filters.HandState,
           HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,

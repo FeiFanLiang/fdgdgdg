@@ -43,6 +43,7 @@ const searchData2 = [
   ['订单渠道', 'HotelArea', 'select', ''],
   ['结款方式', 'SettlementCycle', 'select', ''],
   ['确认号', 'HotelBookingNoNeed', 'input', ''],
+  ['人工处理状态', 'HandState', 'select', ''],  
   ['筛选条件', 'checkList', 'select', ''],
 ]
 

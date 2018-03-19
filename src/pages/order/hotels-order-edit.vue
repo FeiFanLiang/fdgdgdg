@@ -766,7 +766,7 @@ HandRemark:''
                 value: 1
                 },
                 {
-                label: '处理完成',
+                label: '处理成功',
                 value: 2
                 },
                 {
@@ -827,7 +827,7 @@ HandRemark:''
                 }
             const res = await payCompanyApi.list(options)
             this.WaiCaiPayAccount = res.data.Data
-            console.log(this.WaiCaiPayAccount)
+          //  console.log(this.WaiCaiPayAccount)
                 
         },
         async platformAccount(){
@@ -837,7 +837,7 @@ HandRemark:''
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
-            console.log(this.WaiCaiPlatID)
+          //  console.log(this.WaiCaiPlatID)
         },
         setContent(){
             const _self = this
@@ -893,7 +893,7 @@ HandRemark:''
             const _self = this
             const res = await hotelOrderDetailApi.getDetail(_self.ID)
             _self.datas = res.data.Data
-            console.log(_self.datas)
+            //console.log(_self.datas)
             let detail = _self.datas.detail
             if(_self.datas.policy.ReserveModeID == 1 || _self.datas.policy.ReserveModeID == 2){
                 _self.Passenger = detail.Passenger
@@ -974,9 +974,13 @@ HandRemark:''
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-                console.log(_self.form)
                 _self.getImageList(_self.form.Picture)
-                for(let i in _self.form.HotelOrderDetail)
+                for(let i in _self.form.HotelOrderDetail){
+                    console.log(_self.form.HotelOrderDetail[i].HotelBookingNoNeed)
+                    if(_self.form.HotelOrderDetail[i].HotelBookingNoNeed == 0){
+                        _self.form.HotelOrderDetail[i].HotelBookingNoNeed = ""
+                    }
+                }
                 _self.HotelName = _self.form.HotelName
                 const options = {
                     query: {
