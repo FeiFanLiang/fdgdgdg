@@ -174,8 +174,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="确认号" prop="HotelBookingNoNeed">
-                                <el-input placeholder="请输入确认号" v-model="item.HotelBookingNoNeed"></el-input>
+                            <el-form-item label="确认号" prop="HotelBookingNo">
+                                <el-input placeholder="请输入确认号" v-model="item.HotelBookingNo"></el-input>
                             </el-form-item>
                         </el-col>
                        <el-col :span="6">
@@ -975,12 +975,6 @@ HandRemark:''
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
                 _self.getImageList(_self.form.Picture)
-                for(let i in _self.form.HotelOrderDetail){
-                    console.log(_self.form.HotelOrderDetail[i].HotelBookingNoNeed)
-                    if(_self.form.HotelOrderDetail[i].HotelBookingNoNeed == 0){
-                        _self.form.HotelOrderDetail[i].HotelBookingNoNeed = ""
-                    }
-                }
                 _self.HotelName = _self.form.HotelName
                 const options = {
                     query: {
