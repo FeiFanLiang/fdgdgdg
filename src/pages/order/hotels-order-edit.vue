@@ -311,16 +311,20 @@
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="17">
-                            <el-form-item label="备注" prop="Remark">
-                                <el-input  type="textarea" v-model="item.Remark" autosize></el-input>
+                            <el-form-item label="备注" prop="Remark" >
+                                <el-input  type="textarea" v-model="item.Remark" autosize :autosize="{ minRows: 4}"></el-input>
                             </el-form-item>                                                          
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="20" >
+
                             <el-form-item label="确认函">
+                                <el-button @click="tocreate()" style="margin:10px 0;" v-if="Tocreate">添加确认函</el-button>
+                                <div v-if="!Tocreate">
                                 <tinymce :height="0" :width="756" v-model="item.HotelBookingNote"></tinymce>
                                 <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
+                                </div>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -339,28 +343,34 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
-                        <el-col :span="6">
+                    <!--    <el-col :span="6">
                             <el-form-item label="付款货币" prop="CurrencyFuKuan">
                                 <el-select v-model="item.CurrencyFuKuan" clearable>
                                 <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
+                        </el-col> -->
+                   <!--     <el-col :span="6">
                             <el-form-item label="收款货币" prop="CurrencyShouKuan">
                                 <el-select v-model="item.CurrencyShouKuan" clearable>
                                 <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-col>
+                        </el-col> -->
                         <el-col :span="6">
                             <el-form-item label="应收款额" prop="AmountYingShou">
-                                <el-input placeholder="请输入应收款额" v-model="item.AmountYingShou"></el-input>
+                            <el-select v-model="item.CurrencyShouKuan" clearable style="width:80px;position:relative;margin-right:10px">
+                                <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                                <el-input placeholder="请输入应收款额" v-model="item.AmountYingShou" style="position:absolute;"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="6" style="margin-left:70px">
                             <el-form-item label="酒店底价" prop="HotelFee">
-                                <el-input placeholder="请输入酒店底价" v-model="item.HotelFee"></el-input>
+                             <el-select v-model="item.CurrencyFuKuan" clearable style="width:80px;position:relative;margin-right:10px;">
+                                <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                                <el-input placeholder="请输入酒店底价" v-model="item.HotelFee" style="position:absolute;"></el-input>
                             </el-form-item>
                         </el-col>
                         <!--
@@ -584,6 +594,7 @@ export default{
             stringWX:'',
             check:[],
             stringQRH:'',
+            Tocreate:true,
             Passenger : '',
             StayDateStart : '',
             StayDateEnd : '',
@@ -838,6 +849,12 @@ HandRemark:''
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
           //  console.log(this.WaiCaiPlatID)
+        },
+        tocreate(){
+            const _self = this
+            if(_self.Tocreate){
+                _self.Tocreate = false
+            }            
         },
         setContent(){
             const _self = this

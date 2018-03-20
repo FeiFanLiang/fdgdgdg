@@ -19,6 +19,7 @@
         </el-col>
         <el-col :span="6">
             <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+            <el-button type="primary" @click="downloadList()">下载<i class="el-icon-document el-icon--right" ></i></el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -88,7 +89,7 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi,paymentCheckApi } from 'api'
+import { hotelPaymentInfoApi,paymentCheckApi,hotelsOrderApi } from 'api'
 import UploadImageMove from 'components/upload-image-move'
 export default {
   components: {
@@ -170,6 +171,30 @@ export default {
         this.currentPage = val
         this.fetchData(this.currentPage)
     },
+    async downloadList() {
+        const _self = this
+        const Headerinfo = "PaymentType,PaymentNo,CompanyAcount,Partner,PartnerAccount,Passenger,Amount,PaymentDate,Currency,CreateDate,ExpectSettlement,ExpectGetMoney"
+        const options = {   
+            columns:Headerinfo,
+            order: 'ID',
+            query:{
+                CompanyAcount:_self.filters.CompanyAcount,
+                PlatOrderNo:_self.filters.PlatOrderNo,
+                StateScreenshot:0,
+                PaymentType:1,
+                Passenger:_self.filters.Passenger
+            }
+          
+        }
+        try {
+            const res = await hotelsOrderApi.downloadList(options);
+            if (res.request.responseURL) {
+            window.location.href = res.request.responseURL;
+            }
+        } catch (e) {
+            _self.$message.error("数据下载失败!!!");
+        }
+    },
     async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true
@@ -188,6 +213,7 @@ export default {
             }
       }
       try {
+          console.log(options)
         const res = await hotelPaymentInfoApi.getImgList(options)
         _self.paymentCheck = res.data.Data
         _self.count = res.data.Count

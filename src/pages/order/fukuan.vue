@@ -214,7 +214,6 @@ export default {
                             +_self.multipleSelection[a].HotelOrder.StayDateStart.substring(0,10)+' '
                             +_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed+' '
                             +string.substring(string.length-6,string.length)+' '
-                            +'\n'
                     passenger = _self.multipleSelection[a].HotelOrder.Passenger+'  '
                     passenger = passenger.trim()
                 }

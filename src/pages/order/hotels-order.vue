@@ -37,7 +37,7 @@
     </CustomSearchCopy>
     
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
-      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID">
+      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
         <el-table-column type="expand">
             <template scope="props">
               <div>
@@ -155,7 +155,7 @@
                 </el-card>
               </div>
             </template>
-        </el-table-column>
+        </el-table-column>  
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
@@ -191,6 +191,7 @@
             <DeleteButton api="hotelsOrderApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
           </template>
         </el-table-column>
+        
     </el-table>
     <div class="pagination-wrapper">
       <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 100]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
@@ -682,16 +683,18 @@ export default {
       const _self = this;
       let time1 = "";
       let time2 = "";
+      const Headerinfo = "PlatOrderNo,PlatName,HotelName,StayDateStart,StayDateEnd,WaiCaiFlag,Passenger,BookTime"
       if (typeof _self.filters.BookTime != "undefined") {
         if (_self.filters.BookTime[0] != null) {
           time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
           time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
         }
       }
-      const options = {
+      let options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: "BookTime",
+        columns:Headerinfo,
         desc: true,
         query: {
           OrderNo: _self.filters.OrderNo,
@@ -713,6 +716,9 @@ export default {
         }
       };
       try {
+       
+       
+        console.log(options)
         const res = await hotelsOrderApi.downloadList(options);
         if (res.request.responseURL) {
           window.location.href = res.request.responseURL;

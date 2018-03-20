@@ -20,6 +20,7 @@
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
       </el-form-item>
+      <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
   </CustomSearchCopy>
 
 <!--
@@ -41,6 +42,7 @@
     @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
         
         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
+        <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" width=170></el-table-column>        
         <el-table-column label="财务编号" prop="PaymentNo" width=170></el-table-column>
         <el-table-column label="入住人" prop="HotelOrder.Passenger" width=150></el-table-column>
         <el-table-column label="预定日期"  width=150>
@@ -199,6 +201,49 @@ export default {
     this.platformAccount()
   },
   methods:{
+      async downloadList() {
+        const _self = this 
+        let time1 = "";
+        let time2 = "";
+        if (typeof _self.filters.PaymentDate != "undefined") {
+            if (_self.filters.PaymentDate[0] != null) {
+            time1 = new Date(_self.filters.PaymentDate[0]).Format("yyyy-MM-dd");
+            time2 = new Date(_self.filters.PaymentDate[1]).Format("yyyy-MM-dd");
+            }
+        }   
+        const Headerinfo = "PlatOrderNo,PaymentNo,Passenger,BookTime,HotelName,Partner,CompanyAcount,PaymentDate,AmountUse"
+        const options = {   
+            columns:Headerinfo,
+             order: 'ID',
+            query:{
+                CompanyAcount:_self.filters.CompanyAcount,
+                HotelName: _self.trim(_self.filters.HotelName),
+                PlatOrderNo: _self.filters.PlatOrderNo,
+                AmountUse:_self.filters.AmountUse,
+                Partner:_self.filters.Partner,
+                PartnerAccount:_self.filters.PartnerAccount,
+                PartnerAccountModel:_self.filters.PartnerAccountModel,
+                PaymentNo:_self.filters.PaymentNo,
+                StayDateStart: _self.filters.StayDateStart
+                 ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
+                 : "",
+                "ExpectSettlement>": time1,
+                "ExpectSettlement<": time2,
+                PaymentState:0,
+                PaymentType:1,
+                "StateScreenshot>":0
+                             
+            } 
+        }
+        try {
+            const res = await hotelsOrderApi.downloadList(options);
+            if (res.request.responseURL) {
+            window.location.href = res.request.responseURL;
+            }
+        } catch (e) {
+            _self.$message.error("数据下载失败!!!");
+        }
+    },
     async getPayCompany(){
        const res = await policyApi.getPayCompany()
        this.PayCompanyID = res.data.Data

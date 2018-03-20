@@ -21,6 +21,7 @@
           </el-select>
       </el-form-item>
       <el-button style="margin:10px 0;" @click="collection" slot="button-add">收款</el-button>
+      <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
     </CustomSearchCopy>
 
   <el-table ref="multipleTable" :data="shoukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
@@ -148,6 +149,50 @@ export default {
     this.platformAccount();
   },
   methods: {
+    async downloadList() {
+      const _self = this;      
+      let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.BookTime != "undefined") {
+        if (_self.filters.BookTime[0] != null) {
+          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
+        }
+      }
+      const Headerinfo = "Account,PlatOrderNo,HotelName,StayDateStart,StayDateEnd,RoomNum,NightNum,Passenger,BookTime,AmountUse,StateCheck,ExpectSettlement,ExpectGetMoney"
+      const options = {   
+          columns:Headerinfo,
+          order: "ID",
+          query: {
+            HotelName: _self.trim(_self.filters.HotelName),
+            PlatOrderNo: _self.filters.PlatOrderNo,
+            StayDateStart: _self.filters.StayDateStart
+              ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
+              : "",
+          " StateCheck<": 2,
+            PaymentType : 0,
+            StayDateEnd: _self.filters.StayDateEnd
+              ? new Date(_self.filters.StayDateEnd).Format("yyyy-MM-dd")
+              : "",
+            "BookTime>": time1,
+            "BookTime<": time2,
+            "ExpectSettlement<=": _self.filters.ExpectSettlement
+              ? _self.filters.ExpectSettlement.Format("yyyy-MM-dd")
+              : "",
+            StateCheck: _self.filters.StateCheck,
+            PlatPolicyID: _self.filters.PlatPolicyID
+          }  
+      }
+      console.log(options)
+      try {
+          const res = await hotelsOrderApi.downloadList(options);
+          if (res.request.responseURL) {
+          window.location.href = res.request.responseURL;
+          }
+      } catch (e) {
+          _self.$message.error("数据下载失败!!!");
+      }
+    },
     async platformAccount() {
       const options = {
         pageSize: 1000,

@@ -108,7 +108,7 @@ export default {
     return axios.get(base + 'Tips')
   },
   downloadList(params) {
-    return axios.get(base + 'DownLoadList', {
+    return axios.get(base + 'ListDownLoad', {
       params: params
     })
   }
