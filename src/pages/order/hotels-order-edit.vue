@@ -320,8 +320,8 @@
                         <el-col :span="20" >
 
                             <el-form-item label="确认函">
-                                <el-button @click="tocreate()" style="margin:10px 0;" v-if="Tocreate">添加确认函</el-button>
-                                <div v-if="!Tocreate">
+                                <el-button @click="tocreate()" style="margin:10px 0;" v-show="Tocreate">添加确认函</el-button>
+                                <div v-show="!Tocreate">
                                 <tinymce :height="0" :width="756" v-model="item.HotelBookingNote"></tinymce>
                                 <el-button @click="create(item.ID,index)" style="margin:10px 0;">生成确认函</el-button>
                                 </div>
