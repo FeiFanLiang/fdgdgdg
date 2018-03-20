@@ -42,15 +42,15 @@
     @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys" @selection-change="handleSelectionChange" ref="table">
         
         <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
-        <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" width=170></el-table-column>        
+        <el-table-column label="订单号" prop="PlatOrderNo" width=170></el-table-column>        
         <el-table-column label="财务编号" prop="PaymentNo" width=170></el-table-column>
-        <el-table-column label="入住人" prop="HotelOrder.Passenger" width=150></el-table-column>
+        <el-table-column label="入住人" prop="Passenger" width=150></el-table-column>
         <el-table-column label="预定日期"  width=150>
             <template scope="scope">
-                <span style="color:red" v-if="scope.row.HotelOrder.BookTime != null">{{scope.row.HotelOrder.BookTime.substring(0,10)}}</span>
+                <span style="color:red" v-if="scope.row.BookTime != null">{{scope.row.BookTime.substring(0,10)}}</span>
             </template>
         </el-table-column>
-        <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
+        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
         <el-table-column label="收款账户" prop="Partner" width=125 show-overflow-tooltip></el-table-column>
         <el-table-column label="打款账户" prop="CompanyAcount" show-overflow-tooltip></el-table-column>
         <el-table-column label="打款日期" prop="PaymentDate" width=150>
@@ -58,9 +58,9 @@
                 <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
             </template></el-table-column>
         <el-table-column label="金额" prop="AmountUse"></el-table-column>
-        <el-table-column label="截图" prop="Picture" width=70>
+        <el-table-column label="截图" prop="PaymentPicture" width=70>
             <template scope="scope">
-                <el-button type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
+                <el-button type="text" @click="imgShow(scope.row.PaymentPicture)">查看</el-button>
             </template>
         </el-table-column>
         <!--<el-table-column label="预计结算/到款日期" width=110>
@@ -340,8 +340,9 @@ export default {
         try{
             let ids = []          
             for(let i in _self.multipleSelection){
-                ids.push(_self.multipleSelection[i].HotelPaymentId)
-            }         
+                ids.push(_self.multipleSelection[i].PaymentID)
+            }
+            console.log(_self.multipleSelection)         
             ids=Array.from(new Set(ids))
             if(ids.length == 0){
                 _self.$message({
@@ -378,6 +379,7 @@ export default {
         }
     },
     imgShow(img){
+        console.log(img)
         try{
             this.imageList = img.split(',')
             this.dialogVisible = true

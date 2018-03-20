@@ -24,7 +24,7 @@ export default {
   },
   //待付款列表
   pay(params) {
-    return axios.get(base + 'ListCollections', {
+    return axios.get(base5 + 'ListCollections', {
       params: params
     })
   },
@@ -35,7 +35,7 @@ export default {
 
   //待对账付款列表
   checkOut(params) {
-    return axios.get(base + 'ListCollections', {
+    return axios.get(base5 + 'ListCollections', {
       params: params
     })
   },
@@ -49,7 +49,7 @@ export default {
   },
   //待对账收款列表
   checkIn(params) {
-    return axios.get(base + 'ListDaiShouKuan', {
+    return axios.get(base5 + 'ListCollections', {
       params: params
     })
   },
@@ -64,7 +64,7 @@ export default {
   },
   //待发截图列表  /Hotel/HotelPayment/ListDaiFaJieTu
   imgList(params) {
-    return axios.get(base4 + 'ListCollections', {
+    return axios.get(base5 + 'ListCollections', {
       params: params
     })
   },

@@ -19,11 +19,6 @@
             </template>
         </el-table-column>
         <el-table-column label="入住人" prop="HotelOrder.Passenger"></el-table-column>
-        <el-table-column label="预定时间" prop="HotelOrder.BookTime">
-            <template scope="scope">
-                <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
-            </template>
-        </el-table-column>
         <el-table-column label="实付" prop="AmountUse" width=90>
             <!-- <template scope="scope">
                 <input v-model="scope.row.AmountUse" style="width:90%" v-on:input="inputChange">
@@ -31,6 +26,11 @@
         </el-table-column>
         <el-table-column label="应付" prop="YingShouFu" width=90></el-table-column>
         <el-table-column label="对冲" prop="DuiChong" width=90></el-table-column>
+         <el-table-column label="预定时间" prop="HotelOrder.BookTime">
+            <template scope="scope">
+                <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
+            </template>
+        </el-table-column>
         <el-table-column label="备注" prop="Remark">
             <template scope="scope">
                 <el-input v-model="scope.row.Remark" type="textarea" :rows="1"></el-input>
@@ -193,11 +193,11 @@ export default {
                 _self.multipleSelection = _self.$route.query.multipleSelection
                 let select = []
                 for(let i in _self.multipleSelection){
-                    select.push(_self.multipleSelection[i].ID)
+                    select.push(_self.multipleSelection[i].PaymentInfoID)
                 }
                 const res = await hotelPaymentInfoApi.payhj(select)
                 _self.fukuanList = res.data.Data
-                console.log(_self.fukuanList)
+                console.log(_self.multipleSelection)
                 this.fukuanList.forEach(item => {
                     this.multipleSelection2.push(item);
                     this.$refs.table.toggleRowSelection(item,true);
@@ -210,11 +210,11 @@ export default {
                 let remark = ''
                 let passenger = ''
                 for(let a in _self.multipleSelection){
-                    remark+=_self.multipleSelection[a].HotelOrder.Passenger.replace('/',' ')+' '
-                            +_self.multipleSelection[a].HotelOrder.StayDateStart.substring(0,10)+' '
-                            +_self.multipleSelection[a].HotelOrder.HotelBookingNoNeed+' '
+                    remark+=_self.multipleSelection[a].Passenger.replace('/',' ')+' '
+                            +_self.multipleSelection[a].StayDateStart.substring(0,10)+' '
+                            +_self.multipleSelection[a].HotelBookingNoNeed+' '
                             +string.substring(string.length-6,string.length)+' '
-                    passenger = _self.multipleSelection[a].HotelOrder.Passenger+'  '
+                    passenger = _self.multipleSelection[a].Passenger+'  '
                     passenger = passenger.trim()
                 }
                 _self.payCheck = {

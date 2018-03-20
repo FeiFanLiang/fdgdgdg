@@ -99,6 +99,7 @@ export default {
       return{
           currentPage: 1,
           pageSize: 10,
+          aa:false,
           count: 0,
           loading: false,
           paymentCheck:[],
@@ -126,7 +127,18 @@ export default {
             }
         }
     },
-    async handleSuccess(response, file, fileList) {
+    lookImg(){
+        const _self = this
+        if(_self.aa == false){
+            _self.aa = true
+           _self.imageList = []
+        }else{
+            _self.aa = false
+            
+        }
+        
+    },
+    async handleSuccess(response, file, fileList) {   
         if (!response) {
             this.$message.error('上传失败,请重新上传')
             return false
@@ -134,7 +146,7 @@ export default {
         this.imageList.push(response)
         this.Picture = this.imageList.toString()
     },
-    handleRemove(index,file, fileList) {
+    handleRemove(index,file, fileList) {       
         this.imageList.splice(index, 1)
         this.Picture = this.imageList.toString()
     },

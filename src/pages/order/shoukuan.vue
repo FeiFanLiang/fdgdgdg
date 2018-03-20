@@ -174,7 +174,7 @@ export default {
                 _self.multipleSelection = _self.$route.query.multipleSelection
                 let select = []
                 for(let i in _self.multipleSelection){
-                    select.push(_self.multipleSelection[i].ID)
+                    select.push(_self.multipleSelection[i].PaymentInfoID)
                 }
                 const res = await hotelPaymentInfoApi.payhj(select)
                 _self.fukuanList = res.data.Data

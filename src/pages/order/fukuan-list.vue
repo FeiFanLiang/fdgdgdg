@@ -23,40 +23,40 @@
   <el-table ref="multipleTable" :data="fukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
   :default-sort = "{prop: 'UrgentPay', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip>
+    <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
         <template scope="scope">
         <!--    <img src="~assets/images/common/urgent.png" v-if="" style="width:20px;height:23px"> -->
-            <span v-if="scope.row.UrgentPay == 1" style="color:red;">{{ scope.row.HotelOrder.PlatOrderNo }}</span>
-            <span v-else>{{ scope.row.HotelOrder.PlatOrderNo }}</span>
+            <span v-if="scope.row.UrgentPay == 1" style="color:red;">{{ scope.row.PlatOrderNo }}</span>
+            <span v-else>{{ scope.row.PlatOrderNo }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip >
+    <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip >
         <template slot-scope="scope" >
-        <p @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" >{{scope.row.HotelOrder.HotelName}}</p>
+        <p @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" >{{scope.row.HotelName}}</p>
         </template>     
     </el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
-            <span v-if="typeof(scope.row.HotelOrder.StayDateStart) != 'undefined'">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/
-            <span v-if="typeof(scope.row.HotelOrder.StayDateEnd) != 'undefined'">{{ scope.row.HotelOrder.StayDateEnd.split(' ')[0] }}</span>
+            <span v-if="typeof(scope.row.StayDateStart) != 'undefined'">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
+            <span v-if="typeof(scope.row.StayDateEnd) != 'undefined'">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
         </template>
     </el-table-column>
     <el-table-column label="间/晚" prop="RoomNum" width="80">
         <template scope="scope">
-            <span>{{ scope.row.HotelOrder.RoomNum }}</span>/
-            <span>{{ scope.row.HotelOrder.NightNum }}</span>
+            <span>{{ scope.row.RoomNum }}</span>/
+            <span>{{ scope.row.NightNum }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="入住人" prop="HotelOrder.Passenger" width="100"></el-table-column>
+    <el-table-column label="入住人" prop="Passenger" width="100"></el-table-column>
       <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
         <el-table-column label="对冲金额" prop="DuiChong" width="100"></el-table-column>
         <el-table-column label="支付账户" prop="CompanyAcount" width="100"></el-table-column>        
-    <el-table-column label="预定时间" prop="HotelOrder.BookTime" width="150" sortable>
+    <el-table-column label="预定时间" prop="BookTime" width="150" sortable>
         <template scope="scope">
-            <span v-if="typeof(scope.row.HotelOrder.BookTime) != 'undefined'">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
+            <span v-if="typeof(scope.row.BookTime) != 'undefined'">{{ scope.row.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="不可合并支付" prop="HotelOrder.UnMergePay">
+    <el-table-column label="不可合并支付" prop="UnMergePay">
         <template scope="scope">
             <span v-if="scope.row.UnMergePay == 1">不可合并</span>
             <span v-if="scope.row.UnMergePay == 0">可合并</span>
@@ -87,6 +87,8 @@ const searchData = [
   ['外采平台', 'WaiCaiPlatID', 'select', ''],
 
   ['付款周期', 'SettlementCycleFu', 'select', ''],
+  ['付款日期', 'PaymentDate', 'daterange', ''],
+  
 ]
 const searchFields = transSearch(searchData)
 
@@ -123,6 +125,7 @@ export default {
                 WaiCaiPlatID: '',
                 CompanyAcount:'',
                 SettlementCycleFu:'',
+                PaymentDate:''
 
             },
             PlatPolicyID: [],
@@ -193,6 +196,8 @@ export default {
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+                    'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
+                    'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
                 }      
             }
@@ -270,6 +275,8 @@ export default {
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
+                    'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
+                    'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
                     'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
                 }
             }

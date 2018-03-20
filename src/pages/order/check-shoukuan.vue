@@ -30,28 +30,28 @@
     <el-table-column label="销售渠道">
         <template scope="scope">
           <span v-for="item in PlatPolicyID">
-            <span v-if="scope.row.HotelOrder.PlatPolicyID==item.ID">{{item.Account}}</span>
+            <span v-if="scope.row.PlatPolicyID==item.ID">{{item.Account}}</span>
           </span>
         </template>
     </el-table-column>
-    <el-table-column label="订单号" prop="HotelOrder.PlatOrderNo" show-overflow-tooltip></el-table-column>
-    <el-table-column label="酒店名称" prop="HotelOrder.HotelName" show-overflow-tooltip></el-table-column>
+    <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
+    <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
     <el-table-column label="入住/退房日期" width="200">
         <template scope="scope">
-        <span v-if="scope.row.HotelOrder.StayDateStart != null">{{ scope.row.HotelOrder.StayDateStart.split(' ')[0] }}</span>/
-        <span v-if="scope.row.HotelOrder.StayDateEnd != null">{{ scope.row.HotelOrder.StayDateEnd.split(' ')[0] }}</span>
+        <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>/
+        <span v-if="scope.row.StayDateEnd != null">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
         </template>
     </el-table-column>
     <el-table-column label="间/晚" width="80">
         <template scope="scope">
-            <span>{{ scope.row.HotelOrder.RoomNum }}</span>/
-            <span>{{ scope.row.HotelOrder.NightNum }}</span>
+            <span>{{ scope.row.RoomNum }}</span>/
+            <span>{{ scope.row.NightNum }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="入住人" prop="HotelOrder.Passenger"></el-table-column>
-    <el-table-column label="预定时间" prop="HotelOrder.BookTime" width="80" sortable>
+    <el-table-column label="入住人" prop="Passenger"></el-table-column>
+    <el-table-column label="预定时间" prop="BookTime" width="80" sortable>
         <template scope="scope">
-            <span v-if="scope.row.HotelOrder.BookTime != null">{{ scope.row.HotelOrder.BookTime.substring(5,16) }}</span>
+            <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
 

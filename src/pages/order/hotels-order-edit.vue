@@ -83,13 +83,12 @@
                 </el-form-item>
             </el-col>
             <el-col :span="12">
-                            <el-form-item label="处理备注" prop="HandRemark">
-                                <el-input  type="textarea" v-model="form.HandRemark" autosize></el-input>
-                            </el-form-item>     
-                            <el-button @click="addtext($event)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
-                            <el-button @click="addtext($event)">政策不符</el-button>
-                            <el-button @click="addtext($event)">赔钱拒单</el-button>
-                             
+                            <el-form-item label="处理备注" prop="HandRemark" >
+                                <el-input  type="textarea" v-model="form.HandRemark" autosize :minlength="200"></el-input>
+                            </el-form-item>
+                     
+                      
+                      
                           <!---    <div>
                                 <el-checkbox-group  @change="handleChecked(index)" v-model="check">
                                      <el-checkbox-button  label="无房拒单" ></el-checkbox-button>
@@ -101,17 +100,18 @@
             
         </el-row>
         <el-row :gutter="24">
-            <el-col :span="17">
+            <el-col :span="6">
             <el-form-item label="酒店区域" prop="HotelArea">
                 <el-radio-group v-model="form.HotelArea">
                     <el-radio :label="1">国际</el-radio>
                     <el-radio :label="0">国内</el-radio>
-                    <el-radio :label="2">美国1009</el-radio>
-                    <el-radio :label="3">美国2462</el-radio>
-                    <el-radio :label="4">好订1009</el-radio>
-                    <el-radio :label="5">好订2462</el-radio>
                 </el-radio-group>
             </el-form-item>
+            </el-col>
+             <el-col :span="18">
+                <el-button @click="addtext($event)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
+                <el-button @click="addtext($event)">政策不符</el-button>
+                <el-button @click="addtext($event)">赔钱拒单</el-button>
             </el-col>
         </el-row>
         <el-row :gutter="24">
@@ -208,6 +208,11 @@
                                 <el-input placeholder="请输入酒店协议ID" v-model="item.HotelPolicyID"></el-input>
                             </el-form-item>
                         </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="早餐" prop="Breakfast">
+                                <el-input  placeholder="请输入早餐" v-model="item.Breakfast" autosize></el-input>
+                            </el-form-item>                                                          
+                        </el-col>
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
@@ -252,6 +257,11 @@
                                 <el-date-picker v-model="item.StayDateEnd" type="date" placeholder="选择退房日期" style="width:100%;" :picker-options="pickerOptions2" @change="tuifang"></el-date-picker>
                             </el-form-item>
                         </el-col>
+                         <el-col :span="6">
+                            <el-form-item label="预定时间" prop="BookTime">
+                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%"></el-date-picker>
+                            </el-form-item>
+                        </el-col>
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
@@ -269,6 +279,11 @@
                             <el-form-item label="联系电话" prop="PassengerTel">
                                 <el-input placeholder="请输入联系电话" v-model="item.PassengerTel"></el-input>
                             </el-form-item>
+                        </el-col>
+                         <el-col :span="6">
+                            <el-form-item label="床型" prop="Bed">
+                                <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
+                            </el-form-item>                                                          
                         </el-col>
                     </el-row>
                     <el-row :gutter="24">
@@ -291,23 +306,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="预定时间" prop="BookTime">
-                                <el-date-picker v-model="item.BookTime" type="datetime" placeholder="选择预定时间" style="width:100%"></el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="24">
-                        <el-col :span="6">
-                            <el-form-item label="床型" prop="Bed">
-                                <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
-                            </el-form-item>                                                          
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="早餐" prop="Breakfast">
-                                <el-input  placeholder="请输入早餐" v-model="item.Breakfast" autosize></el-input>
-                            </el-form-item>                                                          
-                        </el-col>
+                       
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="17">
@@ -331,12 +330,12 @@
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息1</h1></el-col></el-row>
                     <el-row :gutter="24">
-                        <el-col :span="8">
+                        <el-col :span="10">
                             <el-form-item label="预计收款时间" prop="DateReceipt">
                                 <el-date-picker v-model="item.DateReceipt" type="datetime" placeholder="请选择"></el-date-picker>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="12">
+                        <el-col :span="8">
                             <el-form-item label="预计付款时间" prop="DatePayment">
                                 <el-date-picker v-model="item.DatePayment" type="datetime" placeholder="请选择"></el-date-picker>
                             </el-form-item>
@@ -357,7 +356,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col> -->
-                        <el-col :span="6">
+                        <el-col :span="8">
                             <el-form-item label="应收款额" prop="AmountYingShou">
                             <el-select v-model="item.CurrencyShouKuan" clearable style="width:80px;position:relative;margin-right:10px">
                                 <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
@@ -365,7 +364,7 @@
                                 <el-input placeholder="请输入应收款额" v-model="item.AmountYingShou" style="position:absolute;"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6" style="margin-left:70px">
+                        <el-col :span="8" style="margin-left:70px">
                             <el-form-item label="酒店底价" prop="HotelFee">
                              <el-select v-model="item.CurrencyFuKuan" clearable style="width:80px;position:relative;margin-right:10px;">
                                 <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
@@ -643,13 +642,11 @@ export default{
                 RoomNum: '',
                 CurrencyFuKuan: '',
                 CurrencyShouKuan: '',
-                HotelOrderDetail:[{
-HandRemark:''
-
-                }],
+                HotelOrderDetail:[],
                 Picture:'',
                 WaiCaiPlatID:'',
                 WaiCaiNo:'',
+                WaiCaiFlag:'',
                 WaiCaiPayAccount:''
             },
             copyForm: {},
@@ -1024,24 +1021,34 @@ HandRemark:''
 
                 
                 let datas = _self.form
+                 
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){
-                    await hotelsOrderApi.checkSave(datas)
+                   await hotelsOrderApi.checkSave(datas)                  
                 }else{
-                    await hotelsOrderApi.edit(datas)
+                 
+                   await hotelsOrderApi.edit(datas)
+                  
                 }
-                _self.$message({
-                message: '编辑成功',
-                  type: 'success'
-                })
-                _self.$router.go(-1)
-            } catch (e) {
-                console.error(e)
-                _self.$message.error('编辑失败!!!')
-            } finally {
-                _self.isEditable = true
-            }
+                 const mes = await hotelsOrderApi.edit(datas)
+                 console.log(mes)
+                
+                if(mes.data.State != true){
+                  _self.$message.error(mes.data.Msg)
+                  }else{
+                     _self.$message({
+                        message: '编辑成功',
+                        type: 'success'
+                     })
+                    _self.$router.go(-1)
+                  }      
+                } catch (e) {
+                    console.error(e)
+                    _self.$message.error('编辑失败!!!')
+                } finally {
+                    _self.isEditable = true
+                }
         },
         cancel(){
             this.$router.go(-1)
