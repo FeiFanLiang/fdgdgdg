@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="HotelsOrder">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback"></CustomSearchCopy>
+    <CustomSearchCopy :configList="configList.searchFields2" @searchCallback="searchCallback"></CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border>
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="订单平台" prop="ThreePlatID" width="80">

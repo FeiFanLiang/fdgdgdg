@@ -7,9 +7,9 @@
               <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
           </el-select>
       </el-form-item>
-      <el-form-item label="付款日期" slot="ExpectSettlement">
+      <el-form-item label="付款日期" slot="PaymentDate">
           <el-date-picker
-              v-model="filters.ExpectSettlement"
+              v-model="filters.PaymentDate"
               type="date"
               placeholder="选择日期"
               format="yyyy 年 MM 月 dd 日">
@@ -19,6 +19,10 @@
           <el-select v-model="filters.CompanyAcount" clearable>
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
+      </el-form-item>
+       <el-form-item label="打款日期" slot="PaymentDate">
+          <el-date-picker v-model="filters.PaymentDate" type="daterange" clearable>
+          </el-date-picker>
       </el-form-item>
       <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
   </CustomSearchCopy>
@@ -47,7 +51,7 @@
         <el-table-column label="入住人" prop="Passenger" width=150></el-table-column>
         <el-table-column label="预定日期"  width=150>
             <template scope="scope">
-                <span style="color:red" v-if="scope.row.BookTime != null">{{scope.row.BookTime.substring(0,10)}}</span>
+                <span  v-if="scope.row.BookTime != null">{{scope.row.BookTime.substring(0,10)}}</span>
             </template>
         </el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
@@ -55,7 +59,7 @@
         <el-table-column label="打款账户" prop="CompanyAcount" show-overflow-tooltip></el-table-column>
         <el-table-column label="打款日期" prop="PaymentDate" width=150>
             <template scope="scope">
-                <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
+                <span  v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
             </template></el-table-column>
         <el-table-column label="金额" prop="AmountUse"></el-table-column>
         <el-table-column label="截图" prop="PaymentPicture" width=70>
@@ -65,7 +69,7 @@
         </el-table-column>
         <!--<el-table-column label="预计结算/到款日期" width=110>
             <template scope="scope">
-                <span style="color:red" v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+                <span style="color:red" v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
                 <hr style="border:none;border-top:1px dotted lightgray;margin:0;" />
                 <span style="color:blue" v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
             </template>
@@ -166,7 +170,7 @@ export default {
           filters: {
             StateCheck: "",
             PlatPolicyID: "",
-            ExpectSettlement: "",
+            PaymentDate: '',
             CompanyAcount:''
           },
           PlatPolicyID: [],
@@ -219,6 +223,7 @@ export default {
                 CompanyAcount:_self.filters.CompanyAcount,
                 HotelName: _self.trim(_self.filters.HotelName),
                 PlatOrderNo: _self.filters.PlatOrderNo,
+                Passenger:_self.trim(_self.filters.Passenger),                
                 AmountUse:_self.filters.AmountUse,
                 Partner:_self.filters.Partner,
                 PartnerAccount:_self.filters.PartnerAccount,
@@ -227,8 +232,8 @@ export default {
                 StayDateStart: _self.filters.StayDateStart
                  ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
                  : "",
-                "ExpectSettlement>": time1,
-                "ExpectSettlement<": time2,
+                "PaymentDate>": time1,
+                "PaymentDate<": time2,
                 PaymentState:0,
                 PaymentType:1,
                 "StateScreenshot>":0
@@ -271,10 +276,13 @@ export default {
         this.currentPage = val
         this.fetchData(this.currentPage)
     },
-    searchCallback(filters) {
-      Object.assign(filters, filters, this.filters);
+    searchCallback(filters) {   
+    let now =  Object.assign(this.filters, filters );   
+    Object.assign(filters, filters, this.filters);          
+       
       this.filters = filters;
-      this.filters.ExpectSettlement = "";
+    this.filters.PaymentDate = now.PaymentDate          
+
       this.fetchData();
     },
     trim(s){
@@ -294,7 +302,9 @@ export default {
           time1 = new Date(_self.filters.PaymentDate[0]).Format("yyyy-MM-dd");
           time2 = new Date(_self.filters.PaymentDate[1]).Format("yyyy-MM-dd");
         }
-      }      
+      }     
+      console.log(time1) 
+      
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
@@ -303,6 +313,7 @@ export default {
                 CompanyAcount:_self.filters.CompanyAcount,
                 HotelName: _self.trim(_self.filters.HotelName),
                 PlatOrderNo: _self.filters.PlatOrderNo,
+                Passenger:_self.trim(_self.filters.Passenger),
                 AmountUse:_self.filters.AmountUse,
                 Partner:_self.filters.Partner,
                 PartnerAccount:_self.filters.PartnerAccount,
@@ -311,8 +322,8 @@ export default {
                 StayDateStart: _self.filters.StayDateStart
                  ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
                  : "",
-                "ExpectSettlement>": time1,
-                "ExpectSettlement<": time2,
+                "PaymentDate>": time1,
+                "PaymentDate<": time2,
                 PaymentState:0,
                 PaymentType:1,
                 "StateScreenshot>":0

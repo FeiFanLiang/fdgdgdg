@@ -176,9 +176,8 @@ export default {
               : "",
             "BookTime>": time1,
             "BookTime<": time2,
-            "ExpectSettlement<=": _self.filters.ExpectSettlement
-              ? _self.filters.ExpectSettlement.Format("yyyy-MM-dd")
-              : "",
+            'ExpectSettlement>':_self.filters.ExpectSettlement[0] ? new Date(_self.filters.ExpectSettlement[0]).Format('yyyy-MM-dd') : '',
+            'ExpectSettlement<':_self.filters.ExpectSettlement[1] ? new Date(_self.filters.ExpectSettlement[1]).Format('yyyy-MM-dd') : '',
             StateCheck: _self.filters.StateCheck,
             PlatPolicyID: _self.filters.PlatPolicyID
           }  
@@ -207,9 +206,10 @@ export default {
       });
     },
     searchCallback(filters) {
+      let now =  Object.assign(this.filters, filters );   
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
-      this.filters.ExpectSettlement = "";
+      this.filters.ExpectSettlement = now.ExpectSettlement
       this.fetchData();
     },
     handleSelectionChange(val) {
@@ -257,9 +257,8 @@ export default {
             : "",
           "BookTime>": time1,
           "BookTime<": time2,
-          "ExpectSettlement<=": _self.filters.ExpectSettlement
-            ? _self.filters.ExpectSettlement.Format("yyyy-MM-dd")
-            : "",
+          'ExpectSettlement>':_self.filters.ExpectSettlement[0] ? new Date(_self.filters.ExpectSettlement[0]).Format('yyyy-MM-dd') : '',
+          'ExpectSettlement<':_self.filters.ExpectSettlement[1] ? new Date(_self.filters.ExpectSettlement[1]).Format('yyyy-MM-dd') : '',
           StateCheck: _self.filters.StateCheck,
           PlatPolicyID: _self.filters.PlatPolicyID
         }

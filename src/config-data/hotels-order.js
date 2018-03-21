@@ -46,15 +46,28 @@ const searchData2 = [
   ['人工处理状态', 'HandState', 'select', ''],  
   ['筛选条件', 'checkList', 'select', ''],
 ]
+const searchData3 = [
+  ['酒店名称', 'HotelName', 'input', ''],
+  ['订单号', 'PlatOrderNo', 'input', ''],
+  ['客人姓名', 'Passenger', 'input', ''],
+  ['入住日期', 'StayDateStart', 'date', ''],
+  ['退房日期', 'StayDateEnd', 'date', ''],
+  ['预定日期', 'BookTime', 'daterange', ''],
+  ['销售平台', 'PlatPolicyID', 'select', ''],
+  ['打款账户', 'CompanyAcount', 'select', ''],
+  ['收款状态', 'StateCheck', 'select', ''],
+]
 
 const listFields = lib.transTable(listData)
 const searchFields = lib.transSearch(searchData)
 const searchFields2 = lib.transSearch(searchData2)
+const searchFields3 = lib.transSearch(searchData3)
 export default {
   getConfig () {
     return {
       listFields: listFields,
       searchFields: searchFields,
+      searchFields2: searchFields3,      
       searchOrderFields: searchFields2,
     }
   }

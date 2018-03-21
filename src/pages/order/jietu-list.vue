@@ -24,12 +24,16 @@
       </el-row>
     </el-form>
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
-    @expand="expand" row-key="ID" ref="table">
+    @expand="expand" :expand-row-keys="expandRowKeys" row-key="ID">
         <el-table-column type="expand" width=25>
             <template scope="props">
                 备注：{{props.row.Remark}}
                 <el-table :data="orderDetail" border style="width: 100%">
-                    <el-table-column prop="HotelOrder.PlatOrderNo" label="订单号"></el-table-column>
+                    <el-table-column prop="HotelOrder.PlatOrderNo" label="订单号">
+                         <template scope="scope">
+                         {{scope.row.HotelOrder.PlatOrderNo}}
+                         </template>
+                    </el-table-column>
                     <el-table-column prop="HotelOrder.HotelName" label="酒店名称"></el-table-column>
                     <el-table-column prop="HotelOrder.Passenger" label="入住人"></el-table-column>
                     <el-table-column prop="AmountUse" label="金额"></el-table-column>
@@ -47,8 +51,8 @@
                     <el-col>
                         <UploadImageMove :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageMove>
                     </el-col>
-                </el-row>
-                <el-button type="primary" @click="submitImg(props.row.ID,props.row.StateScreenshot)" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
+                </el-row> 
+                <el-button type="primary" @click="submitImg(props.row.ID,props.row.StateScreenshot)" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button> 
             </template>
         </el-table-column>
         <el-table-column label="类别" prop="PaymentType" width=70>
@@ -86,6 +90,8 @@
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
+
+    
 </div>
 </template>
 <script>
@@ -99,10 +105,10 @@ export default {
       return{
           currentPage: 1,
           pageSize: 10,
-          aa:false,
           count: 0,
           loading: false,
           paymentCheck:[],
+          expandRowKeys:[],
           ID: '',
           orderDetail:[],
           filters:{
@@ -127,24 +133,13 @@ export default {
             }
         }
     },
-    lookImg(){
-        const _self = this
-        if(_self.aa == false){
-            _self.aa = true
-           _self.imageList = []
-        }else{
-            _self.aa = false
-            
-        }
-        
-    },
     async handleSuccess(response, file, fileList) {   
         if (!response) {
             this.$message.error('上传失败,请重新上传')
             return false
         }
         this.imageList.push(response)
-        this.Picture = this.imageList.toString()
+        this.Picture = this.imageList.toString() 
     },
     handleRemove(index,file, fileList) {       
         this.imageList.splice(index, 1)
@@ -236,13 +231,17 @@ export default {
     },
     async expand(row, expanded){
         const _self = this
+        _self.imageList = []
         if (expanded) {
+            _self.expandRowKeys.length = 0;
+            _self.expandRowKeys.push(row.ID);
             const res = await hotelPaymentInfoApi.getDetails(row.ID)
             _self.orderDetail = res.data.Data
             _self.ID = row.ID
+            console.log(_self.ID)
             _self.getImageList(row.Picture)
         }
-    },
+    }
   }
 }
 </script>

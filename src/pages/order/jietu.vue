@@ -1,17 +1,7 @@
 <template lang="html">
 <div id="PaymentCheck">
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
-    @expand="expand" row-key="ID" :expand-row-keys="expandRowKeys">
-        <el-table-column type="expand" width=25>
-            <template scope="props">
-                备注：{{props.row.Remark}}
-                <el-table :data="orderDetail" border style="width: 100%">
-                    <el-table-column prop="HotelOrder.HotelName" label="酒店名称"></el-table-column>
-                    <el-table-column prop="HotelOrder.Passenger" label="入住人"></el-table-column>
-                    <el-table-column prop="AmountUse" label="金额"></el-table-column>
-                </el-table>
-            </template>
-        </el-table-column>
+     row-key="ID" :expand-row-keys="expandRowKeys">
         <el-table-column label="类别" prop="PaymentType" width=70>
             <template scope="scope">
                 <span v-if="scope.row.PaymentType === 0">收款</span>
@@ -26,9 +16,9 @@
         <!-- <el-table-column label="收付方式" prop="PaymentModel" width=70></el-table-column> -->
         <el-table-column label="货币类型" prop="Currency"></el-table-column>
         <el-table-column label="创建时间" prop="CreateDate" width=110></el-table-column>
-        <el-table-column label="截图" prop="Picture" width=70>
+        <el-table-column label="截图" prop="PaymentPicture" width=70>
             <template scope="scope">
-                <el-button type="text" @click="imgShow(scope.row.Picture)">查看</el-button>
+                <el-button type="text" @click="imgShow(scope.row.PaymentPicture)">查看</el-button>
             </template>
         </el-table-column>
         <el-table-column label="状态" prop="State">
@@ -102,36 +92,35 @@ export default {
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
-            order: 'ID'
+            order: 'ID',
+            query:{
+                StateScreenshot:1,
+                PaymentType:1,
+                StateSend:0
+            }
+            
       }
       try {
         const res = await hotelPaymentInfoApi.imgList(options)
         _self.paymentCheck = res.data.Data
+        console.log( _self.paymentCheck)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
         _self.loading = false
       }
     },
-    img(row){
+   async img(row){
         try{
-            hotelPaymentInfoApi.imgState(row.ID)
+        const aa=  await hotelPaymentInfoApi.imgState(row.PaymentID)
+        console.log(aa)
             this.$message({
                 message: '设置成功',
                 type: 'success'
             })
+            this.fetchData();
         }catch(e){
             this.$message.error('设置失败!!!')
-        }
-    },
-    async expand(row, expanded){
-        const _self = this
-        if (expanded) {
-            const res = await hotelPaymentInfoApi.getDetails(row.ID)
-            _self.orderDetail = res.data.Data
-            _self.expandRowKeys.length = 0
-            _self.expandRowKeys.push(row.ID)
-            _self.ID = row.ID
         }
     },
     imgShow(img){

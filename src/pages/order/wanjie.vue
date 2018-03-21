@@ -1,6 +1,6 @@
 <template lang="html">
 <div id="Wanjie">
-    <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback"></CustomSearchCopy>
+    <CustomSearchCopy :configList="configList.searchFields2" @searchCallback="searchCallback"></CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" border>
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip></el-table-column>
         <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip></el-table-column>
@@ -97,7 +97,7 @@ export default {
             : ""
         }
       };
-      try {
+      try {    
         const res = await hotelsOrderApi.finsh(options);
         _self.hotelsOrder = res.data.Data;
         _self.count = res.data.Count;

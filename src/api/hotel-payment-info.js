@@ -95,5 +95,10 @@ export default {
     return axios.get(base5 + 'ListDownLoad', {
       params: params
     })
+  },
+  downloadOrder(params) {
+    return axios.get(base5 + 'DownLoadList', {
+      params: params
+    })
   }
 }

@@ -50,7 +50,12 @@
     <el-table-column label="入住人" prop="Passenger" width="100"></el-table-column>
       <el-table-column label="金额" prop="AmountUse" width="100"></el-table-column>
         <el-table-column label="对冲金额" prop="DuiChong" width="100"></el-table-column>
-        <el-table-column label="支付账户" prop="CompanyAcount" width="100"></el-table-column>        
+        <el-table-column label="支付账户" prop="CompanyAcount" width="100"></el-table-column>
+        <el-table-column label="预计结算日期" width=110>
+            <template scope="scope">
+                <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+            </template>
+        </el-table-column>        
     <el-table-column label="预定时间" prop="BookTime" width="150" sortable>
         <template scope="scope">
             <span v-if="typeof(scope.row.BookTime) != 'undefined'">{{ scope.row.BookTime.substring(5,16) }}</span>
@@ -87,7 +92,9 @@ const searchData = [
   ['外采平台', 'WaiCaiPlatID', 'select', ''],
 
   ['付款周期', 'SettlementCycleFu', 'select', ''],
-  ['付款日期', 'PaymentDate', 'daterange', ''],
+//   ['付款日期', 'PaymentDate', 'daterange', ''],
+  ['预计结算日期', 'ExpectSettlement', 'daterange', ''],
+  
   
 ]
 const searchFields = transSearch(searchData)
@@ -125,7 +132,7 @@ export default {
                 WaiCaiPlatID: '',
                 CompanyAcount:'',
                 SettlementCycleFu:'',
-                PaymentDate:''
+        //        PaymentDate:'',
 
             },
             PlatPolicyID: [],
@@ -170,7 +177,7 @@ export default {
         }
     },
     created(){
-        this.filters.ExpectSettlement = new Date()
+      //this.filters.ExpectSettlement = new Date()
         this.fetchData()    
         this.searchFields = searchFields
         this.platformAccount()
@@ -179,7 +186,7 @@ export default {
     methods:{
         async downloadList() {
         const _self = this            
-         const Headerinfo = "PlatOrderNo,HotelName,StayDateStart,StayDateEnd,RoomNum,NightNum,Passenger,AmountUse,DuiChong,CompanyAcount,BookTime,UnMergePay"
+         const Headerinfo = "PlatOrderNo,HotelName,StayDateStart,StayDateEnd,RoomNum,NightNum,Passenger,AmountUse,DuiChong,CompanyAcount,ExpectSettlement,BookTime,UnMergePay"
          const options = {   
                 columns:Headerinfo,
                 order: 'UrgentPay',
@@ -196,9 +203,10 @@ export default {
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
-                    'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
-                    'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
-                    'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
+                    // 'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
+                    // 'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
+                    'ExpectSettlement>':_self.filters.ExpectSettlement[0] ? new Date(_self.filters.ExpectSettlement[0]).Format('yyyy-MM-dd') : '',
+                    'ExpectSettlement<':_self.filters.ExpectSettlement[1] ? new Date(_self.filters.ExpectSettlement[1]).Format('yyyy-MM-dd') : ''
                 }      
             }
         try {
@@ -229,12 +237,19 @@ export default {
         },
         hotelsOrderSearch() {
             const _self = this
-            this.filters.ExpectSettlement = ''
+            //this.filters.ExpectSettlement = ''
             _self.fetchData()
         },
-        searchCallback(filters) {          
+        searchCallback(filters) {
+          //  debugger
+          console.log(filters)
+          let now = Object.assign(this.filters, filters );
+          console.log(now)
+          
+            Object.assign(filters, filters, this.filters);          
             this.filters = filters
-            this.filters.ExpectSettlement = ''
+          this.filters.BookTime = now.BookTime
+          this.filters.ExpectSettlement = now.ExpectSettlement          
             this.fetchData()
         },
         handleSelectionChange(val) {
@@ -258,6 +273,9 @@ export default {
             const _self = this
             _self.loading = true
             _self.showButton = false
+            console.log(_self.filters.ExpectSettlement)
+
+        //    debugger
             const options = {
                 pageIndex: currentPage || _self.currentPage,
                 pageSize: pageSize || _self.pageSize,
@@ -275,9 +293,10 @@ export default {
                     StayDateEnd:_self.filters.StayDateEnd ? new Date(_self.filters.StayDateEnd ).Format('yyyy-MM-dd') : '',
                     'BookTime>':_self.filters.BookTime[0] ? new Date(_self.filters.BookTime[0]).Format('yyyy-MM-dd') : '',
                     'BookTime<':_self.filters.BookTime[1] ? new Date(_self.filters.BookTime[1]).Format('yyyy-MM-dd') : '',
-                    'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
-                    'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
-                    'ExpectSettlement<=':_self.filters.ExpectSettlement ? _self.filters.ExpectSettlement.Format('yyyy-MM-dd') : '',
+                    // 'PaymentDate>':_self.filters.PaymentDate[0] ? new Date(_self.filters.PaymentDate[0]).Format('yyyy-MM-dd') : '',
+                    // 'PaymentDate<':_self.filters.PaymentDate[1] ? new Date(_self.filters.PaymentDate[1]).Format('yyyy-MM-dd') : '',
+                    'ExpectSettlement>':_self.filters.ExpectSettlement[0] ? new Date(_self.filters.ExpectSettlement[0]).Format('yyyy-MM-dd') : '',
+                    'ExpectSettlement<':_self.filters.ExpectSettlement[1] ? new Date(_self.filters.ExpectSettlement[1]).Format('yyyy-MM-dd') : ''
                 }
             }
             try {

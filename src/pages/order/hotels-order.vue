@@ -30,7 +30,8 @@
       </el-form-item>
       
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
-      <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
+      <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
+      <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
       <el-button  slot="button-add" style="cursor:default">{{Room}}间</el-button>
       <el-button  slot="button-add" style="cursor:default">{{Night}}夜</el-button>
       
@@ -679,11 +680,13 @@ export default {
     this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
-    async downloadList() {
+    async downloadList(e) {
       const _self = this;
+      const text = e.target.innerText;
+      console.log(e.target.innerText)
+      
       let time1 = "";
       let time2 = "";
-      const Headerinfo = "PlatOrderNo,PlatName,HotelName,StayDateStart,StayDateEnd,WaiCaiFlag,Passenger,BookTime"
       if (typeof _self.filters.BookTime != "undefined") {
         if (_self.filters.BookTime[0] != null) {
           time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
@@ -694,7 +697,6 @@ export default {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
         order: "BookTime",
-        columns:Headerinfo,
         desc: true,
         query: {
           OrderNo: _self.filters.OrderNo,
@@ -715,11 +717,12 @@ export default {
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       };
-      try {
-       
-       
-        console.log(options)
-        const res = await hotelsOrderApi.downloadList(options);
+      try {  
+        if(text=="下载"){
+          const res = await hotelsOrderApi.downloadList(options);
+        }else{
+          const res = await hotelsOrderApi.downloadOrder(options);
+        }
         if (res.request.responseURL) {
           window.location.href = res.request.responseURL;
         }
