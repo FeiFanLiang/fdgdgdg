@@ -841,11 +841,12 @@ export default{
         async platformAccount(){
             const options = {
                 pageSize: 1000,
-                order: 'Sort'
+                order: 'Sort',
+                // query:{CanSale:false}
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
-          //  console.log(this.WaiCaiPlatID)
+            console.log(this.WaiCaiPlatID)
         },
         tocreate(){
             const _self = this

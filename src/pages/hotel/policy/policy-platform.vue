@@ -705,17 +705,25 @@ export default {
 
                 if (_self.form.ID) {
                     console.log(_self.form)
-                    await policyApi.editPlatformPolicy(_self.form.ID,_self.form)
+                   const iresult = await policyApi.editPlatformPolicy(_self.form.ID,_self.form)
+                   if(iresult.data.State==false){
+                       _self.$message.error(iresult.data.Msg)
+                   }else{
+                        _self.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        })
+                        _self.dialogShow = false
+                   }
+                   
                 } else {
-                    console.log(_self.form)
+                   
                     await policyApi.addPlatformPolicy(_self.form)
+                 
                 }
-                _self.$message({
-                    message: '保存成功',
-                    type: 'success'
-                })
+               
                 _self.fetchData()
-                _self.dialogShow = false
+                
                 _self.$refs['ReceiptForm'].resetFields()
                 _self.$refs['ReceiptCompany'].resetFields()
                 _self.$refs['PaymentForm'].resetFields()

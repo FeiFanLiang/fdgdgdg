@@ -720,12 +720,15 @@ export default {
       try {  
         if(text=="下载"){
           const res = await hotelsOrderApi.downloadList(options);
-        }else{
-          const res = await hotelsOrderApi.downloadOrder(options);
-        }
-        if (res.request.responseURL) {
+          if (res.request.responseURL) {
           window.location.href = res.request.responseURL;
         }
+        }else{
+          const res = await hotelsOrderApi.downloadOrder(options);
+          if (res.request.responseURL) {
+          window.location.href = res.request.responseURL;
+        }
+        }  
       } catch (e) {
         _self.$message.error("数据下载失败!!!");
       }
