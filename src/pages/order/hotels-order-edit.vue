@@ -9,8 +9,8 @@
                 </el-form-item> 
             </el-col> 
             <el-col :span="6">
-                <el-form-item label="订单编号" prop="OrderNo">
-                    <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
+                <el-form-item label="订单号" prop="PlatOrderNo">
+                    <el-input placeholder="请输入订单号" v-model="form.PlatOrderNo"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -38,13 +38,14 @@
                 </el-form-item>
             </el-col>
             <el-col :span="6">
-                <el-form-item label="间数" prop="RoomNum">
-                    <el-input placeholder="请输入间数" v-model="form.RoomNum"></el-input>
+                <el-form-item label="间/夜">
+                        <el-input placeholder="请输入间数" v-model="form.RoomNum" style="width:40%;"></el-input> /
+                        <el-input placeholder="请输入晚数" v-model="form.NightNum" style="width:40%;"></el-input>
                 </el-form-item>
             </el-col>
             <el-col :span="6">
-                <el-form-item label="晚数" prop="NightNum">
-                    <el-input placeholder="请输入晚数" v-model="form.NightNum"></el-input>
+                <el-form-item label="订单编号" prop="OrderNo">
+                    <el-input placeholder="请输入订单编号" v-model="form.OrderNo"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>

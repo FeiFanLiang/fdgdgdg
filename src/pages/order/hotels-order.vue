@@ -32,8 +32,7 @@
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
-      <el-button  slot="button-add" style="cursor:default">{{Room}}间</el-button>
-      <el-button  slot="button-add" style="cursor:default">{{Night}}夜</el-button>
+      <el-button  slot="button-add" style="cursor:default;border:none">{{Room}}间 / {{Night}}夜</el-button>
       
     </CustomSearchCopy>
     
