@@ -111,5 +111,10 @@ export default {
     return axios.get(base + 'ListDownLoad', {
       params: params
     })
+  } ,
+  async downloadOrder(params) {
+    return axios.get(base + 'DownLoadList', {
+      params: params
+    })
   }
 }

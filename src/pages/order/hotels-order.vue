@@ -682,9 +682,7 @@ export default {
   methods: {
     async downloadList(e) {
       const _self = this;
-      const text = e.target.innerText;
-      console.log(e.target.innerText)
-      
+      const text = e.target.innerText;  
       let time1 = "";
       let time2 = "";
       if (typeof _self.filters.BookTime != "undefined") {
@@ -720,15 +718,15 @@ export default {
       try {  
         if(text=="下载"){
           const res = await hotelsOrderApi.downloadList(options);
-          if (res.request.responseURL) {
+            if (res.request.responseURL) {
           window.location.href = res.request.responseURL;
         }
         }else{
           const res = await hotelsOrderApi.downloadOrder(options);
-          if (res.request.responseURL) {
+            if (res.request.responseURL) {
           window.location.href = res.request.responseURL;
         }
-        }  
+        }         
       } catch (e) {
         _self.$message.error("数据下载失败!!!");
       }

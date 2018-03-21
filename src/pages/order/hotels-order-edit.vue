@@ -218,7 +218,7 @@
                         <el-col :span="6">
                             <el-form-item label="平台信息" prop="PlatPolicyID">
                                 <el-select v-model="item.PlatPolicyID" clearable>
-                                    <el-option v-for="(item,index) in WaiCaiPlatID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                                    <el-option v-for="(item,index) in PlatPolicyIDs " :key="index" :label="item.Account" :value="item.ID"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -784,6 +784,7 @@ export default{
             ],
             WaiCaiPlatID:[],
             WaiCaiPayAccount:[],
+            PlatPolicyIDs:[],
             Beizhu:[],
             WaiCaiFlag:[
                 {
@@ -820,6 +821,7 @@ export default{
         }
         _self.ThreePlat()
         _self.platformAccount()
+        _self.platformAccounts()
         _self.fetchData()
     },
     methods:{
@@ -842,11 +844,21 @@ export default{
             const options = {
                 pageSize: 1000,
                 order: 'Sort',
-                // query:{CanSale:false}
+                query:{CanSale:false}
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
             console.log(this.WaiCaiPlatID)
+        },
+        async platformAccounts(){
+            const options = {
+                pageSize: 1000,
+                order: 'Sort',
+                query:{CanSale:true}
+            }     
+            const res = await policyApi.getPolicyPlatform(options)
+            this.PlatPolicyIDs = res.data.Data
+            console.log(this.PlatPolicyIDs)
         },
         tocreate(){
             const _self = this
