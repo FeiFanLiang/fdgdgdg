@@ -129,6 +129,9 @@
         <el-tab-pane label="预存款信息" name="advancement">
             <Advancement></Advancement>
         </el-tab-pane>
+        <el-tab-pane label="规则信息" name="hotelPlatform">
+            <HotelPlatform></HotelPlatform>
+        </el-tab-pane>
     </el-tabs>
 </div>
 </template>
@@ -142,6 +145,7 @@ import {
 import { HotelTopMenu } from "components";
 const HotelRoomPage = () => import("../hotel-room/hotel-room.vue");
 const HotelPlatformPage = () => import("../hotel-platform/hotel-platform.vue");
+const HotelPlatform = () => import("../hotel-platform/rule-seve.vue");
 // const HotelPolicyPage = () =>
 //     import ('../hotel-policy/hotel-policy.vue')
 const HotelPricePage = () => import("../hotel-price/hotel-price.vue");
@@ -154,6 +158,7 @@ export default {
     HotelTopMenu,
     HotelRoomPage,
     HotelPlatformPage,
+    HotelPlatform,
     // HotelPolicyPage,
     HotelPricePage,
     HotelShowPage,

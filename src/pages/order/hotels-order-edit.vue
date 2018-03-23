@@ -128,7 +128,9 @@
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
                 </el-form-item>
             </el-col>
-            
+            <el-col :span="6">
+                <el-button type="primary" @click="submitOrderList()">保存</el-button>
+            </el-col>
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
@@ -612,6 +614,7 @@ export default{
             imageList: [],
             HandRemark: '',
             showTuigaiButton:false,
+            topform:'',
             loading:false,
             showFujia: false,
             showCaiwu: false,
@@ -845,7 +848,7 @@ export default{
             const options = {
                 pageSize: 1000,
                 order: 'Sort',
-                query:{CanSale:false}
+                query:{CanPurchase:true}
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
@@ -1035,7 +1038,8 @@ export default{
 
                 
                 let datas = _self.form
-                 
+                 console.log(datas)
+                 return false
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){
@@ -1081,6 +1085,36 @@ export default{
                 Remark: '',
                 CreateDate: date
             }
+        },
+        async topsub(){
+            const _self = this
+            _self.topform = {
+                HotelName:_self.form.HotelName,
+                PlatOrderNo:_self.form.PlatOrderNo,
+                OrderState:_self.form.OrderState,
+                OrderState:_self.form.OrderState,
+                
+                
+                
+            }
+            console.log(_self.topform)
+            // try {
+            //     await paymentCheckApi.addFujia(_self.formFujia)
+            //     _self.showFujia = false
+            //     _self.$message({
+            //     message: '添加成功',
+            //     type: 'success'
+            //     })
+            //     const options = {
+            //     query: {
+            //         HotelOrderID: _self.ID
+            //     }
+            //     }
+            //     const res3 = await paymentCheckApi.fujiaList(options)
+            //     _self.fujia = res3.data.Data
+            // } catch (e) {
+            //     _self.$message.error('添加失败!!!')
+            // }
         },
         async submitFormFujia(){
             const _self = this

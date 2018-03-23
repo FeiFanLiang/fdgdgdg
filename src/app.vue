@@ -112,6 +112,7 @@ export default {
   created() {
     const _self = this
     _self.getTips()
+    _self.touser()     
     _self.activeMenu = _self.$route.name
     _self.hotelName = _self.$route.query.hotelName
     _self.user = JSON.parse(localStorage.getItem('user'))
@@ -161,6 +162,10 @@ export default {
     },
     iconName(name) {
       return '#icon-' + name
+    },
+    touser(){       
+      const res = JSON.parse(localStorage.getItem('user'))
+     console.log(res)
     },
     async logout() {
       try {

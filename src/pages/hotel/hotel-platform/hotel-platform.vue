@@ -1,7 +1,7 @@
 <template lang="html">
 <div id="hotel-platform-info-page">
   <el-row>
-    <el-button type="primary" @click="clickAddBtn()">创建</el-button>
+    <el-button type="primary" @click="clickAddBtn()">创建</el-button>    
   </el-row>
     <el-table :data="list" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">
         <el-table-column prop="Platform.PlatName" label="平台名称"></el-table-column>
@@ -195,6 +195,7 @@ export default {
       _self.loading = true
       const res = await hotelPlatformApi.listByHotel(this.$route.params.ID)
       _self.list = res.data
+      console.log(_self.list)
       _self.total = _self.list.length
       _self.loading = false
     },
