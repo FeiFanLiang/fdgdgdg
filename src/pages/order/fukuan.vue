@@ -37,8 +37,9 @@
             </template>
         </el-table-column>
     </el-table>
-    <el-card class="box-card">
-        <el-form ref="payCheck" v-model="payCheck" label-width="110px">
+    <el-row :gutter="24" style="margin-top:10px">
+    <el-col :span="14">
+        <el-form ref="payCheck" v-model="payCheck" label-width="110px" >
             <el-form-item label="财务编号" prop="PaymentNo">
                 <el-input placeholder="财务编号" v-model="payCheck.PaymentNo" class="input"></el-input>
             </el-form-item>
@@ -86,7 +87,20 @@
                 </el-radio-group> 
             </el-form-item>
         </el-form>
-    </el-card>
+    </el-col>        
+    <el-col :span="10">        
+        <el-table :data="fukuanList1" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" ref="table" row-key="ID">
+        <el-table-column label="订单编号" prop="HotelOrder.PlatOrderNo"></el-table-column>          
+        <el-table-column label="收付类型" prop="PaymentType">
+        <template scope="scope">
+                <span v-if="scope.row.PaymentType==0">收款</span>
+                <span v-if="scope.row.PaymentType==1">付款</span>                
+        </template>
+        </el-table-column>
+        <el-table-column label="金额" prop="AmountUse"></el-table-column>        
+        </el-table>
+    </el-col>                
+    </el-row>
     <el-card class="box-card">
         <el-form label-width="110px">
             <el-form-item label="添加截图">
@@ -114,9 +128,11 @@ export default {
         return {
             multipleSelection:[],
             fukuanList: [],
+            fukuanList1: [],            
             loading:false,
             multipleSelection2: [],
             CompanyAcount:[],
+            Ids:[],
             payCheck:{
                 PaymentNo: '',
                 Amount: '',
@@ -139,6 +155,7 @@ export default {
     },
     mounted(){
         this.fetchData()
+        this.toInfo()
         this.getPayCompany()
         this.imgUrl = path.uploadUrl
     },
@@ -185,6 +202,26 @@ export default {
             this.multipleSelection2 = val;
             this.account()
         },
+        async toInfo(){
+            const _self = this
+            _self.loading = true
+            _self.showButton = false 
+            try { 
+                _self.multipleSelection = _self.$route.query.multipleSelection
+                let select = []
+                for(let i in _self.multipleSelection){
+                    select.push(_self.multipleSelection[i].ID)
+                }
+                const res1 = await hotelPaymentInfoApi.getInfoli(select)               
+
+
+               _self.fukuanList1 = res1.data.Data
+                 console.log(res1)    
+                _self.loading = false
+            } catch (e) {
+                _self.loading = false
+            }
+        },
         async fetchData(currentPage,pageSize) {
             const _self = this
             _self.loading = true
@@ -195,9 +232,9 @@ export default {
                 for(let i in _self.multipleSelection){
                     select.push(_self.multipleSelection[i].PaymentInfoID)
                 }
-                const res = await hotelPaymentInfoApi.payhj(select)
+                const res = await hotelPaymentInfoApi.payhj(select)                
                 _self.fukuanList = res.data.Data
-                console.log(_self.multipleSelection)
+             //   console.log(_self.fukuanList)
                 this.fukuanList.forEach(item => {
                     this.multipleSelection2.push(item);
                     this.$refs.table.toggleRowSelection(item,true);
@@ -212,7 +249,7 @@ export default {
                 for(let a in _self.multipleSelection){
                     remark+=_self.multipleSelection[a].Passenger.replace('/',' ')+' '
                             +_self.multipleSelection[a].StayDateStart.substring(0,10)+' '
-                            +_self.multipleSelection[a].HotelBookingNoNeed+' '
+                            +_self.multipleSelection[a].HotelBookingNo+' '
                             +string.substring(string.length-6,string.length)+' '
                     passenger = _self.multipleSelection[a].Passenger+'  '
                     passenger = passenger.trim()
@@ -273,7 +310,7 @@ export default {
 <style lang="scss">
 #Fukuan{
     .input{
-        width:40%
+        width:70%
     }
 }
 </style>

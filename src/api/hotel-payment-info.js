@@ -11,6 +11,9 @@ export default {
   getPaymentInfo(orderId) {
     return axios.get(base + `GetRefPaymentInfo/${orderId}`)
   },
+  getInfoli(Ids){
+    return axios.post(base + 'GetPayments/' ,Ids)
+  },
   //POST /Hotel/HotelPaymentInfo/SetPaymentInfo
   savePaymentInfo(params) {
     return axios.post(base + 'SetPaymentInfo', params)
