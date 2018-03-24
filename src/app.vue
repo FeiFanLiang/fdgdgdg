@@ -112,7 +112,8 @@ export default {
   created() {
     const _self = this
     _self.getTips()
-    _self.touser()     
+    _self.touser()
+    setInterval(() => {  _self.touser() }, 5000)    
     _self.activeMenu = _self.$route.name
     _self.hotelName = _self.$route.query.hotelName
     _self.user = JSON.parse(localStorage.getItem('user'))
@@ -165,7 +166,11 @@ export default {
     },
     touser(){       
       const res = JSON.parse(localStorage.getItem('user'))
-     console.log(res)
+      if(res.realname == ""){
+          this.$router.push({
+          path: '/login'
+        })
+      }
     },
     async logout() {
       try {

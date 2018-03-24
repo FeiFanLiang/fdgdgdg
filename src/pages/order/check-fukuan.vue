@@ -24,6 +24,11 @@
           <el-date-picker v-model="filters.PaymentDate" type="daterange" clearable>
           </el-date-picker>
       </el-form-item>
+      <el-form-item label="外采平台" slot="WaiCaiPlatID">
+          <el-select v-model="filters.WaiCaiPlatID"  @change="changeValue">
+              <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+          </el-select>
+      </el-form-item>
       <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
   </CustomSearchCopy>
 
@@ -114,22 +119,20 @@ const searchData = [
     ['订单号', 'PlatOrderNo', 'input', ''],
     ['客人姓名', 'Passenger', 'input', ''],
     ['入住日期', 'StayDateStart', 'date', ''],
-
     //财务
     ['财务编号', 'PaymentNo', 'input', ''],
-
-    ['打款账户', 'CompanyAcount', 'select', ''],
     ['收款账户', 'Partner', 'input', ''],
-
-
     ['收款账号', 'PartnerAccount', 'input', ''],
     ['收款开户行', 'PartnerAccountModel', 'input', ''],
+    ['打款账户', 'CompanyAcount', 'select', ''],
 
     ['金额', 'AmountUse', 'input', ''],
     ['打款日期', 'PaymentDate', 'daterange', ''],
+    ['外采订单号', 'WaiCaiNo', 'input', ''],      
+    ['外采平台', 'WaiCaiPlatID', 'select', ''],
     ['货币', 'Currency', 'select', ''],
-
-    ['打款状态', 'State', 'select', '']
+    ['打款状态', 'State', 'select', ''],
+    
 
 ]
 const searchFields = transSearch(searchData)
@@ -171,6 +174,8 @@ export default {
             StateCheck: "",
             PlatPolicyID: "",
             PaymentDate: '',
+            WaiCaiPlatID:"",
+            WaiCaiNo:"",
             CompanyAcount:''
           },
           PlatPolicyID: [],
@@ -205,6 +210,12 @@ export default {
     this.platformAccount()
   },
   methods:{
+      changeValue(label) {
+            var _self =this
+            console.log(label)
+         this.filters.WaiCaiPlatID =  label
+     
+        },
       async downloadList() {
         const _self = this 
         let time1 = "";
@@ -227,6 +238,8 @@ export default {
                 AmountUse:_self.filters.AmountUse,
                 Partner:_self.filters.Partner,
                 PartnerAccount:_self.filters.PartnerAccount,
+                WaiCaiNo:_self.filters.WaiCaiNo,
+                WaiCaiPlatID:_self.filters.WaiCaiPlatID,
                 PartnerAccountModel:_self.filters.PartnerAccountModel,
                 PaymentNo:_self.filters.PaymentNo,
                 StayDateStart: _self.filters.StayDateStart
@@ -256,7 +269,9 @@ export default {
     async platformAccount() {
       const options = {
         pageSize: 1000,
-        order: "ID"
+        order: "ID",
+        query:'{"CanPurchase":"true"}'
+
       };
       const res = await policyApi.getPolicyPlatform(options);
       this.PlatPolicyID = res.data.Data;
@@ -277,11 +292,17 @@ export default {
         this.fetchData(this.currentPage)
     },
     searchCallback(filters) {   
-    let now =  Object.assign(this.filters, filters );   
-    Object.assign(filters, filters, this.filters);          
+      const _self = this
+        
+    const now =  Object.assign(this.filters, filters );   
+     Object.assign(filters, filters, this.filters);          
+       console.log(now)
+       console.log(_self.filters.WaiCaiPlatID)
        
       this.filters = filters;
-    this.filters.PaymentDate = now.PaymentDate          
+    this.filters.PaymentDate = now.PaymentDate   
+  //   this.filters.WaiCaiPlatID =   _self.filters.WaiCaiPlatID  
+       
 
       this.fetchData();
     },
@@ -316,6 +337,8 @@ export default {
                 Passenger:_self.trim(_self.filters.Passenger),
                 AmountUse:_self.filters.AmountUse,
                 Partner:_self.filters.Partner,
+                WaiCaiNo:_self.filters.WaiCaiNo,
+                WaiCaiPlatID:_self.filters.WaiCaiPlatID,
                 PartnerAccount:_self.filters.PartnerAccount,
                 PartnerAccountModel:_self.filters.PartnerAccountModel,
                 PaymentNo:_self.filters.PaymentNo,
@@ -331,6 +354,7 @@ export default {
             }
       } 
       try {
+          console.log(options)
         //_self.multipleSelection = _self.$route.query.multipleSelection
         const res = await hotelPaymentInfoApi.checkOut(options)
         _self.paymentCheck = res.data.Data

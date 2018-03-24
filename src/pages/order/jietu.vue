@@ -1,5 +1,43 @@
 <template lang="html">
 <div id="PaymentCheck">
+  <el-form label-width="80px">
+      <el-row :gutter="20">
+          <el-col :span="6">
+            <el-form-item label="酒店名称">
+              <el-input v-model="filters.HotelName"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="订单号">
+              <el-input v-model="filters.PlatOrderNo"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="客人姓名">
+              <el-input  v-model="filters.Passenger"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="销售平台" prop="PlatPolicyID">
+                <el-select v-model="filters.PlatPolicyID">
+                    <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                </el-select>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col :span="6">
+            <el-form-item label="预定日期">
+              <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
+            </el-form-item>
+          </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        <el-col>
+          <el-button type="primary" @click="hotelsOrderSearch(filters)">搜索</el-button>
+        </el-col>
+      </el-row>
+    </el-form>
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
      row-key="ID" :expand-row-keys="expandRowKeys">
         <el-table-column label="类别" prop="PaymentType" width=70>
@@ -52,7 +90,7 @@
 </div>
 </template>
 <script>
-import { hotelPaymentInfoApi } from 'api'
+import { hotelPaymentInfoApi,hotelsOrderApi,policyApi } from 'api'
 import ImageList from 'components/imglist'
 export default {
   components: {
@@ -68,14 +106,30 @@ export default {
           ID: '',
           expandRowKeys: [],
           orderDetail:[],
+          searchFields:[],
           imageList: [],
+          PlatPolicyID:[],
+          filters: {
+            HotelName: "",
+            PlatOrderNo: "",
+            Passenger: '',
+            PlatPolicyID:'',
+            BookTime:''
+          },
           dialogVisible:false
       }
   },
   created() {
     this.fetchData()
+    this.platformAccount()
+    this.configList = hotelsOrderApi.getConfig()
   },
   methods:{
+      hotelsOrderSearch(filters) {
+      const _self = this
+      this.filters = filters
+      _self.fetchData()
+    },
     handleSizeChange(val) {
         this.pageSize = val
         this.fetchData(1, this.pageSize)
@@ -84,11 +138,31 @@ export default {
         this.currentPage = val
         this.fetchData(this.currentPage)
     },
+    async platformAccount() {
+      const options = {
+        pageSize: 1000,
+        order: "ID",
+      };
+      const res = await policyApi.getPolicyPlatform(options);
+      this.PlatPolicyID = res.data.Data;
+      this.PlatPolicyID.splice(0, 0, {
+        Account: "全部",
+        ID: ""
+      });
+    },
     async fetchData(currentPage, pageSize) {
       const _self = this
       _self.loading = true
       _self.currentPage = currentPage || _self.currentPage
       _self.pageSize = pageSize || _self.pageSize
+      let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.BookTime != "undefined") {
+        if (_self.filters.BookTime[0] != null) {
+          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
+        }
+      }
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
@@ -96,6 +170,13 @@ export default {
             query:{
                 StateScreenshot:1,
                 PaymentType:1,
+                WaiCaiFlag:0,
+                HotelName:  _self.filters.HotelName,
+                PlatOrderNo:  _self.filters.PlatOrderNo,
+                Passenger:  _self.filters.Passenger,
+                PlatPolicyID: _self.filters.PlatPolicyID,
+                "BookTime>": time1,
+                "BookTime<": time2,
                 StateSend:0
             }
             
@@ -103,7 +184,7 @@ export default {
       try {
         const res = await hotelPaymentInfoApi.imgList(options)
         _self.paymentCheck = res.data.Data
-        console.log( _self.paymentCheck)
+        console.log( options)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {

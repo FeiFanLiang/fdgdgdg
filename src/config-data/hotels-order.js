@@ -42,8 +42,9 @@ const searchData2 = [
   ['预定日期', 'BookTime', 'daterange', ''],
   ['订单渠道', 'HotelArea', 'select', ''],
   ['结款方式', 'SettlementCycle', 'select', ''],
-  ['确认号', 'HotelBookingNoNeed', 'input', ''],
-  ['人工处理状态', 'HandState', 'select', ''],  
+  ['确认号', 'HotelBookingNo', 'input', ''],
+  ['人工处理状态', 'HandState', 'select', ''],
+  ['外采订单号', 'WaiCaiNo', 'input', ''],      
   ['筛选条件', 'checkList', 'select', ''],
 ]
 const searchData3 = [
@@ -67,7 +68,7 @@ export default {
     return {
       listFields: listFields,
       searchFields: searchFields,
-      searchFields2: searchFields3,      
+      searchFields2: searchFields3,                
       searchOrderFields: searchFields2,
     }
   }

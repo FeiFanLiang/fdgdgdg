@@ -174,6 +174,7 @@ export default {
     async platformAccount() {
       const res = await policyApi.getPolicyPlatform()
       this.PlatformAccountID = res.data.Data
+      console.log(this.PlatformAccountID)
     },
     beforeClose(done) {
       this.showSpiderSetting = false
@@ -203,6 +204,7 @@ export default {
       const _self = this
       const res = await hotelThreePlatInfoApi.getList()
       _self.platInfoList = res.data
+      console.log(_self.platInfoList) 
     },
     clickAddBtn() {
       const _self = this

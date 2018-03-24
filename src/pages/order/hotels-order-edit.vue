@@ -431,8 +431,8 @@
                                 <el-input placeholder="请输入其他费用" v-model="item.OherFee"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="佣金" prop="CommissionStr">
+                        <el-col :span="6" style="margin-left:-75px">
+                            <el-form-item label="佣金" prop="CommissionStr" >
                                 <el-input placeholder="请输入佣金" v-model="item.CommissionStr"></el-input>
                             </el-form-item>
                         </el-col>
@@ -480,11 +480,40 @@
                                     </template>
                                 </el-table-column>
                                 <el-table-column label="货币类型" prop="Currency"></el-table-column>
-                                <el-table-column label="编号" prop="PaymentNo"></el-table-column>
+                                <el-table-column label="编号" prop="PaymentNo" show-overflow-tooltip></el-table-column>
                                 <el-table-column label="金额" prop="Amount"></el-table-column>
-                                <el-table-column label="收付时间" prop="PaymentDate"></el-table-column>
+                                <el-table-column label="预计结算日期" prop="ExpectSettlement" show-overflow-tooltip>
+                                <template scope="scope">
+                                    <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="预计到款日期" prop="ExpectGetMoney" show-overflow-tooltip>
+                                <template scope="scope">
+                                    <span v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="对方账号名" prop="Partner" show-overflow-tooltip></el-table-column>
+                                <el-table-column label="对冲" prop="DuiChong"></el-table-column>
+                                <el-table-column label="公司打款账户" prop="CompanyAcount" show-overflow-tooltip></el-table-column>                                
+                                <el-table-column label="付款人" prop="UpdateUserName"></el-table-column>                                
+                                <el-table-column label="付款时间" prop="UpdateTime" show-overflow-tooltip>
+                                <template scope="scope">
+                                    <span v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="对帐人" prop="AuditorUserName"></el-table-column>                                
+                                <el-table-column label="对账时间" prop="AuditorTime" show-overflow-tooltip>
+                                <template scope="scope">
+                                    <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>                                                                                                                                                       
+                                <el-table-column label="收付时间" prop="PaymentDate" show-overflow-tooltip>
+                                 <template scope="scope">
+                                    <span v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
                                 <el-table-column label="收付方式" prop="PaymentModel"></el-table-column>
-                                <el-table-column label="状态" prop="State">
+                                <el-table-column label="状态" prop="State" show-overflow-tooltip>
                                     <template scope="scope">
                                         <span v-if="scope.row.State === 0">待处理</span>
                                         <span v-if="scope.row.State === 1">已处理，待对账</span>
@@ -520,6 +549,19 @@
                             <el-table-column label="使用时间" prop="UseDate"></el-table-column>
                             <el-table-column label="创建时间" prop="CreateDate"></el-table-column>
                             <el-table-column label="创建人" prop="UserID"></el-table-column>
+                            </el-table>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>操作信息</h1></el-col></el-row>
+                    <el-row :gutter="24">
+                        <el-col>
+                            <el-table :data="fujia" style="width: 95%;margin-left:40px;" border>
+                            <el-table-column label="审核人" prop="AuditorUserName"></el-table-column>
+                            <el-table-column label="审核时间" prop="AuditorTime"></el-table-column>
+                            <el-table-column label="回填人" prop="BackfillUserName"></el-table-column>
+                            <el-table-column label="回填时间" prop="BackfillTime"></el-table-column>
+                            <el-table-column label="最后抓取时间" prop="UseGrabberTimeLast"></el-table-column>
+                            <el-table-column label="更新时间" prop="UpdateTime"></el-table-column>
                             </el-table>
                         </el-col>
                     </el-row>
@@ -832,6 +874,7 @@ export default{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
+            console.log(this.money)
         },
         async fetchData() {
             const options = {

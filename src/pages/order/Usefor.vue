@@ -41,126 +41,9 @@
       
     </CustomSearchCopy>
     
-    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
-      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
-        <el-table-column type="expand">
-            <template scope="props">
-              <div>
-                <p><el-button size="big" @click="qrh(props.row.ID)">确认函</el-button></p>
-                <el-card class="box-card">
-                    <h4>预订其他信息</h4>
-                    <!-- <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p> -->
-                    <p><span>房型</span><span class="span-text">{{ props.row.Room }}</span></p>
-                    <p><span>间数</span><span class="span-text">{{ props.row.RoomNum }}</span></p>
-                    <p><span>晚数</span><span class="span-text">{{ props.row.NightNum }}</span></p>
-                    <!-- <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p> -->
-                    <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
-                    <p><span>平台政策ID</span><span class="span-text">{{ props.row.PlatPolicyID }}</span></p>
-                    <!-- <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p> -->
-                    <p><span>订单号</span><span class="span-text">{{ props.row.PlatOrderNo}}</span></p>
-                    <p><span>订单编号</span><span class="span-text">{{ props.row.OrderNo}}</span></p>
-                    <!-- <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
-                    <p><span>其他订单类型</span><span class="span-text">{{ props.row.PlatOrderType }}</span></p>
-                    <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p> -->
-                    <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
-                </el-card>
-                <el-card class="box-card">
-                    <h4>财务付款</h4>
-                    <p><span>账户名称</span><span class="span-text">{{ props.row.AccountName }}</span></p>
-                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFuKuan }}</span></p>
-                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShouKuan }}</span></p>
-                    <p><span>收款额</span><span class="span-text">{{ props.row.AmountShou }}</span></p>
-                    <p><span>付款额</span><span class="span-text">{{ props.row.AmountFu }}</span></p>
-                    <!-- <p><span>酒店底价</span><span class="span-text">{{ props.row.HotelFee }}</span></p> -->
-                    <p><span>利润</span><span class="span-text">{{ props.row.Profit }}</span></p>
-                    <!-- <p><span>优惠金额</span><span class="span-text">{{ props.row.Discounts }}</span></p>
-                    <p><span>其他费用</span><span class="span-text">{{ props.row.OherFee }}</span></p>
-                    <p><span>改期费</span><span class="span-text">{{ props.row.FeeChange }}</span></p>
-                    <p><span>退票费</span><span class="span-text">{{ props.row.FeeCancel }}</span></p>
-                    <p><span>佣金</span><span class="span-text">{{ props.row.Commission }}</span></p>
-                    <p><span>手续费</span><span class="span-text">{{ props.row.Fee }}</span></p> -->
-                </el-card>
-                <el-card class="box-card">
-                    <h4>订单状态、发单信息</h4>
-                    <p><span>订单状态</span>
-                        <span class="span-text" v-if="props.row.OrderState == 0">未处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 1">已处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 2">已拒绝</span>
-                        <span class="span-text" v-if="props.row.OrderState == 3">未处理+未发单</span>
-                        <span class="span-text" v-if="props.row.OrderState == 4">待排房</span>
-                        <span class="span-text" v-if="props.row.OrderState == 5">风险订单</span>
-                        <span class="span-text" v-if="props.row.OrderState == 6">风险订单+未处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 7">风险订单+已处理</span>
-                    </p>
-                    <p><span>订单类型</span>
-                        <span class="span-text" v-if="props.row.OrderType == 0">新订</span>
-                        <span class="span-text" v-if="props.row.OrderType == 1">修改</span>
-                        <span class="span-text" v-if="props.row.OrderType == 2">取消</span>
-                        <span class="span-text" v-if="props.row.OrderType == 3">延住</span>
-                        <span class="span-text" v-if="props.row.OrderType == 4">无效</span>
-                        <span class="span-text" v-if="props.row.OrderType == 5">新订+修改</span>
-                        <span class="span-text" v-if="props.row.OrderType == 6">改期</span>
-                    </p>
-                    <p><span>酒店预定号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
-                    <!-- <h4>外采、关联消息</h4>
-                    <p><span>外采类型</span><span class="span-text">{{ props.row.WaiCaiType }}</span></p>
-                    <p><span>外采编号</span><span class="span-text">{{ props.row.WaiCaiNo }}</span></p>
-                    <p><span>关联订单</span><span class="span-text">{{ props.row.POrderID }}</span></p> -->
-                    <h4>其他信息</h4>
-                    <!-- <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
-                    <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p> -->
-                    <p>
-                      <span>第三方平台</span>
-                      <span class="span-text">
-                        <span v-for="item in ThreePlatID">
-                          <span v-if="props.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
-                        </span>
-                      </span>
-                    </p>
-                    <p><span>是否保密</span><span class="span-text" v-if="props.row.Secret === 0">不需要保密</span><span class="span-text" v-if="props.row.Secret === 1">需要保密</span></p>
-                    <p><span>保密状态</span><span class="span-text" v-if="props.row.SecretState === 0">未处理</span><span class="span-text" v-if="props.row.SecretState === 1">已经保密</span></p>
-                    <!-- <p><span>结算周期</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 0">单结</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 1">周结</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 2">月结</span>
-                    </p> -->
-                </el-card>
-                <el-card class="box-card">
-                    <h4>财务、对账信息、操作流程</h4>
-                    <p><span>审核状态</span><span class="span-text" v-if="props.row.StateAuditor === 1">审核</span><span class="span-text" v-if="props.row.StateAuditor === 2">结束</span></p>
-                    <p><span>付款状态</span><span class="span-text" v-if="props.row.StateFuKuan === 0">未付</span><span class="span-text" v-if="props.row.StateFuKuan === 1">已付款</span></p>
-                    <p><span>收款状态</span><span class="span-text" v-if="props.row.StateShouKuan === 1">完成</span></p>
-                    <!-- <p><span>对账付款</span><span class="span-text" v-if="props.row.StateCheckFuKuan === 1">完成</span></p>
-                    <p><span>对账收款</span><span class="span-text" v-if="props.row.StateCheckShouKuan === 1">完成</span></p>
-                    <p><span>审核对账</span><span class="span-text" v-if="props.row.StateCheckEnd === 1">平</span></p>
-                    <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
-                    <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p> -->
-                    <br>
-                    <p><span>订单渠道</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 1">国际</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 0">国内</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 2">美国1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 3">美国2462</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 4">好订1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 5">好订2462</span>
-                    </p>
-                    <p>
-                      <span>回填状态</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 0">未回填</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 1">回传成功</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 2">回填失败</span>
-                    </p>
-                    <!-- <p>
-                      <span>订单截图状态</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 0">未截图</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 1">截图完成</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 2">不截图</span>
-                    </p> -->
-                    <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span><span>锁定</span><span class="span-text" v-if="props.row.LockState === 0">未锁定</span></p>
-                </el-card>
-              </div>
-            </template>
-        </el-table-column>  
+    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading"  border
+       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
+          
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
@@ -717,6 +600,8 @@ export default {
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
+          HandState:2,
+          IsDelete:false, 
           WaiCaiNo:_self.filters.WaiCaiNo,
           PlatOrderNo: _self.filters.PlatOrderNo
         }
@@ -886,7 +771,9 @@ export default {
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
-          WaiCaiNo:_self.filters.WaiCaiNo,          
+          WaiCaiNo:_self.filters.WaiCaiNo,
+          HandState:2,
+          IsDelete:false,        
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       };

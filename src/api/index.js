@@ -44,6 +44,7 @@ import airInformationApi from './air-informations'
 import dwzApi from './dwz'
 import weixinScanCodeApi from './weixin-scan-code'
 import roomStatPriceApi from './room-stat-price'
+import platStatPriceApi from './platform-sale'
 import hotelsOrderApi from './hotels-order'
 import paymentCheckApi from './payment-check'
 import hotelPaymentInfoApi from './hotel-payment-info'
@@ -59,6 +60,7 @@ import singlePriceRatioLogApi from './single-price-ratio-log'
 import hotelHotelpriceApi from './hotel-hotelprice'
 export {
   accountApi,
+  platStatPriceApi,
   airlineApi,
   bargainsRoomApi,
   carArrangeApi,
