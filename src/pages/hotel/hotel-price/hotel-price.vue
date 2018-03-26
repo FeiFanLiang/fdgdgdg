@@ -552,6 +552,7 @@ export default {
         this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
         this.$set(item, 'select', false)
       })
+      console.log(_self.chosenRoom.SonRooms)
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
       _self.mutipList = []

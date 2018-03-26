@@ -576,7 +576,7 @@ export default {
       console.log(form)     
       
       const res = await platStatPriceApi.getPriceList(_self.filters.PlatformID,form)
-      
+      console.log(res)
       // let SonRooms = [..._self.chosenRoom.SonRooms]
     if( JSON.stringify(res.data.Sonrooms) == "{}"){
       _self.chosenRoom.SonRooms.forEach((item, index) => {
@@ -595,6 +595,7 @@ export default {
         this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
         this.$set(item, 'select', false)
       })
+      console.log(_self.chosenRoom.SonRooms)
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
       _self.mutipList = []

@@ -511,13 +511,13 @@
                                 </el-table-column>
                                 <el-table-column label="对方账号名" prop="Partner"  width="120" ></el-table-column>
                                 <el-table-column label="公司打款账户" prop="CompanyAcount"  width="130" ></el-table-column>                                
-                                <el-table-column label="付款人" prop="UpdateUserName"  width="100"></el-table-column>                                
-                                <el-table-column label="付款时间" prop="UpdateTime"  width="110" >
+                                <el-table-column label="付款人" prop="HotelPayment.CreateUserName"  width="100"></el-table-column>                                
+                                <el-table-column label="付款时间" prop="CreateTime"  width="110" >
                                 <template scope="scope">
-                                    <span v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>
+                                    <span v-if="scope.row.CreateTime != null">{{scope.row.CreateTime.substring(0,10)}}</span>
                                 </template>
                                 </el-table-column>
-                                <el-table-column label="对帐人" prop="AuditorUserName"  width="100"></el-table-column>                                
+                                <el-table-column label="对帐人" prop="HotelPayment.AuditorUserName"  width="100"></el-table-column>                                
                                 <el-table-column label="对账时间" prop="AuditorTime"  width="110" >
                                 <template scope="scope">
                                     <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,10)}}</span>
@@ -528,12 +528,10 @@
                                     <span v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
                                 </template>
                                 </el-table-column>
-                                <el-table-column label="截图" prop="StateScreenshot">
+                                <el-table-column label="截图" prop="Picture">
                                     <template scope="scope">
-                                        <span v-if="scope.row.StateScreenshot === 0">未截图</span>
-                                        <span v-if="scope.row.StateScreenshot === 1">截图完成</span>
-                                        <span v-if="scope.row.StateScreenshot === 2">不截图</span>
-                                    </template>
+                                    <el-button type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
+                                </template>
                                 </el-table-column>
                             </el-table>
                         </el-col>
@@ -641,6 +639,9 @@
         <el-button type="primary" @click="submitFormFujia()">保存</el-button>
       </span>
     </el-dialog>
+    <el-dialog v-model="dialogVisible" size="small">
+        <ImageList :images="imageList"></ImageList>
+    </el-dialog>
 </div>
 </template>
 <script>
@@ -654,10 +655,14 @@ import {
 } from 'api'
 import UploadImage from 'components/upload-image'
 import Tinymce from 'components/Tinymce'
+import ImageList from 'components/imglist'
+
 export default{
     components: {
         UploadImage,
-        Tinymce
+        Tinymce,
+        ImageList
+        
     },
     data(){
         let that = this;
@@ -667,6 +672,7 @@ export default{
             stringQRH:'',
             Tocreate:true,
             Passenger : '',
+            dialogVisible:false,
             StayDateStart : '',
             StayDateEnd : '',
             Room : '',
@@ -903,7 +909,16 @@ export default{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
-            console.log(res)
+           console.log(res)
+        },
+        imgShow(img){
+            console.log(img)
+            try{
+                this.imageList = img.split(',')
+                this.dialogVisible = true
+            }catch(e){
+                this.$message.error('截图获取失败!!!')
+        }
         },
         async fetchData() {
             const options = {
@@ -1077,7 +1092,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-                console.log(_self.form.HotelOrderDetail)
+              //  console.log(res)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
                 const options = {
@@ -1112,7 +1127,7 @@ export default{
 
                 
                 let datas = _self.form
-                 console.log(datas)
+               //  console.log(datas)
                 // return false
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
@@ -1252,7 +1267,7 @@ export default{
                 
                 }else{
                     num = up.split(ntes)
-                    console.log(up.length)                                        
+                  //  console.log(up.length)                                        
                     if(num.length-1 == 2){
                         up = up.replace(ntes,'')
                         up = up.replace(",",'')
