@@ -2,29 +2,27 @@
 <div id="HotelsOrder">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
       <el-form-item label="订单平台" slot="ThreePlatID">
-        <el-select v-model="filters.ThreePlatID" clearable>
+        <el-select v-model="filters.ThreePlatID" clearable @change="changeValue">
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="订单区域" slot="HotelArea">
-        <el-select v-model="filters.HotelArea" clearable>
+        <el-select v-model="filters.HotelArea" clearable @change="changeValue1">
           <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="人工处理状态" slot="HandState">
-        <el-select v-model="filters.HandState" clearable>
+        <el-select v-model="filters.HandState" clearable @change="changeValue2">
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="结款方式" slot="SettlementCycle">
-        <el-select v-model="filters.SettlementCycle" clearable>
+        <el-select v-model="filters.SettlementCycle" clearable @change="changeValue3">
           <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="外采订单号" slot="WaiCaiNo">
-        <el-select v-model="filters.WaiCaiNo" clearable>
-          <el-option v-for="item in WaiCaiNo" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
+          <el-input v-model="filters.WaiCaiNo"></el-input>
       </el-form-item>
       
       <el-form-item label="筛选条件" slot="checkList">
@@ -298,6 +296,10 @@ export default {
     return {
       loadingHotel: false,
       Room:"",
+      Pts:"",
+      Qy:"",
+      Fs:"",
+      Rstate:"",
       Night:"",
       hotelList: [],
       imageList: [],
@@ -646,9 +648,28 @@ export default {
         _self.hotelList = [];
       }
     },
+    changeValue(value) {
+          this.Pts = value
+    },
+    changeValue1(value) {
+          this.Qy = value
+    },
+    changeValue2(value) {
+          this.Rstate = value
+    },
+    changeValue3(value) {
+          this.Fs = value
+    },
     searchCallback(filters) {
+      const now =  Object.assign(this.filters, filters );   
+      console.log(now)
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
+      this.filters.WaiCaiNo = now.WaiCaiNo   
+      this.filters.ThreePlatID = this.Pts
+      this.filters.HotelArea = this.Qy
+      this.filters.SettlementCycle = this.Fs
+      this.filters.HandState = this.Rstate 
       this.fetchData();
     },
     qrh(id) {

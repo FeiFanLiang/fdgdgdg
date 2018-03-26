@@ -3,17 +3,17 @@
 <div id="FukuanList">
     <CustomSearchCopy :configList="searchFields" @searchCallback="searchCallback">
       <el-form-item label="外采平台" slot="WaiCaiPlatID">
-          <el-select v-model="filters.WaiCaiPlatID">
+          <el-select v-model="filters.WaiCaiPlatID" @change="changeValue">
               <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
           </el-select>
       </el-form-item>
       <el-form-item label="打款账户" slot="CompanyAcount">
-          <el-select v-model="filters.CompanyAcount" clearable>
+          <el-select v-model="filters.CompanyAcount" clearable @change="changeValue1">
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
       </el-form-item>
       <el-form-item label="付款周期" slot="SettlementCycleFu" >
-          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期">
+          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期" @change="changeValue2">
               <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
           </el-select>
       </el-form-item>
@@ -117,6 +117,9 @@ export default {
             currentPage: 1,
             pageSize: 10,
             count: 0,
+            CompanyA:"",
+            WaiCaiP:"",
+            SettlementC:"",
             fukuanList: [],
             loading:false,
             multipleSelection: [],
@@ -240,16 +243,27 @@ export default {
             //this.filters.ExpectSettlement = ''
             _self.fetchData()
         },
+        changeValue(value) {
+          this.WaiCaiP = value
+        },
+        changeValue1(value) {
+            this.CompanyA = value
+        },
+        changeValue2(value) {
+            this.SettlementC = value
+        },
         searchCallback(filters) {
           //  debugger
-          console.log(filters)
           let now = Object.assign(this.filters, filters );
           console.log(now)
           
             Object.assign(filters, filters, this.filters);          
             this.filters = filters
           this.filters.BookTime = now.BookTime
-          this.filters.ExpectSettlement = now.ExpectSettlement          
+          this.filters.ExpectSettlement = now.ExpectSettlement
+          this.filters.WaiCaiPlatID = this.WaiCaiP
+          this.filters.CompanyAcount = this.CompanyA
+          this.filters.SettlementCycleFu = this.SettlementC
             this.fetchData()
         },
         handleSelectionChange(val) {

@@ -3,7 +3,7 @@
 <div id="CheckShoukuan">
     <CustomSearchCopy :configList="configList.searchFields" @searchCallback="searchCallback">
         <el-form-item label="销售平台" slot="PlatPolicyID">
-            <el-select v-model="filters.PlatPolicyID">
+            <el-select v-model="filters.PlatPolicyID" @change="changeValue">
                 <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
             </el-select>
         </el-form-item>
@@ -16,7 +16,7 @@
             </el-date-picker>
       </el-form-item>
       <el-form-item label="收款状态" slot='StateCheck'>
-          <el-select v-model="filters.StateCheck" placeholder="请选择" clearable>
+          <el-select v-model="filters.StateCheck" placeholder="请选择" clearable @change="changeValue1">
               <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
           </el-select>
       </el-form-item>
@@ -119,6 +119,8 @@ export default {
       currentPage: 1,
       pageSize: 10,
       count: 0,
+      PlatP:"",
+      StateC:"",
       shoukuanList: [],
       loading: false,
       multipleSelection: [],
@@ -205,11 +207,19 @@ export default {
         ID: ""
       });
     },
+    changeValue(value) {
+        this.PlatP = value
+    },
+    changeValue1(value) {
+        this.StateC = value
+    },
     searchCallback(filters) {
       let now =  Object.assign(this.filters, filters );   
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
       this.filters.ExpectSettlement = now.ExpectSettlement
+      this.filters.PlatPolicyID = this.PlatP
+      this.filters.StateCheck = this.StateC      
       this.fetchData();
     },
     handleSelectionChange(val) {

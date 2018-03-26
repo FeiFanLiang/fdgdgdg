@@ -213,10 +213,7 @@ export default {
                     select.push(_self.multipleSelection[i].ID)
                 }
                 const res1 = await hotelPaymentInfoApi.getInfoli(select)               
-
-
-               _self.fukuanList1 = res1.data.Data
-                 console.log(res1)    
+               _self.fukuanList1 = res1.data.Data   
                 _self.loading = false
             } catch (e) {
                 _self.loading = false

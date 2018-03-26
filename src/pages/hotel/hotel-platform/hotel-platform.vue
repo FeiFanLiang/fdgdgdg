@@ -68,7 +68,7 @@
             <el-input v-model="form.hotelId" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="平台名称" prop="platformId">
-            <el-select class="w193" v-model="form.platformId" placeholder="请选择">
+            <el-select class="w193" v-model="form.platformId" placeholder="请选择" @change="changeVal">
               <el-option v-for="(item,index) in platInfoList"
                 :label="item.PlatName"
                 :value="item.ID"
@@ -127,6 +127,7 @@ export default {
       total: 0,
       currentPage: 1,
       platInfoList: [],
+      nowI:"",
       loading: false,
       isEditable: true,
       showDialog: false,
@@ -175,6 +176,18 @@ export default {
       const res = await policyApi.getPolicyPlatform()
       this.PlatformAccountID = res.data.Data
       console.log(this.PlatformAccountID)
+    },
+   async changeVal(e){
+      const _self = this 
+      let nowP = []
+      const res = await policyApi.getPolicyPlatform()
+      _self.PlatformAccountID = res.data.Data    
+     for( let j in _self.PlatformAccountID){
+       if(_self.PlatformAccountID[j].Platform.ID==e){
+         nowP.push(_self.PlatformAccountID[j])
+       }
+     }
+     _self.PlatformAccountID = nowP
     },
     beforeClose(done) {
       this.showSpiderSetting = false

@@ -6,7 +6,7 @@
             <el-col :span="6">
                 <el-form-item label="酒店名称" prop="HotelName">
                     <el-input placeholder="请输入酒店名称" v-model="form.HotelName"></el-input>                  
-                </el-form-item> 
+                </el-form-item>
             </el-col> 
             <el-col :span="6">
                 <el-form-item label="订单号" prop="PlatOrderNo">
@@ -128,9 +128,9 @@
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
                 </el-form-item>
             </el-col>
-            <el-col :span="6">
+        <!--    <el-col :span="6">
                 <el-button type="primary" @click="submitOrderList()">保存</el-button>
-            </el-col>
+            </el-col> -->
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
@@ -252,7 +252,7 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="入住日期" prop="StayDateStart">
-                                <el-date-picker v-model="item.StayDateStart" type="date" placeholder="选择入住日期" style="width:100%;" :picker-options="pickerOptions" @change="ruzhu"></el-date-picker>
+                                <el-date-picker v-model="item.StayDateStart" type="date" placeholder="选择入住日期" style="width:100%;"  @change="ruzhu"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -479,47 +479,54 @@
                                         <span v-if="scope.row.PaymentType === 1">付款</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="货币类型" prop="Currency"></el-table-column>
-                                <el-table-column label="编号" prop="PaymentNo" show-overflow-tooltip></el-table-column>
-                                <el-table-column label="金额" prop="Amount"></el-table-column>
-                                <el-table-column label="预计结算日期" prop="ExpectSettlement" show-overflow-tooltip>
-                                <template scope="scope">
-                                    <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
-                                </template>
-                                </el-table-column>
-                                <el-table-column label="预计到款日期" prop="ExpectGetMoney" show-overflow-tooltip>
-                                <template scope="scope">
-                                    <span v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
-                                </template>
-                                </el-table-column>
-                                <el-table-column label="对方账号名" prop="Partner" show-overflow-tooltip></el-table-column>
-                                <el-table-column label="对冲" prop="DuiChong"></el-table-column>
-                                <el-table-column label="公司打款账户" prop="CompanyAcount" show-overflow-tooltip></el-table-column>                                
-                                <el-table-column label="付款人" prop="UpdateUserName"></el-table-column>                                
-                                <el-table-column label="付款时间" prop="UpdateTime" show-overflow-tooltip>
-                                <template scope="scope">
-                                    <span v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>
-                                </template>
-                                </el-table-column>
-                                <el-table-column label="对帐人" prop="AuditorUserName"></el-table-column>                                
-                                <el-table-column label="对账时间" prop="AuditorTime" show-overflow-tooltip>
-                                <template scope="scope">
-                                    <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,10)}}</span>
-                                </template>
-                                </el-table-column>                                                                                                                                                       
-                                <el-table-column label="收付时间" prop="PaymentDate" show-overflow-tooltip>
-                                 <template scope="scope">
-                                    <span v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
-                                </template>
-                                </el-table-column>
-                                <el-table-column label="收付方式" prop="PaymentModel"></el-table-column>
-                                <el-table-column label="状态" prop="State" show-overflow-tooltip>
+                                <el-table-column label="编号" prop="PaymentNo" width="170"></el-table-column>
+                                <el-table-column label="状态" prop="State" width="130" >
                                     <template scope="scope">
                                         <span v-if="scope.row.State === 0">待处理</span>
                                         <span v-if="scope.row.State === 1">已处理，待对账</span>
                                         <span v-if="scope.row.State === 2">已对账，待结算</span>
                                         <span v-if="scope.row.State === 3">结算完成</span>
                                     </template>
+                                </el-table-column>
+                                <el-table-column label="实付/实收" prop="AmountUse" width="120">
+                                <template scope="scope">
+                                    <span>{{scope.row.Currency}}  {{scope.row.AmountUse}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="应收/应付" prop="YingShouFu"  width="120">
+                                <template scope="scope">
+                                    <span>{{scope.row.Currency}}  {{scope.row.YingShouFu}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="对冲" prop="DuiChong"></el-table-column>                                
+                                <el-table-column label="预计结算日期" prop="ExpectSettlement"  width="130" >
+                                <template scope="scope">
+                                    <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="预计到款日期" prop="ExpectGetMoney"  width="130" >
+                                <template scope="scope">
+                                    <span v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="对方账号名" prop="Partner"  width="120" ></el-table-column>
+                                <el-table-column label="公司打款账户" prop="CompanyAcount"  width="130" ></el-table-column>                                
+                                <el-table-column label="付款人" prop="UpdateUserName"  width="100"></el-table-column>                                
+                                <el-table-column label="付款时间" prop="UpdateTime"  width="110" >
+                                <template scope="scope">
+                                    <span v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>
+                                <el-table-column label="对帐人" prop="AuditorUserName"  width="100"></el-table-column>                                
+                                <el-table-column label="对账时间" prop="AuditorTime"  width="110" >
+                                <template scope="scope">
+                                    <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,10)}}</span>
+                                </template>
+                                </el-table-column>                                                                                                                                                       
+                                <el-table-column label="收付时间" prop="PaymentDate"  width="110" >
+                                 <template scope="scope">
+                                    <span v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
+                                </template>
                                 </el-table-column>
                                 <el-table-column label="截图" prop="StateScreenshot">
                                     <template scope="scope">
@@ -554,16 +561,36 @@
                     </el-row>
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>操作信息</h1></el-col></el-row>
                     <el-row :gutter="24">
-                        <el-col>
-                            <el-table :data="fujia" style="width: 95%;margin-left:40px;" border>
-                            <el-table-column label="审核人" prop="AuditorUserName"></el-table-column>
-                            <el-table-column label="审核时间" prop="AuditorTime"></el-table-column>
-                            <el-table-column label="回填人" prop="BackfillUserName"></el-table-column>
-                            <el-table-column label="回填时间" prop="BackfillTime"></el-table-column>
-                            <el-table-column label="最后抓取时间" prop="UseGrabberTimeLast"></el-table-column>
-                            <el-table-column label="更新时间" prop="UpdateTime"></el-table-column>
-                            </el-table>
-                        </el-col>
+                    <el-col :span="8">
+                       <el-form-item label="审核人" prop="AuditorUserName">
+                            <span>{{item.AuditorUserName}}</span>                 
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="审核时间" prop="AuditorTime">
+                            <span v-if="item.AuditorTime != null">{{item.AuditorTime.substring(0,10)}}</span>                 
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                      <el-form-item label="回填人" prop="BackfillUserName">
+                           <span>{{item.BackfillUserName}}</span>                 
+                      </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                            <el-form-item label="回填时间" prop="BackfillTime">
+                            <span v-if="item.BackfillTime != null">{{item.BackfillTime.substring(0,10)}}</span>                 
+                            </el-form-item>
+                    </el-col>      
+                    <el-col :span="8">                           
+                            <el-form-item label="最后抓取时间" prop="GrabberTimeLast">
+                            <span v-if="item.GrabberTimeLast != null">{{item.GrabberTimeLast.substring(0,10)}}</span>                 
+                            </el-form-item>
+                    </el-col>     
+                    <el-col :span="8"> 
+                            <el-form-item label="更新时间" prop="UpdateTime">
+                            <span v-if="item.UpdateTime != null">{{item.UpdateTime.substring(0,10)}}</span>                 
+                            </el-form-item>
+                    </el-col>                                                             
                     </el-row>
                 </el-form>
             </el-collapse-item>
@@ -644,6 +671,7 @@ export default{
             StayDateEnd : '',
             Room : '',
             RoomNum : '',
+            AuditorUserName:"",
             NightNum : '',
             HotelName : '',
             Company:'',
@@ -869,12 +897,13 @@ export default{
         _self.platformAccount()
         _self.platformAccounts()
         _self.fetchData()
+        _self.caiwuDetail()
     },
     methods:{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
-            console.log(this.money)
+            console.log(res)
         },
         async fetchData() {
             const options = {
@@ -884,7 +913,7 @@ export default{
                 }
             const res = await payCompanyApi.list(options)
             this.WaiCaiPayAccount = res.data.Data
-          //  console.log(this.WaiCaiPayAccount)
+         //   console.log(this.WaiCaiPayAccount)
                 
         },
         async platformAccount(){
@@ -895,7 +924,7 @@ export default{
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.WaiCaiPlatID = res.data.Data
-            console.log(this.WaiCaiPlatID)
+       //     console.log(this.WaiCaiPlatID)
         },
         async platformAccounts(){
             const options = {
@@ -905,7 +934,7 @@ export default{
             }     
             const res = await policyApi.getPolicyPlatform(options)
             this.PlatPolicyIDs = res.data.Data
-            console.log(this.PlatPolicyIDs)
+       //     console.log(this.PlatPolicyIDs)
         },
         tocreate(){
             const _self = this
@@ -1027,7 +1056,7 @@ export default{
                 let date2 = new Date(this.form.StayDateEnd);    //结束时间
                 let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数
                 let days=Math.floor(date3/(24*3600*1000))
-                this.form.RoomNum = 1
+              //  this.form.RoomNum = 1
                 this.form.NightNum = days
             }
         },
@@ -1038,7 +1067,7 @@ export default{
                 let date2 = new Date(val);   //结束时间
                 let date3 = date2.getTime() - new Date(date1).getTime();   //时间差的毫秒数
                 let days=Math.floor(date3/(24*3600*1000))
-                this.form.RoomNum = 1
+              //  this.form.RoomNum = 1
                 this.form.NightNum = days
             }
         },
@@ -1048,6 +1077,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+                console.log(_self.form.HotelOrderDetail)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
                 const options = {

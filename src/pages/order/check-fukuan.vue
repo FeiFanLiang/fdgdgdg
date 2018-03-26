@@ -16,7 +16,7 @@
           </el-date-picker>
       </el-form-item>-->
       <el-form-item label="打款账户" slot="CompanyAcount">
-          <el-select v-model="filters.CompanyAcount" clearable>
+          <el-select v-model="filters.CompanyAcount" clearable @change="changeValue">
               <el-option v-for="(item,index) in PayCompanyID " :key="item.ID" :label="item.ShortName" :value="item.ShortName"></el-option>
           </el-select>
       </el-form-item>
@@ -25,7 +25,7 @@
           </el-date-picker>
       </el-form-item>
       <el-form-item label="外采平台" slot="WaiCaiPlatID">
-          <el-select v-model="filters.WaiCaiPlatID"  @change="changeValue">
+          <el-select v-model="filters.WaiCaiPlatID"  @change="changeValue1">
               <el-option v-for="(item,index) in PlatPolicyID " :key="index" :label="item.Account" :value="item.ID"></el-option>
           </el-select>
       </el-form-item>
@@ -158,6 +158,8 @@ export default {
           pageSize: 10,
           count: 0,
           loading: false,
+          WaiCaiP:"",
+          CompanyA:"",
           paymentCheck:[],
           ID: '',
           expandRowKeys: [],
@@ -210,12 +212,12 @@ export default {
     this.platformAccount()
   },
   methods:{
-      changeValue(label) {
-            var _self =this
-            console.log(label)
-         this.filters.WaiCaiPlatID =  label
-     
-        },
+      changeValue(value) {
+          this.CompanyA = value
+      },
+      changeValue1(value) {
+          this.WaiCaiP = value
+      },
       async downloadList() {
         const _self = this 
         let time1 = "";
@@ -292,19 +294,13 @@ export default {
         this.fetchData(this.currentPage)
     },
     searchCallback(filters) {   
-      const _self = this
-        
-    const now =  Object.assign(this.filters, filters );   
-     Object.assign(filters, filters, this.filters);          
-       console.log(now)
-       console.log(_self.filters.WaiCaiPlatID)
-       
-      this.filters = filters;
-    this.filters.PaymentDate = now.PaymentDate   
-  //   this.filters.WaiCaiPlatID =   _self.filters.WaiCaiPlatID  
-       
-
-      this.fetchData();
+        const now =  Object.assign(this.filters, filters );   
+        Object.assign(filters, filters, this.filters);           
+        this.filters = filters;
+        this.filters.PaymentDate = now.PaymentDate   
+        this.filters.WaiCaiPlatID = this.WaiCaiP
+        this.filters.CompanyAcount = this.CompanyA 
+        this.fetchData();
     },
     trim(s){
             if(s){
