@@ -1112,7 +1112,7 @@ export default{
                 
                 let datas = _self.form
                  console.log(datas)
-                 return false
+                // return false
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){
