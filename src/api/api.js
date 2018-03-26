@@ -6,7 +6,7 @@ const outsideBase = 'http://123.235.27.78:59510/'
 // const base = 'http://192.168.10.10:8500/'
 // http://192.168.10.95:8500/swagger/ui/index.html#/
 // const base = 'http://192.168.10.92:8500/'
-// const base = 'http://192.168.10.170:8080/'
+// const base = 'http://192.168.10.170:5000/'
 let url = ''
 const host = window.location.host
 

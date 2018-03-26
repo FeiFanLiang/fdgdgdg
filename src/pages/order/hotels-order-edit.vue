@@ -1095,6 +1095,7 @@ export default{
         },
         async submitOrderList() {
             const _self = this
+            let mes
             for(let i in _self.form.HotelOrderDetail){
                 _self.form.HotelOrderDetail[i].HotelBookingNote = tinyMCE.editors[i].getContent()
             }
@@ -1116,15 +1117,10 @@ export default{
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){
-                   await hotelsOrderApi.checkSave(datas)                  
-                }else{
-                 
-                   await hotelsOrderApi.edit(datas)
-                  
+                 mes =  await hotelsOrderApi.checkSave(datas)                  
+                }else{                 
+                  mes =  await hotelsOrderApi.edit(datas)                
                 }
-                 const mes = await hotelsOrderApi.edit(datas)
-                 console.log(mes)
-                
                 if(mes.data.State != true){
                   _self.$message.error(mes.data.Msg)
                   }else{
