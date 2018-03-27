@@ -9,7 +9,7 @@
                 <el-form-item label="手续费" prop="Fee">
                 <el-input v-model="form.Fee" style="width:80px" placeholder="手续费"></el-input>
                 </el-form-item>
-                <el-form-item label="利润">
+                <el-form-item label="退回金额">
                 <span>{{lirun}}</span>
                 </el-form-item>
                 </div>
@@ -157,9 +157,9 @@ export default {
                             if(form.DuiChong){
                                 form.DuiChong = Number(_self.form.DuiChong)
                             }
-                            console.log(form)
-                        
-                            await hotelPaymentInfoApi.savePaymentInfo(form)
+                            
+                         const res =   await hotelPaymentInfoApi.savePaymentInfo(form)
+                         console.log(res)
                             _self.$message({
                                 message: '审核成功',
                                 type: 'success'
@@ -179,6 +179,9 @@ export default {
                 _self.isShow = true
             }else{
                 _self.isShow = false
+                _self.form.PartnerAccountModel = ''
+                _self.form.Partner = ''
+                _self.form.PartnerAccount = ''                
             }
      
         }
@@ -188,7 +191,7 @@ export default {
             if(!this.form.Fee){
                 return ''
             }else{
-                return this.AmountYingShou - this.form.Fee
+                return  this.AmountYingShou - this.form.Fee
             }
         }
        

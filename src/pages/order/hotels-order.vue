@@ -210,8 +210,8 @@
               </el-col> -->
               <el-col :span="8">
                         <el-form-item label="酒店名称" prop="HotelName">
-                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel">
-                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.HotelName">
+                            <el-select v-model="form.HotelName"  filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
+                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.ID">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -764,16 +764,22 @@ export default {
           }
         };
         const res = await hotelBaseApi.listAll(options);
+        console.log(res)
         if (res && res.data && res.data.Data) {
           _self.hotelList = res.data.Data;
-          _self.form.HotelID = _self.hotelList[0].ID;
-          _self.form.HotelName = _self.hotelList[0].HotelName;
+          // _self.form.HotelID = _self.hotelList[0].ID;
+          // _self.form.HotelName = _self.hotelList[0].HotelName;
 
           _self.loadingHotel = false;
         }
       } else {
         _self.hotelList = [];
       }
+    },
+    changv(value){
+      const _self = this;      
+      console.log(value)
+      _self.form.HotelID = value
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   

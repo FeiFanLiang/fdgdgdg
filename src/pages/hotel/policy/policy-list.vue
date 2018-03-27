@@ -265,8 +265,20 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
+                    <el-form-item label="协议到期日" prop="ExpiringDate" >
+                        <el-date-picker v-model="form.ExpiringDate" type="date" placeholder="选择日期"> </el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="24">
+                <el-col :span="10">
                     <el-form-item label="备注3" prop="Remark3">
                         <el-input type="textarea" v-model="form.Remark3" autosize></el-input>
+                    </el-form-item>
+                </el-col>
+                  <el-col :span="10">
+                    <el-form-item label="备注14" prop="Remark14">
+                        <el-input type="textarea" v-model="form.Remark14" autosize></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -329,11 +341,6 @@
                         <el-input type="textarea" v-model="form.Remark13" autosize></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="10">
-                    <el-form-item label="备注14" prop="Remark14">
-                        <el-input type="textarea" v-model="form.Remark14" autosize></el-input>
-                    </el-form-item>
-                </el-col>
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer" style="text-align:center;margin:10px;">
@@ -370,6 +377,7 @@ import UploadImageCopy from 'components/upload-image-copy'
                 HotelID:'',
                 Name: '',
                 PersonName: '',
+                ExpiringDate:'',
                 PurchasingName: '',
                 IsDefault: false,
                 Remark:'',
@@ -618,15 +626,17 @@ import UploadImageCopy from 'components/upload-image-copy'
                 HotelID:_self.HotelID,
                 IsDefault:false,
                 PolicyImage:'',
-                SecretTypeID:'',
-                ReserveModeID:''
+                SecretTypeID:2,
+                ReserveModeID:5
             }
             _self.imageList = []
             _self.FinancialInfo = {
                 PayCompanyID:'',
-                SettlementUnit:'',
-                PayPeriod:'',
-                Company:'',
+                PayPeriodTplusN:0,
+                SettlementUnitTplusN:0,
+                SettlementUnit:0,
+                PayPeriod:2,
+                Company:'澳迅',
                 UrgentPay:'',
                 UnMergePay:''
             }
@@ -717,5 +727,8 @@ import UploadImageCopy from 'components/upload-image-copy'
   }
   .el-tooltip__popper{
       max-width:500px;
+  }
+  .el-date-editor.el-input{
+      width:100%
   }
 </style>

@@ -501,31 +501,30 @@
                                 <el-table-column label="对冲" prop="DuiChong"></el-table-column>                                
                                 <el-table-column label="预计结算日期" prop="ExpectSettlement"  width="130" >
                                 <template scope="scope">
-                                    <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
+                                    <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,16)}}</span>
                                 </template>
                                 </el-table-column>
                                 <el-table-column label="预计到款日期" prop="ExpectGetMoney"  width="130" >
                                 <template scope="scope">
-                                    <span v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,10)}}</span>
+                                    <span v-if="scope.row.ExpectGetMoney != null">{{scope.row.ExpectGetMoney.substring(0,16)}}</span>
                                 </template>
                                 </el-table-column>
                                 <el-table-column label="对方账号名" prop="Partner"  width="120" ></el-table-column>
                                 <el-table-column label="公司打款账户" prop="CompanyAcount"  width="130" ></el-table-column>                                
-                                <el-table-column label="付款人" prop="HotelPayment.CreateUserName"  width="100"></el-table-column>                                
-                                <el-table-column label="付款时间" prop="CreateTime"  width="110" >
+                                <el-table-column label="付款人" prop="CreateUserName"  width="100">
                                 <template scope="scope">
-                                    <span v-if="scope.row.CreateTime != null">{{scope.row.CreateTime.substring(0,10)}}</span>
+                                        <span v-if="scope.row.PaymentType === 1">{{scope.row.HotelPayment.CreateUserName}}</span>
                                 </template>
-                                </el-table-column>
+                                </el-table-column>                                
                                 <el-table-column label="对帐人" prop="HotelPayment.AuditorUserName"  width="100"></el-table-column>                                
                                 <el-table-column label="对账时间" prop="AuditorTime"  width="110" >
-                                <template scope="scope">
-                                    <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,10)}}</span>
-                                </template>
+                                <template scope="scope">                                                                
+                                 <span v-if="typeof(scope.row.HotelPayment.AuditorTime) != 'undefined'">{{ scope.row.HotelPayment.AuditorTime.substring(0,16) }}</span>    
+                                </template>                                                                                     
                                 </el-table-column>                                                                                                                                                       
                                 <el-table-column label="收付时间" prop="PaymentDate"  width="110" >
                                  <template scope="scope">
-                                    <span v-if="scope.row.PaymentDate != null">{{scope.row.PaymentDate.substring(0,10)}}</span>
+                                 <span v-if="typeof(scope.row.HotelPayment.PaymentDate) != 'undefined'">{{ scope.row.HotelPayment.PaymentDate.substring(0,16) }}</span>
                                 </template>
                                 </el-table-column>
                                 <el-table-column label="截图" prop="Picture">
@@ -566,7 +565,7 @@
                     </el-col>
                     <el-col :span="8">
                       <el-form-item label="审核时间" prop="AuditorTime">
-                            <span v-if="item.AuditorTime != null">{{item.AuditorTime.substring(0,10)}}</span>                 
+                            <span v-if="item.AuditorTime != null">{{item.AuditorTime.substring(0,16)}}</span>                 
                       </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -576,17 +575,17 @@
                     </el-col>
                     <el-col :span="8">
                             <el-form-item label="回填时间" prop="BackfillTime">
-                            <span v-if="item.BackfillTime != null">{{item.BackfillTime.substring(0,10)}}</span>                 
+                            <span v-if="item.BackfillTime != null">{{item.BackfillTime.substring(0,16)}}</span>                 
                             </el-form-item>
                     </el-col>      
                     <el-col :span="8">                           
                             <el-form-item label="最后抓取时间" prop="GrabberTimeLast">
-                            <span v-if="item.GrabberTimeLast != null">{{item.GrabberTimeLast.substring(0,10)}}</span>                 
+                            <span v-if="item.GrabberTimeLast != null">{{item.GrabberTimeLast.substring(0,16)}}</span>                 
                             </el-form-item>
                     </el-col>     
                     <el-col :span="8"> 
                             <el-form-item label="更新时间" prop="UpdateTime">
-                            <span v-if="item.UpdateTime != null">{{item.UpdateTime.substring(0,10)}}</span>                 
+                            <span v-if="item.UpdateTime != null">{{item.UpdateTime.substring(0,16)}}</span>                 
                             </el-form-item>
                     </el-col>                                                             
                     </el-row>
@@ -1127,7 +1126,7 @@ export default{
 
                 
                 let datas = _self.form
-               //  console.log(datas)
+             //    console.log(datas)
                 // return false
                 //datas.Addition = _self.fujia
                 //datas.PaymentInfo = _self.money
@@ -1228,7 +1227,7 @@ export default{
                     POrderID:this.POrderID,
                     HotelPolicyID:this.form.HotelPolicyID,
                     AmountYingShou:this.form.AmountYingShou,
-                    HotelFee:this.form.HotelFee
+                    HotelFee:this.form.HotelOrderDetail[0].HotelFee
                 }
             })
         },

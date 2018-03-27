@@ -20,7 +20,6 @@
     </el-col>
     <el-col :span="4">
       <el-button @click="mutipEdit()">批量修改房间状态</el-button>
-      
     </el-col>
      
     <!-- <el-col :span="3">
@@ -73,7 +72,7 @@
             </div>
             </td>
             <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in week" @click="priceOne(sonRoom,day.date)">
-            <div class="dayname">{{sonRoom.SonRoomName}}</div>
+        <!--    <div class="dayname">{{sonRoom.SonRoomName}}</div> -->
             <div class="dayname">{{day.date}}</div>
             <div class="price" v-if="currency(sonRoom,day.date)===0">底价<span>￥</span>{{price(sonRoom,day.date)}}</div>
             <div class="price" v-if="currency(sonRoom,day.date)===1">底价<span>YEN</span>{{price(sonRoom,day.date)}}</div>
@@ -106,7 +105,7 @@
                 </div>
               </td>
               <td class="ui-table-col-center w100 current" v-bind:class="{'close':!isOpen(sonRoom,day.date),'open':isOpen(sonRoom,day.date)}" v-for="day in weekList" @click="priceOne(sonRoom,day.date)">
-                <div class="dayname">{{sonRoom.SonRoomName}}</div>
+              <!--  <div class="dayname">{{sonRoom.SonRoomName}}</div> -->
                 <div class="dayname">{{day.date}}</div>
                 <div class="price" v-if="currency(sonRoom,day.date)===0">底价<span>￥</span>{{price(sonRoom,day.date)}}</div>
                 <div class="price" v-if="currency(sonRoom,day.date)===1">底价<span>YEN</span>{{price(sonRoom,day.date)}}</div>
@@ -455,9 +454,10 @@ export default {
      const res = await platStatPriceApi.getSonRoomList(_self.stateForm.hotelId,_self.filters.PlatformID)
       console.log(res)
     },
-    changeValue(){
+    changeValue(value){
        this.expandRowKeys.length = 0
         this.expandRowKeys.push(0)
+        this.filters.PlatformID = value
     },
     handleSingalSonRoomId(tab) {
       const _self = this
@@ -573,10 +573,9 @@ export default {
         BeginDate: _self.startAndEndDay[0].date,
         EndDate: _self.startAndEndDay[1].date
       }
-      console.log(form)     
-      
+    
       const res = await platStatPriceApi.getPriceList(_self.filters.PlatformID,form)
-      console.log(res)
+     // console.log(res)
       // let SonRooms = [..._self.chosenRoom.SonRooms]
     if( JSON.stringify(res.data.Sonrooms) == "{}"){
       _self.chosenRoom.SonRooms.forEach((item, index) => {
@@ -595,7 +594,7 @@ export default {
         this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
         this.$set(item, 'select', false)
       })
-      console.log(_self.chosenRoom.SonRooms)
+   //   console.log(_self.chosenRoom.SonRooms)
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
       _self.mutipList = []
@@ -613,14 +612,16 @@ export default {
       return ''
     },
     price(item, date) {
+        console.log(item.timeDate[date])
+      
       if (
         item &&
         item.timeDate &&
         item.timeDate[date] &&
-        item.timeDate[date].hasOwnProperty('SonRoomPurchasePrice') &&
-        item.timeDate[date].SonRoomPurchasePrice.hasOwnProperty('Price')
+        item.timeDate[date].hasOwnProperty('platSalePrice') &&
+        item.timeDate[date].platSalePrice.hasOwnProperty('SonRoomID')
       ) {
-        return item.timeDate[date].SonRoomPurchasePrice.Price
+        return item.timeDate[date].platSalePrice[0].SonRoomID
       }
       return ''
     },
@@ -653,6 +654,8 @@ export default {
       return ''
     },
     otherPrice(type, item, date) {
+        //    console.log(item.timeDate[date].platSalePrice[0].Price)
+      
       if (
         item &&
         item.timeDate &&
@@ -664,7 +667,10 @@ export default {
         let value = item.timeDate[date].platSalePrice.find(
           item => item.ThreePlatId === this.platInfoList[type]
         )
+      //  let value = item.timeDate[date].platSalePrice
+        
         return value ? value.Price : ''
+     //   console.log(value.Price)
       }
       return ''
     },
@@ -680,6 +686,7 @@ export default {
         let value = item.timeDate[date].platSalePrice.find(
           item => item.ThreePlatId === this.platInfoList[type]
         )
+   //     console.log( item.timeDate[date].platSalePrice)        
         return value ? value.Stat : ''
       }
       return ''
@@ -692,13 +699,14 @@ export default {
         item.timeDate[date].hasOwnProperty('Count')
       ) {
         return item.timeDate[date].Count
+        
       }
       return ''
     },
     async fetchData() {
       // const res = await platStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       const res = await hotelRoomApi.list(this.stateForm.hotelId)
-      console.log(res)
+     // console.log(res)
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {
