@@ -84,21 +84,17 @@
                 </el-form-item>
             </el-col>
             <el-col :span="12">
-                            <el-form-item label="处理备注" prop="HandRemark" >
-                                <el-input  type="textarea" v-model="form.HandRemark" autosize :minlength="200"></el-input>
-                            </el-form-item>
-                     
-                      
-                      
-                          <!---    <div>
-                                <el-checkbox-group  @change="handleChecked(index)" v-model="check">
-                                     <el-checkbox-button  label="无房拒单" ></el-checkbox-button>
-                                     <el-checkbox-button  label="政策不符" ></el-checkbox-button>
-                                     <el-checkbox-button  label="赔钱拒单" ></el-checkbox-button>                                                                     
-                                </el-checkbox-group>
-                            </div>         -->                                          
+                <el-form-item label="处理备注" prop="HandRemark" >
+                    <el-input  type="textarea" v-model="form.HandRemark" autosize :minlength="200"></el-input>
+                </el-form-item>                                       
             </el-col>
-            
+            <el-col :span="6">
+                <el-form-item label="截图状态" prop="StateSend">
+                    <span v-if="form.StateSend == 0" style="color:orange">未发送</span>
+                    <span v-if="form.StateSend == 1" style="color:orange">已发截图</span>
+                    <span v-if="form.StateSend == 2" style="color:orange">已处理</span>                    
+                </el-form-item>
+            </el-col>            
         </el-row>
         <el-row :gutter="24">
             <el-col :span="6">
@@ -519,17 +515,17 @@
                                 <el-table-column label="对帐人" prop="HotelPayment.AuditorUserName"  width="100"></el-table-column>                                
                                 <el-table-column label="对账时间" prop="AuditorTime"  width="110" >
                                 <template scope="scope">                                                                
-                                 <span v-if="typeof(scope.row.HotelPayment.AuditorTime) != 'undefined'">{{ scope.row.HotelPayment.AuditorTime.substring(0,16) }}</span>    
+                                 <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.AuditorTime) != 'undefined'">{{ scope.row.HotelPayment.AuditorTime.substring(0,16) }}</span>    
                                 </template>                                                                                     
                                 </el-table-column>                                                                                                                                                       
                                 <el-table-column label="收付时间" prop="PaymentDate"  width="110" >
                                  <template scope="scope">
-                                 <span v-if="typeof(scope.row.HotelPayment.PaymentDate) != 'undefined'">{{ scope.row.HotelPayment.PaymentDate.substring(0,16) }}</span>
+                                 <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.PaymentDate) != 'undefined'">{{ scope.row.HotelPayment.PaymentDate.substring(0,16) }}</span>
                                 </template>
                                 </el-table-column>
                                 <el-table-column label="截图" prop="Picture">
                                     <template scope="scope">
-                                    <el-button type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
+                                    <el-button v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.Picture) != 'undefined'" type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
                                 </template>
                                 </el-table-column>
                             </el-table>

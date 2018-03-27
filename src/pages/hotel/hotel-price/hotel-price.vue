@@ -552,7 +552,7 @@ export default {
         this.$set(item, 'timeDate', res.data.Sonrooms[String(item.ID)].STSes)
         this.$set(item, 'select', false)
       })
-      console.log(_self.chosenRoom.SonRooms)
+     // console.log(_self.chosenRoom.SonRooms)
       // _self.chosenRoom.SonRooms = SonRooms
       // this.$set(this.chosenRoom, 'SonRooms', SonRooms)
       _self.mutipList = []
@@ -593,6 +593,7 @@ export default {
         let value = item.timeDate[date].salePrice.find(
           item => item.ThreePlatId === this.platInfoList[type]
         )
+    //    console.log(value)
         return value ? value.Currency : ''
       }
       return ''
@@ -655,7 +656,7 @@ export default {
     async fetchData() {
       // const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       const res = await hotelRoomApi.list(this.stateForm.hotelId)
-      console.log(res)
+     // console.log(res)
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {

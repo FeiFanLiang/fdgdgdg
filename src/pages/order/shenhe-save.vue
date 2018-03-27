@@ -160,10 +160,16 @@ export default {
                             
                          const res =   await hotelPaymentInfoApi.savePaymentInfo(form)
                          console.log(res)
-                            _self.$message({
+                         if(res.data.State == true){
+                             _self.$message({
                                 message: '审核成功',
                                 type: 'success'
                             })
+                            this.$router.go(-1)                            
+                         }else{
+                             _self.$message.error(mes.data.Msg)
+                         }
+                            
                         }catch(e){
                             _self.$message.error('审核失败!!!')
                         }

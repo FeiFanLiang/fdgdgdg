@@ -16,7 +16,7 @@ export default {
   },
   //POST /Hotel/HotelPaymentInfo/SetPaymentInfo
   savePaymentInfo(params) {
-    return axios.post(base + 'SetPaymentInfo', params)
+    return axios.post(base4 + 'SetPaymentInfo', params)
   },
   //  GET /Hotel/PlatformAccount/GetInfo/{id}
   getAccount(id) {
