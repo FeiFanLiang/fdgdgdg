@@ -244,6 +244,9 @@ export default {
                 let remark = ''
                 let passenger = ''
                 for(let a in _self.multipleSelection){
+                    if(_self.multipleSelection[a].HotelBookingNo == undefined){
+                        _self.multipleSelection[a].HotelBookingNo = "N"
+                    }
                     remark+=_self.multipleSelection[a].Passenger.replace('/',' ')+' '
                             +_self.multipleSelection[a].StayDateStart.substring(0,10)+' '
                             +_self.multipleSelection[a].HotelBookingNo+' '

@@ -574,7 +574,9 @@ export default {
         EndDate: _self.startAndEndDay[1].date
       }
     
-      const res = await platStatPriceApi.getPriceList(_self.filters.PlatformID,form)
+      const res = await platStatPriceApi.getPriceList(form)
+          
+
      // console.log(res)
       // let SonRooms = [..._self.chosenRoom.SonRooms]
     if( JSON.stringify(res.data.Sonrooms) == "{}"){
@@ -626,6 +628,7 @@ export default {
       return ''
     },
     otherCurrency(type, item, date) {
+      console.log(item)
       if (
         item &&
         item.timeDate &&
