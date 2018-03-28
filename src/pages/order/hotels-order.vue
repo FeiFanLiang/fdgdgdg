@@ -50,7 +50,7 @@
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
-      <el-button  slot="button-add" style="cursor:default;border:none">{{Room}}间 / {{Night}}夜</el-button>
+      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜</el-button>
       
     </CustomSearchCopy>
     
@@ -464,6 +464,7 @@ export default {
       hotelList: [],
       imageList: [],
       nows:{},
+      RoomNight:"",
       text: -1,
       currentPage: 1,
       pageSize: 10,
@@ -1052,8 +1053,7 @@ export default {
         const res = await hotelsOrderApi.fetch(options);
         console.log(res)
         _self.hotelsOrder = res.data.Data;
-         _self.Room = res.data.room;
-         _self.Night = res.data.night;         
+        _self.RoomNight = res.data.RoomNight;                 
         _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {

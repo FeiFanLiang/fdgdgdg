@@ -504,7 +504,7 @@
                                 </el-table-column>
                                 <el-table-column label="应收/应付" prop="YingShouFu"  width="120">
                                 <template scope="scope">
-                                    <span>{{scope.row.Currency}}  {{scope.row.YingShouFu}}</span>
+                                    <span>{{scope.row.YingShouFu}}</span>
                                 </template>
                                 </el-table-column>
                                 <el-table-column label="对冲" prop="DuiChong"></el-table-column>                                
@@ -524,6 +524,11 @@
                                 <template scope="scope">
                                         <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.CreateUserName) != 'undefined' && scope.row.PaymentType === 1">{{scope.row.HotelPayment.CreateUserName}}</span>
                                 </template>
+                                </el-table-column>
+                                <el-table-column label="收付时间" prop="PaymentDate"  width="110" >
+                                 <template scope="scope">
+                                 <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.PaymentDate) != 'undefined'">{{ scope.row.HotelPayment.PaymentDate.substring(0,16) }}</span>
+                                </template>
                                 </el-table-column>                                
                                 <el-table-column label="对帐人" prop="HotelPayment.AuditorUserName"  width="100"></el-table-column>                                
                                 <el-table-column label="对账时间" prop="AuditorTime"  width="110" >
@@ -531,11 +536,7 @@
                                  <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.AuditorTime) != 'undefined'">{{ scope.row.HotelPayment.AuditorTime.substring(0,16) }}</span>    
                                 </template>                                                                                     
                                 </el-table-column>                                                                                                                                                       
-                                <el-table-column label="收付时间" prop="PaymentDate"  width="110" >
-                                 <template scope="scope">
-                                 <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.PaymentDate) != 'undefined'">{{ scope.row.HotelPayment.PaymentDate.substring(0,16) }}</span>
-                                </template>
-                                </el-table-column>
+                                
                                 <el-table-column label="截图" prop="Picture">
                                     <template scope="scope">
                                     <el-button v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.Picture) != 'undefined'" type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>

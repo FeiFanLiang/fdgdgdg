@@ -16,6 +16,26 @@
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="订单状态" slot="OrderState">
+        <el-select v-model="filters.OrderState" clearable @change="changeValue4">
+          <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="订单类别" slot="OrderType">
+        <el-select v-model="filters.OrderType" clearable @change="changeValue5">
+          <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="外采渠道" slot="WaiCaiPlatID">
+        <el-select v-model="filters.WaiCaiPlatID" clearable @change="changeValue7">
+          <el-option v-for="item in WaiCaiPlatID" :key="item.value" :label="item.Account" :value="item.ID"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="采购方式" slot="WaiCaiFlag">
+        <el-select v-model="filters.WaiCaiFlag" clearable @change="changeValue6">
+          <el-option v-for="item in WaiCaiFlag" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="结款方式" slot="SettlementCycle">
         <el-select v-model="filters.SettlementCycle" clearable @change="changeValue3">
           <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -35,7 +55,7 @@
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
-      <el-button  slot="button-add" style="cursor:default;border:none">{{Room}}间 / {{Night}}夜</el-button>
+      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜</el-button>
       
     </CustomSearchCopy>
     
@@ -299,8 +319,13 @@ export default {
       Pts:"",
       Qy:"",
       Fs:"",
+      Zt:"",
+      Lb:"",
+      Wcfs:"",
+      Wcqd:"",
       Rstate:"",
       Night:"",
+      RoomNight:"",
       hotelList: [],
       imageList: [],
       text: -1,
@@ -602,6 +627,11 @@ export default {
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
+          OrderState:_self.filters.OrderState,
+          OrderType:_self.filters.OrderType,
+          WaiCaiFlag:_self.filters.WaiCaiFlag,
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
           HandState:2,
           IsDelete:false, 
           WaiCaiNo:_self.filters.WaiCaiNo,
@@ -660,6 +690,18 @@ export default {
     changeValue3(value) {
           this.Fs = value
     },
+    changeValue4(value) {
+          this.Zt = value
+    },
+    changeValue5(value) {
+          this.Lb = value
+    },
+    changeValue6(value) {
+          this.Wcfs = value
+    },
+    changeValue7(value) {
+          this.Wcqd = value
+    },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
       console.log(now)
@@ -669,7 +711,11 @@ export default {
       this.filters.ThreePlatID = this.Pts
       this.filters.HotelArea = this.Qy
       this.filters.SettlementCycle = this.Fs
-      this.filters.HandState = this.Rstate 
+      this.filters.HandState = this.Rstate    
+      this.filters.OrderState = this.Zt
+      this.filters.OrderType = this.Lb
+      this.filters.WaiCaiFlag = this.Wcfs  
+      this.filters.WaiCaiPlatID = this.Wcqd   
       this.fetchData();
     },
     qrh(id) {
@@ -795,15 +841,19 @@ export default {
           WaiCaiNo:_self.filters.WaiCaiNo,
           HandState:2,
           IsDelete:false,        
-          PlatOrderNo: _self.filters.PlatOrderNo
+          PlatOrderNo: _self.filters.PlatOrderNo,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
+          OrderState:_self.filters.OrderState,
+          OrderType:_self.filters.OrderType,
+          WaiCaiFlag:_self.filters.WaiCaiFlag,
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,                                                  
         }
       };
       try {
         const res = await hotelsOrderApi.fetch(options);
         console.log(res)
         _self.hotelsOrder = res.data.Data;
-         _self.Room = res.data.room;
-         _self.Night = res.data.night;         
+        _self.RoomNight = res.data.RoomNight;         
         _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {
