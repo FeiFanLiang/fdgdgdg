@@ -1138,26 +1138,25 @@ export default{
         async submitOrderList() {
             const _self = this
             let mes
+           
             for(let i in _self.form.HotelOrderDetail){
                 _self.form.HotelOrderDetail[i].HotelBookingNote = tinyMCE.editors[i].getContent()
-            }
-            
+            } 
             try {
                 _self.isEditable = false
                 if(_self.type == '回填'){
-                    _self.form.BackfillState = 1
+                    _self.form.ActionCmd = 2
                 }
                 if(_self.type == '审核'){
-                    _self.form.StateAuditor = 1
+                    _self.form.ActionCmd = 3
                 }
-              
-
-                
+                if(_self.type == '退改'){
+                    _self.form.ActionCmd = 5
+                }
+                if(_self.type == '酒店订单'){
+                    _self.form.ActionCmd = 1
+                }
                 let datas = _self.form
-             //    console.log(datas)
-                // return false
-                //datas.Addition = _self.fujia
-                //datas.PaymentInfo = _self.money
                 if(_self.type == '审核'){
                  mes =  await hotelsOrderApi.checkSave(datas)                  
                 }else{                 
@@ -1189,6 +1188,7 @@ export default{
             _self.formFujia = {
                 HotelOrderID: _self.ID,
                 Money: 0,
+                ActionCmd:0,
                 PlateName: '',
                 PlateOrderNo: '',
                 UseDate: '',

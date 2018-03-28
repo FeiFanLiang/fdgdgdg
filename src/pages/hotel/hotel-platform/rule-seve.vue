@@ -124,11 +124,20 @@
         </el-form-item>
         </el-col>        
         </el-row>
+        <el-row>
+         <el-col :span="12">
         <el-form-item label="选择模式" prop='StateCheck'>
           <el-select v-model="form.StateCheck" placeholder="请选择" clearable @change="changeValue">
               <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
+        </el-col>
+         <el-col :span="12">
+        
+                <i class="el-icon-question"></i>
+      
+        </el-col>
+         </el-row>
         <el-row v-if=isShow>
         <el-col :span="12">
         <el-form-item label="开始天数" prop="StartDay">

@@ -730,12 +730,9 @@ export default {
         }
       ],
       rules: {
-        HotelName: [
-          { required: true, message: "请输入酒店名称", trigger: "blur" }
-        ],
-        PlatOrderNo: [
-          { required: true, message: "请输入第三方订单号", trigger: "blur" }
-        ]
+        // HotelName: [
+        //   { required: true, message: "请输入酒店名称", trigger: "change" }
+        // ]
         // ThreePlatID: [
         //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }
         // ],
@@ -1098,6 +1095,15 @@ export default {
     },
     async submitForm() {
       const _self = this;
+    
+      if(_self.form.HotelID == undefined){
+          this.$message({
+            showClose: true,
+            message: "请输入酒店名称",
+            type: "error"
+          });
+      }
+      else{
       _self.$refs["form"].validate(async valid => {
         if (valid) {
           try {
@@ -1140,6 +1146,7 @@ export default {
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
+                ActionCmd:0,
                 HotelOrderDetail: [_self.form]
               };
             } else {
@@ -1149,12 +1156,13 @@ export default {
               var f = {
                 ID: id,
                 HotelArea: _self.detail.HotelArea,
+                ActionCmd:0,
                 Picture: _self.imageList.toString(),
                 HotelOrderDetail: [_self.form]
               };
             }
-            // console.log(f)
-            // return false
+            console.log(f)
+           // return false
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;
@@ -1167,14 +1175,9 @@ export default {
           } finally {
             _self.isEditable = true;
           }
-        } else {
-          this.$message({
-            showClose: true,
-            message: "请输入第三方订单号",
-            type: "error"
-          });
-        }
+        } 
       });
+    }
     }
   }
 };

@@ -154,21 +154,15 @@
           </el-input>
         </el-col>
         <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" style="margin-top:60px" >
-        <el-table-column prop="PlatformID" label="渠道" show-overflow-tooltip fixed="left" slot="left-one">
-          <template scope="scope">
-            <span v-for="item in PlatPolicyIDs"><span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span></span>
-          </template>
-          </el-table-column>
-          <el-table-column prop="Price" label="价格" show-overflow-tooltip fixed="left" slot="left-one">
+          <el-table-column prop="Price" label="价格" show-overflow-tooltip  slot="left-one">
           <template scope="scope">
             <el-input placeholder="请输入收款金额" v-model="scope.row.Price"></el-input>
           </template>
           </el-table-column>
-          <el-table-column prop="Stat" label="状态" show-overflow-tooltip fixed="right" slot="right-one" width="300">
+          <el-table-column prop="Stat" label="状态" show-overflow-tooltip  slot="right-one" width="300">
           <template scope="scope">
             <el-radio class="radio" v-model="scope.row.Stat" :label="0">自动更新</el-radio>
           <el-radio class="radio" v-model="scope.row.Stat" :label="1">人工维护</el-radio>
-          <el-radio class="radio" v-model="scope.row.Stat" :label="2">关房</el-radio>
           </template>
           </el-table-column>
           
@@ -190,12 +184,6 @@
       </el-col>
     </el-form-item>
       <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" style="margin-top:40px" >
-        <el-table-column prop="PlatformID" label="渠道" show-overflow-tooltip slot="left-one">
-          <template scope="scope">
-            <span v-for="item in PlatPolicyIDs"><span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span></span>
-          </template>
-          </el-table-column>
-          <el-table-column prop="Price" label="价格" show-overflow-tooltip  slot="left-two" width="130">
           <template scope="scope">
             <el-input placeholder="请输入收款金额" v-model="scope.row.Price"></el-input>
           </template>
@@ -205,17 +193,19 @@
             <el-input-number v-model="scope.row.RoomCount"  :min="1" width="100" ></el-input-number>
           </template>
           </el-table-column>
-          <el-table-column prop="Stat" label="状态" show-overflow-tooltip  slot="right-one" width="300">
+          <el-table-column prop="UpdateChannel" label="状态" show-overflow-tooltip  slot="right-one" width="300">
           <template scope="scope">
-            <el-radio class="radio" v-model="scope.row.Stat" :label="0">自动更新</el-radio>
-          <el-radio class="radio" v-model="scope.row.Stat" :label="1">人工维护</el-radio>
-          <el-radio class="radio" v-model="scope.row.Stat" :label="2">关房</el-radio>
+            <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="0">机器抓取</el-radio>
+          <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="1">人工更改</el-radio>
+          <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="2">关房</el-radio>
           </template>
           </el-table-column>
-          <el-table-column prop="IsOpen" label="房间状态" show-overflow-tooltip  slot="right-one" width="300">
+          <el-table-column prop="IsOpen" label="打开状态" show-overflow-tooltip  slot="right-one">
           <template scope="scope">
-            <el-radio class="radio" v-model="scope.row.IsOpen" :label="true">开房</el-radio>
-            <el-radio class="radio" v-model="scope.row.IsOpen" :label="false">关房</el-radio>            
+          <el-radio-group v-model="scope.row.IsOpen">
+            <el-radio-button  :label="true">开</el-radio-button>
+            <el-radio-button  :label="false">关</el-radio-button>  
+            </el-radio-group>          
           </template>
           </el-table-column>
           
@@ -913,6 +903,10 @@ export default {
         )
   
         _self.getPriceList()
+        _self.$message({
+              message: "修改成功",
+              type: "success"
+            });
         _self.priceChangeForOne = false
         _self.isEditable = true
       } catch (e) {
@@ -935,19 +929,25 @@ export default {
           stateForm.push({
             hotelId: _self.stateForm.hotelId,
             roomId: _self.chosenRoom.roomId,
-            sonRoomId: _self.stateForm.sonRoomId,
-            roomType: 1,
-            date: time,
-            count: _self.stateForm.count,
-            isOpen: _self.stateForm.isOpen,
-            updateChannel: _self.stateForm.updateChannel
+            SonRoomID:_self.hotelprice[index].SonRoomID,
+            UseDate: time,
+            PlatformID: _self.hotelprice[index].PlatformID,
+            RoomCount: _self.hotelprice[index].RoomCount,
+            IsOpen: _self.hotelprice[index].IsOpen,
+            UpdateChannel: _self.hotelprice[index].UpdateChannel
           })
           })
         })
         console.log(stateForm)
-        return false        
+            
         const res = await platStatPriceApi.UpdateRoomState(stateForm)
+          console.log(res)
+          
         _self.getPriceList()
+        _self.$message({
+              message: "修改成功",
+              type: "success"
+            });
         _self.priceChangeForOne = false
         _self.isEditable = true
       } catch (e) {

@@ -577,9 +577,6 @@ export default {
       rules: {
         HotelName: [
           { required: true, message: "请输入酒店名称", trigger: "blur" }
-        ],
-        PlatOrderNo: [
-          { required: true, message: "请输入第三方订单号", trigger: "blur" }
         ]
         // ThreePlatID: [
         //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }

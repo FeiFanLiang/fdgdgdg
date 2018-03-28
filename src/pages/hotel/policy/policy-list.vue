@@ -383,6 +383,8 @@ import UploadImageCopy from 'components/upload-image-copy'
             currentPage: 1,
             pageSize: 10,
             count: 0,
+            date:"",
+            arra:[],
             policyList:[],
             loading:false,
             filters:{
@@ -550,6 +552,8 @@ import UploadImageCopy from 'components/upload-image-copy'
       created(){
         this.HotelID = this.$route.params.ID
         this.hotelName = this.$route.query.hotelName
+        
+        this.arra.push(da)
         console.log(this.hotelName + this.HotelID)
         this.fetchData()
         this.getRserveMode()
@@ -675,8 +679,12 @@ import UploadImageCopy from 'components/upload-image-copy'
         },
         async addPolicy(){
             const _self = this
+             let d = new Date()
+                d.setFullYear(2018,11,31)
+            console.log(_self.value2)
             try{
                 _self.title = '酒店协议创建'
+              //  _self.form.ExpiringDate = d                
                 _self.activeNames = ''
                 _self.resetForm()
                 _self.dialogShow = true
@@ -714,9 +722,12 @@ import UploadImageCopy from 'components/upload-image-copy'
                         _self.isEditable = false
                         if (_self.form.ID) {
                             console.log(_self.form)
+                            return false
                             await policyApi.editHotelPolicy(_self.form.ID,_self.form)
                         } else {
                             console.log(_self.form)
+                            return false
+                            
                             await policyApi.addHotelPolicy(_self.form)
                         }
                         _self.$message({
