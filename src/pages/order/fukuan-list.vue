@@ -18,21 +18,34 @@
           </el-select>
       </el-form-item>
         <el-button style="margin:10px 0;" @click="payment" slot="button-add">付款</el-button>
-        <el-button type="primary" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
+        <el-button @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>   
+        <el-button slot="button-add" style="border:none;cursor:default">
+        <el-tag type="primary">单结</el-tag>
+        <el-tag type="success">月结</el-tag>
+        <el-tag type="danger">半月结</el-tag>
+        <el-tag type="warning">周结</el-tag>
+        <el-tag type="info">其它</el-tag> 
+        </el-button>
     </CustomSearchCopy>
   <el-table ref="multipleTable" :data="fukuanList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading" @selection-change="handleSelectionChange"
   :default-sort = "{prop: 'UrgentPay', order: 'descending'}">
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip>
+    <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width="170">
         <template scope="scope">
-        <!--    <img src="~assets/images/common/urgent.png" v-if="" style="width:20px;height:23px"> -->
-            <span v-if="scope.row.UrgentPay == 1" style="color:red;">{{ scope.row.PlatOrderNo }}</span>
-            <span v-else>{{ scope.row.PlatOrderNo }}</span>
+           <img src="~assets/images/common/urgent.png" v-if="scope.row.PaymentInfoUrgentPay == 1" style="width:20px;height:23px"> 
+            <span v-if="scope.row.PaymentInfoUrgentPay == 1" style="color:red;">{{ scope.row.PlatOrderNo }}</span>
+           <span v-else>{{ scope.row.PlatOrderNo }}</span> 
         </template>
     </el-table-column>
-    <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip >
+    <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="170"> >
         <template slot-scope="scope" >
-        <p @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" >{{scope.row.HotelName}}</p>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 2" style="color:#20a0ff" >{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 4" style="color:#13ce66" >{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 5" style="color:#ff4949" >{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 6" style="color:#f7ba2a" >{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 0" style="color:#8391a5" >{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 1">{{scope.row.HotelName}}</span>
+        <span @dblclick="paymento(scope.$index, scope.row)" class="hotelname" onselectstart="return false;" v-if="scope.row.SettlementCycleFu == 3">{{scope.row.HotelName}}</span>
         </template>     
     </el-table-column>
     <el-table-column label="入住/退房日期" width="200">
@@ -41,10 +54,9 @@
             <span v-if="typeof(scope.row.StayDateEnd) != 'undefined'">{{ scope.row.StayDateEnd.split(' ')[0] }}</span>
         </template>
     </el-table-column>
-    <el-table-column label="间/晚" prop="RoomNum" width="80">
+    <el-table-column label="预定时间" prop="BookTime" width="150" sortable>
         <template scope="scope">
-            <span>{{ scope.row.RoomNum }}</span>/
-            <span>{{ scope.row.NightNum }}</span>
+            <span v-if="typeof(scope.row.BookTime) != 'undefined'">{{ scope.row.BookTime.substring(5,16) }}</span>
         </template>
     </el-table-column>
     <el-table-column label="入住人" prop="Passenger" width="100"></el-table-column>
@@ -56,9 +68,10 @@
                 <span v-if="scope.row.ExpectSettlement != null">{{scope.row.ExpectSettlement.substring(0,10)}}</span>
             </template>
         </el-table-column>        
-    <el-table-column label="预定时间" prop="BookTime" width="150" sortable>
+    <el-table-column label="间/晚" prop="RoomNum" width="80">
         <template scope="scope">
-            <span v-if="typeof(scope.row.BookTime) != 'undefined'">{{ scope.row.BookTime.substring(5,16) }}</span>
+            <span>{{ scope.row.RoomNum }}</span>/
+            <span>{{ scope.row.NightNum }}</span>
         </template>
     </el-table-column>
     <el-table-column label="不可合并支付" prop="UnMergePay">

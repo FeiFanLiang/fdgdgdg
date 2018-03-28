@@ -1,8 +1,11 @@
 import axios from 'axios'
 import path from './api'
 const base = path.apiBaseUrl + 'Hotel/Platform_SalePrice/'
-
+import {
+  platStatPriceApi
+} from '../config-data'
 export default {
+  getConfig: platStatPriceApi.getConfig,
   getSonRoomList (hotelID,platID) {
     return axios.get(base + `GetPlatSonRoomList?hotelID=${hotelID}&platID=${platID}`)
   },

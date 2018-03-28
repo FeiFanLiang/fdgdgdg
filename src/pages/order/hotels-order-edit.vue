@@ -89,10 +89,10 @@
                 </el-form-item>                                       
             </el-col>
             <el-col :span="6">
-                <el-form-item label="截图状态" prop="StateSend">
-                    <span v-if="form.StateSend == 0" style="color:orange">未发送</span>
-                    <span v-if="form.StateSend == 1" style="color:orange">已发截图</span>
-                    <span v-if="form.StateSend == 2" style="color:orange">已处理</span>                    
+                <el-form-item label="订单类型" prop="OrderType">
+                    <el-select v-model="form.OrderType" clearable>
+                    <el-option v-for="items in OrderType" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                    </el-select>
                 </el-form-item>
             </el-col>            
         </el-row>
@@ -105,11 +105,18 @@
                 </el-radio-group>
             </el-form-item>
             </el-col>
-             <el-col :span="18">
+             <el-col :span="12">
                 <el-button @click="addtext($event)" style="margin-left:110px;margin-bottom:22px">无房拒单</el-button>
                 <el-button @click="addtext($event)">政策不符</el-button>
                 <el-button @click="addtext($event)">赔钱拒单</el-button>
             </el-col>
+            <el-col :span="6">
+                <el-form-item label="截图状态" prop="StateSend">
+                    <span v-if="form.StateSend == 0" style="color:orange">未发送</span>
+                    <span v-if="form.StateSend == 1" style="color:orange">已发截图</span>
+                    <span v-if="form.StateSend == 2" style="color:orange">已处理</span>                    
+                </el-form-item>
+            </el-col> 
         </el-row>
         <el-row :gutter="24">
             <el-col :span="6">
@@ -137,7 +144,13 @@
             <el-collapse-item :key="item.id" v-for="(item,index) in form.HotelOrderDetail" style="border-right: none;" :name="item.ID">
                 <template slot="title">
                     <span v-if="item.UpdateTime != null">
-                        {{item.PlatOrderType + '单' + item.UpdateTime.substring(5,10)}}
+                    <span  v-if="item.OrderType == 0">新订{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 1">修改{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 2">取消{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 3">延住{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 4">无效{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 5">新订+修改{{'单' + item.UpdateTime.substring(5,10)}}</span>
+                    <span  v-if="item.OrderType == 6">改期{{'单' + item.UpdateTime.substring(5,10)}}</span>
                     </span>
                 </template>
                 <!--///////////////////////////////////-->
@@ -509,7 +522,7 @@
                                 <el-table-column label="公司打款账户" prop="CompanyAcount"  width="130" ></el-table-column>                                
                                 <el-table-column label="付款人" prop="CreateUserName"  width="100">
                                 <template scope="scope">
-                                        <span v-if="scope.row.PaymentType === 1">{{scope.row.HotelPayment.CreateUserName}}</span>
+                                        <span v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.CreateUserName) != 'undefined' && scope.row.PaymentType === 1">{{scope.row.HotelPayment.CreateUserName}}</span>
                                 </template>
                                 </el-table-column>                                
                                 <el-table-column label="对帐人" prop="HotelPayment.AuditorUserName"  width="100"></el-table-column>                                

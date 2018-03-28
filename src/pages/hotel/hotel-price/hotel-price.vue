@@ -493,6 +493,8 @@ export default {
             updateChannel: _self.singalStateForm.updateChannel
           })
         })
+        // console.log(form)
+        // return false
         const res = await roomStatPriceApi.UpdateRoomState(form)
         _self.$message({
           message: '修改成功',
@@ -594,6 +596,8 @@ export default {
           item => item.ThreePlatId === this.platInfoList[type]
         )
     //    console.log(value)
+              console.log(item.timeDate[date].salePrice)
+
         return value ? value.Currency : ''
       }
       return ''
@@ -789,6 +793,8 @@ export default {
             }
           })
         })
+        console.log(otherPriceForm)
+        return false
         const otherPriceFormRes = await roomStatPriceApi.updateRoomSalePrice(
           otherPriceForm
         )

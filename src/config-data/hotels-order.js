@@ -40,11 +40,14 @@ const searchData2 = [
   ['订单平台', 'ThreePlatID', 'select', ''],
   ['入住日期', 'StayDateStart', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
-  ['订单渠道', 'HotelArea', 'select', ''],
-  ['结款方式', 'SettlementCycle', 'select', ''],
-  ['确认号', 'HotelBookingNo', 'input', ''],
   ['人工处理状态', 'HandState', 'select', ''],
-  ['外采订单号', 'WaiCaiNo', 'input', ''],      
+  ['外采订单号', 'WaiCaiNo', 'input', ''],     
+  ['订单类别', 'OrderType', 'select', ''],
+  ['外采渠道', 'WaiCaiPlatID', 'select', ''],  
+  ['采购方式', 'WaiCaiFlag', 'select', ''],  
+  ['订单状态', 'OrderState', 'select', ''],
+  ['付款周期', 'SettlementCycleFu', 'select', ''], 
+  ['确认号', 'HotelBookingNo', 'input', ''],         
   ['筛选条件', 'checkList', 'select', ''],
 ]
 const searchData3 = [

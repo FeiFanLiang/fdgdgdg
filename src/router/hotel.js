@@ -21,15 +21,15 @@ export default {
         hidden: true
       }
     },
-    {
-      path: 'HotelBasePolicy',
-      component: _import('hotel/hotel-base-policy/hotel-base-policy'),
-      name: '酒店政策信息'
-    },
+    // {
+    //   path: 'HotelBasePolicy',
+    //   component: _import('hotel/hotel-base-policy/hotel-base-policy'),
+    //   name: '酒店政策信息'
+    // },
     {
       path: 'PolicyList',
       component: _import('hotel/policy/policy-list'),
-      name: '酒店政策信息2'
+      name: '酒店协议'
     },
     {
       path: 'PolicyPlatForm',

@@ -6,20 +6,35 @@
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单区域" slot="HotelArea">
-        <el-select v-model="filters.HotelArea" clearable @change="changeValue1">
-          <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item label="人工处理状态" slot="HandState">
         <el-select v-model="filters.HandState" clearable @change="changeValue2">
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="结款方式" slot="SettlementCycle">
-        <el-select v-model="filters.SettlementCycle" clearable @change="changeValue3">
-          <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+      <el-form-item label="订单状态" slot="OrderState">
+        <el-select v-model="filters.OrderState" clearable @change="changeValue4">
+          <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="订单类别" slot="OrderType">
+        <el-select v-model="filters.OrderType" clearable @change="changeValue5">
+          <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="外采渠道" slot="WaiCaiPlatID">
+        <el-select v-model="filters.WaiCaiPlatID" clearable @change="changeValue7">
+          <el-option v-for="item in WaiCaiPlatID" :key="item.value" :label="item.Account" :value="item.ID"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="采购方式" slot="WaiCaiFlag">
+        <el-select v-model="filters.WaiCaiFlag" clearable @change="changeValue6">
+          <el-option v-for="item in WaiCaiFlag" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="付款周期" slot="SettlementCycleFu" >
+          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期" @change="changeValue3">
+              <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
+          </el-select>
       </el-form-item>
       <el-form-item label="外采订单号" slot="WaiCaiNo">
           <el-input v-model="filters.WaiCaiNo"></el-input>
@@ -176,6 +191,29 @@
           </template>
         </el-table-column>
         <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
+        <el-table-column label="订单状态" prop="OrderState" show-overflow-tooltip>
+        <template scope="scope">
+          <span  v-if="scope.row.OrderState == 0">未处理</span>
+          <span  v-if="scope.row.OrderState == 1">已处理</span>
+          <span  v-if="scope.row.OrderState == 2">已拒绝</span>
+          <span  v-if="scope.row.OrderState == 3">未处理+未发单</span>
+          <span  v-if="scope.row.OrderState == 4">待排房</span>
+          <span  v-if="scope.row.OrderState == 5">风险订单</span>
+          <span  v-if="scope.row.OrderState == 6">风险订单+未处理</span>
+          <span  v-if="scope.row.OrderState == 7">风险订单+已处理</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="订单类别" prop="OrderType"  width="80">
+        <template scope="scope">
+            <span  v-if="scope.row.OrderType == 0">新订</span>
+            <span  v-if="scope.row.OrderType == 1">修改</span>
+            <span  v-if="scope.row.OrderType == 2">取消</span>
+            <span  v-if="scope.row.OrderType == 3">延住</span>
+            <span  v-if="scope.row.OrderType == 4">无效</span>
+            <span  v-if="scope.row.OrderType == 5">新订+修改</span>
+            <span  v-if="scope.row.OrderType == 6">改期</span>
+          </template>
+        </el-table-column>        
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
@@ -295,7 +333,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="订单类型" prop="OrderType">
-                        <el-select v-model="form.OrderType" clearable>
+                        <el-select v-model="form.OrderType" clearable @change="changeValue8">
                           <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -401,6 +439,7 @@ import {
   hotelsOrderApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
+  policyApi,
   hotelBaseApi
 } from "api";
 import UploadImage from "components/upload-image";
@@ -416,10 +455,15 @@ export default {
       Pts:"",
       Qy:"",
       Fs:"",
+      Zt:"",
+      Lb:"",
+      Wcfs:"",
+      Wcqd:"",
       Rstate:"",
       Night:"",
       hotelList: [],
       imageList: [],
+      nows:{},
       text: -1,
       currentPage: 1,
       pageSize: 10,
@@ -429,6 +473,7 @@ export default {
       isEditable: true,
       form: {
         PlatOrderNo: "",
+        Nowtate:"",
         HotelName: "",
         HotelID: "",
         ThreePlatID: "",
@@ -450,13 +495,18 @@ export default {
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
+      WaiCaiPlatID:[],
       ID: "",
       filters: {
         HotelName: "",
         ThreePlatID: "",
-        SettlementCycle: "",
+        SettlementCycleFu: "",
         checkList: "",
+        OrderState:"",
         HandState:"",
+        OrderType:"",
+        WaiCaiFlag:"",
+        WaiCaiPlatID:"",
         HotelArea: "",
         WaiCaiNo:""
       },
@@ -465,6 +515,16 @@ export default {
           PlatName: "全部",
           value: ""
         }
+      ],
+      WaiCaiFlag:[
+                {
+                    label:'自营',
+                    value:0
+                },
+                {
+                    label:'外采',
+                    value:1
+                }
       ],
       SettlementCycle: [
         {
@@ -609,6 +669,36 @@ export default {
           value: 6
         }
       ],
+      payPeriodList: [{
+                    value: 0,
+                    text: '其他（每单备注）'
+                }, {
+                    value: 1,
+                    text: '预付款'
+                },
+                {
+                    value: 2,
+                    text: '单结'
+                },
+                {
+                    value: 3,
+                    text: '日结'
+                },
+
+                {
+                    value: 4,
+                    text: '月结'
+                },
+                {
+                    value: 5,
+                    text: '半月结'
+                },
+                {
+                    value: 6,
+                    text: '周结'
+                }
+
+            ],
       SCycle: [
         {
           label: "单结",
@@ -684,6 +774,7 @@ export default {
   created() {
     this.fetchData();
     this.ThreePlat();
+    this.platformAccount();
     this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
@@ -698,6 +789,31 @@ export default {
     },
     changeValue3(value) {
           this.Fs = value
+    },
+    changeValue4(value) {
+          this.Zt = value
+    },
+    changeValue5(value) {
+          this.Lb = value
+    },
+    changeValue6(value) {
+          this.Wcfs = value
+    },
+    changeValue7(value) {
+          this.Wcqd = value
+    },
+    changeValue8(value){
+      const _self = this;            
+      _self.form.OrderType = value
+    },
+    async platformAccount(){
+            const options = {
+                pageSize: 1000,
+                order: 'Sort'
+            }     
+            const res = await policyApi.getPolicyPlatform(options)
+            this.WaiCaiPlatID = res.data.Data
+       //     console.log(this.WaiCaiPlatID)
     },
     async downloadList(e) {
       const _self = this;
@@ -726,12 +842,16 @@ export default {
           "BookTime>": time1,
           "BookTime<": time2,
           ThreePlatID: _self.filters.ThreePlatID,
-          SettlementCycle: _self.filters.SettlementCycle,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
           HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
+          OrderState:_self.filters.OrderState,
+          OrderType:_self.filters.OrderType,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
           WaiCaiNo:_self.filters.WaiCaiNo,
+          WaiCaiFlag:_self.filters.WaiCaiFlag,
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       };
@@ -783,14 +903,19 @@ export default {
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
-      console.log(now)
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
       this.filters.WaiCaiNo = now.WaiCaiNo   
       this.filters.ThreePlatID = this.Pts
       this.filters.HotelArea = this.Qy
-      this.filters.SettlementCycle = this.Fs
-      this.filters.HandState = this.Rstate      
+      this.filters.SettlementCycleFu = this.Fs
+     // console.log(this.filters)
+      this.filters.HandState = this.Rstate    
+      this.filters.OrderState = this.Zt
+      this.filters.OrderType = this.Lb
+      this.filters.WaiCaiFlag = this.Wcfs  
+      this.filters.WaiCaiPlatID = this.Wcqd       
+             
       this.fetchData();
     },
     qrh(id) {
@@ -907,16 +1032,21 @@ export default {
           "BookTime>": time1,
           "BookTime<": time2,
           ThreePlatID: _self.filters.ThreePlatID,
-          SettlementCycle: _self.filters.SettlementCycle,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
           HandState:_self.filters.HandState,
           HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
-          WaiCaiNo:_self.filters.WaiCaiNo,          
+          WaiCaiNo:_self.filters.WaiCaiNo,
+          OrderState:_self.filters.OrderState,
+          OrderType:_self.filters.OrderType,
+          WaiCaiFlag:_self.filters.WaiCaiFlag,
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,                                                  
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       };
+      console.log(options)
       try {
         const res = await hotelsOrderApi.fetch(options);
         console.log(res)
@@ -971,6 +1101,7 @@ export default {
           try {
             _self.isEditable = false;
             let time = new Date().Format("yyyy-MM-dd");
+            
             switch (_self.form.OrderType) {
               case 0:
                 _self.form.PlatOrderType = "新订";
@@ -997,9 +1128,13 @@ export default {
                 _self.form.PlatOrderType = "";
             }
             _self.form.UpdateTime = time;
+          
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
-            _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-            console.log(_self.detail);
+            //   console.log(_self.form.PlatOrderType)
+            // return false
+            //console.log(_self.detail);
+             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
+            
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
@@ -1016,7 +1151,8 @@ export default {
                 HotelOrderDetail: [_self.form]
               };
             }
-            console.log(f);
+            // console.log(f)
+            // return false
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;

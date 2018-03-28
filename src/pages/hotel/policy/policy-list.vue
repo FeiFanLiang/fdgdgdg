@@ -1,12 +1,32 @@
 <template>
 <div>
     <el-row :gutter="24" style="margin-bottom:10px;" v-if="typeof(HotelID) == 'undefined'">
+      <el-form label-width="80px">
+
         <el-col :span="6">
-            <el-input placeholder="请输入酒店名称" v-model="filters.hotelname"></el-input>
+            <el-form-item label="酒店名称">
+               <el-input placeholder="请输入酒店名称" v-model="filters.hotelname"></el-input>             
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-form-item label="采购人">
+               <el-input placeholder="请输入采购人" v-model="filters.hotelname"></el-input>             
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-form-item label="录入时间">
+                <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>            
+            </el-form-item>
+        </el-col>
+        <el-col :span="6">
+            <el-form-item label="协议到期日">
+                <el-date-picker  v-model="filters.BookTime" type="date"></el-date-picker>                                       
+            </el-form-item>
         </el-col>
         <el-col :span="5">
             <el-button type="primary" @click="policySearch(filters)">搜索</el-button>
         </el-col>
+        </el-form>
     </el-row>
     <el-button type="primary" @click="addPolicy" v-if="typeof(HotelID) != 'undefined'">创建</el-button>
     <el-table :data="policyList" border style="width: 100%" element-loading-text="拼命加载中" v-loading="loading">

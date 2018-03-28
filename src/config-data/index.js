@@ -10,6 +10,7 @@ import carUseApi from './car-use'
 import driverBaseApi from './driver-base'
 import driverEvaluateApi from './driver-evaluate'
 import hotelBaseApi from './hotel-base'
+import platStatPriceApi from './hotel-price'
 import hotelPayModeApi from './hotel-paymode'
 import hotelPlatformApi from './hotel-platform'
 import hotelPolicyApi from './hotel-policy'
@@ -31,6 +32,7 @@ import tripOrderApi from './trip-order'
 export {
   bargainsRoomApi,
   carArrangeApi,
+  platStatPriceApi,
   carBaseApi,
   carLineApi,
   stationApi,
