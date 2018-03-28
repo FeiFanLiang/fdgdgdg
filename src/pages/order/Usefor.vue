@@ -303,6 +303,7 @@
 import {
   hotelsOrderApi,
   paymentCheckApi,
+  policyApi,
   hotelThreePlatInfoApi,
   hotelBaseApi
 } from "api";
@@ -328,6 +329,7 @@ export default {
       RoomNight:"",
       hotelList: [],
       imageList: [],
+      WaiCaiPlatID:[],
       text: -1,
       currentPage: 1,
       pageSize: 10,
@@ -368,6 +370,16 @@ export default {
         HotelArea: "",
         WaiCaiNo:""
       },
+      WaiCaiFlag:[
+                {
+                    label:'自营',
+                    value:0
+                },
+                {
+                    label:'外采',
+                    value:1
+                }
+      ],
       ThreePlatID: [
         {
           PlatName: "全部",
@@ -592,6 +604,7 @@ export default {
   created() {
     this.fetchData();
     this.ThreePlat();
+    this.platformAccount();
     this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
@@ -653,6 +666,16 @@ export default {
       } catch (e) {
         _self.$message.error("数据下载失败!!!");
       }
+    },
+    async platformAccount(){
+            const options = {
+                pageSize: 1000,
+                order: 'Sort',
+                query:{CanPurchase:true}
+            }     
+            const res = await policyApi.getPolicyPlatform(options)
+            this.WaiCaiPlatID = res.data.Data
+       //     console.log(this.WaiCaiPlatID)
     },
     async remoteHotelList(querys) {
       const _self = this;
