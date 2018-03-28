@@ -406,14 +406,14 @@
                 <el-col :span="6">
                     <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
                         <el-select v-model="HotelOrderDetail.SettlementCycleFu" clearable>
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.text" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（收）" prop="SettlementCycle">
                         <el-select v-model="HotelOrderDetail.SettlementCycle" clearable>
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.text" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -525,24 +525,6 @@ export default {
                     label:'外采',
                     value:1
                 }
-      ],
-      SettlementCycle: [
-        {
-          label: "全部",
-          value: ""
-        },
-        {
-          label: "单结",
-          value: 0
-        },
-        {
-          label: "周结",
-          value: 1
-        },
-        {
-          label: "月结",
-          value: 2
-        }
       ],
       HandState: [{
                 label: '未处理',
@@ -669,10 +651,12 @@ export default {
           value: 6
         }
       ],
-      payPeriodList: [{
+      payPeriodList: [
+                {
                     value: 0,
                     text: '其他（每单备注）'
-                }, {
+                }, 
+                {
                     value: 1,
                     text: '预付款'
                 },
@@ -701,17 +685,34 @@ export default {
             ],
       SCycle: [
         {
-          label: "单结",
-          value: 0
-        },
-        {
-          label: "周结",
-          value: 1
-        },
-        {
-          label: "月结",
-          value: 2
-        }
+                    value: 0,
+                    text: '其他（每单备注）'
+                }, 
+                {
+                    value: 1,
+                    text: '预付款'
+                },
+                {
+                    value: 2,
+                    text: '单结'
+                },
+                {
+                    value: 3,
+                    text: '日结'
+                },
+
+                {
+                    value: 4,
+                    text: '月结'
+                },
+                {
+                    value: 5,
+                    text: '半月结'
+                },
+                {
+                    value: 6,
+                    text: '周结'
+                }
       ],
       Currency: [
         {
