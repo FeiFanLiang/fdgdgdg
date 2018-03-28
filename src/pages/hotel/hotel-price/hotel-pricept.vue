@@ -144,16 +144,16 @@
       </el-row>
       <el-row style="margin-top:20px;" v-for="(item,index) in priceForm.price" :key="index">
         <el-col :span="12" :offset="1">
-          <el-input placeholder="售卖价" v-model="priceForm.price[index].price">
-<template slot="prepend">
- {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</template>
-<template slot="append">
- ￥
-</template>
+          <el-input placeholder="售卖价" v-model="priceForm.price[index].price" :disabled="true">
+          <template slot="prepend">
+          {{item.title}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </template>
+          <template slot="append">
+          ￥
+          </template>
           </el-input>
         </el-col>
-        <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" >
+        <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" style="margin-top:60px" >
         <el-table-column prop="PlatformID" label="渠道" show-overflow-tooltip fixed="left" slot="left-one">
           <template scope="scope">
             <span v-for="item in PlatPolicyIDs"><span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span></span>
@@ -189,18 +189,52 @@
         </el-date-picker>
       </el-col>
     </el-form-item>
+      <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" style="margin-top:40px" >
+        <el-table-column prop="PlatformID" label="渠道" show-overflow-tooltip slot="left-one">
+          <template scope="scope">
+            <span v-for="item in PlatPolicyIDs"><span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span></span>
+          </template>
+          </el-table-column>
+          <el-table-column prop="Price" label="价格" show-overflow-tooltip  slot="left-two" width="130">
+          <template scope="scope">
+            <el-input placeholder="请输入收款金额" v-model="scope.row.Price"></el-input>
+          </template>
+          </el-table-column>
+          <el-table-column prop="Price" label="剩余数量" show-overflow-tooltip slot="left-three" width="230">
+          <template scope="scope">
+            <el-input-number v-model="scope.row.RoomCount"  :min="1" width="100" ></el-input-number>
+          </template>
+          </el-table-column>
+          <el-table-column prop="Stat" label="状态" show-overflow-tooltip  slot="right-one" width="300">
+          <template scope="scope">
+            <el-radio class="radio" v-model="scope.row.Stat" :label="0">自动更新</el-radio>
+          <el-radio class="radio" v-model="scope.row.Stat" :label="1">人工维护</el-radio>
+          <el-radio class="radio" v-model="scope.row.Stat" :label="2">关房</el-radio>
+          </template>
+          </el-table-column>
+          <el-table-column prop="IsOpen" label="房间状态" show-overflow-tooltip  slot="right-one" width="300">
+          <template scope="scope">
+            <el-radio class="radio" v-model="scope.row.IsOpen" :label="true">开房</el-radio>
+            <el-radio class="radio" v-model="scope.row.IsOpen" :label="false">关房</el-radio>            
+          </template>
+          </el-table-column>
+          
+      </CustomTable>
+
+
+<!--
     <el-form-item label="是否开房">
       <el-radio-group v-model="stateForm.isOpen">
         <el-radio-button :label="true">开房</el-radio-button>
         <el-radio-button :label="false">关房</el-radio-button>
       </el-radio-group>
   </el-form-item>
-  <!-- <el-form-item label="房间类型">
+  <el-form-item label="房间类型">
     <el-radio-group v-model="stateForm.roomType">
       <el-radio-button :label="0">物理房型</el-radio-button>
       <el-radio-button :label="1">子房型</el-radio-button>
     </el-radio-group>
-  </el-form-item> -->
+  </el-form-item> 
   <el-form-item label="获取渠道">
     <el-radio-group v-model="stateForm.updateChannel">
       <el-radio :label="0">机器抓取</el-radio>
@@ -209,7 +243,7 @@
   </el-form-item>
   <el-form-item label="剩余数量">
      <el-input-number v-model="stateForm.count"  :min="1" ></el-input-number>
-  </el-form-item>
+  </el-form-item>  -->
         </el-form>
     </el-tab-pane>
   </el-tabs>
@@ -285,7 +319,6 @@ export default {
       singalSonRoomId: '',
       mutipList: [],
       hotelprice:[],
-      Price:"",
       PlatPolicyIDs:[],
       PlatformID:'',
       mutip: false,
@@ -318,6 +351,11 @@ export default {
         count: '',
         isOpen: '',
         updateChannel: ''
+      },
+      form:{
+        price:"",
+        stat:""
+
       },
       priceForm: {
         sonRoomId: '',
@@ -814,9 +852,20 @@ export default {
       const _self = this
       _self.priceChangeForOne = true
       _self.priceForm.sonRoomId = item.ID
-      let otherPriceForm = []      
+      let otherPriceForm = []   
+      _self.hotelprice = []   
       console.log(item.timeDate[date].platSalePrice)
+      if(item.timeDate[date].platSalePrice.length == 0){
+          _self.hotelprice.push({
+            PlatformID:_self.filters.PlatformID,
+            Price:"",
+            Stat:0
+          })
+         
+      }else{
         _self.hotelprice = item.timeDate[date].platSalePrice
+          
+      }
      //   console.log(_self.priceForm)
       _self.priceForm.time = [new Date(date), new Date(date)]
       // _self.priceForm.price[0].price = _self.price(item, date);
@@ -828,14 +877,12 @@ export default {
       _self.stateForm.isOpen = item.timeDate[date].IsOpen
       _self.stateForm.updateChannel = item.timeDate[date].UpdateChannel
       _self.stateForm.sonRoomId = item.ID
-     
-     
-            console.log(otherPriceForm)
+      
       _self.stateForm.date = [new Date(date), new Date(date)]
     },
     async priceSubmit() {
       const _self = this
-      console.log(scope.row.Price)
+       console.log( _self.hotelprice[0].Price)
       try {
         _self.isEditable = false
         let priceForm = []
@@ -847,50 +894,24 @@ export default {
         
         
         timeList.forEach(time => {
-          // _self.priceForm.price.forEach(item => {
-          //   // if (item.id === -1) {
-          //   //   priceForm.push({
-          //   //     sonRoomId: _self.priceForm.sonRoomId,
-          //   //     price: item.price,
-          //   //     useTime: time
-          //   //   })
-          //   // } else {
-          //     otherPriceForm.push({
-          //       sonRoomId: _self.priceForm.sonRoomId,
-          //       price: item.price,
-          //       useTime: time,
-          //       threePlatId: item.id,
-          //       stat: item.stat || 0
-          //     })
-          // //  }
-          // })
-          _self.hotelprice.forEach(item => {
-            // if (item.id === -1) {
-            //   priceForm.push({
-            //     sonRoomId: _self.priceForm.sonRoomId,
-            //     price: item.price,
-            //     useTime: time
-            //   })
-            // } else {
+          _self.hotelprice.forEach((item,index) => {
               otherPriceForm.push({
                 sonRoomId: _self.priceForm.sonRoomId,
-                price: item.price,
-                useTime: time,
-                threePlatId: item.id,
-                stat: item.stat || 0
+                Price: _self.hotelprice[index].Price,
+                UseDate: time,
+                PlatformID: _self.hotelprice[index].PlatformID,
+                Stat:_self.hotelprice[index].Stat
               })
           //  }
           })
         })  
           console.log(_self.priceForm)      
         console.log(otherPriceForm)        
-        return false
-        // const otherPriceFormRes = await platStatPriceApi.updateRoomSalePrice(
-        //   otherPriceForm
-        // )
-        // const priceFormRes = await platStatPriceApi.updateRoomPurchasePrice(
-        //   priceForm
-        // )
+        
+        const otherPriceFormRes = await platStatPriceApi.updateRoomSalePrice(
+          otherPriceForm
+        )
+  
         _self.getPriceList()
         _self.priceChangeForOne = false
         _self.isEditable = true
@@ -910,6 +931,7 @@ export default {
           _self.stateForm.date[1]
         )
         timeList.forEach(time => {
+          _self.hotelprice.forEach((item,index) => {
           stateForm.push({
             hotelId: _self.stateForm.hotelId,
             roomId: _self.chosenRoom.roomId,
@@ -920,8 +942,10 @@ export default {
             isOpen: _self.stateForm.isOpen,
             updateChannel: _self.stateForm.updateChannel
           })
+          })
         })
-        console.log(stateForm)        
+        console.log(stateForm)
+        return false        
         const res = await platStatPriceApi.UpdateRoomState(stateForm)
         _self.getPriceList()
         _self.priceChangeForOne = false

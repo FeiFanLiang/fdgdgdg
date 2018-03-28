@@ -809,18 +809,36 @@ export default{
             ],
             money: [],
             fujia: [],
-            SCycle: [{
-                label: '单结',
-                value: 0
+            SCycle: [
+                {
+                    value: 0,
+                    label: '其他（每单备注）'
+                }, 
+                {
+                    value: 1,
+                    label: '预付款'
                 },
                 {
-                label: '周结',
-                value: 1
+                    value: 2,
+                    label: '单结'
                 },
                 {
-                label: '月结',
-                value: 2
+                    value: 3,
+                    label: '日结'
                 },
+
+                {
+                    value: 4,
+                    label: '月结'
+                },
+                {
+                    value: 5,
+                    label: '半月结'
+                },
+                {
+                    value: 6,
+                    label: '周结'
+                }
             ],
             formFujia: {
                 UseDate: '',

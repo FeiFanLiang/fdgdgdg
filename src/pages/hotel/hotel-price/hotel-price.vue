@@ -493,7 +493,7 @@ export default {
             updateChannel: _self.singalStateForm.updateChannel
           })
         })
-        // console.log(form)
+         console.log(form)
         // return false
         const res = await roomStatPriceApi.UpdateRoomState(form)
         _self.$message({
@@ -831,6 +831,8 @@ export default {
             updateChannel: _self.stateForm.updateChannel
           })
         })
+        console.log(stateForm)
+        return false
         const res = await roomStatPriceApi.UpdateRoomState(stateForm)
         _self.getPriceList()
         _self.priceChangeForOne = false
