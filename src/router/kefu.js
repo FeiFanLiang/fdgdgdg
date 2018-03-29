@@ -9,8 +9,8 @@ export default {
   iconClass: 'cf-c02',
   children: [
     {
-      path: 'Pending',
-      component: _import('order/Pending'),
+      path: 'hotels-order/Pending',
+      component: _import('order/hotels-order'),
       name: '待处理列表'
     },
     {
@@ -63,12 +63,12 @@ export default {
       name: '票单列表'
     },
     {
-      path: 'Usefor',
-      component: _import('order/Usefor'),
+      path: 'hotels-order/Usefor',
+      component: _import('order/hotels-order'),
       name: '有用单列表'
     },
     {
-      path: 'HotelsOrder',
+      path: 'hotels-order/HotelsOrder',
       component: _import('order/hotels-order'),
       name: '酒店订单'
     }

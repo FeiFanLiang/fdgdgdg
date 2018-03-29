@@ -61,7 +61,7 @@
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30,50,100,200]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
     <el-dialog :title="dialogTitle" v-model="showDialog"   @close="resetForm('form')">
-      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="90px" :rules="rules">
+      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px" :rules="rules">
       <el-row> 
       <el-col :span="12">
        <el-form-item label="酒店ID" prop="HotelID" >

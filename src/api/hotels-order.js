@@ -45,6 +45,11 @@ export default {
       params: params
     })
   },
+  fetchy (params) {
+    return axios.get(base + 'ListOrder', {
+      params: params
+    })
+  },
   // 全部完成订单
   all (params) {
     return axios.get(base + 'ListOrderEnd', {

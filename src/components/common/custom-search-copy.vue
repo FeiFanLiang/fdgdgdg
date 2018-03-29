@@ -4,7 +4,7 @@
         <el-form label-width="80px" style="margin-left:-20px;">
           <el-col :span="6" v-if="item.type==='input'">
             <el-form-item :label="item.label">
-              <el-input v-model="filters[item.name]"></el-input>
+              <el-input v-model="filters[item.name]" @blur="cler($event)"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6" v-if="item.type==='date'">
@@ -60,6 +60,9 @@ export default {
     search() {
       this.$emit('searchCallback', this.filters)
     },
+    cler(e){
+      console.log(e.target.value)
+    }
   }
 }
 </script>

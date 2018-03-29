@@ -11,7 +11,7 @@
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单状态" slot="OrderState">
+      <el-form-item label="订单状态" slot="OrderState" style="margin-bottom:30px">
         <el-select v-model="filters.OrderState" clearable @change="changeValue4">
           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
@@ -56,7 +56,7 @@
     
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
       :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
-        <el-table-column type="expand">
+        <el-table-column type="expand" v-if="Namen">
             <template scope="props">
               <div>
                 <p><el-button size="big" @click="qrh(props.row.ID)">确认函</el-button></p>
@@ -451,6 +451,7 @@ export default {
     let that = this;
     return {
       loadingHotel: false,
+      Namen:true,
       Room:"",
       Pts:"",
       Qy:"",
@@ -767,14 +768,38 @@ export default {
         //   { required: true, message: "请输入预定时间", trigger: "blur" }
         // ]
       },
-      detail: {}
+      detail: {},
+      type:""
     };
   },
   created() {
-    this.fetchData();
-    this.ThreePlat();
-    this.platformAccount();
-    this.configList = hotelsOrderApi.getConfig();
+    const _self = this
+    _self.fetchData();
+    _self.ThreePlat();
+    _self.type = _self.$route.name
+    _self.platformAccount();
+    _self.configList = hotelsOrderApi.getConfig();
+  },
+  watch:{
+    "$route":function(val){
+      console.log(val)
+        this.type = val.name
+        this.nowName()
+        this.fetchData()        
+        this.filters = {
+            HotelName: "",
+            ThreePlatID: "",
+            SettlementCycleFu: "",
+            checkList: "",
+            OrderState:"",
+            HandState:"",
+            OrderType:"",
+            WaiCaiFlag:"",
+            WaiCaiPlatID:"",
+            HotelArea: "",
+            WaiCaiNo:""
+        }
+    }
   },
   methods: {
     changeValue(value) {
@@ -804,6 +829,14 @@ export default {
     changeValue8(value){
       const _self = this;            
       _self.form.OrderType = value
+    },
+    nowName(){
+      const _self = this;                  
+      if(_self.type == '酒店订单'){
+          _self.Namen = true
+      }else{
+          _self.Namen = false   
+      }
     },
     async platformAccount(){
             const options = {
@@ -1045,14 +1078,46 @@ export default {
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,                                                  
           PlatOrderNo: _self.filters.PlatOrderNo
         }
-      };
+      }
       console.log(options)
       try {
-        const res = await hotelsOrderApi.fetch(options);
-        console.log(res)
-        _self.hotelsOrder = res.data.Data;
-        _self.RoomNight = res.data.RoomNight;                 
-        _self.count = res.data.Count;
+            _self.type = _self.$route.name
+             if(_self.type == '酒店订单'){
+                _self.Namen = true
+            }else{
+                _self.Namen = false   
+            }
+        if(_self.type == '酒店订单'){
+           const res = await hotelsOrderApi.fetch(options);
+           console.log("123")
+          _self.hotelsOrder = res.data.Data;
+          _self.RoomNight = res.data.RoomNight;                 
+          _self.count = res.data.Count;
+        }
+        if(_self.type == '有用单列表'){
+            options.query.HandState = 2;
+            options.query.IsDelete = false;   
+           const res = await hotelsOrderApi.fetchy(options);
+           console.log(res)
+          _self.hotelsOrder = res.data.Data;
+          _self.RoomNight = res.data.RoomNight;                 
+          _self.count = res.data.Count;
+        }
+        if(_self.type == '待处理列表'){
+            options.query={
+                "HandState<" : 3
+            }
+            options.query.IsDelete = false; 
+            options.query.OrderType = 0; 
+            options.query.OrderState = 0; 
+            options.query.BackfillState = 0;  
+           const res = await hotelsOrderApi.fetchy(options);
+           console.log(res)
+          _self.hotelsOrder = res.data.Data;
+          _self.RoomNight = res.data.RoomNight;                 
+          _self.count = res.data.Count;
+        }
+       
         _self.loading = false;
       } catch (e) {
         _self.loading = false;
@@ -1139,9 +1204,19 @@ export default {
           
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
             //   console.log(_self.form.PlatOrderType)
-            // return false
+            // return false 
             //console.log(_self.detail);
+
+            let a={x:1,y:2};
+            let b={z:3};
+                a={...a,...b};
+                a.x=6
+                //console.log(_self.form)
+
              _self.form = { ..._self.form, ..._self.HotelOrderDetail };
+                //console.log(_self.form)
+              //  return false
+             
             
             if (typeof _self.detail == "undefined") {
               var f = {

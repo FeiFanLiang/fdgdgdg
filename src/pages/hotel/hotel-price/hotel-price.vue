@@ -794,7 +794,7 @@ export default {
           })
         })
         console.log(otherPriceForm)
-        return false
+      //  return false
         const otherPriceFormRes = await roomStatPriceApi.updateRoomSalePrice(
           otherPriceForm
         )
@@ -832,7 +832,7 @@ export default {
           })
         })
         console.log(stateForm)
-        return false
+       // return false
         const res = await roomStatPriceApi.UpdateRoomState(stateForm)
         _self.getPriceList()
         _self.priceChangeForOne = false
