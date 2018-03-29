@@ -949,13 +949,14 @@ export default{
         },
         async fetchData() {
             const options = {
+                pageSize: 1000,
                 query: { 
                     Own:1
                 }
                 }
             const res = await payCompanyApi.list(options)
             this.WaiCaiPayAccount = res.data.Data
-         //   console.log(this.WaiCaiPayAccount)
+           // console.log(this.WaiCaiPayAccount)
                 
         },
         async platformAccount(){
