@@ -539,7 +539,7 @@
                                 
                                 <el-table-column label="截图" prop="Picture">
                                     <template scope="scope">
-                                    <el-button v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.Picture) != 'undefined'" type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
+                                    <el-button v-if="typeof(scope.row.HotelPayment) != 'undefined' && typeof(scope.row.HotelPayment.Picture) != 'undefined' && scope.row.HotelPayment.Picture != ''" type="text" @click="imgShow(scope.row.HotelPayment.Picture)">查看</el-button>
                                 </template>
                                 </el-table-column>
                             </el-table>

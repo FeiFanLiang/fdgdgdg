@@ -182,7 +182,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="早餐类型">
-            <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型" @change="changeBreakfastType">
+            <el-select v-model="sonForm.breakfastType" placeholder="请选择早餐类型">
               <el-option v-for="(item,index) in breakfastTypes " :label="item.name" :value="item.value" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -448,9 +448,9 @@ export default {
       }
       this.bed = []
     },
-    changeBreakfastType(value) {
-      this.breakfastTypesName = value
-    },
+    // changeBreakfastType(value) {
+    //   this.breakfastTypesName = value
+    // },
     hotelSonRoomAdd(row) {
       this.roomName = row.RoomName
       this.sonFormDialogVisible = true

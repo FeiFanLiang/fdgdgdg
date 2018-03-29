@@ -2,19 +2,6 @@
 <div id="Rule">
     <el-button @click="returns()">返回</el-button>
     <el-button @click="addrule()">创建规则</el-button>    
-    <el-popover
-  ref="popover5"
-  placement="top"
-  width="160"
-  v-model="visible2">
-  <p>这是一段内容这是一段内容确定删除吗？</p>
-  <div style="text-align: right; margin: 0">
-    <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-    <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
-  </div>
-</el-popover>
-
-<el-button v-popover:popover5>删除</el-button>
     <el-table :data="RuleCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
      row-key="ID"  ref="table">
         <el-table-column label="优先级" prop="Rank" sortable width=100></el-table-column>     
@@ -64,14 +51,7 @@
             <template scope="scope">
                 <el-button type="primary" @click="Rulecom(scope.$index, scope.row)" size="small">编辑</el-button>            
              <!--   <el-button type="danger" @click="Det(scope.$index, scope.row)" size="small">删除</el-button> -->
-             <el-popover ref="popover3" placement="top" width="160"  v-model="visible1">
-                    <p>你确定删除这条数据吗？</p>
-                    <div style="text-align: right; margin: 0">
-                    <el-button size="mini" type="text" @click="visible1 = false">取消</el-button>
-                    <el-button  type="primary" size="mini" @click="Det(scope.$index, scope.row)">确定</el-button>
-                    </div>
-                    </el-popover>
-                    <el-button size="small" type="danger" v-popover:popover5 >删除</el-button>
+                    <el-button size="small" type="danger" @click="Det(scope.$index, scope.row)" >删除</el-button>
                     
             </template>
         </el-table-column>
@@ -133,9 +113,12 @@
         </el-form-item>
         </el-col>
          <el-col :span="12">
-        
-                <i class="el-icon-question"></i>
-      
+        <el-tooltip class="item" effect="dark" content="根据时间段来设置价格规则" placement="top-start" v-if=!isShow>
+              <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="以当前日期为基准计算天数延续来设置价格规则。计算方式为：入住日期（成本*折扣+金额）" placement="top-start" v-if=isShow>
+              <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
+        </el-tooltip>
         </el-col>
          </el-row>
         <el-row v-if=isShow>
@@ -466,12 +449,26 @@ export default {
         },
         async Det($index, row) {
             const _self = this
-                     await hotelHotelpriceApi.removeD(row.ID)    
-                    _self.fetchData()          
-                _self.$message({
-                            message: '删除成功',
-                            type: 'success'
-                        })    
+                
+                   _self.$confirm(`是否删除?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                    })
+                    .then(async() => {
+                    try {
+                        await hotelHotelpriceApi.removeD(row.ID)  
+                        _self.fetchData()
+                        _self.$message({
+                        message: '删除成功',
+                        type: 'success'
+                        })
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    })
+                    .catch(() => {})
+   
         },
         
         

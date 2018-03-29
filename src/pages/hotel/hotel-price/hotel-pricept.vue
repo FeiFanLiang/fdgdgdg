@@ -45,7 +45,7 @@
     <el-col :span="10">
       <el-button icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
       <el-date-picker class="mydate" v-model="chosenDate" type="date" placeholder="选择日期">
-      </el-date-picker>
+      </el-date-picker width="150">
       <el-button @click="next">后一{{periodType==='week'?'周':'月'}}<i class="el-icon-arrow-right "></i></el-button>
     </el-col>
   </el-row>
@@ -210,31 +210,7 @@
           </el-table-column>
           
       </CustomTable>
-
-
-<!--
-    <el-form-item label="是否开房">
-      <el-radio-group v-model="stateForm.isOpen">
-        <el-radio-button :label="true">开房</el-radio-button>
-        <el-radio-button :label="false">关房</el-radio-button>
-      </el-radio-group>
-  </el-form-item>
-  <el-form-item label="房间类型">
-    <el-radio-group v-model="stateForm.roomType">
-      <el-radio-button :label="0">物理房型</el-radio-button>
-      <el-radio-button :label="1">子房型</el-radio-button>
-    </el-radio-group>
-  </el-form-item> 
-  <el-form-item label="获取渠道">
-    <el-radio-group v-model="stateForm.updateChannel">
-      <el-radio :label="0">机器抓取</el-radio>
-      <el-radio :label="1">人工更改</el-radio>
-    </el-radio-group>
-  </el-form-item>
-  <el-form-item label="剩余数量">
-     <el-input-number v-model="stateForm.count"  :min="1" ></el-input-number>
-  </el-form-item>  -->
-        </el-form>
+      </el-form>
     </el-tab-pane>
   </el-tabs>
   <div slot="footer" class="dialog-footer">
@@ -253,21 +229,35 @@
         </el-date-picker>
       </el-col>
     </el-form-item>
-    <el-form-item label="是否开房">
-      <el-radio-group v-model="singalStateForm.isOpen">
-        <el-radio-button :label="true">开房</el-radio-button>
-        <el-radio-button :label="false">关房</el-radio-button>
-      </el-radio-group>
-  </el-form-item>
-  <el-form-item label="获取渠道">
-  <el-radio-group v-model="singalStateForm.updateChannel">
-      <el-radio :label="0">机器抓取</el-radio>
-      <el-radio :label="1">人工更改</el-radio>
-  </el-radio-group>
-  </el-form-item>
-  <el-form-item label="剩余数量">
-     <el-input-number v-model="singalStateForm.count"  :min="1" ></el-input-number>
-  </el-form-item>
+
+
+    <CustomTable :list="hotelprice" :loading="loading" :configList="configList.listFields" :editMethod="configList.editMethod" style="margin-top:40px" >
+          <template scope="scope">
+            <el-input placeholder="请输入收款金额" v-model="scope.row.Price"></el-input>
+          </template>
+          </el-table-column>
+          <el-table-column prop="singalStateForm.count" label="剩余数量" show-overflow-tooltip slot="left-three" width="230">
+          <template scope="scope">
+            <el-input-number v-model="scope.row.RoomCount"  :min="1" width="100" ></el-input-number>
+          </template>
+          </el-table-column>
+          <el-table-column prop="UpdateChannel" label="状态" show-overflow-tooltip  slot="right-one" width="300">
+          <template scope="scope">
+            <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="0">机器抓取</el-radio>
+          <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="1">人工更改</el-radio>
+          <el-radio class="radio" v-model="scope.row.UpdateChannel" :label="2">关房</el-radio>
+          </template>
+          </el-table-column>
+          <el-table-column prop="IsOpen" label="打开状态" show-overflow-tooltip  slot="right-one">
+          <template scope="scope">
+          <el-radio-group v-model="scope.row.IsOpen">
+            <el-radio-button  :label="true">开</el-radio-button>
+            <el-radio-button  :label="false">关</el-radio-button>  
+            </el-radio-group>          
+          </template>
+          </el-table-column>
+          
+      </CustomTable>
         </el-form>
     </el-tab-pane>
   </el-tabs>
@@ -515,9 +505,11 @@ export default {
     },
     handleSingalSonRoomId(tab) {
       const _self = this
+   
       _self.mutipList.forEach(function(item) {
         if (Number(tab.name) === item.ID) {
           _self.singalSonRoomId = String(item.ID)
+             console.log(item)
           _self.singalStateForm.sonRoomId = item.ID
           _self.singalStateForm.count = 0
           _self.singalStateForm.isOpen = false
@@ -539,7 +531,9 @@ export default {
     },
     mutipEdit() {
       const _self = this
+      _self.hotelprice =[]
       if (_self.mutipList.length > 0) {
+        console.log(_self.mutipList)
         _self.mutip = true
         _self.singalSonRoomId = String(_self.mutipList[0].ID)
         _self.singalStateForm.sonRoomId = _self.mutipList[0].ID
@@ -547,6 +541,12 @@ export default {
         _self.singalStateForm.isOpen = false
         _self.singalStateForm.updateChannel = 0
         _self.singalStateForm.date = [new Date(), new Date()]
+        _self.hotelprice.push({
+            PlatformID:_self.filters.PlatformID,
+            Price:"",
+            IsOpen:true,
+            UpdateChannel:0
+          })
       } else {
         this.$message.error('请先选择子房型')
       }
@@ -560,18 +560,34 @@ export default {
           _self.singalStateForm.date[0],
           _self.singalStateForm.date[1]
         )
+        // timeList.forEach(time => {
+        //   form.push({
+        //     hotelId: _self.singalStateForm.hotelId,
+        //     roomId: _self.chosenRoom.roomId,
+        //     sonRoomId: _self.singalStateForm.sonRoomId,
+        //     roomType: 1,
+        //     date: time,
+        //     count: _self.singalStateForm.count,
+        //     isOpen: _self.singalStateForm.isOpen,
+        //     updateChannel: _self.singalStateForm.updateChannel
+        //   })
+        // })
         timeList.forEach(time => {
+          
           form.push({
-            hotelId: _self.singalStateForm.hotelId,
+            hotelId: _self.stateForm.hotelId,
             roomId: _self.chosenRoom.roomId,
-            sonRoomId: _self.singalStateForm.sonRoomId,
-            roomType: 1,
-            date: time,
-            count: _self.singalStateForm.count,
-            isOpen: _self.singalStateForm.isOpen,
-            updateChannel: _self.singalStateForm.updateChannel
+            SonRoomID:_self.singalStateForm.sonRoomId,
+            UseDate: time,
+            PlatformID: _self.hotelprice[0].PlatformID,
+            RoomCount: _self.hotelprice[0].RoomCount,
+            IsOpen: _self.hotelprice[0].IsOpen,
+            UpdateChannel: _self.hotelprice[0].UpdateChannel
           })
+        
         })
+        console.log(form)
+       
         const res = await platStatPriceApi.UpdateRoomState(form)
         _self.$message({
           message: '修改成功',
@@ -989,6 +1005,9 @@ export default {
     background-color: rgba(255, 255, 255, 0);
     background-clip: padding-box;
   }
+  .el-date-editor.el-input{
+  width:193px
+}
   .el-table--enable-row-hover .el-table__body td:hover.current {
     background-color: #ff000057!important;
     background-clip: padding-box;

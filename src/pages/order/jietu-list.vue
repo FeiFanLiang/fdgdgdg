@@ -43,7 +43,7 @@
                     <span style="color:orange;">截图状态</span>
                         <el-radio-group v-model="props.row.StateScreenshot">
                             <el-radio :label="0">未截图</el-radio>
-                            <el-radio :label="1">截图完成</el-radio>
+                            <el-radio :label="1">截图完成</el-radio>                           
                         </el-radio-group>
                     </p>
                 </el-row>
@@ -152,14 +152,22 @@ export default {
             StateScreenshot:state,
             Picture:this.Picture   
         }
+        
         try{
-            _self.isEditable = false
+            if(params.StateScreenshot == 1 && params.Picture !=''){
+                _self.isEditable = false
             await paymentCheckApi.putImg(params)
             _self.$message({
                 message: '提交成功',
                 type: 'success'
             })
             this.fetchData()
+        
+            }else{
+                 _self.$message.error('提交失败!!!')    
+                
+            }
+            
         }catch (e) {
             console.log(e)
             _self.$message.error('提交失败!!!')

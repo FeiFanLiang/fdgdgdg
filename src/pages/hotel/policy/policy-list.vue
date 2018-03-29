@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="jiud">
     <el-row :gutter="24" style="margin-bottom:10px;" v-if="typeof(HotelID) == 'undefined'">
       <el-form label-width="80px">
 
@@ -286,7 +286,7 @@
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="协议到期日" prop="ExpiringDate" >
-                        <el-date-picker v-model="form.ExpiringDate" type="date" placeholder="选择日期"> </el-date-picker>
+                        <el-date-picker v-model="ExpiringDate" type="date" placeholder="选择日期"> </el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -384,6 +384,7 @@ import UploadImageCopy from 'components/upload-image-copy'
             pageSize: 10,
             count: 0,
             date:"",
+            ExpiringDate:new Date('2018-12-31'),
             arra:[],
             policyList:[],
             loading:false,
@@ -399,7 +400,7 @@ import UploadImageCopy from 'components/upload-image-copy'
                 HotelID:'',
                 Name: '',
                 PersonName: '',
-                ExpiringDate:'',
+                ExpiringDate:new Date('2018-12-31'),
                 PurchasingName: '',
                 IsDefault: false,
                 Remark:'',
@@ -552,8 +553,6 @@ import UploadImageCopy from 'components/upload-image-copy'
       created(){
         this.HotelID = this.$route.params.ID
         this.hotelName = this.$route.query.hotelName
-        
-        this.arra.push(da)
         console.log(this.hotelName + this.HotelID)
         this.fetchData()
         this.getRserveMode()
@@ -681,10 +680,9 @@ import UploadImageCopy from 'components/upload-image-copy'
             const _self = this
              let d = new Date()
                 d.setFullYear(2018,11,31)
-            console.log(_self.value2)
+            console.log(d)
             try{
-                _self.title = '酒店协议创建'
-              //  _self.form.ExpiringDate = d                
+                _self.title = '酒店协议创建'            
                 _self.activeNames = ''
                 _self.resetForm()
                 _self.dialogShow = true
@@ -718,16 +716,12 @@ import UploadImageCopy from 'components/upload-image-copy'
                 if (valid) {
                     try{
                         _self.form.FinancialInfo = _self.FinancialInfo
+                        _self.form.ExpiringDate = _self.ExpiringDate                        
                         _self.form.FinancialInfo.ReceiptCompany = _self.ReceiptCompany
                         _self.isEditable = false
                         if (_self.form.ID) {
-                            console.log(_self.form)
-                            return false
                             await policyApi.editHotelPolicy(_self.form.ID,_self.form)
-                        } else {
-                            console.log(_self.form)
-                            return false
-                            
+                        } else {    
                             await policyApi.addHotelPolicy(_self.form)
                         }
                         _self.$message({
@@ -759,7 +753,9 @@ import UploadImageCopy from 'components/upload-image-copy'
   .el-tooltip__popper{
       max-width:500px;
   }
-  .el-date-editor.el-input{
-      width:100%
-  }
+  .jiud{
+      .el-date-editor.el-input{
+             width:100%
+      }  
+    }
 </style>

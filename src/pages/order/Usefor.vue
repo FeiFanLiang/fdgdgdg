@@ -113,7 +113,7 @@
               </el-col> -->
               <el-col :span="8">
                         <el-form-item label="酒店名称" prop="HotelName">
-                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel">
+                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
                                 <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.HotelName">
                                 </el-option>
                             </el-select>
@@ -706,8 +706,8 @@ export default {
         const res = await hotelBaseApi.listAll(options);
         if (res && res.data && res.data.Data) {
           _self.hotelList = res.data.Data;
-          _self.form.HotelID = _self.hotelList[0].ID;
-          _self.form.HotelName = _self.hotelList[0].HotelName;
+          // _self.form.HotelID = _self.hotelList[0].ID;
+          // _self.form.HotelName = _self.hotelList[0].HotelName;
 
           _self.loadingHotel = false;
         }
@@ -738,6 +738,11 @@ export default {
     },
     changeValue7(value) {
           this.Wcqd = value
+    },
+    changv(value){
+      const _self = this;      
+      console.log(value)
+      _self.form.HotelID = value
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -789,7 +794,7 @@ export default {
         let date2 = new Date(this.form.StayDateEnd); //结束时间
         let date3 = date2.getTime() - new Date(date1).getTime(); //时间差的毫秒数
         let days = Math.floor(date3 / (24 * 3600 * 1000));
-        this.form.RoomNum = 1;
+        //this.form.RoomNum = 1;
         this.form.NightNum = days;
       }
     },
@@ -800,7 +805,7 @@ export default {
         let date2 = new Date(val); //结束时间
         let date3 = date2.getTime() - new Date(date1).getTime(); //时间差的毫秒数
         let days = Math.floor(date3 / (24 * 3600 * 1000));
-        this.form.RoomNum = 1;
+       // this.form.RoomNum = 1;
         this.form.NightNum = days;
       }
     },
@@ -1000,7 +1005,7 @@ export default {
         } else {
           this.$message({
             showClose: true,
-            message: "请输入第三方订单号",
+            message: "请输入酒店名称",
             type: "error"
           });
         }
