@@ -575,9 +575,9 @@ export default {
         }
       ],
       rules: {
-        HotelName: [
-          { required: true, message: "请输入酒店名称", trigger: "blur" }
-        ]
+        // HotelName: [
+        //   { required: true, message: "请输入酒店名称", trigger: "blur" }
+        // ]
         // ThreePlatID: [
         //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }
         // ],
@@ -939,6 +939,14 @@ export default {
     },
     async submitForm() {
       const _self = this;
+      if(_self.form.HotelID == undefined){
+          this.$message({
+            showClose: true,
+            message: "请输入酒店名称",
+            type: "error"
+          });
+      }
+      else{
       _self.$refs["form"].validate(async valid => {
         if (valid) {
           try {
@@ -1010,6 +1018,7 @@ export default {
           });
         }
       });
+    }
     }
   }
 };

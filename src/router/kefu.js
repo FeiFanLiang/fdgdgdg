@@ -10,7 +10,7 @@ export default {
   children: [
     {
       path: 'hotels-order/Pending',
-      component: _import('order/hotels-order'),
+      component: _import('order/Pending'),
       name: '待处理列表'
     },
     {
@@ -64,7 +64,7 @@ export default {
     },
     {
       path: 'hotels-order/Usefor',
-      component: _import('order/hotels-order'),
+      component: _import('order/Usefor'),
       name: '有用单列表'
     },
     {

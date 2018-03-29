@@ -575,9 +575,9 @@ export default {
         }
       ],
       rules: {
-        HotelName: [
-          { required: true, message: "请输入酒店名称", trigger: "blur" }
-        ]
+        // HotelName: [
+        //   { required: true, message: "请输入酒店名称", trigger: "blur" }
+        // ]
         // ThreePlatID: [
         //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }
         // ],
@@ -888,7 +888,7 @@ export default {
           OrderType:_self.filters.OrderType,
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
-          "HandState<":3,
+          HandState:0,
           OrderState:0,
           OrderType:0,          
           BackfillState:0,
@@ -944,6 +944,15 @@ export default {
     },
     async submitForm() {
       const _self = this;
+
+      if(_self.form.HotelID == undefined){
+          this.$message({
+            showClose: true,
+            message: "请输入酒店名称",
+            type: "error"
+          });
+      }
+      else{
       _self.$refs["form"].validate(async valid => {
         if (valid) {
           try {
@@ -1015,6 +1024,7 @@ export default {
           });
         }
       });
+      }
     }
   }
 };

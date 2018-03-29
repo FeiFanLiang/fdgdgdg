@@ -14,6 +14,11 @@ export default {
       name: '酒店基础信息'
     },
     {
+      path: 'HotelGroup',
+      component: _import('hotel/hotel-base/hotel-group'),
+      name: '酒店组信息'
+    },
+    {
       path: 'HotelBaseAdd',
       component: _import('hotel/hotel-base/hotel-base-add'),
       name: '添加酒店',
