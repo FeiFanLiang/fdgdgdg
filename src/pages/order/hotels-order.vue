@@ -1089,7 +1089,7 @@ export default {
             }
         if(_self.type == '酒店订单'){
            const res = await hotelsOrderApi.fetch(options);
-           console.log("123")
+         //  console.log("123")
           _self.hotelsOrder = res.data.Data;
           _self.RoomNight = res.data.RoomNight;                 
           _self.count = res.data.Count;
@@ -1098,7 +1098,7 @@ export default {
             options.query.HandState = 2;
             options.query.IsDelete = false;   
            const res = await hotelsOrderApi.fetchy(options);
-           console.log(res)
+         //  console.log(res)
           _self.hotelsOrder = res.data.Data;
           _self.RoomNight = res.data.RoomNight;                 
           _self.count = res.data.Count;
@@ -1112,7 +1112,7 @@ export default {
             options.query.OrderState = 0; 
             options.query.BackfillState = 0;  
            const res = await hotelsOrderApi.fetchy(options);
-           console.log(res)
+         //  console.log(res)
           _self.hotelsOrder = res.data.Data;
           _self.RoomNight = res.data.RoomNight;                 
           _self.count = res.data.Count;

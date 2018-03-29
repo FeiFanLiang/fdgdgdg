@@ -58,8 +58,11 @@ import advancementApi from './advancement'
 import tripOrderApi from './trip-order'
 import singlePriceRatioLogApi from './single-price-ratio-log'
 import hotelHotelpriceApi from './hotel-hotelprice'
+import hotelGroupApi from './hotel-group'
+
 export {
   accountApi,
+  hotelGroupApi,
   platStatPriceApi,
   airlineApi,
   bargainsRoomApi,

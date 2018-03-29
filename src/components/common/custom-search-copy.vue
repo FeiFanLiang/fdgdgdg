@@ -61,7 +61,9 @@ export default {
       this.$emit('searchCallback', this.filters)
     },
     cler(e){
-      console.log(e.target.value)
+      let val = e.target.value
+      e.target.value = val.replace(/(^\s*)|(\s*$)/g, "");
+    //  console.log(e.target.value)
     }
   }
 }

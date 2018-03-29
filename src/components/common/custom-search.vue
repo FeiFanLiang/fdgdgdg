@@ -8,7 +8,7 @@
           </el-select>
         </el-col>
         <el-col :span="4" v-if="item.type==='input'">
-          <el-input  :placeholder="item.label" v-model="filters[item.name]"></el-input>
+          <el-input  :placeholder="item.label" v-model="filters[item.name]" @blur="cler($event)"></el-input>
         </el-col>
           <el-col :span="4" v-if="item.type==='checkbox'">
                           <el-checkbox  v-model="filters[item.name]">{{item.label}}</el-checkbox>
@@ -56,6 +56,11 @@ export default {
     },
     multipleChangeCallBack(data) {
       this.filters = { ...this.filters, ...data }
+    },
+    cler(e){
+      let val = e.target.value
+      e.target.value = val.replace(/(^\s*)|(\s*$)/g, "");
+    //  console.log(e.target.value)
     }
   }
 }
