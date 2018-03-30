@@ -108,15 +108,14 @@ export default {
       return array
     }
   },
-
   created() {
     const _self = this
     _self.getTips()
-    _self.touser()
     setInterval(() => {  _self.touser() }, 5000)    
     _self.activeMenu = _self.$route.name
     _self.hotelName = _self.$route.query.hotelName
     _self.user = JSON.parse(localStorage.getItem('user'))
+    console.log(_self.user)
   },
   watch: {
     $route(to, from) {
@@ -178,9 +177,9 @@ export default {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'info'
-        })
-        localStorage.removeItem('user')
-
+        })     
+         localStorage.removeItem('user')
+   
         this.$router.push({
           path: '/login'
         })

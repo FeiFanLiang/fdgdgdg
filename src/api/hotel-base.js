@@ -13,6 +13,16 @@ export default {
       params: params
     })
   },
+  listgroup(params){
+    return axios.get(base + 'ShowGroupHotel/', {
+      params: params
+    })
+  },
+  addlist(params){
+    return axios.get(base + 'AddListGroup/', {
+      params: params
+    })
+  },
   listByQuery(params) {
     return axios.get(base, {
       params: params

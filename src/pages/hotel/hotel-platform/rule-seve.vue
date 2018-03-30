@@ -1,7 +1,9 @@
 <template>
 <div id="Rule">
     <el-button @click="returns()">返回</el-button>
-    <el-button @click="addrule()">创建规则</el-button>    
+    <el-button @click="addrule()">创建规则</el-button>
+    <el-button @click="addrule()">添加组</el-button>    
+    <el-button @click="delgroup()">删除组</el-button>            
     <el-table :data="RuleCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
      row-key="ID"  ref="table">
         <el-table-column label="优先级" prop="Rank" sortable width=100></el-table-column>     
@@ -153,11 +155,45 @@
         <el-button type="primary" @click="submitForm()">保存</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="删除组规则" v-model="showDialog2"   @close="resetForm('form')">
+      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px">
+        <el-row>
+      
+    <el-col :span="12">        
+        <el-form-item label="渠道" prop="PlatformID">
+            <el-select  v-model="form.PlatformID" placeholder="请选择">
+              <el-option v-for="(item,index) in PlatPolicyIDs"
+                :label="item.PlatName"
+                :value="item.ID"
+                :key="index">
+              </el-option>
+            </el-select>
+        </el-form-item>
+        </el-col>
+        </el-row>
+        <el-row>
+        <el-col :span="12">
+        <el-form-item label="组名称" prop="GroupName">
+            <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
+                <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
+                </el-option>
+            </el-select>
+        </el-form-item>
+    </el-col>
+        </el-row>
+    
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm()">保存</el-button>
+      </span>
+
+    </el-dialog>
+    
 </div>
 </template>
 <script>
 import {
-  hotelPlatformApi, hotelThreePlatInfoApi, policyApi,hotelHotelpriceApi
+  hotelPlatformApi, hotelThreePlatInfoApi, policyApi,hotelHotelpriceApi,hotelGroupApi
 } from 'api'
 import { HotelTopMenu } from 'components'
 
@@ -172,12 +208,15 @@ export default {
             HotelPolicyID:'',
             Accoun:'',
             dialogTag: '',
+            loadingHotel:false,
             sheheSaveList:[],
+            GrouplList:[],
             isShow:false,
             loading:true,
             visible1:false,
             visible2:false,            
             showDialog:false,
+            showDialog2:false,
             labelPosition:'right',
             dialogTitle: '',
             RuleCheck:[],
@@ -211,6 +250,7 @@ export default {
                 StartDay:'',
                 StartDate:'',
                 EndDate:'',
+                CreateTime:"",
                 StateCheck:''  
             },
             rules: {
@@ -262,6 +302,31 @@ export default {
             this.currentPage = val
             this.fetchData(this.currentPage)
         },
+        async remoteHotelList(querys) {
+        const _self = this;
+        if (querys !== "") {
+            _self.loadingHotel = true;
+            const options = {
+            pageIndex: 1,
+            pageSize: 20,
+            order: "ID",
+            query: {
+                GroupName: querys
+            }
+            };
+            const res = await hotelGroupApi.listAll(options)
+            console.log(res)
+            if (res && res.data && res.data.Data) {
+            _self.GrouplList = res.data.Data;
+            // _self.form.HotelID = _self.hotelList[0].ID;
+            // _self.form.HotelName = _self.hotelList[0].HotelName;
+
+            _self.loadingHotel = false;
+            }
+        } else {
+            _self.GrouplList = [];
+        }
+        },
         changeValue(value){
             var _self =this
             if(value == 1){
@@ -297,6 +362,10 @@ export default {
             
             console.log(_self.dialogTag)
         },
+        delgroup(){
+            const _self = this
+            _self.showDialog2 = true
+        },
         submitForm() {
         const _self = this
         if (_self.dialogTag === 1) _self.addSave()
@@ -319,7 +388,8 @@ export default {
             _self.form.StartDay = row.StartDay
             _self.form.StartDate = row.StartDate
             _self.form.EndDate = row.EndDate                
-            _self.form.StateCheck = row.ModeType                
+            _self.form.StateCheck = row.ModeType
+            _self.form.CreateTime = row.CreateTime              
             
             if(row.SetType==1){
                 _self.form.isDisabled = false

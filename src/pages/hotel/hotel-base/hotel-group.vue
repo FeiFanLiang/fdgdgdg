@@ -30,7 +30,7 @@
         <el-table-column   label="操作" width="180" fixed="right">
 <template scope="scope">
 <el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">编辑</el-button>
-<el-button size="small" @click="hotelbaseEdit(scope.$index, scope.row)">删除</el-button>
+<el-button size="small" type="danger"  @click="del(scope.$index, scope.row)">删除</el-button>
 </template>
         </el-table-column>
       </el-table> 
@@ -93,6 +93,8 @@ export default {
       filters: {
         ID: '',
         GroupName: '',
+        labelVal: '1',
+
       },
       form:{
         Remark: '',
@@ -117,21 +119,6 @@ export default {
       this.dialogTableVisible = false
       this.getHotelbaseList()
     },
-    /*addHotelShow(row) {
-      this.$router.push({
-        name: '添加酒店展示',
-        params: {
-          hotelID: row.ID
-        },
-        query: {
-          GroupName: row.GroupName
-        }
-      });
-    },*/
-    /*addHotelBase(){
-       this.dialogTableVisible=true;
-       this.getHotelbaseList();
-    },*/
     hotelbaseSearch() {
       this.getHotelbaseList()
     },
@@ -152,6 +139,7 @@ export default {
         }
       }
       const res = await hotelGroupApi.listAll(options)
+      console.log(res)
         let data = res.data.Data
       
         _self.hotelbase = data
@@ -160,7 +148,48 @@ export default {
       
     },
     async submitForm(){
-      
+      const _self = this
+      _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                try {       
+                 const res =  await hotelGroupApi.add(_self.form)
+                 console.log(res)
+                    _self.getHotelbaseList()
+                    _self.dialogTableVisible = false
+                    _self.$message({
+                    message: '保存成功',
+                    type: 'success'
+                    })
+                } catch (e) {
+                    console.error(e)
+                    _self.$message.error('添加失败!!!')
+                } 
+                } else {
+                return false
+                }
+            })
+
+    },
+   async del($index, row){
+          const _self = this
+          _self.$confirm(`是否删除?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+          })
+          .then(async() => {
+          try {
+              await hotelGroupApi.del(row.ID)  
+              _self.getHotelbaseList()
+              _self.$message({
+              message: '删除成功',
+              type: 'success'
+              })
+          } catch (e) {
+              console.error(e)
+          }
+          })
+          .catch(() => {})
     },
     handleSizeChange(val) {
       this.pageSize = val
@@ -172,7 +201,7 @@ export default {
     },
     hotelbaseEdit($index, row) {
       this.$router.push({
-        name: '酒店信息编辑',
+        name: '酒店组编辑',
         params: {
           ID: row.ID
         },

@@ -116,7 +116,6 @@ export default {
           type: 'info'
         })
         localStorage.removeItem('user')
-
         this.$router.push({
           path: '/login'
         })

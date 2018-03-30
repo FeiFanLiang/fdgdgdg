@@ -1120,7 +1120,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-              //  console.log(res)
+                console.log(_self.form)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
                 const options = {
@@ -1160,7 +1160,7 @@ export default{
                 let datas = _self.form
                 if(_self.type == '审核'){
                  mes =  await hotelsOrderApi.checkSave(datas)                  
-                }else{                 
+                }else{            
                   mes =  await hotelsOrderApi.edit(datas)                
                 }
                 if(mes.data.State != true){

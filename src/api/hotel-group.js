@@ -14,5 +14,11 @@ export default {
   },
   del(id) {
     return axios.delete(base + id)
+  },
+  keep(params) {
+    return axios.put(base + params.id, params)
+  },
+  addbase(){
+    
   }
 }

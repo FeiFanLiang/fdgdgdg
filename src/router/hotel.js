@@ -16,7 +16,17 @@ export default {
     {
       path: 'HotelGroup',
       component: _import('hotel/hotel-base/hotel-group'),
-      name: '酒店组信息'
+      name: '酒店组管理'
+    },
+    {
+   
+      path: 'group',
+      component: _import('hotel/hotel-base/hotel-group-edit'),
+      name: '酒店组编辑',
+      meta: {
+        hidden: true
+      }
+      
     },
     {
       path: 'HotelBaseAdd',
