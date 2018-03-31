@@ -28,10 +28,13 @@
         <el-table-column label="操作" width="170">
             <template scope="scope">
                 <el-button type="primary" size="small" @click="clickEditBtn(scope.$index,scope.row)">编辑</el-button>
-                <DeleteButton api="wxyhApi" @successCallBack="fetchData" :id="scope.row.ID"></DeleteButton>
+                <DeleteButton api="wxyhApi" @successCallBack="fetchData" :id="scope.row.ID" style="display:inline-block"></DeleteButton>
             </template>
         </el-table-column>
     </el-table>
+    <div class="pagination-wrapper" style="text-align:center;margin:10px;">
+        <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
+    </div>
     <el-dialog :title="dialogTitle" v-model="showDialog" @close="resetForm('form')">
       <el-form ref="form" :model="form"  label-width="60px">
         <el-row :gutter="20">
@@ -99,6 +102,9 @@ export default {
   data() {
     return {
       dwzList: [],
+      currentPage: 1,
+      pageSize: 10,
+      count: 0,
       loading: false,
       isEditable: true,
       showDialog: false,
@@ -125,19 +131,32 @@ export default {
     this.fetchData()
   },
   methods: {
-    carlineStationSearch(filters) {
-      const options = {
-        query: {
-          Nickname: filters.Nickname
-        }
-      }
-      this.fetchData(options)
+    carlineStationSearch() {
+      this.fetchData()
     },
-    async fetchData(option) {
+    handleSizeChange(val) {
+        this.pageSize = val
+        this.fetchData(1, this.pageSize)
+    },
+    handleCurrentChange(val) {
+        this.currentPage = val
+        this.fetchData(this.currentPage)
+    },
+    async fetchData(currentPage,pageSize) {
       const _self = this
       _self.loading = true
+      _self.currentPage = currentPage || _self.currentPage
+      _self.pageSize = pageSize || _self.pageSize
+      const options = {
+            pageIndex: currentPage || _self.currentPage,
+            pageSize: pageSize || _self.pageSize,
+            order: 'ID',
+            query:{
+                   Nickname: _self.filters.Nickname   
+            }
+      }
       try {
-        const res = await wxyhApi.listByQuery(option)
+        const res = await wxyhApi.listByQuery(options)
         console.log(res)
         this.dwzList = res.data.Data
         _self.loading = false

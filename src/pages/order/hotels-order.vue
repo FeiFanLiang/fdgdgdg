@@ -16,12 +16,12 @@
           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单类别" slot="OrderType">
+      <el-form-item label="订单类别" slot="OrderType" style="margin-bottom:10px" >
         <el-select v-model="filters.OrderType" clearable @change="changeValue5">
           <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="外采渠道" slot="WaiCaiPlatID">
+      <el-form-item label="外采渠道" slot="WaiCaiPlatID" style="margin-bottom:30px">
         <el-select v-model="filters.WaiCaiPlatID" clearable @change="changeValue7">
           <el-option v-for="item in WaiCaiPlatID" :key="item.value" :label="item.Account" :value="item.ID"></el-option>
         </el-select>
@@ -35,6 +35,11 @@
           <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期" @change="changeValue3">
               <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
           </el-select>
+      </el-form-item>
+      <el-form-item label="回填人" slot="BackfillUserName" >
+        <el-select v-model="filters.BackfillUserName" clearable @change="changeValue9">
+          <el-option v-for="item in BackfillUserName" :key="item.value" :label="item.text" :value="item.value"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="外采订单号" slot="WaiCaiNo">
           <el-input v-model="filters.WaiCaiNo"></el-input>
@@ -461,6 +466,7 @@ export default {
       Wcfs:"",
       Wcqd:"",
       Rstate:"",
+      Htr:"",
       Night:"",
       hotelList: [],
       imageList: [],
@@ -686,6 +692,28 @@ export default {
                 }
 
             ],
+      BackfillUserName: [
+          {
+            value: '张雪',
+            text: '张雪'
+          },
+          {
+            value: '吴庆莲',
+            text: '吴庆莲'
+          },
+          {
+            value: '马铭悦',
+            text: '马铭悦'
+          },
+          {
+            value: '王娇',
+            text: '王娇'
+          },
+          {
+            value: '林梅霞',
+            text: '林梅霞'
+          },
+      ],
       SCycle: [
         {
                     value: 0,
@@ -831,6 +859,9 @@ export default {
       const _self = this;            
       _self.form.OrderType = value
     },
+    changeValue9(value) {
+          this.Htr = value
+    },
     nowName(){
       const _self = this;                  
       if(_self.type == '酒店订单'){
@@ -895,6 +926,7 @@ export default {
           StateFuKuan: _self.filters.StateFuKuan,
           WaiCaiNo:_self.filters.WaiCaiNo,
           WaiCaiFlag:_self.filters.WaiCaiFlag,
+          BackfillUserName:_self.filters.BackfillUserName,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,
           PlatOrderNo: _self.filters.PlatOrderNo
         }
@@ -958,8 +990,9 @@ export default {
       this.filters.OrderState = this.Zt
       this.filters.OrderType = this.Lb
       this.filters.WaiCaiFlag = this.Wcfs  
-      this.filters.WaiCaiPlatID = this.Wcqd       
-             
+      this.filters.WaiCaiPlatID = this.Wcqd
+      this.filters.BackfillUserName = this.Htr
+                          
       this.fetchData();
     },
     qrh(id) {
@@ -1096,7 +1129,8 @@ export default {
           OrderState:_self.filters.OrderState,
           OrderType:_self.filters.OrderType,
           WaiCaiFlag:_self.filters.WaiCaiFlag,
-          WaiCaiPlatID:_self.filters.WaiCaiPlatID,                                                  
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,
+          BackfillUserName:_self.filters.BackfillUserName,                                                            
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       }
