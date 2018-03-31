@@ -26,5 +26,10 @@ export default {
   // DELETE /Hotel/TripOrder/{id}
   del(id) {
     return axios.delete(base + id)
+  },
+  downloadList(params) {
+    return axios.get(base + 'DownloadList', {
+      params: params
+    })
   }
 }

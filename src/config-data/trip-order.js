@@ -31,6 +31,7 @@ const searchData = [
   ['客人姓名', 'Passenger', 'input', ''],
   ['付款状态', 'StateFu', 'select', ''],
   ['收款状态', 'StateShou', 'select', ''],
+  ['预定日期', 'Booktime', 'daterange', ''],
   ['是否忽略', 'StateIgnore', 'select', '']
 ]
 

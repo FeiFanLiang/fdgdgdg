@@ -60,8 +60,10 @@ import singlePriceRatioLogApi from './single-price-ratio-log'
 import hotelHotelpriceApi from './hotel-hotelprice'
 import hotelGroupApi from './hotel-group'
 import wxyhApi from './wxyh'
+import lssue from './lssue'
 export {
   accountApi,
+  lssue,
   wxyhApi,
   hotelGroupApi,
   platStatPriceApi,

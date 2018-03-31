@@ -68,6 +68,11 @@ export default {
       name: '微信用户'
     },
     {
+      path: 'hotels-order/lssuel',
+      component: _import('order/lssuel'),
+      name: '工单列表'
+    },
+    {
       path: 'hotels-order/HotelsOrder',
       component: _import('order/hotels-order'),
       name: '酒店订单'

@@ -17,10 +17,25 @@
         </el-select>
       </el-form-item>
       <el-button style="margin:10px 0;" @click="clickAddBtn" slot="button-add">添加</el-button>
+      <el-button type="" @click="downloadList()" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
     </CustomSearchCopy>
     <el-table :data="tripOrder" :loading="loading" border style="width:100%">
-      <el-table-column label="订单名称" prop="Title"></el-table-column>
+      <el-table-column label="订单名称" prop="Title" width="200"></el-table-column>
       <el-table-column label="订单号" prop="PlatOrderNo" width="180"></el-table-column>
+      <el-table-column label="收款状态" prop="StateShou">
+           <template scope="scope">
+            <span  v-if="scope.row.StateShou == 0">未收</span>
+            <span  v-if="scope.row.StateShou == 1">已收</span>
+            <span  v-if="scope.row.StateShou == 2">收款对账</span>
+          </template>
+     </el-table-column>
+      <el-table-column label="付款状态" prop="StateFu" >
+           <template scope="scope">
+            <span  v-if="scope.row.StateFu == 0">未付</span>
+            <span  v-if="scope.row.StateFu == 1">已付</span>
+            <span  v-if="scope.row.StateFu == 2">付款对账</span>
+          </template>
+     </el-table-column>
       <el-table-column label="订单来源" width="110">
         <template scope="scope">
           <p v-for="item in SourcePlatID">
@@ -35,6 +50,12 @@
       </el-table-column>
       <el-table-column label="客人姓名" prop="Passenger" width="110"></el-table-column>
       <el-table-column label="联系电话" prop="Tel" width="130"></el-table-column>
+      <el-table-column label="订单状态" prop="OrderState" >
+           <template scope="scope">
+            <span  v-if="scope.row.OrderState == 0">正常</span>
+            <span  v-if="scope.row.OrderState == 1">退票</span>
+          </template>
+     </el-table-column>
       <el-table-column width="150" label="操作">
         <template scope="scope">
           <el-button size="small" @click="clickEditBtn(scope.$index, scope.row)">编辑</el-button>
@@ -194,6 +215,7 @@ import { tripOrderApi,policyApi } from 'api'
         tripOrder: [],
         filters:{
           StateShou:'',
+          Booktime:'',
           StateIgnore:''
         },
         form:{
@@ -231,9 +253,37 @@ import { tripOrderApi,policyApi } from 'api'
         this.fetchData(this.currentPage)
       },
       searchCallback(filters) {
+          let now = Object.assign(this.filters, filters );
           Object.assign(filters, filters, this.filters)
           this.filters = filters
+          this.filters.Booktime = now.Booktime
           this.fetchData()
+      },
+      async downloadList(){
+           const _self = this
+          const options = {
+            order: 'ID',
+            query: { 
+              Title:_self.filters.Title,
+              PlatOrderNo:_self.filters.PlatOrderNo,
+              Passenger:_self.filters.Passenger,
+              StateFu:_self.filters.StateFu,
+              StateShou:_self.filters.StateShou,
+              'Booktime>':_self.filters.Booktime[0] ? new Date(_self.filters.Booktime[0]).Format('yyyy-MM-dd') : '',
+              'Booktime<':_self.filters.Booktime[1] ? new Date(_self.filters.Booktime[1]).Format('yyyy-MM-dd') : '',
+              StateIgnore:_self.filters.StateIgnore,
+            }
+          }
+         try {  
+          const res = await tripOrderApi.downloadList(options);
+            if (res.request.responseURL) {
+          window.location.href = res.request.responseURL;
+        }
+              
+      } catch (e) {
+        _self.$message.error("数据下载失败!!!");
+      }
+       
       },
       async fetchData(currentPage, pageSize) {
         const _self = this
@@ -251,10 +301,13 @@ import { tripOrderApi,policyApi } from 'api'
               Passenger:_self.filters.Passenger,
               StateFu:_self.filters.StateFu,
               StateShou:_self.filters.StateShou,
+              'Booktime>':_self.filters.Booktime[0] ? new Date(_self.filters.Booktime[0]).Format('yyyy-MM-dd') : '',
+              'Booktime<':_self.filters.Booktime[1] ? new Date(_self.filters.Booktime[1]).Format('yyyy-MM-dd') : '',
               StateIgnore:_self.filters.StateIgnore,
             }
           }
           const res = await tripOrderApi.list(options)
+          console.log(res)
           _self.tripOrder = res.data.Data
           _self.count = res.data.Count
           _self.loading = false

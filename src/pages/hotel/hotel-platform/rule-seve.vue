@@ -542,22 +542,29 @@ export default {
             })
         },
         async removeForm(){
-            const _self = this 
-                try {
+            const _self = this     
                     let option = {
                         GroupId: _self.form.GroupName,
                         PlatFromId: _self.form.PlatformID
                     } 
-                    const res = await hotelHotelpriceApi.dele(option)
+                     _self.$confirm(`是否删除?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                    })
+                    .then(async() => {
+                    try {
+                       const res = await hotelHotelpriceApi.dele(option)
                     _self.showDialog2 = false
                     _self.$message({
                     message: '删除成功',
                     type: 'success'
                     })
-                }catch (e) {
-                    console.error(e)
-                    _self.$message.error('删除失败!!!')
-                }
+                    } catch (e) {
+                        console.error(e)
+                    }
+                    })
+                    .catch(() => {})     
         },
        async editSave() {
             const _self = this
