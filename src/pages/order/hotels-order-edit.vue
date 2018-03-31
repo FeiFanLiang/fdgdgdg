@@ -975,7 +975,7 @@ export default{
             if(this.money != ''){
                 this.finance = true
             }
-           console.log(res)
+           console.log(id)
         },
         imgShow(img){
             console.log(img)
@@ -1159,7 +1159,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-               _self.activeName = _self.form.HotelOrderDetail[0].ID
+            //   _self.activeName = _self.form.HotelOrderDetail[0].ID
 
                 console.log(_self.form)
                 _self.getImageList(_self.form.Picture)

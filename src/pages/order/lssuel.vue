@@ -72,13 +72,17 @@
        <!-- <el-table-column prop="Description" label="描述"></el-table-column> -->
         <el-table-column prop="OptState" label="处理状态">
           <template scope="scope">
-            <el-button type="text" size="small"  v-if="scope.row.OptState  == 0" @click="Single(scope.row,$event)">未处理</el-button>            
-            <span  v-if="scope.row.OptState == 1">处理中</span>
-            <span  v-if="scope.row.OptState == 9">处理完成</span>            
+            <el-button type="text" size="small"  v-if="scope.row.OptState  == 0" @click="Single(scope.row,$event)">未处理</el-button>
+            <el-button type="text" size="small"  v-if="scope.row.OptState  == 1" @click="Single(scope.row,$event)">处理中</el-button>                                    
+            <span  v-if="scope.row.OptState == 2">处理完成</span>            
           </template>
         </el-table-column>
         <el-table-column prop="OptUserName" label="处理人"></el-table-column>
-        <el-table-column prop="CreateTime" label="创建时间"></el-table-column>
+        <el-table-column prop="CreateTime" label="创建时间">
+            <template scope="scope">
+                    <span v-if="scope.row.CreateTime != null">{{ scope.row.CreateTime.split(' ')[0] }}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="CreateUserName" label="提单人"></el-table-column>        
         <el-table-column prop="ReState " label="结单状态">
         <template scope="scope">
@@ -114,8 +118,8 @@
                 </el-col> 
                 </el-row>
                 <el-row>
-                        <el-form-item label="截图信息" prop="PolicyImage">
-                            <UploadImageCopy :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccess"></UploadImageCopy>
+                        <el-form-item label="截图信息" prop="Picture">
+                            <UploadImageCopy :images="imageList" @onRemove="handleRemove" @onSuccess="handleSuccesss"></UploadImageCopy>
                         </el-form-item> 
                 </el-row> 
             </el-form>
@@ -151,7 +155,7 @@ export default {
         OptState:'',
         ProjectType:'',
         Description:"",
-        PolicyImage:"",
+        Picture:"",
         Title:"",
         ID:""
       },
@@ -228,19 +232,20 @@ export default {
     handleRemove(index,file, fileList) {
             this.imageList.splice(index, 1)
             let f = this.imageList
-            this.form.PolicyImage = f.toString()
+            this.form.Picture = f.toString()
     },
-    async handleSuccess(response, file, fileList) {
+    async handleSuccesss(response, file, fileList) {
             if (!response) {
                 this.$message.error('上传失败,请重新上传')
                 return false
             }
             this.imageList.push(response)
             let f = this.imageList
-            this.form.PolicyImage = f.toString()
-        },
+            this.form.Picture = f.toString()
+    },
     addlss(){
         this.showDialog=true
+        this.imageList = []
     },
     async downloadList(){
           const _self = this
@@ -289,8 +294,9 @@ export default {
       }
       try {
         const res = await lssue.listByQuery(options)
-        //console.log(res)
+        console.log(res)
         this.dwzList = res.data.Data
+        this.count =  res.data.Count
         _self.loading = false
       } catch (e) {
         _self.loading = false
@@ -300,8 +306,13 @@ export default {
       const _self = this
       const ntext = e.target.innerText
         try{
-          if(ntext=="未处理"){
-            _self.form.ID = row.ID
+            _self.form.ID = row.ID          
+          if(ntext=="处理中"){
+            _self.form.OptState = 2
+            await lssue.states(_self.form)  
+          }
+          else{
+            if(ntext=="未处理"){
             _self.form.OptState = 1
             await lssue.states(_self.form)    
           }else{
@@ -309,8 +320,7 @@ export default {
             _self.form2.ReState = 1
             await lssue.states(_self.form2)    
           }
-         
-        // console.log(aa)
+          }  
             this.$message({
                 message: '设置成功',
                 type: 'success'
@@ -320,68 +330,20 @@ export default {
             this.$message.error('设置失败!!!')
         }
     },
-    async clickEditBtn($index, row) {
-      const _self = this
-      _self.dialogTitle = '编辑微信用户信息'
-      _self.showDialog = true      
-      try {
-        _self.form.CaiUser = row.CaiUser
-        _self.form.Name = row.Name
-        _self.form.Nickname = row.Nickname
-        _self.form.ID = row.ID
-        _self.form.OptUser = row.OptUser
-        _self.form.State = row.State        
-        _self.form.Tel = row.Tel
-        _self.form.UserName = row.UserName
-        _self.form.Remark = row.Remark 
-      } catch (e) {
-        console.error(e)
-      }
-    },
-    submitForm() {
-      const _self = this
-      
-    },
     async addSave() {
       const _self = this
       try {
         _self.isEditable = false
-        console.log(_self.form)
-        return false
-       // await lssue.add(_self.form)
+        await lssue.add(_self.form)
         _self.fetchData()
         _self.showDialog = false
         _self.$message({
-          message: '保存成功',
+          message: '添加成功',
           type: 'success'
         })
       } catch (e) {
         console.error(e)
         _self.$message.error('添加失败!!!')
-      } finally {
-        _self.isEditable = true
-      }
-    },
-    async editSave() {
-      const _self = this
-      const form = {}
-      for (let [k, v] of Object.entries(_self.form)) {
-        if (_self.form[k] != _self.copyForm[k]) {
-          form[k] = v
-        }
-      }
-      try {
-        _self.isEditable = false
-        await lssue.edit(_self.form.ID, form)
-        _self.showDialog = false
-        _self.fetchData()
-        _self.$message({
-          message: '编辑成功',
-          type: 'success'
-        })
-      } catch (e) {
-        console.error(e)
-        _self.$message.error('编辑失败!!!')
       } finally {
         _self.isEditable = true
       }

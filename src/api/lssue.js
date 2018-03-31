@@ -3,27 +3,27 @@ import path from './api'
 const base = path.apiBaseUrl + 'Utility/Issue/'
 
 export default {
-  listByQuery (params) {
+  async listByQuery (params) {
     return axios.get(base + 'list', {
       params: params
     })
   },
-  detail(id) {
+  async detail(id) {
     return axios.get(base + id)
   },
-  add(params) {
+  async add(params) {
     return axios.post(base, params)
   },
-  edit(id,params) {
+  async edit(id,params) {
     return axios.put(base + id,params)
   },
-  states(params) {
+  async states(params) {
     return axios.post(base+'SetState',params)
   },
-  del(id) {
+  async del(id) {
     return axios.delete(base + id)
   },
-  downloadList(params) {
+  async downloadList(params) {
     return axios.get(base + 'DownloadList', {
       params: params
     })

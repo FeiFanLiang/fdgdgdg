@@ -64,6 +64,11 @@ export default {
     ImgList
   },
   mounted() {
+     if(this.$route.name == '工单列表'){
+       this.action = path.uploadIssue
+     }else{
+       this.action = path.uploadUrl       
+     }
     this.$nextTick(() => {
       this.$on('onFileError', (file, msg) => {
         this.upStatus = 'error'

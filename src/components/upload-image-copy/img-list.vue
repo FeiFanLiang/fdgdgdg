@@ -31,7 +31,11 @@ export default {
   },
   computed: {
     images() {
-      return this.lists.map(item => path.imageUrl + item)
+      if(this.$route.name == '工单列表'){
+      return this.lists.map(item => path.imageIssueUrl + item)       
+     }else{
+      return this.lists.map(item => path.imageUrl + item) 
+     }
     }
   },
   data() {

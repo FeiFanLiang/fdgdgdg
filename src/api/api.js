@@ -21,5 +21,8 @@ if (host.indexOf('localhost') > -1) {
 export default {
   apiBaseUrl: url,
   uploadUrl: url + 'Hotel/Image/',
-  imageUrl: url + 'upload/'
+  uploadIssue: url + 'Hotel/Image/IssueFile/',  
+  imageUrl: url + 'upload/',
+  imageIssueUrl: url + 'upload/Issue/'
+  
 }
