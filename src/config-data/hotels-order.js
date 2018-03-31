@@ -47,7 +47,8 @@ const searchData2 = [
   ['采购方式', 'WaiCaiFlag', 'select', ''],  
   ['订单状态', 'OrderState', 'select', ''],
   ['付款周期', 'SettlementCycleFu', 'select', ''], 
-  ['确认号', 'HotelBookingNo', 'input', ''],         
+  ['确认号', 'HotelBookingNo', 'input', ''],
+  ['回填日期', 'BackfillTime', 'daterange', ''],           
   ['筛选条件', 'checkList', 'select', ''],
 ]
 const searchData3 = [

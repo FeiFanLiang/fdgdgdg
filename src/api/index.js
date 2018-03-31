@@ -59,9 +59,10 @@ import tripOrderApi from './trip-order'
 import singlePriceRatioLogApi from './single-price-ratio-log'
 import hotelHotelpriceApi from './hotel-hotelprice'
 import hotelGroupApi from './hotel-group'
-
+import wxyhApi from './wxyh'
 export {
   accountApi,
+  wxyhApi,
   hotelGroupApi,
   platStatPriceApi,
   airlineApi,

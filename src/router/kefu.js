@@ -65,7 +65,7 @@ export default {
     {
       path: 'hotels-order/Usefor',
       component: _import('order/Usefor'),
-      name: '有用单列表'
+      name: '微信用户'
     },
     {
       path: 'hotels-order/HotelsOrder',

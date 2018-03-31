@@ -77,6 +77,7 @@
           :total="count">
         </el-pagination>
       </div>
+      <!--
     <el-dialog title="添加酒店" v-model="dialogTableVisible" width="80%">
       <el-row :gutter="20">
         <el-col :span="3">
@@ -117,7 +118,7 @@
           <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" :current-page="currentPage2" :page-size="pageSize2" :total="count2">
           </el-pagination>
         </div>
-    </el-dialog>
+    </el-dialog> -->
           
       </div>
 </template>
@@ -144,7 +145,6 @@ export default {
       Groupname:"",
       countryOptions: [],
       multipleSelection: [],
-      multipleSelection2:[],
       hotelbase: [],
       addlist:[],
       currentPage: 1,
@@ -156,15 +156,6 @@ export default {
       loading: false,
       loading2:false,
       filters: {
-        ID: '',
-        HotelName: '',
-        HotelName_En: '',
-        FrontPhone: '',
-        labelVal: '1',
-        country: '',
-        city: ''
-      },
-      filters2: {
         ID: '',
         HotelName: '',
         HotelName_En: '',
@@ -204,13 +195,14 @@ export default {
     },
     hotelAddHide() {
       this.dialogTableVisible = true
-      this.getHotelbaseall()      
+      console.log("123")
+      if(this.addlist == ''){
+        this.getHotelbaseall()
+      }
+      
     },
     hotelbaseSearch() {
       this.getHotelbaseList()
-    },
-    hotelbaseSearch2(){
-       this.getHotelbaseall()
     },
     async getHotelbaseList(currentPage, pageSize) {
       const _self = this
@@ -269,39 +261,6 @@ export default {
             })
 
     },
-    async getHotelbaseall(currentPage, pageSize) {
-        const _self = this
-        _self.loading2 = true
-        _self.currentPage2 = currentPage || _self.currentPage2
-        _self.pageSize2 = pageSize || _self.pageSize2
-        const options = {
-          pageIndex: _self.currentPage2,
-          pageSize: _self.pageSize2,
-          order: 'ID',
-          query: {
-            ID: _self.filters2.labelVal === '3' ? _self.filters2.ID : '',
-            HotelName:
-              _self.filters2.labelVal === '1' ? _self.filters2.HotelName : '',
-            HotelName_En:
-              _self.filters2.labelVal === '2' ? _self.filters2.HotelName_En : '',
-            City: _self.filters2.city,
-            Country: _self.filters2.country,
-            IsDelete: false
-            }
-        }
-        try {
-          console.log(options)
-            const res2 = await hotelBaseApi.addlist(_self.$route.params.ID,options)
-            console.log(res2)
-            let data2 = res2.data.Data
-            _self.addlist = data2        
-            _self.count2 = res2.data.Count
-          _self.loading2 = false
-        } catch (e) {
-            console.log(e)
-          _self.loading2 = false
-        }     
-    },
     async del($index, row){
             const _self = this
             _self.$confirm(`是否删除?`, '提示', {
@@ -311,11 +270,11 @@ export default {
             })
             .then(async() => {
             try {
-          let ids = []          
-          ids.push(row.ID)    
-          let strids = '['+ ids.toString() + ']'
-              const a=  await hotelGroupApi.removehotel(_self.$route.params.ID,strids)  
-                _self.getHotelbaseList()                              
+        let ids = []          
+          ids.push(row.ID)      
+              const a=  await hotelGroupApi.removehotel(_self.$route.params.ID,ids)  
+              console.log(_self.$route.params.ID,ids)
+                _self.getHotelbaseList()
                 _self.$message({
                 message: '删除成功',
                 type: 'success'
@@ -330,25 +289,13 @@ export default {
         this.pageSize = val
         this.getHotelbaseList(1, this.pageSize)
       },
-      handleSizeChange2(val) {
-        this.pageSize2 = val
-        this.getHotelbaseall(1, this.pageSize)
-      },
       handleCurrentChange(val) {
         this.currentPage = val
         this.getHotelbaseList(this.currentPage)
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;  
-       // console.log(this.multipleSelection)       
-      },
-      handleSelectionChange2(val) {
-        this.multipleSelection2 = val;  
-       // console.log(this.multipleSelection2)       
-      },
-      handleCurrentChange2(val) {
-        this.currentPage2 = val
-        this.getHotelbaseall(this.currentPage2)
+        console.log(this.multipleSelection)       
       },
     async alladd(){
           const _self = this; 
@@ -362,15 +309,12 @@ export default {
             const arr = {
                 hotelListStr:ids
             }
-              const a=  await hotelGroupApi.removehotel(_self.$route.params.ID,strids)  
+              const a=  await hotelGroupApi.removehotel(_self.$route.params.ID,strids)    
               _self.getHotelbaseList()
-              _self.loading2 = false
-                
                 _self.$message({
                 message: '删除成功',
                 type: 'success'
                 })         
-                
           }else{
               this.$message({
                   message: '请选择酒店',
@@ -378,7 +322,7 @@ export default {
               });
           }
       }catch(e){
-              _self.$message.error('删除失败!!!')
+              _self.$message.error('添加失败!!!')
           }
     },
     async addtogroup(){
@@ -393,12 +337,10 @@ export default {
            let strids = '['+ ids.toString() + ']'
             const res = await hotelGroupApi.addbase(_self.$route.params.ID,strids) 
             _self.getHotelbaseList()
-            _self.dialogTableVisible = false
                 _self.$message({
                 message: '添加成功',
                 type: 'success'
                 })   
-                
           }else{
               this.$message({
                   message: '请选择酒店',

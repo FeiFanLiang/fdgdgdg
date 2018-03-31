@@ -201,6 +201,7 @@ export default {
             }
           }
         }
+        console.log(res)
         _self.hotelbase = data
         _self.count = res.data.Count
         this.loading = false

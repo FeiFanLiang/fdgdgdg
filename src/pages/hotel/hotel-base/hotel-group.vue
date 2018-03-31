@@ -206,7 +206,8 @@ export default {
           ID: row.ID
         },
         query: {
-          GroupName: row.GroupName
+          GroupName: row.GroupName,
+          Remark: row.Remark          
         }
       })
     }

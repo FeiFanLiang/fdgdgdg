@@ -2,8 +2,8 @@
 <div id="Rule">
     <el-button @click="returns()">返回</el-button>
     <el-button @click="addrule()">创建规则</el-button>
-    <el-button @click="addrule()">添加组</el-button>    
-    <el-button @click="delgroup()">删除组</el-button>            
+    <el-button @click="addrules()">批量添加价格规则</el-button>    
+    <el-button @click="delgroup()">批量删除价格规则</el-button>            
     <el-table :data="RuleCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
      row-key="ID"  ref="table">
         <el-table-column label="优先级" prop="Rank" sortable width=100></el-table-column>     
@@ -107,20 +107,28 @@
         </el-col>        
         </el-row>
         <el-row>
-         <el-col :span="12">
+         <el-col :span="10">
         <el-form-item label="选择模式" prop='StateCheck'>
           <el-select v-model="form.StateCheck" placeholder="请选择" clearable @change="changeValue">
               <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="item.value"></el-option>
           </el-select>
         </el-form-item>
         </el-col>
-         <el-col :span="12">
+         <el-col :span="2" style="text-align:center">
         <el-tooltip class="item" effect="dark" content="根据时间段来设置价格规则" placement="top-start" v-if=!isShow>
               <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="以当前日期为基准计算天数延续来设置价格规则。计算方式为：入住日期（成本*折扣+金额）" placement="top-start" v-if=isShow>
               <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
         </el-tooltip>
+        </el-col>
+         <el-col :span="12" v-if="batch">
+        <el-form-item label="组名称" prop="GroupName">
+            <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
+                <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
+                </el-option>
+            </el-select>
+        </el-form-item>
         </el-col>
          </el-row>
         <el-row v-if=isShow>
@@ -179,12 +187,12 @@
                 </el-option>
             </el-select>
         </el-form-item>
-    </el-col>
+        </el-col>
         </el-row>
     
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm()">保存</el-button>
+        <el-button type="primary" @click="removeForm()">删除</el-button>
       </span>
 
     </el-dialog>
@@ -209,6 +217,7 @@ export default {
             Accoun:'',
             dialogTag: '',
             loadingHotel:false,
+            batch:false,
             sheheSaveList:[],
             GrouplList:[],
             isShow:false,
@@ -242,6 +251,7 @@ export default {
                 isDisabled:true,
                 HotelID:'',
                 Discount:'',
+                GroupName:'',
                 AddMoney:'',
                 BookDay:'',
                 Rank:'',
@@ -335,9 +345,20 @@ export default {
                 _self.isShow = false
             }
         },
+        addrules(){
+            const _self = this
+            _self.addrule()
+            _self.dialogTitle = '批量添加价格规则'
+            _self.dialogTag = 3            
+            if(_self.dialogTitle = '批量添加价格规则'){
+           _self.batch = true
+                
+            }
+        },
         addrule(){
             const _self = this
             _self.showDialog = true
+           _self.batch = false            
             _self.dialogTag = 1
             _self.dialogTitle = '添加'
             const nowdate = new Date().Format('yyyy-MM-dd hh:mm:ss')
@@ -370,6 +391,7 @@ export default {
         const _self = this
         if (_self.dialogTag === 1) _self.addSave()
         if (_self.dialogTag === 2) _self.editSave()
+        if (_self.dialogTag === 3) _self.addSaves()        
         },
         Rulecom($index, row) {
             const _self = this
@@ -468,6 +490,74 @@ export default {
                 return false
                 }
             })
+        },
+        async addSaves() {
+            const _self = this
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
+                try {
+                    if( _self.form.isDisabled==false){
+                        _self.form.SetType = 1
+                    }else{
+                        _self.form.SetType = 0
+                        
+                    }
+                    if( _self.form.StateCheck==1){
+                        _self.form.ModeType = 1
+                    }else{
+                        _self.form.ModeType = 0
+                        
+                    }
+                    _self.form.StartDate ?
+                            (_self.form.StartDate = new Date(
+                                _self.form.StartDate
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                    _self.form.EndDate ?
+                            (_self.form.EndDate = new Date(
+                                _self.form.EndDate
+                            ).Format('yyyy-MM-dd hh:mm:ss')) :
+                            ''
+                // const opation ={
+                //     GroupId:_self.form.GroupName,
+                //     PlatFromId:_self.form.PlatformID
+                // } 
+                const res =  await hotelHotelpriceApi.addrules(_self.form)
+                 console.log(_self.form)
+             // return false
+                    _self.fetchData()
+                    _self.$refs['form'].resetFields()
+                    _self.showDialog = false
+                    _self.$message({
+                    message: '保存成功',
+                    type: 'success'
+                    })
+                } catch (e) {
+                    console.error(e)
+                    _self.$message.error('添加失败!!!')
+                } 
+                } else {
+                return false
+                }
+            })
+        },
+        async removeForm(){
+            const _self = this 
+                try {
+                    let option = {
+                        GroupId: _self.form.GroupName,
+                        PlatFromId: _self.form.PlatformID
+                    } 
+                    const res = await hotelHotelpriceApi.dele(option)
+                    _self.showDialog2 = false
+                    _self.$message({
+                    message: '删除成功',
+                    type: 'success'
+                    })
+                }catch (e) {
+                    console.error(e)
+                    _self.$message.error('删除失败!!!')
+                }
         },
        async editSave() {
             const _self = this

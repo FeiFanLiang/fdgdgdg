@@ -49,6 +49,7 @@
                 </el-form-item>
             </el-col>
         </el-row>
+        <!--
         <el-row :gutter="24">
             <el-col :span="6">
                 <el-form-item label="付款货币" prop="CurrencyFu">
@@ -74,7 +75,7 @@
                     <el-input placeholder="请输入付款金额" v-model="form.AmountFu"></el-input>
                 </el-form-item>
             </el-col>
-        </el-row>
+        </el-row> -->
         <el-row :gutter="24">
             <el-col :span="6">
                 <el-form-item label="人工处理状态" prop="HandState">
@@ -166,7 +167,7 @@
                             <el-form-item label="外采标记" prop="WaiCaiFlag">
                                 <!-- <span v-if="item.WaiCaiFlag == 0" style="color:orange">自营</span>
                                 <span v-if="item.WaiCaiFlag == 1" style="color:orange">外采</span> -->
-                                <el-select v-model="item.WaiCaiFlag" clearable>
+                                <el-select v-model="item.WaiCaiFlag" clearable >
                                     <el-option v-for="(item,index) in WaiCaiFlag " :key="index" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -202,6 +203,35 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+                    </el-row>
+                    <el-row :gutter="24">
+                        <el-col :span="6">
+                            <el-form-item label="应收款额" prop="AmountYingShou">
+                            <el-select v-model="item.CurrencyShouKuan" clearable style="width:80px;position:relative;margin-right:10px">
+                                <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                                <el-input placeholder="请输入应收款额" v-model="item.AmountYingShou" style="position:absolute;width:53%"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="酒店底价" prop="HotelFee">
+                             <el-select v-model="item.CurrencyFuKuan" clearable style="width:80px;position:relative;margin-right:10px;">
+                                <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                                <el-input placeholder="请输入酒店底价" v-model="item.HotelFee" style="position:absolute;width:53%"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="佣金" prop="CommissionStr" >
+                                <el-input placeholder="请输入佣金" v-model="item.CommissionStr"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="床型" prop="Bed">
+                                <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
+                            </el-form-item>                                                          
+                        </el-col>
+
                     </el-row>
                     <el-row :gutter="24">
                         
@@ -292,16 +322,16 @@
                                 <el-input placeholder="请输入联系电话" v-model="item.PassengerTel"></el-input>
                             </el-form-item>
                         </el-col>
-                         <el-col :span="6">
+                    <!--     <el-col :span="6">
                             <el-form-item label="床型" prop="Bed">
                                 <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
                             </el-form-item>                                                          
-                        </el-col>
+                        </el-col> -->
                     </el-row>
                     <el-row :gutter="24">
                         <el-col :span="6">
                             <el-form-item label="客人要求" prop="PassengerAsk">
-                                <el-input type="textarea" v-model="item.PassengerAsk" autosize></el-input>
+                                <el-input type="textarea" v-model="item.PassengerAsk" ></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -368,7 +398,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col> -->
-                        <el-col :span="8">
+                     <!--     <el-col :span="8">
                             <el-form-item label="应收款额" prop="AmountYingShou">
                             <el-select v-model="item.CurrencyShouKuan" clearable style="width:80px;position:relative;margin-right:10px">
                                 <el-option v-for="items in Currency" :key="items.value" :label="items.label" :value="items.value"></el-option>
@@ -384,7 +414,7 @@
                                 <el-input placeholder="请输入酒店底价" v-model="item.HotelFee" style="position:absolute;"></el-input>
                             </el-form-item>
                         </el-col>
-                        <!--
+                      
                         <el-col :span="6">
                             <el-form-item label="应付款额" prop="AmountYingFu">
                                 <el-input placeholder="请输入应付款额" v-model="item.AmountYingFu"></el-input>
@@ -440,11 +470,11 @@
                                 <el-input placeholder="请输入其他费用" v-model="item.OherFee"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="6" style="margin-left:-75px">
+                     <!--   <el-col :span="6" style="margin-left:-75px">
                             <el-form-item label="佣金" prop="CommissionStr" >
                                 <el-input placeholder="请输入佣金" v-model="item.CommissionStr"></el-input>
                             </el-form-item>
-                        </el-col>
+                        </el-col> -->
                         <el-col :span="6">
                             <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
                                 <el-select v-model="item.SettlementCycleFu" clearable>

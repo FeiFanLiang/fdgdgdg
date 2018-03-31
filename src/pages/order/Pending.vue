@@ -6,40 +6,36 @@
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单区域" slot="HotelArea">
-        <el-select v-model="filters.HotelArea" clearable @change="changeValue1">
-          <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
-      </el-form-item>
+      <!--
       <el-form-item label="人工处理状态" slot="HandState">
         <el-select v-model="filters.HandState" clearable @change="changeValue2">
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
-      </el-form-item>
-      <el-form-item label="订单状态" slot="OrderState">
+      </el-form-item> -->
+      <el-form-item label="订单状态" slot="OrderState" style="margin-bottom:20px" >
         <el-select v-model="filters.OrderState" clearable @change="changeValue4">
           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单类别" slot="OrderType">
+      <el-form-item label="订单类别" slot="OrderType"  style="margin-bottom:40px">
         <el-select v-model="filters.OrderType" clearable @change="changeValue5">
           <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="外采渠道" slot="WaiCaiPlatID">
+      <el-form-item label="外采渠道" slot="WaiCaiPlatID"  style="margin-bottom:20px">
         <el-select v-model="filters.WaiCaiPlatID" clearable @change="changeValue7">
           <el-option v-for="item in WaiCaiPlatID" :key="item.value" :label="item.Account" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="采购方式" slot="WaiCaiFlag">
+      <el-form-item label="采购方式" slot="WaiCaiFlag" style="margin-bottom:20px">
         <el-select v-model="filters.WaiCaiFlag" clearable @change="changeValue6">
           <el-option v-for="item in WaiCaiFlag" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="结款方式" slot="SettlementCycle">
-        <el-select v-model="filters.SettlementCycle" clearable @change="changeValue3">
-          <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
+      <el-form-item label="付款周期" slot="SettlementCycleFu" >
+          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期" @change="changeValue3">
+              <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
+          </el-select>
       </el-form-item>
       <el-form-item label="外采订单号" slot="WaiCaiNo">
           <el-input v-model="filters.WaiCaiNo"></el-input>
@@ -368,7 +364,13 @@ export default {
         checkList: "",
         HandState:"",
         HotelArea: "",
-        WaiCaiNo:""
+        SettlementCycleFu:"",
+        WaiCaiNo:"",
+        OrderState:"",
+        OrderType:"",
+        WaiCaiFlag:"",
+        WaiCaiPlatID:"",
+        BackfillTime:""
       },
       ThreePlatID: [
         {
@@ -394,6 +396,38 @@ export default {
           value: 2
         }
       ],
+      payPeriodList: [
+                {
+                    value: 0,
+                    text: '其他（每单备注）'
+                }, 
+                {
+                    value: 1,
+                    text: '预付款'
+                },
+                {
+                    value: 2,
+                    text: '单结'
+                },
+                {
+                    value: 3,
+                    text: '日结'
+                },
+
+                {
+                    value: 4,
+                    text: '月结'
+                },
+                {
+                    value: 5,
+                    text: '半月结'
+                },
+                {
+                    value: 6,
+                    text: '周结'
+                }
+
+            ],
       WaiCaiFlag:[
                 {
                     label:'自营',
@@ -633,6 +667,14 @@ export default {
           time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
         }
       }
+      let timeh1 = "";
+      let timeh2 = "";
+      if (typeof _self.filters.BackfillTime != "undefined") {
+        if (_self.filters.BackfillTime[0] != null) {
+          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+        }
+      }
       let options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -642,12 +684,13 @@ export default {
           OrderNo: _self.filters.OrderNo,
           HotelName: _self.filters.HotelName,
           Passenger: _self.filters.Passenger,
-          HandState:_self.filters.HandState,
           StayDateStart: _self.filters.StayDateStart
             ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
             : "",
           "BookTime>": time1,
           "BookTime<": time2,
+          "BackfillTime>": timeh1,
+          "BackfillTime<": timeh2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
           HotelBookingNo: _self.filters.HotelBookingNo,
@@ -659,7 +702,7 @@ export default {
           OrderType:_self.filters.OrderType,
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
-          "HandState<":3,
+          HandState:0,
           OrderState:0,
           BackfillState:0,
           OrderType:0,
@@ -754,8 +797,8 @@ export default {
       this.filters.WaiCaiNo = now.WaiCaiNo   
       this.filters.ThreePlatID = this.Pts
       this.filters.HotelArea = this.Qy
-      this.filters.SettlementCycle = this.Fs
-      this.filters.HandState = this.Rstate    
+      this.filters.SettlementCycleFu = this.Fs
+     // this.filters.HandState = this.Rstate    
       this.filters.OrderState = this.Zt
       this.filters.OrderType = this.Lb
       this.filters.WaiCaiFlag = this.Wcfs  
@@ -861,6 +904,14 @@ export default {
           time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
         }
       }
+      let timeh1 = "";
+      let timeh2 = "";
+      if (typeof _self.filters.BackfillTime != "undefined") {
+        if (_self.filters.BackfillTime[0] != null) {
+          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+        }
+      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -875,9 +926,10 @@ export default {
             : "",
           "BookTime>": time1,
           "BookTime<": time2,
+          "BackfillTime>": timeh1,
+          "BackfillTime<": timeh2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycle: _self.filters.SettlementCycle,
-          HandState:_self.filters.HandState,
           HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,

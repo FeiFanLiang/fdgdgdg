@@ -18,7 +18,11 @@ export default {
   keep(params) {
     return axios.put(base + params.id, params)
   },
-  addbase(){
+  addbase(id,params){
+    return axios.get(base + `AddHotel/${id}?hotelListStr=`+params)
     
+  },
+  removehotel(id,params){
+    return axios.get(base + `RemoveHotel/${id}?hotelListStr=`+params)
   }
 }

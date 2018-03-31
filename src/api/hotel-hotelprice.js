@@ -16,6 +16,14 @@ export default {
   },
  async xiug (params) {
     return axios.put(base1+'UpdateRule/', params)
+  },
+  async addrules (params) {
+    return axios.post(base1+'CreatGroupHotel/?GroupId='+params.GroupName+'&PlatFromId='+params.PlatformID, params)
+  },
+  async dele(params) {
+    return axios.delete(base1+'DeleteGroupHotel/', {
+        params: params
+    })
   }
 
   

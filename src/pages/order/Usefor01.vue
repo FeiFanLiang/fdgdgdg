@@ -2,8 +2,13 @@
 <div id="HotelsOrder">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
       <el-form-item label="订单平台" slot="ThreePlatID">
-        <el-select v-model="filters.ThreePlatID" @change="changeValue">
+        <el-select v-model="filters.ThreePlatID" clearable @change="changeValue">
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="订单区域" slot="HotelArea">
+        <el-select v-model="filters.HotelArea" clearable @change="changeValue1">
+          <el-option v-for="item in HotelArea" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="人工处理状态" slot="HandState">
@@ -11,7 +16,7 @@
           <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="订单状态" slot="OrderState" style="margin-bottom:30px">
+      <el-form-item label="订单状态" slot="OrderState">
         <el-select v-model="filters.OrderState" clearable @change="changeValue4">
           <el-option v-for="item in OrderState" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
@@ -31,10 +36,10 @@
           <el-option v-for="item in WaiCaiFlag" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="付款周期" slot="SettlementCycleFu" >
-          <el-select v-model="filters.SettlementCycleFu" clearable placeholder="请选择付款周期" @change="changeValue3">
-              <el-option v-for="(item,index) in payPeriodList" :key="index" :label="item.text" :value="item.value"></el-option>
-          </el-select>
+      <el-form-item label="结款方式" slot="SettlementCycle">
+        <el-select v-model="filters.SettlementCycle" clearable @change="changeValue3">
+          <el-option v-for="item in SettlementCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="外采订单号" slot="WaiCaiNo">
           <el-input v-model="filters.WaiCaiNo"></el-input>
@@ -54,126 +59,9 @@
       
     </CustomSearchCopy>
     
-    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading" @expand="expand" border
-      :expand-row-keys="expandRowKeys" :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
-        <el-table-column type="expand" v-if="Namen">
-            <template scope="props">
-              <div>
-                <p><el-button size="big" @click="qrh(props.row.ID)">确认函</el-button></p>
-                <el-card class="box-card">
-                    <h4>预订其他信息</h4>
-                    <!-- <p><span>城市</span><span class="span-text">{{ props.row.City }}</span></p> -->
-                    <p><span>房型</span><span class="span-text">{{ props.row.Room }}</span></p>
-                    <p><span>间数</span><span class="span-text">{{ props.row.RoomNum }}</span></p>
-                    <p><span>晚数</span><span class="span-text">{{ props.row.NightNum }}</span></p>
-                    <!-- <p><span>联系电话</span><span class="span-text">{{ props.row.PassengerTel }}</span></p> -->
-                    <p><span>政策ID</span><span class="span-text">{{ props.row.HotelPolicyID }}</span></p>
-                    <p><span>平台政策ID</span><span class="span-text">{{ props.row.PlatPolicyID }}</span></p>
-                    <!-- <p><span>订单标题</span><span class="span-text">{{ props.row.OrderTitle }}</span></p> -->
-                    <p><span>订单号</span><span class="span-text">{{ props.row.PlatOrderNo}}</span></p>
-                    <p><span>订单编号</span><span class="span-text">{{ props.row.OrderNo}}</span></p>
-                    <!-- <p><span>其他订单状态</span><span class="span-text">{{ props.row.PlatOrderState }}</span></p>
-                    <p><span>其他订单类型</span><span class="span-text">{{ props.row.PlatOrderType }}</span></p>
-                    <p><span>来源订单ID</span><span class="span-text">{{ props.row.FromID }}</span></p> -->
-                    <p><span>备注</span><span class="span-text">{{ props.row.PassengerAsk }}</span></p>
-                </el-card>
-                <el-card class="box-card">
-                    <h4>财务付款</h4>
-                    <p><span>账户名称</span><span class="span-text">{{ props.row.AccountName }}</span></p>
-                    <p><span>付款货币</span><span class="span-text">{{ props.row.CurrencyFuKuan }}</span></p>
-                    <p><span>收款货币</span><span class="span-text">{{ props.row.CurrencyShouKuan }}</span></p>
-                    <p><span>收款额</span><span class="span-text">{{ props.row.AmountShou }}</span></p>
-                    <p><span>付款额</span><span class="span-text">{{ props.row.AmountFu }}</span></p>
-                    <!-- <p><span>酒店底价</span><span class="span-text">{{ props.row.HotelFee }}</span></p> -->
-                    <p><span>利润</span><span class="span-text">{{ props.row.Profit }}</span></p>
-                    <!-- <p><span>优惠金额</span><span class="span-text">{{ props.row.Discounts }}</span></p>
-                    <p><span>其他费用</span><span class="span-text">{{ props.row.OherFee }}</span></p>
-                    <p><span>改期费</span><span class="span-text">{{ props.row.FeeChange }}</span></p>
-                    <p><span>退票费</span><span class="span-text">{{ props.row.FeeCancel }}</span></p>
-                    <p><span>佣金</span><span class="span-text">{{ props.row.Commission }}</span></p>
-                    <p><span>手续费</span><span class="span-text">{{ props.row.Fee }}</span></p> -->
-                </el-card>
-                <el-card class="box-card">
-                    <h4>订单状态、发单信息</h4>
-                    <p><span>订单状态</span>
-                        <span class="span-text" v-if="props.row.OrderState == 0">未处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 1">已处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 2">已拒绝</span>
-                        <span class="span-text" v-if="props.row.OrderState == 3">未处理+未发单</span>
-                        <span class="span-text" v-if="props.row.OrderState == 4">待排房</span>
-                        <span class="span-text" v-if="props.row.OrderState == 5">风险订单</span>
-                        <span class="span-text" v-if="props.row.OrderState == 6">风险订单+未处理</span>
-                        <span class="span-text" v-if="props.row.OrderState == 7">风险订单+已处理</span>
-                    </p>
-                    <p><span>订单类型</span>
-                        <span class="span-text" v-if="props.row.OrderType == 0">新订</span>
-                        <span class="span-text" v-if="props.row.OrderType == 1">修改</span>
-                        <span class="span-text" v-if="props.row.OrderType == 2">取消</span>
-                        <span class="span-text" v-if="props.row.OrderType == 3">延住</span>
-                        <span class="span-text" v-if="props.row.OrderType == 4">无效</span>
-                        <span class="span-text" v-if="props.row.OrderType == 5">新订+修改</span>
-                        <span class="span-text" v-if="props.row.OrderType == 6">改期</span>
-                    </p>
-                    <p><span>酒店预定号</span><span class="span-text">{{ props.row.HotelBookingNo }}</span></p>
-                    <!-- <h4>外采、关联消息</h4>
-                    <p><span>外采类型</span><span class="span-text">{{ props.row.WaiCaiType }}</span></p>
-                    <p><span>外采编号</span><span class="span-text">{{ props.row.WaiCaiNo }}</span></p>
-                    <p><span>关联订单</span><span class="span-text">{{ props.row.POrderID }}</span></p> -->
-                    <h4>其他信息</h4>
-                    <!-- <p><span>最后抓取时间</span><span class="span-text">{{ props.row.GrabberTimeLast }}</span></p>
-                    <p><span>抓取的渠道</span><span class="span-text">{{ props.row.FetchChannel }}</span></p> -->
-                    <p>
-                      <span>第三方平台</span>
-                      <span class="span-text">
-                        <span v-for="item in ThreePlatID">
-                          <span v-if="props.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
-                        </span>
-                      </span>
-                    </p>
-                    <p><span>是否保密</span><span class="span-text" v-if="props.row.Secret === 0">不需要保密</span><span class="span-text" v-if="props.row.Secret === 1">需要保密</span></p>
-                    <p><span>保密状态</span><span class="span-text" v-if="props.row.SecretState === 0">未处理</span><span class="span-text" v-if="props.row.SecretState === 1">已经保密</span></p>
-                    <!-- <p><span>结算周期</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 0">单结</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 1">周结</span>
-                        <span class="span-text" v-if="props.row.SettlementCycle == 2">月结</span>
-                    </p> -->
-                </el-card>
-                <el-card class="box-card">
-                    <h4>财务、对账信息、操作流程</h4>
-                    <p><span>审核状态</span><span class="span-text" v-if="props.row.StateAuditor === 1">审核</span><span class="span-text" v-if="props.row.StateAuditor === 2">结束</span></p>
-                    <p><span>付款状态</span><span class="span-text" v-if="props.row.StateFuKuan === 0">未付</span><span class="span-text" v-if="props.row.StateFuKuan === 1">已付款</span></p>
-                    <p><span>收款状态</span><span class="span-text" v-if="props.row.StateShouKuan === 1">完成</span></p>
-                    <!-- <p><span>对账付款</span><span class="span-text" v-if="props.row.StateCheckFuKuan === 1">完成</span></p>
-                    <p><span>对账收款</span><span class="span-text" v-if="props.row.StateCheckShouKuan === 1">完成</span></p>
-                    <p><span>审核对账</span><span class="span-text" v-if="props.row.StateCheckEnd === 1">平</span></p>
-                    <p><span>紧急打款</span><span class="span-text" v-if="props.row.UrgentPay === 1">紧急</span></p>
-                    <p><span>不可合并支付</span><span class="span-text" v-if="props.row.UnMergePay === 1">不可合并</span></p> -->
-                    <br>
-                    <p><span>订单渠道</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 1">国际</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 0">国内</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 2">美国1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 3">美国2462</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 4">好订1009</span>
-                        <span class="span-text" v-if="props.row.HotelArea === 5">好订2462</span>
-                    </p>
-                    <p>
-                      <span>回填状态</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 0">未回填</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 1">回传成功</span>
-                      <span class="span-text" v-if="props.row.BackfillState === 2">回填失败</span>
-                    </p>
-                    <!-- <p>
-                      <span>订单截图状态</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 0">未截图</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 1">截图完成</span>
-                      <span class="span-text" v-if="props.row.StateScreenshot === 2">不截图</span>
-                    </p> -->
-                    <p><span>锁定</span><span class="span-text" v-if="props.row.LockState === 1">锁定</span><span>锁定</span><span class="span-text" v-if="props.row.LockState === 0">未锁定</span></p>
-                </el-card>
-              </div>
-            </template>
-        </el-table-column>  
+    <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading"  border
+       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
+          
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
@@ -191,29 +79,6 @@
           </template>
         </el-table-column>
         <el-table-column label="入住人" prop="Passenger" show-overflow-tooltip></el-table-column>
-        <el-table-column label="订单状态" prop="OrderState" show-overflow-tooltip>
-        <template scope="scope">
-          <span  v-if="scope.row.OrderState == 0">未处理</span>
-          <span  v-if="scope.row.OrderState == 1">已处理</span>
-          <span  v-if="scope.row.OrderState == 2">已拒绝</span>
-          <span  v-if="scope.row.OrderState == 3">未处理+未发单</span>
-          <span  v-if="scope.row.OrderState == 4">待排房</span>
-          <span  v-if="scope.row.OrderState == 5">风险订单</span>
-          <span  v-if="scope.row.OrderState == 6">风险订单+未处理</span>
-          <span  v-if="scope.row.OrderState == 7">风险订单+已处理</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="订单类别" prop="OrderType"  width="80">
-        <template scope="scope">
-            <span  v-if="scope.row.OrderType == 0">新订</span>
-            <span  v-if="scope.row.OrderType == 1">修改</span>
-            <span  v-if="scope.row.OrderType == 2">取消</span>
-            <span  v-if="scope.row.OrderType == 3">延住</span>
-            <span  v-if="scope.row.OrderType == 4">无效</span>
-            <span  v-if="scope.row.OrderType == 5">新订+修改</span>
-            <span  v-if="scope.row.OrderType == 6">改期</span>
-          </template>
-        </el-table-column>        
         <el-table-column label="入住/退房日期" width="200">
           <template scope="scope">
             <span v-if="scope.row.StayDateStart != null">{{ scope.row.StayDateStart.split(' ')[0] }}</span>
@@ -248,8 +113,8 @@
               </el-col> -->
               <el-col :span="8">
                         <el-form-item label="酒店名称" prop="HotelName">
-                            <el-select v-model="form.HotelName"  filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
-                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.ID">
+                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
+                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.HotelName">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -333,7 +198,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="订单类型" prop="OrderType">
-                        <el-select v-model="form.OrderType" clearable @change="changeValue8">
+                        <el-select v-model="form.OrderType" clearable>
                           <el-option v-for="item in OrderType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
@@ -406,14 +271,14 @@
                 <el-col :span="6">
                     <el-form-item label="结算周期（付）" prop="SettlementCycleFu">
                         <el-select v-model="HotelOrderDetail.SettlementCycleFu" clearable>
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.text" :value="item.value"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="结算周期（收）" prop="SettlementCycle">
                         <el-select v-model="HotelOrderDetail.SettlementCycle" clearable>
-                          <el-option v-for="item in SCycle" :key="item.value" :label="item.text" :value="item.value"></el-option>
+                          <el-option v-for="item in SCycle" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -438,8 +303,8 @@
 import {
   hotelsOrderApi,
   paymentCheckApi,
-  hotelThreePlatInfoApi,
   policyApi,
+  hotelThreePlatInfoApi,
   hotelBaseApi
 } from "api";
 import UploadImage from "components/upload-image";
@@ -451,7 +316,6 @@ export default {
     let that = this;
     return {
       loadingHotel: false,
-      Namen:true,
       Room:"",
       Pts:"",
       Qy:"",
@@ -462,10 +326,10 @@ export default {
       Wcqd:"",
       Rstate:"",
       Night:"",
+      RoomNight:"",
       hotelList: [],
       imageList: [],
-      nows:{},
-      RoomNight:"",
+      WaiCaiPlatID:[],
       text: -1,
       currentPage: 1,
       pageSize: 10,
@@ -475,7 +339,6 @@ export default {
       isEditable: true,
       form: {
         PlatOrderNo: "",
-        Nowtate:"",
         HotelName: "",
         HotelID: "",
         ThreePlatID: "",
@@ -497,28 +360,16 @@ export default {
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
-      WaiCaiPlatID:[],
       ID: "",
       filters: {
         HotelName: "",
         ThreePlatID: "",
-        SettlementCycleFu: "",
+        SettlementCycle: "",
         checkList: "",
-        OrderState:"",
         HandState:"",
-        OrderType:"",
-        WaiCaiFlag:"",
-        WaiCaiPlatID:"",
         HotelArea: "",
-        BackfillTime:"",
         WaiCaiNo:""
       },
-      ThreePlatID: [
-        {
-          PlatName: "全部",
-          value: ""
-        }
-      ],
       WaiCaiFlag:[
                 {
                     label:'自营',
@@ -528,6 +379,30 @@ export default {
                     label:'外采',
                     value:1
                 }
+      ],
+      ThreePlatID: [
+        {
+          PlatName: "全部",
+          value: ""
+        }
+      ],
+      SettlementCycle: [
+        {
+          label: "全部",
+          value: ""
+        },
+        {
+          label: "单结",
+          value: 0
+        },
+        {
+          label: "周结",
+          value: 1
+        },
+        {
+          label: "月结",
+          value: 2
+        }
       ],
       HandState: [{
                 label: '未处理',
@@ -654,68 +529,36 @@ export default {
           value: 6
         }
       ],
-      payPeriodList: [
-                {
-                    value: 0,
-                    text: '其他（每单备注）'
-                }, 
-                {
-                    value: 1,
-                    text: '预付款'
-                },
-                {
-                    value: 2,
-                    text: '单结'
-                },
-                {
-                    value: 3,
-                    text: '日结'
-                },
-
-                {
-                    value: 4,
-                    text: '月结'
-                },
-                {
-                    value: 5,
-                    text: '半月结'
-                },
-                {
-                    value: 6,
-                    text: '周结'
-                }
-
-            ],
       SCycle: [
-        {
-                    value: 0,
-                    text: '其他（每单备注）'
-                }, 
-                {
-                    value: 1,
-                    text: '预付款'
-                },
-                {
-                    value: 2,
-                    text: '单结'
-                },
-                {
-                    value: 3,
-                    text: '日结'
-                },
+          {
+              value: 0,
+              label: '其他（每单备注）'
+          }, 
+          {
+              value: 1,
+              label: '预付款'
+          },
+          {
+              value: 2,
+              label: '单结'
+          },
+          {
+              value: 3,
+              label: '日结'
+          },
 
-                {
-                    value: 4,
-                    text: '月结'
-                },
-                {
-                    value: 5,
-                    text: '半月结'
-                },
-                {
-                    value: 6,
-                    text: '周结'
-                }
+          {
+              value: 4,
+              label: '月结'
+          },
+          {
+              value: 5,
+              label: '半月结'
+          },
+          {
+              value: 6,
+              label: '周结'
+          }
       ],
       Currency: [
         {
@@ -733,7 +576,7 @@ export default {
       ],
       rules: {
         // HotelName: [
-        //   { required: true, message: "请输入酒店名称", trigger: "change" }
+        //   { required: true, message: "请输入酒店名称", trigger: "blur" }
         // ]
         // ThreePlatID: [
         //   { required: true, type:Number,message: "请输入订单平台", trigger: "blur" }
@@ -769,40 +612,109 @@ export default {
         //   { required: true, message: "请输入预定时间", trigger: "blur" }
         // ]
       },
-      detail: {},
-      type:""
+      detail: {}
     };
   },
   created() {
-    const _self = this
-    _self.fetchData();
-    _self.ThreePlat();
-    _self.type = _self.$route.name
-    _self.platformAccount();
-    _self.configList = hotelsOrderApi.getConfig();
-  },
-  watch:{
-    "$route":function(val){
-      console.log(val)
-        this.type = val.name
-        this.nowName()
-        this.fetchData()        
-        this.filters = {
-            HotelName: "",
-            ThreePlatID: "",
-            SettlementCycleFu: "",
-            checkList: "",
-            OrderState:"",
-            HandState:"",
-            OrderType:"",
-            WaiCaiFlag:"",
-            WaiCaiPlatID:"",
-            HotelArea: "",
-            WaiCaiNo:""
-        }
-    }
+    this.fetchData();
+    this.ThreePlat();
+    this.platformAccount();
+    this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
+    async downloadList(e) {
+      const _self = this;
+      const text = e.target.innerText;  
+      let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.BookTime != "undefined") {
+        if (_self.filters.BookTime[0] != null) {
+          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
+        }
+      }
+      let options = {
+        pageIndex: _self.currentPage,
+        pageSize: _self.pageSize,
+        order: "BookTime",
+        desc: true,
+        query: {
+          OrderNo: _self.filters.OrderNo,
+          HotelName: _self.filters.HotelName,
+          Passenger: _self.filters.Passenger,
+          HandState:_self.filters.HandState,
+          StayDateStart: _self.filters.StayDateStart
+            ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
+            : "",
+          "BookTime>": time1,
+          "BookTime<": time2,
+          ThreePlatID: _self.filters.ThreePlatID,
+          SettlementCycle: _self.filters.SettlementCycle,
+          HotelBookingNo: _self.filters.HotelBookingNo,
+          HotelArea: _self.filters.HotelArea,
+          StateAuditor: _self.filters.StateAuditor,
+          StateFuKuan: _self.filters.StateFuKuan,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
+          OrderState:_self.filters.OrderState,
+          OrderType:_self.filters.OrderType,
+          WaiCaiFlag:_self.filters.WaiCaiFlag,
+          WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
+          HandState:2,
+          IsDelete:false, 
+          WaiCaiNo:_self.filters.WaiCaiNo,
+          PlatOrderNo: _self.filters.PlatOrderNo
+        }
+      };
+      try {  
+        if(text=="下载"){
+          const res = await hotelsOrderApi.downloadList(options);
+            if (res.request.responseURL) {
+          window.location.href = res.request.responseURL;
+        }
+        }else{
+          const res = await hotelsOrderApi.downloadOrder(options);
+            if (res.request.responseURL) {
+          window.location.href = res.request.responseURL;
+        }
+        }         
+      } catch (e) {
+        _self.$message.error("数据下载失败!!!");
+      }
+    },
+    async platformAccount(){
+            const options = {
+                pageSize: 1000,
+                order: 'Sort',
+                query:{CanPurchase:true}
+            }     
+            const res = await policyApi.getPolicyPlatform(options)
+            this.WaiCaiPlatID = res.data.Data
+       //     console.log(this.WaiCaiPlatID)
+    },
+    async remoteHotelList(querys) {
+      const _self = this;
+      if (querys !== "") {
+        _self.loadingHotel = true;
+        const options = {
+          pageIndex: 1,
+          pageSize: 20,
+          order: "ID",
+          query: {
+            HotelName: querys
+          }
+        };
+        const res = await hotelBaseApi.listAll(options);
+        if (res && res.data && res.data.Data) {
+          _self.hotelList = res.data.Data;
+          // _self.form.HotelID = _self.hotelList[0].ID;
+          // _self.form.HotelName = _self.hotelList[0].HotelName;
+
+          _self.loadingHotel = false;
+        }
+      } else {
+        _self.hotelList = [];
+      }
+    },
     changeValue(value) {
           this.Pts = value
     },
@@ -827,119 +739,6 @@ export default {
     changeValue7(value) {
           this.Wcqd = value
     },
-    changeValue8(value){
-      const _self = this;            
-      _self.form.OrderType = value
-    },
-    nowName(){
-      const _self = this;                  
-      if(_self.type == '酒店订单'){
-          _self.Namen = true
-      }else{
-          _self.Namen = false   
-      }
-    },
-    async platformAccount(){
-            const options = {
-                pageSize: 1000,
-                order: 'Sort',
-                query:{CanPurchase:true}
-            }     
-            const res = await policyApi.getPolicyPlatform(options)
-            this.WaiCaiPlatID = res.data.Data
-       //     console.log(this.WaiCaiPlatID)
-    },
-    async downloadList(e) {
-      const _self = this;
-      const text = e.target.innerText;  
-      let time1 = "";
-      let time2 = "";
-      if (typeof _self.filters.BookTime != "undefined") {
-        if (_self.filters.BookTime[0] != null) {
-          time1 = new Date(_self.filters.BookTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
-        }
-      }
-      let timeh1 = "";
-      let timeh2 = "";
-      if (typeof _self.filters.BackfillTime != "undefined") {
-        if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
-        }
-      }
-      let options = {
-        pageIndex: _self.currentPage,
-        pageSize: _self.pageSize,
-        order: "BookTime",
-        desc: true,
-        query: {
-          OrderNo: _self.filters.OrderNo,
-          HotelName: _self.filters.HotelName,
-          Passenger: _self.filters.Passenger,
-          HandState:_self.filters.HandState,
-          StayDateStart: _self.filters.StayDateStart
-            ? new Date(_self.filters.StayDateStart).Format("yyyy-MM-dd")
-            : "",
-          "BookTime>": time1,
-          "BookTime<": time2,
-          "BackfillTime>": timeh1,
-          "BackfillTime<": timeh2,
-          ThreePlatID: _self.filters.ThreePlatID,
-          SettlementCycleFu: _self.filters.SettlementCycleFu,
-          HotelBookingNo: _self.filters.HotelBookingNo,
-          HotelArea: _self.filters.HotelArea,
-          OrderState:_self.filters.OrderState,
-          OrderType:_self.filters.OrderType,
-          StateAuditor: _self.filters.StateAuditor,
-          StateFuKuan: _self.filters.StateFuKuan,
-          WaiCaiNo:_self.filters.WaiCaiNo,
-          WaiCaiFlag:_self.filters.WaiCaiFlag,
-          WaiCaiPlatID:_self.filters.WaiCaiPlatID,
-          PlatOrderNo: _self.filters.PlatOrderNo
-        }
-      };
-      try {  
-        if(text=="下载"){
-          const res = await hotelsOrderApi.downloadList(options);
-            if (res.request.responseURL) {
-          window.location.href = res.request.responseURL;
-        }
-        }else{
-          const res = await hotelsOrderApi.downloadOrder(options);
-            if (res.request.responseURL) {
-          window.location.href = res.request.responseURL;
-        }
-        }         
-      } catch (e) {
-        _self.$message.error("数据下载失败!!!");
-      }
-    },
-    async remoteHotelList(querys) {
-      const _self = this;
-      if (querys !== "") {
-        _self.loadingHotel = true;
-        const options = {
-          pageIndex: 1,
-          pageSize: 20,
-          order: "ID",
-          query: {
-            HotelName: querys
-          }
-        };
-        const res = await hotelBaseApi.listAll(options);
-        console.log(res)
-        if (res && res.data && res.data.Data) {
-          _self.hotelList = res.data.Data;
-          // _self.form.HotelID = _self.hotelList[0].ID;
-          // _self.form.HotelName = _self.hotelList[0].HotelName;
-
-          _self.loadingHotel = false;
-        }
-      } else {
-        _self.hotelList = [];
-      }
-    },
     changv(value){
       const _self = this;      
       console.log(value)
@@ -947,19 +746,18 @@ export default {
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
+      console.log(now)
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
       this.filters.WaiCaiNo = now.WaiCaiNo   
       this.filters.ThreePlatID = this.Pts
       this.filters.HotelArea = this.Qy
-      this.filters.SettlementCycleFu = this.Fs
-     // console.log(this.filters)
+      this.filters.SettlementCycle = this.Fs
       this.filters.HandState = this.Rstate    
       this.filters.OrderState = this.Zt
       this.filters.OrderType = this.Lb
       this.filters.WaiCaiFlag = this.Wcfs  
-      this.filters.WaiCaiPlatID = this.Wcqd       
-             
+      this.filters.WaiCaiPlatID = this.Wcqd   
       this.fetchData();
     },
     qrh(id) {
@@ -996,7 +794,7 @@ export default {
         let date2 = new Date(this.form.StayDateEnd); //结束时间
         let date3 = date2.getTime() - new Date(date1).getTime(); //时间差的毫秒数
         let days = Math.floor(date3 / (24 * 3600 * 1000));
-        this.form.RoomNum = 1;
+        //this.form.RoomNum = 1;
         this.form.NightNum = days;
       }
     },
@@ -1007,7 +805,7 @@ export default {
         let date2 = new Date(val); //结束时间
         let date3 = date2.getTime() - new Date(date1).getTime(); //时间差的毫秒数
         let days = Math.floor(date3 / (24 * 3600 * 1000));
-        this.form.RoomNum = 1;
+       // this.form.RoomNum = 1;
         this.form.NightNum = days;
       }
     },
@@ -1061,14 +859,6 @@ export default {
           time2 = new Date(_self.filters.BookTime[1]).Format("yyyy-MM-dd");
         }
       }
-      let timeh1 = "";
-      let timeh2 = "";
-      if (typeof _self.filters.BackfillTime != "undefined") {
-        if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
-        }
-      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -1083,62 +873,30 @@ export default {
             : "",
           "BookTime>": time1,
           "BookTime<": time2,
-          "BackfillTime>": timeh1,
-          "BackfillTime<": timeh2,
           ThreePlatID: _self.filters.ThreePlatID,
-          SettlementCycleFu: _self.filters.SettlementCycleFu,
+          SettlementCycle: _self.filters.SettlementCycle,
           HandState:_self.filters.HandState,
           HotelBookingNo: _self.filters.HotelBookingNo,
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
           WaiCaiNo:_self.filters.WaiCaiNo,
+          HandState:2,
+          IsDelete:false,        
+          PlatOrderNo: _self.filters.PlatOrderNo,
+          SettlementCycleFu: _self.filters.SettlementCycleFu,
           OrderState:_self.filters.OrderState,
           OrderType:_self.filters.OrderType,
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,                                                  
-          PlatOrderNo: _self.filters.PlatOrderNo
         }
-      }
-      console.log(options)
+      };
       try {
-            _self.type = _self.$route.name
-             if(_self.type == '酒店订单'){
-                _self.Namen = true
-            }else{
-                _self.Namen = false   
-            }
-        if(_self.type == '酒店订单'){
-           const res = await hotelsOrderApi.fetch(options);
-         //  console.log("123")
-          _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
-          _self.count = res.data.Count;
-        }
-        if(_self.type == '有用单列表'){
-            options.query.HandState = 2;
-            options.query.IsDelete = false;   
-           const res = await hotelsOrderApi.fetchy(options);
-         //  console.log(res)
-          _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
-          _self.count = res.data.Count;
-        }
-        if(_self.type == '待处理列表'){
-            options.query={
-                "HandState<" : 3
-            }
-            options.query.IsDelete = false; 
-            options.query.OrderType = 0; 
-            options.query.OrderState = 0; 
-            options.query.BackfillState = 0;  
-           const res = await hotelsOrderApi.fetchy(options);
-         //  console.log(res)
-          _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
-          _self.count = res.data.Count;
-        }
-       
+        const res = await hotelsOrderApi.fetch(options);
+        console.log(res)
+        _self.hotelsOrder = res.data.Data;
+        _self.RoomNight = res.data.RoomNight;         
+        _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {
         _self.loading = false;
@@ -1181,7 +939,6 @@ export default {
     },
     async submitForm() {
       const _self = this;
-    
       if(_self.form.HotelID == undefined){
           this.$message({
             showClose: true,
@@ -1195,7 +952,6 @@ export default {
           try {
             _self.isEditable = false;
             let time = new Date().Format("yyyy-MM-dd");
-            
             switch (_self.form.OrderType) {
               case 0:
                 _self.form.PlatOrderType = "新订";
@@ -1222,27 +978,12 @@ export default {
                 _self.form.PlatOrderType = "";
             }
             _self.form.UpdateTime = time;
-          
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
-            //   console.log(_self.form.PlatOrderType)
-            // return false 
-            //console.log(_self.detail);
-
-            let a={x:1,y:2};
-            let b={z:3};
-                a={...a,...b};
-                a.x=6
-                //console.log(_self.form)
-
-             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-                //console.log(_self.form)
-              //  return false
-             
-            
+            _self.form = { ..._self.form, ..._self.HotelOrderDetail };
+            console.log(_self.detail);
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
-                ActionCmd:0,
                 HotelOrderDetail: [_self.form]
               };
             } else {
@@ -1252,13 +993,11 @@ export default {
               var f = {
                 ID: id,
                 HotelArea: _self.detail.HotelArea,
-                ActionCmd:0,
                 Picture: _self.imageList.toString(),
                 HotelOrderDetail: [_self.form]
               };
             }
-            console.log(f)
-           // return false
+            console.log(f);
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;
@@ -1271,7 +1010,13 @@ export default {
           } finally {
             _self.isEditable = true;
           }
-        } 
+        } else {
+          this.$message({
+            showClose: true,
+            message: "请输入酒店名称",
+            type: "error"
+          });
+        }
       });
     }
     }
