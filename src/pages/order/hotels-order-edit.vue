@@ -505,10 +505,12 @@
                         </el-col>
                     </el-row>
                     <hr style="height:3px;border:none;border-top:3px double #DEE5EB;" />
+                    <div v-if="finance">
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>财务信息2</h1></el-col></el-row>
+                    <!--
                     <div style="width:98%;height:50px;position: relative;">
                         <el-button @click="addCaiwu" style="position:absolute;right:0;">添加</el-button>
-                    </div>
+                    </div> -->
                     <el-row :gutter="24">
                         <el-col>
                             <el-table :data="money" style="width: 95%;margin-left:40px;">
@@ -575,6 +577,8 @@
                             </el-table>
                         </el-col>
                     </el-row>
+                    </div>
+                    <!--
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>附加项目</h1></el-col></el-row>
                     <div style="width:98%;height:50px;position: relative;"><el-button @click="addFujia" style="position:absolute;right:0;">添加</el-button></div>
                     <el-row :gutter="24">
@@ -596,6 +600,7 @@
                             </el-table>
                         </el-col>
                     </el-row>
+                    -->
                     <el-row :gutter="24"><el-col :span="3" style="color:orange;"><h1>操作信息</h1></el-col></el-row>
                     <el-row :gutter="24">
                     <el-col :span="8">
@@ -710,6 +715,7 @@ export default{
             check:[],
             stringQRH:'',
             Tocreate:true,
+            finance:false,
             Passenger : '',
             dialogVisible:false,
             StayDateStart : '',
@@ -966,6 +972,9 @@ export default{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
+            if(this.money != ''){
+                this.finance = true
+            }
            console.log(res)
         },
         imgShow(img){
@@ -1150,6 +1159,8 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
+               _self.activeName = _self.form.HotelOrderDetail[0].ID
+
                 console.log(_self.form)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
