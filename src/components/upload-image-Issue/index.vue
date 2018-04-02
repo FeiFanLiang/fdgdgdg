@@ -49,7 +49,7 @@ export default {
       percentText: 0,
       headers: {},
       //action: 'http://192.168.10.95:8500/Hotel/Image/'
-      action: path.uploadUrl
+      action: path.uploadIssue
     }
   },
   computed: {
@@ -64,11 +64,6 @@ export default {
     ImgList
   },
   mounted() {
-     if(this.$route.name == '工单列表'){
-       this.action = path.uploadIssue
-     }else{
-       this.action = path.uploadUrl       
-     }
     this.$nextTick(() => {
       this.$on('onFileError', (file, msg) => {
         this.upStatus = 'error'

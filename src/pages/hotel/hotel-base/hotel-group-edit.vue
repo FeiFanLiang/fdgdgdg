@@ -124,11 +124,7 @@
 
 <script>
 import { hotelGroupApi,hotelAreaApi2,hotelBaseApi } from 'api'
-import HotelBaseAdd from './hotel-base-add.vue'
 export default {
-  components: {
-    HotelBaseAdd
-  },
   created() {
     const _self = this
     _self.Groupname = _self.$route.query.GroupName
@@ -273,11 +269,11 @@ export default {
             })
 
     },
-    async getHotelbaseall(currentPage, pageSize) {
+    async getHotelbaseall(currentPage2, pageSize2) {
         const _self = this
         _self.loading2 = true
-        _self.currentPage2 = currentPage || _self.currentPage2
-        _self.pageSize2 = pageSize || _self.pageSize2
+        _self.currentPage2 = currentPage2 || _self.currentPage2
+        _self.pageSize2 = pageSize2 || _self.pageSize2
         const options = {
           pageIndex: _self.currentPage2,
           pageSize: _self.pageSize2,
@@ -336,7 +332,7 @@ export default {
       },
       handleSizeChange2(val) {
         this.pageSize2 = val
-        this.getHotelbaseall(1, this.pageSize)
+        this.getHotelbaseall(1, this.pageSize2)
       },
       handleCurrentChange(val) {
         this.currentPage = val

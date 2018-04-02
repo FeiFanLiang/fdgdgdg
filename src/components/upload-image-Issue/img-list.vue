@@ -30,12 +30,8 @@ export default {
     document.body.appendChild(this.$refs.dialog.$el)
   },
   computed: {
-    images() {
-      if(this.$route.name == '工单列表'){
+    images() { 
       return this.lists.map(item => path.imageIssueUrl + item)       
-     }else{
-      return this.lists.map(item => path.imageUrl + item) 
-     }
     }
   },
   data() {
