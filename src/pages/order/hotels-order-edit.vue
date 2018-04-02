@@ -1239,9 +1239,8 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-            //   _self.activeName = _self.form.HotelOrderDetail[0].ID
-
-                console.log(_self.form)
+               // _self.activeName = _self.form.HotelOrderDetail[0].ID
+               //console.log(_self.money)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
                 const options = {
@@ -1318,36 +1317,6 @@ export default{
                 Remark: '',
                 CreateDate: date
             }
-        },
-        async topsub(){
-            const _self = this
-            _self.topform = {
-                HotelName:_self.form.HotelName,
-                PlatOrderNo:_self.form.PlatOrderNo,
-                OrderState:_self.form.OrderState,
-                OrderState:_self.form.OrderState,
-                
-                
-                
-            }
-            console.log(_self.topform)
-            // try {
-            //     await paymentCheckApi.addFujia(_self.formFujia)
-            //     _self.showFujia = false
-            //     _self.$message({
-            //     message: '添加成功',
-            //     type: 'success'
-            //     })
-            //     const options = {
-            //     query: {
-            //         HotelOrderID: _self.ID
-            //     }
-            //     }
-            //     const res3 = await paymentCheckApi.fujiaList(options)
-            //     _self.fujia = res3.data.Data
-            // } catch (e) {
-            //     _self.$message.error('添加失败!!!')
-            // }
         },
         async submitFormFujia(){
             const _self = this

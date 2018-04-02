@@ -132,7 +132,8 @@ export default {
   created() {
     const _self = this
     _self.Groupname = _self.$route.query.GroupName
-    _self.form.id = _self.$route.params.ID   
+    _self.form.id = _self.$route.params.ID 
+    _self.ID = _self.$route.params.ID         
     _self.form.GroupName = _self.$route.query.GroupName  
     _self.form.Remark = _self.$route.query.Remark     
     _self.getHotelbaseList()
@@ -142,6 +143,7 @@ export default {
     return {
       dialogTableVisible: false,
       Groupname:"",
+      ID:"",
       countryOptions: [],
       multipleSelection: [],
       multipleSelection2:[],
@@ -204,7 +206,9 @@ export default {
     },
     hotelAddHide() {
       this.dialogTableVisible = true
-      this.getHotelbaseall()      
+      if(this.count2==0){
+        this.getHotelbaseall()         
+      }         
     },
     hotelbaseSearch() {
       this.getHotelbaseList()
@@ -233,8 +237,8 @@ export default {
         }
       }
       try {  
-          const res = await hotelBaseApi.listgroup(_self.$route.params.ID,options)  
-          console.log(res)
+          const res = await hotelBaseApi.listgroup(_self.form.id,options)  
+          console.log(_self.ID)
           let data = res.data.Data
           _self.hotelbase = data
           _self.count = res.data.Count               
@@ -351,7 +355,7 @@ export default {
         this.getHotelbaseall(this.currentPage2)
       },
     async alladd(){
-          const _self = this; 
+        const _self = this; 
          try{
         let ids = []          
               for(let i in _self.multipleSelection){
@@ -359,17 +363,13 @@ export default {
               }
           let strids = '['+ ids.toString() + ']'
           if(ids.length!=0){
-            const arr = {
-                hotelListStr:ids
-            }
               const a=  await hotelGroupApi.removehotel(_self.$route.params.ID,strids)  
               _self.getHotelbaseList()
               _self.loading2 = false
-                
-                _self.$message({
+              _self.$message({
                 message: '删除成功',
                 type: 'success'
-                })         
+              })         
                 
           }else{
               this.$message({
@@ -383,7 +383,7 @@ export default {
     },
     async addtogroup(){
         const _self = this;
-        console.log(_self.$route.params.ID)
+      //  console.log(_self.$route.params.ID)
       try{
         let ids = []          
               for(let i in _self.multipleSelection2){
@@ -393,12 +393,12 @@ export default {
            let strids = '['+ ids.toString() + ']'
             const res = await hotelGroupApi.addbase(_self.$route.params.ID,strids) 
             _self.getHotelbaseList()
+            _self.getHotelbaseall()      
             _self.dialogTableVisible = false
-                _self.$message({
+            _self.$message({
                 message: '添加成功',
                 type: 'success'
-                })   
-                
+            })          
           }else{
               this.$message({
                   message: '请选择酒店',

@@ -20,7 +20,7 @@ export default {
     },
     {
    
-      path: 'group',
+      path: 'group/:ID',
       component: _import('hotel/hotel-base/hotel-group-edit'),
       name: '酒店组编辑',
       meta: {

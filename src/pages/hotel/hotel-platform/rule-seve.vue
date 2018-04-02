@@ -164,7 +164,7 @@
       </span>
     </el-dialog>
     <el-dialog title="删除组规则" v-model="showDialog2"   @close="resetForm('form')">
-      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px">
+      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px" :rules="rules1">
         <el-row>
       
     <el-col :span="12">        
@@ -271,6 +271,13 @@ export default {
                     type: 'number'
                 }
                 ],
+                GroupName: [
+                {
+                    required: true,
+                    message: '请选择组名称',
+                    type: 'number'
+                }
+                ],
                 Discount: [
                 {
                     required: true,
@@ -283,7 +290,24 @@ export default {
                     message: '请输入添加金额'
                 }
                 ]
-        },
+            },
+            rules1:{
+                PlatformID: [
+                {
+                    required: true,
+                    message: '请选择渠道',
+                    type: 'number'
+                }
+                ],
+                GroupName: [
+                {
+                    required: true,
+                    message: '请选择组名称',
+                    type: 'number'
+                }
+                ]
+
+            }
             
         }
     },
@@ -349,7 +373,8 @@ export default {
             const _self = this
             _self.addrule()
             _self.dialogTitle = '批量添加价格规则'
-            _self.dialogTag = 3            
+            _self.dialogTag = 3  
+            _self.form.isDisabled = true                      
             if(_self.dialogTitle = '批量添加价格规则'){
            _self.batch = true
                 
@@ -425,7 +450,6 @@ export default {
            
         },
         async platformAccount(){
-     
             const res = await hotelThreePlatInfoApi.getList()
             this.PlatPolicyIDs = res.data
             console.log(res)
@@ -470,18 +494,16 @@ export default {
                             (_self.form.EndDate = new Date(
                                 _self.form.EndDate
                             ).Format('yyyy-MM-dd hh:mm:ss')) :
-                            ''
-                            
+                            ''                           
                  const res =  await hotelHotelpriceApi.add(_self.form)
-                 console.log(res)
-                 
-                    _self.fetchData()
-                    _self.$refs['form'].resetFields()
-                    _self.showDialog = false
-                    _self.$message({
+                // console.log(res)
+                _self.fetchData()
+                _self.$refs['form'].resetFields()
+                _self.showDialog = false
+                _self.$message({
                     message: '保存成功',
                     type: 'success'
-                    })
+                })
                 } catch (e) {
                     console.error(e)
                     _self.$message.error('添加失败!!!')
@@ -542,7 +564,9 @@ export default {
             })
         },
         async removeForm(){
-            const _self = this     
+            const _self = this 
+            _self.$refs['form'].validate(async valid => {
+                if (valid) {
                     let option = {
                         GroupId: _self.form.GroupName,
                         PlatFromId: _self.form.PlatformID
@@ -565,7 +589,11 @@ export default {
                         console.error(e)
                     }
                     })
-                    .catch(() => {})     
+                    .catch(() => {})  
+                }else{
+                    return false
+                }
+            })   
         },
        async editSave() {
             const _self = this
