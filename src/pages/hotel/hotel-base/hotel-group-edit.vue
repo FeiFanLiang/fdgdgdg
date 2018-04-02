@@ -57,8 +57,8 @@
         <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>      
         <el-table-column prop="HotelName_En" label="酒店英文名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="StarName" label="星级" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="GroupName" label="城市" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="StarNum" label="星级" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="City" label="城市" show-overflow-tooltip></el-table-column>
         <el-table-column   label="操作" width="180" fixed="right">
           <template scope="scope">
              <el-button size="small" type="danger"  @click="del(scope.$index, scope.row)">移除</el-button>
@@ -107,7 +107,7 @@
           <el-table  :data="addlist" v-loading="loading2" element-loading-text="拼命加载中" @selection-change="handleSelectionChange2" border style="width: 100%">
             <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
             <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>      
-            <el-table-column prop="GroupName" label="酒店组名" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="HotelName_En" label="酒店英文名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
             <el-table-column prop="StarNum" label="星级" show-overflow-tooltip></el-table-column>
             <el-table-column prop="City" label="城市" show-overflow-tooltip></el-table-column>
@@ -131,12 +131,12 @@ export default {
   },
   created() {
     const _self = this
-    _self.getHotelbaseList()
-    _self.getCountryOptions()
     _self.Groupname = _self.$route.query.GroupName
     _self.form.id = _self.$route.params.ID   
     _self.form.GroupName = _self.$route.query.GroupName  
-    _self.form.Remark = _self.$route.query.Remark      
+    _self.form.Remark = _self.$route.query.Remark     
+    _self.getHotelbaseList()
+    _self.getCountryOptions() 
   },
   data() {
     return {
@@ -212,7 +212,7 @@ export default {
     hotelbaseSearch2(){
        this.getHotelbaseall()
     },
-    async getHotelbaseList(currentPage, pageSize) {
+    async getHotelbaseList(currentPage,pageSize) {
       const _self = this
       _self.loading = true
       _self.currentPage = currentPage || _self.currentPage
@@ -234,7 +234,7 @@ export default {
       }
       try {  
           const res = await hotelBaseApi.listgroup(_self.$route.params.ID,options)  
-          console.log(options)
+          console.log(res)
           let data = res.data.Data
           _self.hotelbase = data
           _self.count = res.data.Count               

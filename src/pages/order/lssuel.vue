@@ -97,14 +97,7 @@
         <el-dialog title="新建工单" v-model="showDialog" @close="resetForm('form')">
             <el-form ref="form" :model="form"  label-width="70px">
                 <el-row :gutter="17">
-                    <el-col :span="12">
-                        <el-form-item label="项目" prop="ProjectType" style="margin-bottom:30px">
-                            <el-select v-model="form.ProjectType" clearable>
-                              <el-option v-for="item in ProjectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
+                    <el-col :span="24">
                         <el-form-item label="标题" prop="Title" style="margin-bottom:30px">
                               <el-input v-model="form.Title"></el-input>     
                         </el-form-item>
@@ -115,7 +108,14 @@
                         <el-form-item label="描述" prop="Description" style="margin-bottom:30px">
                               <el-input type="textarea" v-model="form.Description"></el-input>     
                         </el-form-item>
-                </el-col> 
+                </el-col>
+                <el-col :span="12">
+                        <el-form-item label="项目" prop="ProjectType" style="margin-bottom:30px">
+                            <el-select v-model="form.ProjectType" clearable>
+                              <el-option v-for="item in ProjectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col> 
                 </el-row>
                 <el-row>
                         <el-form-item label="截图信息" prop="Picture">
@@ -127,12 +127,11 @@
               <el-button @click="showDialog = false">取 消</el-button>
                 <el-button type="primary" @click="addSave()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
             </span>
-
         </el-dialog>
 </div>
 </template>
 <script>
-import { lssue } from 'api'
+import { lssueApi } from 'api'
 import UploadImageCopy from 'components/upload-image-copy'
 
 export default {
@@ -263,7 +262,7 @@ export default {
             }
           }
          try {  
-              const res = await lssue.downloadList(options);
+              const res = await lssueApi.downloadList(options);
               if (res.request.responseURL) {
                   window.location.href = res.request.responseURL;
                 }     
@@ -293,7 +292,7 @@ export default {
             }
       }
       try {
-        const res = await lssue.listByQuery(options)
+        const res = await lssueApi.listByQuery(options)
         console.log(res)
         this.dwzList = res.data.Data
         this.count =  res.data.Count
@@ -309,16 +308,16 @@ export default {
             _self.form.ID = row.ID          
           if(ntext=="处理中"){
             _self.form.OptState = 2
-            await lssue.states(_self.form)  
+            await lssueApi.states(_self.form)  
           }
           else{
             if(ntext=="未处理"){
             _self.form.OptState = 1
-            await lssue.states(_self.form)    
+            await lssueApi.states(_self.form)    
           }else{
             _self.form2.ID = row.ID
             _self.form2.ReState = 1
-            await lssue.states(_self.form2)    
+            await lssueApi.states(_self.form2)    
           }
           }  
             this.$message({
@@ -334,7 +333,7 @@ export default {
       const _self = this
       try {
         _self.isEditable = false
-        await lssue.add(_self.form)
+        await lssueApi.add(_self.form)
         _self.fetchData()
         _self.showDialog = false
         _self.$message({

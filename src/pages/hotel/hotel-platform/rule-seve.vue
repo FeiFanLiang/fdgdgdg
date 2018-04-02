@@ -556,6 +556,7 @@ export default {
                     try {
                        const res = await hotelHotelpriceApi.dele(option)
                     _self.showDialog2 = false
+                    _self.fetchData()                    
                     _self.$message({
                     message: '删除成功',
                     type: 'success'

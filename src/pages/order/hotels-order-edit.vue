@@ -132,9 +132,9 @@
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
                 </el-form-item>
             </el-col>
-        <!--    <el-col :span="6">
-                <el-button type="primary" @click="submitOrderList()">保存</el-button>
-            </el-col> -->
+         <!--  <el-col :span="6">
+                <el-button type="primary" @click="addlss()">新建工单</el-button>
+            </el-col>  -->
             <el-col :span="6">
                 <el-button @click="shenhe()" v-show="showTuigaiButton">退改审核</el-button>
                 <el-button @click="obsoleteShenhe()" v-show="showTuigaiButton">废单审核</el-button>
@@ -686,11 +686,46 @@
     <el-dialog v-model="dialogVisible" size="small">
         <ImageList :images="imageList"></ImageList>
     </el-dialog>
+    <el-dialog title="新建工单" v-model="showDialog" @close="resetForm('form')">
+            <el-form ref="form" :model="form2"  label-width="70px">
+                <el-row :gutter="17">
+                    <el-col :span="24">
+                        <el-form-item label="标题" prop="Title" style="margin-bottom:30px">
+                              <el-input v-model="form2.Title"></el-input>     
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                <el-col :span="12">
+                        <el-form-item label="描述" prop="Description" style="margin-bottom:30px">
+                              <el-input type="textarea" v-model="form2.Description"></el-input>     
+                        </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                        <el-form-item label="项目" prop="ProjectType" style="margin-bottom:30px">
+                            <el-select v-model="form2.ProjectType" clearable>
+                              <el-option v-for="item in ProjectType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col> 
+                </el-row>
+                <el-row>
+                        <el-form-item label="截图信息" prop="Picture">
+                            <UploadImageCopy :images="imageList2" @onRemove="handleRemove2" @onSuccess="handleSuccesss"></UploadImageCopy>
+                        </el-form-item> 
+                </el-row> 
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="showDialog = false">取 消</el-button>
+                <el-button type="primary" @click="addSave()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
+            </span>
+        </el-dialog>
 </div>
 </template>
 <script>
 import {
   hotelsOrderApi,
+  lssueApi,
   paymentCheckApi,
   hotelThreePlatInfoApi,
   hotelOrderDetailApi,
@@ -700,10 +735,12 @@ import {
 import UploadImage from 'components/upload-image'
 import Tinymce from 'components/Tinymce'
 import ImageList from 'components/imglist'
+import UploadImageCopy from 'components/upload-image-copy'
 
 export default{
     components: {
         UploadImage,
+        UploadImageCopy,
         Tinymce,
         ImageList
         
@@ -715,6 +752,7 @@ export default{
             check:[],
             stringQRH:'',
             Tocreate:true,
+            showDialog:false,
             finance:false,
             Passenger : '',
             dialogVisible:false,
@@ -733,6 +771,7 @@ export default{
             type:'',
             text:'',
             imageList: [],
+            imageList2: [],            
             HandRemark: '',
             showTuigaiButton:false,
             topform:'',
@@ -774,6 +813,14 @@ export default{
                 WaiCaiFlag:'',
                 WaiCaiPayAccount:''
             },
+            form2:{
+                OptState:'',
+                ProjectType:'',
+                Description:"",
+                Picture:"",
+                Title:"",
+                ID:""
+            },
             copyForm: {},
             pickerOptions: {
                 disabledDate(time) {
@@ -785,6 +832,20 @@ export default{
                 return time.getTime() < Date.now() - 8.64e7 || time.getTime() < new Date(that.form.StayDateStart).getTime();
                 }
             },
+            ProjectType:[
+                {
+                label:"酒店订单",
+                value:0
+                },
+                {
+                label:"酒店财务",
+                value:1
+                },
+                {
+                label:"其它",
+                value:9
+                }
+            ],
             OrderState: [{
                 label: '未处理',
                 value: 0
@@ -977,6 +1038,11 @@ export default{
             }
            console.log(id)
         },
+        addlss(){
+            this.showDialog=true
+            this.form2.Title = this.form.PlatOrderNo
+            this.imageList2 = []
+        },
         imgShow(img){
             console.log(img)
             try{
@@ -1126,6 +1192,20 @@ export default{
             this.imageList.splice(index, 1)
             let f = this.imageList
             this.form.Picture = f.toString()
+        },
+        handleRemove2(index,file, fileList) {
+            this.imageList2.splice(index, 1)
+            let f = this.imageList2
+            this.form.Picture = f.toString()
+        },
+        async handleSuccesss(response, file, fileList) {
+                if (!response) {
+                    this.$message.error('上传失败,请重新上传')
+                    return false
+                }
+                this.imageList2.push(response)
+                let f = this.imageList2
+                this.form.Picture = f.toString()
         },
         async ThreePlat() {
             const res = await hotelThreePlatInfoApi.getList()
