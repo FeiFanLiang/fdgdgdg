@@ -21,7 +21,7 @@ export default {
     {
    
       path: 'group/:ID',
-      component: _import('hotel/hotel-base/hotel-group-edit'),
+      component: _import('hotel/hotel-base/hotel-group-ed'),
       name: '酒店组编辑',
       meta: {
         hidden: true

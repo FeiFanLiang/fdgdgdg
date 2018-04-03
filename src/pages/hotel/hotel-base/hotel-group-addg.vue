@@ -32,7 +32,7 @@
   </el-row>
         <div class="eltable">
           <el-table  :data="addlist" v-loading="loading2" element-loading-text="拼命加载中" @selection-change="handleSelectionChange2" border style="width: 100%">
-            <el-table-column type="selection" width="55" :reserve-selection="true"></el-table-column>
+            <el-table-column type="selection" width="55" :reserve-selection="false"></el-table-column>
             <el-table-column prop="HotelName" label="酒店名称" show-overflow-tooltip></el-table-column>      
             <el-table-column prop="HotelName_En" label="酒店英文名" show-overflow-tooltip></el-table-column>
             <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
@@ -41,7 +41,7 @@
           </el-table> 
         </div>
         <div class="pagination-wrapper" >
-          <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" :current-page="currentPage2" :page-size="pageSize2" :total="count2">
+          <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30,50]" @size-change="handleSizeChange2" @current-change="handleCurrentChange2" :current-page="currentPage2" :page-size="pageSize2" :total="count2">
           </el-pagination>
         </div>  
       </div>
@@ -112,12 +112,6 @@ export default {
     returns(){
             this.$router.go(-1)
     },
-    hotelAddHide() {
-      this.dialogTableVisible = true
-      if(this.count2==0){
-        this.getHotelbaseall()         
-      }         
-    },
     hotelbaseSearch2(){
        this.getHotelbaseall()
     },
@@ -179,11 +173,11 @@ export default {
             const res = await hotelGroupApi.addbase(_self.$route.params.ID,strids) 
             _self.getHotelbaseall()      
             _self.dialogTableVisible = false
+            _self.getHotelbaseall()
             _self.$message({
                 message: '添加成功',
                 type: 'success'
             })  
-       _self.getHotelbaseall()
                     
           }else{
               this.$message({

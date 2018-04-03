@@ -1029,7 +1029,8 @@ export default{
         _self.platformAccount()
         _self.platformAccounts()
         _self.fetchData()
-        _self.caiwuDetail()
+        
+        setTimeout(() => {  _self.caiwuDetail( _self.activeName) }, 1000)    
     },
     methods:{
         async addSave() {
@@ -1053,10 +1054,10 @@ export default{
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
-            if(this.money != ''){
+            if(this.money.length != 0){
                 this.finance = true
             }
-           console.log(id)
+          // console.log(this.money.length)
         },
         addlss(){
             this.showDialog=true
@@ -1070,7 +1071,7 @@ export default{
                 this.dialogVisible = true
             }catch(e){
                 this.$message.error('截图获取失败!!!')
-        }
+            }
         },
         async fetchData() {
             const options = {
@@ -1259,7 +1260,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-               // _self.activeName = _self.form.HotelOrderDetail[0].ID
+                _self.activeName = _self.form.HotelOrderDetail[0].ID
                //console.log(_self.money)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
