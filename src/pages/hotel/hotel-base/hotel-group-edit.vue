@@ -45,6 +45,7 @@
     <el-col :span="5">
       <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
       <el-button type="primary" @click="hotelAddHide"> 添加酒店 </el-button>
+     <!-- <el-button @click="hotelbaseEdit()">添加酒店1</el-button> -->
     </el-col>
   </el-row>
   
@@ -405,6 +406,18 @@ export default {
               _self.$message.error('添加失败!!!')
           }
 
+    },
+    hotelbaseEdit() {
+    const _self = this     
+      _self.$router.push({
+        name: '酒店组添加',
+        params: {
+          ID: _self.ID,
+        },
+        query: {
+          GroupName: _self.$route.query.GroupName       
+        }
+      })
     }
     }
 }

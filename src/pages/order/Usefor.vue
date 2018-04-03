@@ -158,7 +158,8 @@ export default {
       try {
         const res = await wxyhApi.listByQuery(options)
         console.log(res)
-        this.dwzList = res.data.Data
+        _self.dwzList = res.data.Data
+        _self.count = res.data.Count        
         _self.loading = false
       } catch (e) {
         _self.loading = false

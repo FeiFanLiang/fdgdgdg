@@ -26,7 +26,17 @@ export default {
       meta: {
         hidden: true
       }
-      
+ 
+    },
+    {
+   
+      path: 'addgroup/:ID',
+      component: _import('hotel/hotel-base/hotel-group-addg'),
+      name: '酒店组添加',
+      meta: {
+        hidden: true
+      }
+ 
     },
     {
       path: 'HotelBaseAdd',

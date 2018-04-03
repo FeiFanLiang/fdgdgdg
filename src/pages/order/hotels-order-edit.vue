@@ -1,6 +1,6 @@
 <template>
 <div id="HotelsOrderEdit">
-    <h1>{{HotelName}}</h1>
+    <h1>{{HotelName}}<el-button type="primary" @click="addlss()" style="margin-left:10px">新建工单</el-button></h1>
     <el-form ref="form" :model="form" label-width="110px" element-loading-text="拼命加载中" v-loading="loading">
         <el-row :gutter="24">
             <el-col :span="6">
@@ -132,7 +132,7 @@
                     <span v-if="form.StateAuditor == 1" style="color:orange">已审核</span>
                 </el-form-item>
             </el-col>
-         <!--  <el-col :span="6">
+      <!--     <el-col :span="6">
                 <el-button type="primary" @click="addlss()">新建工单</el-button>
             </el-col>  -->
             <el-col :span="6">
@@ -711,7 +711,7 @@
                 </el-row>
                 <el-row>
                         <el-form-item label="截图信息" prop="Picture">
-                            <UploadImageCopy :images="imageList2" @onRemove="handleRemove2" @onSuccess="handleSuccesss"></UploadImageCopy>
+                            <UploadImageLssue :images="imageList2" @onRemove="handleRemove2" @onSuccess="handleSuccesss"></UploadImageLssue>
                         </el-form-item> 
                 </el-row> 
             </el-form>
@@ -736,11 +736,13 @@ import UploadImage from 'components/upload-image'
 import Tinymce from 'components/Tinymce'
 import ImageList from 'components/imglist'
 import UploadImageCopy from 'components/upload-image-copy'
+import UploadImageLssue from 'components/upload-image-Issue'
 
 export default{
     components: {
         UploadImage,
         UploadImageCopy,
+        UploadImageLssue,
         Tinymce,
         ImageList
         
@@ -1030,6 +1032,24 @@ export default{
         _self.caiwuDetail()
     },
     methods:{
+        async addSave() {
+        const _self = this
+        try {
+            _self.isEditable = false
+            await lssueApi.add(_self.form2)
+            _self.fetchData()
+            _self.showDialog = false
+            _self.$message({
+            message: '添加成功',
+            type: 'success'
+            })
+        } catch (e) {
+            console.error(e)
+            _self.$message.error('添加失败!!!')
+        } finally {
+            _self.isEditable = true
+        }
+        },
         async caiwuDetail(id){
             const res = await paymentCheckApi.getAccount(id)
             this.money = res.data.Data
