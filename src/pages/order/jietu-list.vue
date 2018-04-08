@@ -147,12 +147,13 @@ export default {
     },
     async submitImg(id,state){
         const _self = this
+        this.Picture = this.imageList.toString()        
         let params = {
             ID:id,
             StateScreenshot:state,
             Picture:this.Picture   
         }
-        
+
         try{
             if(params.StateScreenshot == 1 && params.Picture !=''){
                 _self.isEditable = false

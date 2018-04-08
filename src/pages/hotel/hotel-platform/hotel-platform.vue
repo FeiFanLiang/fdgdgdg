@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column label="有效" width="70" align="center">
           <template scope="scope">
-          <i class="el-icon-circle-cross" style="color:#FF4949" v-if="scope.row.IsValid"></i>
+          <i class="el-icon-circle-cross" style="color:#FF4949" v-if="scope.row.IsDisabled"></i>
           <i class="el-icon-circle-check" style="color:#13CE66" v-else></i>
           </template>
         </el-table-column>
