@@ -42,6 +42,9 @@
   <el-col :span="4">
       <el-input placeholder="请输入城市" v-model="filters.city"></el-input>
     </el-col>
+    <el-col :span="3">
+      <el-input placeholder="请输入星级" v-model="filters.StarNum"></el-input>
+    </el-col>
     <el-col :span="5">
       <el-button type="primary" @click="hotelbaseSearch(filters)">搜索</el-button>
       <el-button @click="hotelbaseEdit()">添加酒店</el-button> 
@@ -112,6 +115,7 @@ export default {
         ID: '',
         HotelName: '',
         HotelName_En: '',
+        StarNum:"",
         FrontPhone: '',
         labelVal: '1',
         country: '',
@@ -147,7 +151,9 @@ export default {
       _self.countryOptions = res.data
     },
     hotelbaseSearch() {
-      this.getHotelbaseList()
+      const _self = this
+      _self.getHotelbaseList()
+      
     },
     async getHotelbaseList(currentPage,pageSize) {
       const _self = this
@@ -165,15 +171,16 @@ export default {
           HotelName_En:
             _self.filters.labelVal === '2' ? _self.filters.HotelName_En : '',
           City: _self.filters.city,
+          StarNum:_self.filters.StarNum,
           Country: _self.filters.country,
           IsDelete: false
         }
       }
       try {  
           const res = await hotelBaseApi.listgroup(_self.form.id,options)  
-         // console.log(_self.ID)
-          let data = res.data.Data
-          _self.hotelbase = data
+          console.log(options)
+          let data = res.data.Data  
+          _self.hotelbase = data            
           _self.count = res.data.Count               
          _self.loading = false
       } catch (e) {
