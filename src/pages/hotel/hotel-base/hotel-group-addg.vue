@@ -24,6 +24,9 @@
         <el-col :span="4">
           <el-input placeholder="请输入城市" v-model="filters2.city"></el-input>
         </el-col>
+        <el-col :span="3">
+          <el-input placeholder="请输入星级" v-model="filters2.StarNum"></el-input>
+        </el-col>
         <el-col :span="5">
           <el-button type="primary" @click="hotelbaseSearch2(filters2)">搜索</el-button>
           <el-button type="primary" @click="addtogroup"> 添加</el-button>
@@ -78,6 +81,7 @@ export default {
         FrontPhone: '',
         labelVal: '1',
         country: '',
+        StarNum:"",
         city: ''
       },
       form:{
@@ -131,6 +135,7 @@ export default {
             HotelName_En:
               _self.filters2.labelVal === '2' ? _self.filters2.HotelName_En : '',
             City: _self.filters2.city,
+            StarNum:_self.filters2.StarNum,
             Country: _self.filters2.country,
             IsDelete: false
             }
