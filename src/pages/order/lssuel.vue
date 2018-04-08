@@ -51,6 +51,9 @@
             <el-button type="primary" @click="addlss()">新建</el-button>            
         </el-col>
       </el-row>
+      <el-row :gutter="17">
+            <el-checkbox v-model="checked">仅自己</el-checkbox>       
+      </el-row>      
     </el-form>
     <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
         <el-table-column prop="ID" label="ID"></el-table-column>
@@ -145,6 +148,7 @@ export default {
       imageList:[],
       pageSize: 10,
       count: 0,
+      checked:"",
       loading: false,
       isEditable: true,
       showDialog: false,
@@ -215,8 +219,13 @@ export default {
   },
   created() {
     this.fetchData()
-    const usern = JSON.parse(localStorage.getItem('user'))
-    this.filters.CreateUserName = usern.realname
+    //const usern = JSON.parse(localStorage.getItem('user'))
+    // if(usern.realname == '超级管理员'){
+    //   this.filters.CreateUserName = ''
+    // }else{
+    //   this.filters.CreateUserName = usern.realname
+    // }
+    // this.filters.CreateUserName = usern.realname
   },
   methods: {
     hotelsOrderSearch() {
@@ -250,6 +259,7 @@ export default {
     },
     async downloadList(){
           const _self = this
+          
           const options = {
             order: 'ID',
             query: { 
@@ -278,6 +288,13 @@ export default {
       _self.loading = true
       _self.currentPage = currentPage || _self.currentPage
       _self.pageSize = pageSize || _self.pageSize
+      if(_self.checked==true){
+            const usern = JSON.parse(localStorage.getItem('user'))      
+            _self.filters.CreateUserName = usern.realname
+      }else{
+          _self.filters.CreateUserName = ''
+        
+      }
       const options = {
             pageIndex: currentPage || _self.currentPage,
             pageSize: pageSize || _self.pageSize,
