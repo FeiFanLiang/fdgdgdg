@@ -22,7 +22,7 @@ export default {
       }
     },
     {
-      path: 'ShenheSave/:ID/:POrderID/:HotelPolicyID',
+      path: 'ShenheSave/:ID',
       component: _import('order/shenhe-save'),
       name: '订单审核',
       meta: {

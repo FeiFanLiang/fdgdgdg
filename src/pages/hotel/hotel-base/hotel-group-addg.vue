@@ -136,15 +136,15 @@ export default {
             }
         }
         try {
-          console.log(options)
+         // console.log(options)
             const res2 = await hotelBaseApi.addlist(_self.$route.params.ID,options)
-            console.log(res2)
+           // console.log(res2)
             let data2 = res2.data.Data
             _self.addlist = data2        
             _self.count2 = res2.data.Count
           _self.loading2 = false
         } catch (e) {
-            console.log(e)
+          //  console.log(e)
           _self.loading2 = false
         }     
       },
@@ -199,9 +199,6 @@ export default {
   .pagination-wrapper {
     text-align: center;
     padding: 30px;
-  }
-  .el-dialog{
-    width:80%
   }
 }
 </style>

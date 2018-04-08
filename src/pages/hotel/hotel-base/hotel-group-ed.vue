@@ -77,7 +77,7 @@
           :total="count">
         </el-pagination>
       </div>
-           
+          
       </div>
 </template>
 
@@ -171,13 +171,13 @@ export default {
       }
       try {  
           const res = await hotelBaseApi.listgroup(_self.form.id,options)  
-          console.log(_self.ID)
+         // console.log(_self.ID)
           let data = res.data.Data
           _self.hotelbase = data
           _self.count = res.data.Count               
          _self.loading = false
       } catch (e) {
-          console.log(e)
+         // console.log(e)
         _self.loading = false
       }
           
@@ -290,9 +290,6 @@ export default {
   .pagination-wrapper {
     text-align: center;
     padding: 30px;
-  }
-  .el-dialog{
-    width:80%
   }
 }
 </style>

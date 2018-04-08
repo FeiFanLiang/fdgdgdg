@@ -1030,7 +1030,7 @@ export default{
         _self.platformAccounts()
         _self.fetchData()
         
-        setTimeout(() => {  _self.caiwuDetail( _self.activeName) }, 1000)    
+      //  setTimeout(() => {  _self.caiwuDetail( _self.activeName) }, 1000)    
     },
     methods:{
         async addSave() {
@@ -1061,6 +1061,7 @@ export default{
         },
         addlss(){
             this.showDialog=true
+            this.form2.ProjectType = 0
             this.form2.Title = this.form.PlatOrderNo
             this.imageList2 = []
         },
@@ -1260,7 +1261,7 @@ export default{
             try {
                 const res = await hotelsOrderApi.getOrderList(POrderID)
                 _self.form = res.data.Data
-                _self.activeName = _self.form.HotelOrderDetail[0].ID
+                //_self.activeName = _self.form.HotelOrderDetail[0].ID
                //console.log(_self.money)
                 _self.getImageList(_self.form.Picture)
                 _self.HotelName = _self.form.HotelName
@@ -1390,7 +1391,7 @@ export default{
                 }
             }
         },
-         addtext(e){
+        addtext(e){
              const _self = this
              const ntes = e.target.innerText    
              const tim =  _self.form.BookTime

@@ -215,6 +215,8 @@ export default {
   },
   created() {
     this.fetchData()
+    const usern = JSON.parse(localStorage.getItem('user'))
+    this.filters.CreateUserName = usern.realname
   },
   methods: {
     hotelsOrderSearch() {

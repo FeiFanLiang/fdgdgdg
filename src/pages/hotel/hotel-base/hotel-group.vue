@@ -139,7 +139,7 @@ export default {
         }
       }
       const res = await hotelGroupApi.listAll(options)
-      console.log(res)
+     // console.log(res)
         let data = res.data.Data
       
         _self.hotelbase = data
@@ -153,7 +153,7 @@ export default {
                 if (valid) {
                 try {       
                  const res =  await hotelGroupApi.add(_self.form)
-                 console.log(res)
+               //  console.log(res)
                     _self.getHotelbaseList()
                     _self.dialogTableVisible = false
                     _self.$message({
