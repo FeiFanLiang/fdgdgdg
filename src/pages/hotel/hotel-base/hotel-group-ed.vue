@@ -62,7 +62,7 @@
         <el-table-column prop="Address" label="地址" show-overflow-tooltip></el-table-column>
         <el-table-column prop="StarNum" label="星级" show-overflow-tooltip></el-table-column>
         <el-table-column prop="City" label="城市" show-overflow-tooltip></el-table-column>
-        <el-table-column   label="操作" width="180" fixed="right">
+        <el-table-column   label="操作" width="80" fixed="right">
           <template scope="scope">
              <el-button size="small" type="danger"  @click="del(scope.$index, scope.row)">移除</el-button>
           </template>

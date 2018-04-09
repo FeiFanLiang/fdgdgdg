@@ -703,9 +703,9 @@ export default {
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
           HandState:0,
-          OrderState:0,
-          BackfillState:0,
-          OrderType:0,
+          // OrderState:0,
+          // BackfillState:0,
+          // OrderType:0,
           IsDelete:false, 
           WaiCaiNo:_self.filters.WaiCaiNo,
           PlatOrderNo: _self.filters.PlatOrderNo
@@ -941,9 +941,9 @@ export default {
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,  
           HandState:0,
-          OrderState:0,
-          OrderType:0,          
-          BackfillState:0,
+          // OrderState:0,
+          // OrderType:0,          
+          // BackfillState:0,
           IsDelete:false,        
           PlatOrderNo: _self.filters.PlatOrderNo
         }
@@ -1038,7 +1038,7 @@ export default {
             _self.form.UpdateTime = time;
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-            console.log(_self.detail);
+         //   console.log(_self.form);
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),

@@ -68,7 +68,7 @@
           </template>
       </el-table-column>
         <el-table-column label="审核人" prop="AuditorUserName"></el-table-column>                                                                                                            
-        <el-table-column label="审核时间" prop="AuditorTime" width=190>
+        <el-table-column label="审核时间" prop="AuditorTime" width=150>
             <template scope="scope">
             <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,16)}}</span>
             </template>                             
@@ -87,7 +87,7 @@
                 <el-button type="text" @click="imgShow(scope.row.PaymentPicture)">查看</el-button>
             </template>
         </el-table-column>
-        <el-table-column label="状态" prop="State">
+        <el-table-column label="状态" prop="State" width=100>
             <template scope="scope">
                 <span v-if="scope.row.State === 0">待处理</span>
                 <span v-if="scope.row.State === 1">已处理，待对账</span>
@@ -104,7 +104,7 @@
             </template>
         </el-table-column> -->
         <!--<el-table-column label="备注" prop="Remark" show-overflow-tooltip></el-table-column>-->
-        <el-table-column label="操作" width=120>
+        <el-table-column label="操作" width=80 fixed="right">
             <template scope="scope">
                 <el-button type="text" size="small" @click="img(scope.row)">确定已发</el-button>
             </template>
