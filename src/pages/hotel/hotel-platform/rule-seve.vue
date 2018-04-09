@@ -85,15 +85,9 @@
         <el-row>
         <el-form-item label="采购渠道" prop="RulePlatFromId">
             <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
-              <el-option v-for="(item,index) in PlatPolicyIDs"
-                :label="item.PlatName"
-                :value="item.ID"
-                :key="index">
-              </el-option>
+              <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
             </el-select>
         </el-form-item>
-
-
         </el-row>        
       
         <el-row>
@@ -196,11 +190,8 @@
         
             <el-form-item label="采购渠道" prop="RulePlatFromId">
             <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
-              <el-option v-for="(item,index) in PlatPolicyIDs"
-                :label="item.PlatName"
-                :value="item.ID"
-                :key="index">
-              </el-option>
+              <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
+              
             </el-select>
         </el-form-item>
         </el-col>
@@ -266,6 +257,25 @@ export default {
                     label: "模式二",
                     value: 1
                 }
+            ],
+            RulePlatFromIds:[
+                {
+                    label: "好订网",
+                    value: 5
+                },
+                {
+                    label: "Agoda",
+                    value: 9
+                },
+                {
+                    label: "缤客",
+                    value: 8
+                },
+                {
+                    label: "Booking_携程",
+                    value: 6
+                }
+                
             ],
             copyForm:{},
             CompanyAcount:'',
