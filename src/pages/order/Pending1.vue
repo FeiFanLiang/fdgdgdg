@@ -110,7 +110,7 @@
               <el-col :span="8">
                         <el-form-item label="酒店名称" prop="HotelName">
                             <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
-                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.ID">
+                                <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.HotelName">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -996,7 +996,7 @@ export default {
     },
     async submitForm() {
       const _self = this;
-
+      
       if(_self.form.HotelID == undefined){
           this.$message({
             showClose: true,
@@ -1036,8 +1036,12 @@ export default {
                 _self.form.PlatOrderType = "";
             }
             _self.form.UpdateTime = time;
+            let aa = _self.form
+            aa.HotelFee = _self.HotelOrderDetail.HotelFee
+         //   console.log(_self.form);
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
+           // aa = { aa, ..._self.HotelOrderDetail }
          //   console.log(_self.form);
             if (typeof _self.detail == "undefined") {
               var f = {
@@ -1052,10 +1056,12 @@ export default {
                 ID: id,
                 HotelArea: _self.detail.HotelArea,
                 Picture: _self.imageList.toString(),
-                HotelOrderDetail: [_self.form]
+                HotelOrderDetail: [aa]
               };
             }
-            console.log(f);
+            console.log(_self.form);
+            console.log(aa)
+           // return false
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;
