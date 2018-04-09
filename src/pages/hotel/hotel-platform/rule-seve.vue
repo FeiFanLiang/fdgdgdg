@@ -83,6 +83,20 @@
         </el-col>
       </el-row>
         <el-row>
+        <el-form-item label="采购渠道" prop="RulePlatFromId">
+            <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
+              <el-option v-for="(item,index) in PlatPolicyIDs"
+                :label="item.PlatName"
+                :value="item.ID"
+                :key="index">
+              </el-option>
+            </el-select>
+        </el-form-item>
+
+
+        </el-row>        
+      
+        <el-row>
         <el-col :span="12">
         <el-form-item label="折扣" prop="Discount">
             <el-input v-model="form.Discount"></el-input>
@@ -178,6 +192,19 @@
             </el-select>
         </el-form-item>
         </el-col>
+    <el-col :span="12">        
+        
+            <el-form-item label="采购渠道" prop="RulePlatFromId">
+            <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
+              <el-option v-for="(item,index) in PlatPolicyIDs"
+                :label="item.PlatName"
+                :value="item.ID"
+                :key="index">
+              </el-option>
+            </el-select>
+        </el-form-item>
+        </el-col>
+
         </el-row>
         <el-row>
         <el-col :span="12">
@@ -261,6 +288,7 @@ export default {
                 StartDate:'',
                 EndDate:'',
                 CreateTime:"",
+                RulePlatFromId:"",
                 StateCheck:''  
             },
             rules: {
@@ -275,6 +303,13 @@ export default {
                 {
                     required: true,
                     message: '请选择组名称',
+                    type: 'number'
+                }
+                ],
+                RulePlatFromId:[
+                {
+                    required: true,
+                    message: '请选择采购渠道',
                     type: 'number'
                 }
                 ],
@@ -296,6 +331,13 @@ export default {
                 {
                     required: true,
                     message: '请选择渠道',
+                    type: 'number'
+                }
+                ],
+                RulePlatFromId:[
+                {
+                    required: true,
+                    message: '请选择采购渠道',
                     type: 'number'
                 }
                 ],
@@ -569,6 +611,7 @@ export default {
                 if (valid) {
                     let option = {
                         GroupId: _self.form.GroupName,
+                        RulePlatFromId: _self.form.RulePlatFromId,                        
                         PlatFromId: _self.form.PlatformID
                     } 
                      _self.$confirm(`是否删除?`, '提示', {
