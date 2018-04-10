@@ -41,12 +41,12 @@
         <el-table-column label="结束天数" prop="EndDay" width=125></el-table-column>
         <el-table-column label="创建时间" width=150>
             <template scope="scope">
-                <span  v-if="scope.row.CreateTime != null">{{scope.row.CreateTime.substring(0,10)}}</span>
+                <span  v-if="scope.row.CreateTime != null">{{scope.row.CreateTime.substring(0,16)}}</span>
             </template>
         </el-table-column>
             <el-table-column label="更新时间" prop="" width=150>
             <template scope="scope">
-                <span  v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>                
+                <span  v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,16)}}</span>                
             </template>
         </el-table-column>        
         <el-table-column label="操作" prop="" width=170>
@@ -64,85 +64,82 @@
     </div>
     <el-dialog :title="dialogTitle" v-model="showDialog"   @close="resetForm('form')">
       <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px" :rules="rules">
-      <el-row> 
-      <el-col :span="12">
-       <el-form-item label="酒店ID" prop="HotelID" >
-            <el-input v-model="form.HotelID"  :disabled="true"></el-input>
-        </el-form-item>
-        </el-col>
-      <el-col :span="12">        
-        <el-form-item label="销售渠道" prop="PlatformID">
-            <el-select  v-model="form.PlatformID" placeholder="请选择">
-              <el-option v-for="(item,index) in PlatPolicyIDs"
-                :label="item.PlatName"
-                :value="item.ID"
-                :key="index">
-              </el-option>
-            </el-select>
-        </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row> 
+            <el-col :span="12">
+                <el-form-item label="酒店ID" prop="HotelID" >
+                    <el-input v-model="form.HotelID"  :disabled="true"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">        
+                <el-form-item label="销售渠道" prop="PlatformID">
+                    <el-select  v-model="form.PlatformID" placeholder="请选择">
+                    <el-option v-for="(item,index) in PlatPolicyIDs"
+                        :label="item.PlatName"
+                        :value="item.ID"
+                        :key="index">
+                    </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+        </el-row>
         <el-row v-if="batch">
-        <el-col :span="12">
-        
-        <el-form-item label="采购渠道" prop="RulePlatFromId">
-            <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
-              <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
-            </el-select>
-        </el-form-item>
-        </el-col>
-        
-        <el-col :span="12">
-        <el-form-item label="组名称" prop="GroupName">
-            <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
-                <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        </el-col>
+            <el-col :span="12">
+                <el-form-item label="采购渠道" prop="RulePlatFromId">
+                    <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
+                    <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="组名称" prop="GroupName">
+                    <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
+                        <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-col>
         </el-row>        
-      
         <el-row>
-        <el-col :span="12">
-        <el-form-item label="折扣" prop="Discount">
-            <el-input v-model="form.Discount"></el-input>
-        </el-form-item>
-        </el-col>
-        <el-col :span="12">        
-        <el-form-item label="添加的金额" prop="AddMoney">
-            <el-input v-model="form.AddMoney" ></el-input>
-        </el-form-item>
-        </el-col>        
+            <el-col :span="12">
+            <el-form-item label="折扣" prop="Discount">
+                <el-input v-model="form.Discount"></el-input>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">        
+            <el-form-item label="添加的金额" prop="AddMoney">
+                <el-input v-model="form.AddMoney" ></el-input>
+            </el-form-item>
+            </el-col>        
         </el-row>
         <el-row>
-        <el-col :span="12">
-        <el-form-item label="预定天数" prop="BookDay">
-            <el-input v-model="form.BookDay" ></el-input>
-        </el-form-item>
-        </el-col>
-        <el-col :span="12">
-        <el-form-item label="优先级" prop="Rank">
-            <el-input v-model="form.Rank" ></el-input>
-        </el-form-item>
-        </el-col>        
+            <el-col :span="12">
+            <el-form-item label="预定天数" prop="BookDay">
+                <el-input v-model="form.BookDay" ></el-input>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">
+            <el-form-item label="优先级" prop="Rank">
+                <el-input v-model="form.Rank" ></el-input>
+            </el-form-item>
+            </el-col>        
         </el-row>
         <el-row>
-         <el-col :span="12">
-        <el-form-item label="选择模式" prop='StateCheck'>
-          <el-select v-model="form.StateCheck" placeholder="请选择" clearable @change="changeValue">
-              <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        </el-col>
-         <el-col :span="2" style="text-align:center">
-        <el-tooltip class="item" effect="dark" content="根据时间段来设置价格规则" placement="top-start" v-if=!isShow>
-              <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
-        </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="以当前日期为基准计算天数延续来设置价格规则。计算方式为：入住日期（成本*折扣+金额）" placement="top-start" v-if=isShow>
-              <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
-        </el-tooltip>
-        </el-col>
-         </el-row>
+            <el-col :span="12">
+                <el-form-item label="选择模式" prop='StateCheck'>
+                <el-select v-model="form.StateCheck" placeholder="请选择" clearable @change="changeValue">
+                    <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                </el-select>
+                </el-form-item>
+            </el-col>
+            <el-col :span="2" style="text-align:center">
+                <el-tooltip class="item" effect="dark" content="根据时间段来设置价格规则" placement="top-start" v-if=!isShow>
+                    <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="以当前日期为基准计算天数延续来设置价格规则。计算方式为：入住日期（成本*折扣+金额）" placement="top-start" v-if=isShow>
+                    <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
+                </el-tooltip>
+            </el-col>
+        </el-row>
         <el-row v-if=isShow>
         <el-col :span="12">
         <el-form-item label="开始天数" prop="StartDay">
@@ -176,32 +173,28 @@
       </span>
     </el-dialog>
     <el-dialog title="删除组规则" v-model="showDialog2"   @close="resetForm('form')">
-      <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px" :rules="rules1">
-        <el-row>
-      
-    <el-col :span="12">        
-        <el-form-item label="销售渠道" prop="PlatformID">
-            <el-select  v-model="form.PlatformID" placeholder="请选择">
-              <el-option v-for="(item,index) in PlatPolicyIDs"
-                :label="item.PlatName"
-                :value="item.ID"
-                :key="index">
-              </el-option>
-            </el-select>
-        </el-form-item>
-        </el-col>
-    <el-col :span="12">        
-        
+    <el-form  ref="form" :model="form" :label-position="labelPosition" label-width="100px" :rules="rules1">
+    <el-row>  
+        <el-col :span="12">        
+            <el-form-item label="销售渠道" prop="PlatformID">
+                <el-select  v-model="form.PlatformID" placeholder="请选择">
+                <el-option v-for="(item,index) in PlatPolicyIDs"
+                    :label="item.PlatName"
+                    :value="item.ID"
+                    :key="index">
+                </el-option>
+                </el-select>
+            </el-form-item>
+            </el-col>
+        <el-col :span="12">        
             <el-form-item label="采购渠道" prop="RulePlatFromId">
-            <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
-              <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
-              
-            </el-select>
-        </el-form-item>
+                <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
+                <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option> 
+                </el-select>
+            </el-form-item>
         </el-col>
-
-        </el-row>
-        <el-row>
+    </el-row>
+    <el-row>
         <el-col :span="12">
         <el-form-item label="组名称" prop="GroupName">
             <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
@@ -210,9 +203,8 @@
             </el-select>
         </el-form-item>
         </el-col>
-        </el-row>
-    
-      </el-form>
+    </el-row>
+    </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="removeForm()">删除</el-button>
       </span>
