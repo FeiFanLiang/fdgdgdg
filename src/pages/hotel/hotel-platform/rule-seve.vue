@@ -71,7 +71,7 @@
         </el-form-item>
         </el-col>
       <el-col :span="12">        
-        <el-form-item label="渠道" prop="PlatformID">
+        <el-form-item label="销售渠道" prop="PlatformID">
             <el-select  v-model="form.PlatformID" placeholder="请选择">
               <el-option v-for="(item,index) in PlatPolicyIDs"
                 :label="item.PlatName"
@@ -82,12 +82,24 @@
         </el-form-item>
         </el-col>
       </el-row>
-        <el-row>
+        <el-row v-if="batch">
+        <el-col :span="12">
+        
         <el-form-item label="采购渠道" prop="RulePlatFromId">
             <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
               <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
             </el-select>
         </el-form-item>
+        </el-col>
+        
+        <el-col :span="12">
+        <el-form-item label="组名称" prop="GroupName">
+            <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
+                <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        </el-col>
         </el-row>        
       
         <el-row>
@@ -115,7 +127,7 @@
         </el-col>        
         </el-row>
         <el-row>
-         <el-col :span="10">
+         <el-col :span="12">
         <el-form-item label="选择模式" prop='StateCheck'>
           <el-select v-model="form.StateCheck" placeholder="请选择" clearable @change="changeValue">
               <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="item.value"></el-option>
@@ -129,14 +141,6 @@
         <el-tooltip class="item" effect="dark" content="以当前日期为基准计算天数延续来设置价格规则。计算方式为：入住日期（成本*折扣+金额）" placement="top-start" v-if=isShow>
               <span><button type="button" class="el-button el-button--text"><!----><i class="el-icon-warning"></i><!----></button></span>
         </el-tooltip>
-        </el-col>
-         <el-col :span="12" v-if="batch">
-        <el-form-item label="组名称" prop="GroupName">
-            <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
-                <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
-                </el-option>
-            </el-select>
-        </el-form-item>
         </el-col>
          </el-row>
         <el-row v-if=isShow>
@@ -176,7 +180,7 @@
         <el-row>
       
     <el-col :span="12">        
-        <el-form-item label="渠道" prop="PlatformID">
+        <el-form-item label="销售渠道" prop="PlatformID">
             <el-select  v-model="form.PlatformID" placeholder="请选择">
               <el-option v-for="(item,index) in PlatPolicyIDs"
                 :label="item.PlatName"
