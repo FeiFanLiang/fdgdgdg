@@ -55,7 +55,7 @@
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
-      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜</el-button>
+      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜 &nbsp; 拒单率{{JuDanLv}}%</el-button>
       
     </CustomSearchCopy>
     
@@ -472,6 +472,7 @@ export default {
       imageList: [],
       nows:{},
       RoomNight:"",
+      JuDanLv:"",
       text: -1,
       currentPage: 1,
       pageSize: 10,
@@ -973,9 +974,15 @@ export default {
       }
     },
     changv(value){
+    
       const _self = this;      
+      console.log(_self.detail.HotelOrderDetail)
+      if(_self.detail.HotelOrderDetail == undefined){
+        _self.form.HotelID = value 
+      }else{
       console.log(value)
-      _self.form.HotelID = value
+        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
+      }
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -1142,36 +1149,37 @@ export default {
             }else{
                 _self.Namen = false   
             }
-        if(_self.type == '酒店订单'){
+       // if(_self.type == '酒店订单'){
            const res = await hotelsOrderApi.fetch(options);
-         //  console.log("123")
+           console.log(res)
           _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
+          _self.RoomNight = res.data.RoomNight;     
+          _self.JuDanLv = res.data.JuDanLv;            
           _self.count = res.data.Count;
-        }
-        if(_self.type == '有用单列表'){
-            options.query.HandState = 2;
-            options.query.IsDelete = false;   
-           const res = await hotelsOrderApi.fetchy(options);
-         //  console.log(res)
-          _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
-          _self.count = res.data.Count;
-        }
-        if(_self.type == '待处理列表'){
-            options.query={
-                "HandState<" : 3
-            }
-            options.query.IsDelete = false; 
-            options.query.OrderType = 0; 
-            options.query.OrderState = 0; 
-            options.query.BackfillState = 0;  
-           const res = await hotelsOrderApi.fetchy(options);
-         //  console.log(res)
-          _self.hotelsOrder = res.data.Data;
-          _self.RoomNight = res.data.RoomNight;                 
-          _self.count = res.data.Count;
-        }
+       // }
+        // if(_self.type == '有用单列表'){
+        //     options.query.HandState = 2;
+        //     options.query.IsDelete = false;   
+        //    const res = await hotelsOrderApi.fetchy(options);
+        //  //  console.log(res)
+        //   _self.hotelsOrder = res.data.Data;
+        //   _self.RoomNight = res.data.RoomNight;                 
+        //   _self.count = res.data.Count;
+        // }
+        // if(_self.type == '待处理列表'){
+        //     options.query={
+        //         "HandState<" : 3
+        //     }
+        //     options.query.IsDelete = false; 
+        //     options.query.OrderType = 0; 
+        //     options.query.OrderState = 0; 
+        //     options.query.BackfillState = 0;  
+        //    const res = await hotelsOrderApi.fetchy(options);
+        //  //  console.log(res)
+        //   _self.hotelsOrder = res.data.Data;
+        //   _self.RoomNight = res.data.RoomNight;                 
+        //   _self.count = res.data.Count;
+        // }
        
         _self.loading = false;
       } catch (e) {
@@ -1257,38 +1265,26 @@ export default {
             }
             _self.form.UpdateTime = time;
           
+            let nowF = _self.form
+            nowF.HotelFee = _self.HotelOrderDetail.HotelFee
+         //   console.log(_self.form);
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
-            //   console.log(_self.form.PlatOrderType)
-            // return false 
-            //console.log(_self.detail);
-
-            let a={x:1,y:2};
-            let b={z:3};
-                a={...a,...b};
-                a.x=6
-                //console.log(_self.form)
-
-             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-                //console.log(_self.form)
-              //  return false
-             
-            
+            _self.form = { ..._self.form, ..._self.HotelOrderDetail };
+           // nowF = { nowF, ..._self.HotelOrderDetail }
+         //   console.log(_self.form);
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
-                ActionCmd:0,
                 HotelOrderDetail: [_self.form]
               };
             } else {
               let id = _self.detail.ID;
-              _self.form.ID = "";
+              nowF.ID = "";
               _self.HotelOrderDetail.ID = "";
               var f = {
-                ID: id,
                 HotelArea: _self.detail.HotelArea,
-                ActionCmd:0,
                 Picture: _self.imageList.toString(),
-                HotelOrderDetail: [_self.form]
+                HotelOrderDetail: [nowF]
               };
             }
             console.log(f)

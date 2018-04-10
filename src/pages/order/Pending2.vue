@@ -51,7 +51,7 @@
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
       <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
-      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜 &nbsp; 拒单率{{JuDanLv}}%</el-button>
+      <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜</el-button>
       
     </CustomSearchCopy>
     
@@ -323,7 +323,6 @@ export default {
       Rstate:"",
       Night:"",
       RoomNight:"",
-      JuDanLv:"",
       hotelList: [],
       imageList: [],
       text: -1,
@@ -788,13 +787,8 @@ export default {
     },
     changv(value){
       const _self = this;      
-      console.log(_self.detail.HotelOrderDetail)
-      if(_self.detail.HotelOrderDetail == undefined){
-        _self.form.HotelID = value 
-      }else{
       console.log(value)
-        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
-      }
+      _self.form.HotelID = value
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -958,8 +952,7 @@ export default {
         const res = await hotelsOrderApi.fetch(options);
         console.log(res)
         _self.hotelsOrder = res.data.Data;
-         _self.RoomNight = res.data.RoomNight;  
-        _self.JuDanLv = res.data.JuDanLv;        
+         _self.RoomNight = res.data.RoomNight;         
         _self.count = res.data.Count;
         _self.loading = false;
       } catch (e) {
@@ -984,10 +977,8 @@ export default {
       console.log(_self.form.PlatOrderNo);
       const res = await hotelsOrderApi.getDetail(_self.form.PlatOrderNo);
       _self.detail = res.data.Data;
-      console.log(_self.detail)
       if (_self.detail) {
         _self.form = _self.detail;
-      //  _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
         _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0];
         if (typeof _self.detail == "undefined") {
           _self.text = 0;
@@ -1005,7 +996,7 @@ export default {
     },
     async submitForm() {
       const _self = this;
-      
+
       if(_self.form.HotelID == undefined){
           this.$message({
             showClose: true,
@@ -1045,12 +1036,8 @@ export default {
                 _self.form.PlatOrderType = "";
             }
             _self.form.UpdateTime = time;
-            let nowF = _self.form
-            nowF.HotelFee = _self.HotelOrderDetail.HotelFee
-         //   console.log(_self.form);
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-           // nowF = { nowF, ..._self.HotelOrderDetail }
          //   console.log(_self.form);
             if (typeof _self.detail == "undefined") {
               var f = {
@@ -1059,17 +1046,16 @@ export default {
               };
             } else {
               let id = _self.detail.ID;
-              nowF.ID = "";
+              _self.form.ID = "";
               _self.HotelOrderDetail.ID = "";
               var f = {
+                ID: id,
                 HotelArea: _self.detail.HotelArea,
                 Picture: _self.imageList.toString(),
-                HotelOrderDetail: [nowF]
+                HotelOrderDetail: [_self.form]
               };
             }
-            console.log(_self.form);
-            console.log(nowF)
-           // return false
+            console.log(f);
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;

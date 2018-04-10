@@ -11,6 +11,14 @@
         <template scope="scope">
          <span>{{scope.row.Platform.PlatName}}</span>
         </template>
+        </el-table-column>
+        <el-table-column label="采购渠道" prop="PurchasePlatID" width=130>
+        <template scope="scope">
+
+         <span v-for="item in PlatPolicyIDs">
+            <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
+          </span>
+        </template>
         </el-table-column>        
         <el-table-column label="折扣" prop="Discount" ></el-table-column>
         <el-table-column label="金额" prop="AddMoney" ></el-table-column>
@@ -82,15 +90,24 @@
                 </el-form-item>
             </el-col>
         </el-row>
+        <el-row v-if="!batch"> 
+        <el-col :span="12">        
+            <el-form-item label="采购渠道" prop="PurchasePlatID">
+                <el-select  v-model="form.PurchasePlatID" placeholder="请选择">
+                <el-option v-for="(item,index) in PlatPolicyIDs" :label="item.PlatName" :value="item.ID" :key="index"></el-option> 
+                </el-select>
+            </el-form-item>
+        </el-col>
+        </el-row>
         <el-row v-if="batch">
             <el-col :span="12">
-                <el-form-item label="采购渠道" prop="RulePlatFromId">
-                    <el-select  v-model="form.RulePlatFromId" placeholder="请选择">
+                <el-form-item label="采购渠道" prop="PurchasePlatID">
+                    <el-select  v-model="form.PurchasePlatID" placeholder="请选择">
                     <el-option v-for="(item,index) in RulePlatFromIds" :label="item.label" :value="item.value" :key="item.value"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" v-if="zuname">
                 <el-form-item label="组名称" prop="GroupName">
                     <el-select v-model="form.GroupName"  filterable remote placeholder="请输入组名称" :remote-method="remoteHotelList" :loading="loadingHotel">
                         <el-option v-for="(item,index) in GrouplList" :key="index" :label="item&&item.GroupName" :value="item&&item.ID">
@@ -230,6 +247,7 @@ export default {
             HotelPolicyID:'',
             Accoun:'',
             dialogTag: '',
+            zuname:true,
             loadingHotel:false,
             batch:false,
             sheheSaveList:[],
@@ -283,6 +301,8 @@ export default {
                 ID:'',
                 isDisabled:true,
                 HotelID:'',
+                PurchasePlatID:"",
+                RulePlatFromId:"",
                 Discount:'',
                 GroupName:'',
                 AddMoney:'',
@@ -294,7 +314,6 @@ export default {
                 StartDate:'',
                 EndDate:'',
                 CreateTime:"",
-                RulePlatFromId:"",
                 StateCheck:''  
             },
             rules: {
@@ -302,6 +321,13 @@ export default {
                 {
                     required: true,
                     message: '请选择渠道',
+                    type: 'number'
+                }
+                ],
+                PurchasePlatID: [
+                {
+                    required: true,
+                    message: '请选择渠道名称',
                     type: 'number'
                 }
                 ],
@@ -420,6 +446,7 @@ export default {
         addrules(){
             const _self = this
             _self.addrule()
+            _self.zuname = true            
             _self.dialogTitle = '批量添加价格规则'
             _self.dialogTag = 3  
             _self.form.isDisabled = true                      
@@ -470,6 +497,7 @@ export default {
             const _self = this
             console.log(row.Discount)
             _self.showDialog = true
+            _self.zuname = false
             _self.dialogTag = 2
             _self.dialogTitle = '编辑规则信息'
             _self.form.HotelID = row.HotelID
@@ -478,6 +506,7 @@ export default {
             _self.form.AddMoney = row.AddMoney
             _self.form.BookDay = row.BookDay
             _self.form.PlatformID = row.Platform.ID
+            _self.form.PurchasePlatID = row.PurchasePlatID           
             _self.form.Rank = row.Rank
             _self.form.EndDay = row.EndDay
             _self.form.StartDay = row.StartDay
@@ -617,7 +646,7 @@ export default {
                 if (valid) {
                     let option = {
                         GroupId: _self.form.GroupName,
-                        RulePlatFromId: _self.form.RulePlatFromId,                        
+                        PurchasePlatID: _self.form.PurchasePlatID,                        
                         PlatFromId: _self.form.PlatformID
                     } 
                      _self.$confirm(`是否删除?`, '提示', {
