@@ -49,15 +49,27 @@
       </el-form-item>
       
       <el-button type="primary" @click="clickAddBtn" slot="button-add">添加新订单</el-button>
-      <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>
-      <el-button type="" @click="downloadList($event)" slot="button-add">汇总下载<i class="el-icon-document el-icon--right" ></i></el-button>      
+
+      <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>      
       <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜 &nbsp; 拒单率{{JuDanLv}}%</el-button>
-      
+      <el-col slot="col-add">
+          <el-form ref="form" :model="form2" label-width="130px">
+          <el-col :span="6">
+          <el-form-item label="修改人工处理状态" prop="HandState" style="margin-bottom:0px">
+                <el-select v-model="form2.HandState" clearable style="width:170px;">
+                    <el-option v-for="item in HandState" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+                </el-form-item>
+          </el-col>                
+          </el-form>
+            <el-button type="primary" @click="toState()" style="margin-left:180px">修改</el-button>
+                
+       </el-col>
     </CustomSearchCopy>
-    
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading"  border
-       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs">
-          
+       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs" @selection-change="handleSelectionChange2">
+                      <el-table-column type="selection" width="55" :reserve-selection="false"></el-table-column>
+
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
@@ -325,6 +337,7 @@ export default {
       RoomNight:"",
       JuDanLv:"",
       hotelList: [],
+      multipleSelection2:[],
       imageList: [],
       text: -1,
       currentPage: 1,
@@ -353,6 +366,9 @@ export default {
         Remark: "",
         CurrencyFuKuan: "",
         CurrencyShouKuan: ""
+      },
+      form2:{
+        HandState:""
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
@@ -728,6 +744,35 @@ export default {
         _self.$message.error("数据下载失败!!!");
       }
     },
+    async toState(){
+    try{
+      let ids =[]
+      for(let i in this.multipleSelection2){
+            ids.push(this.multipleSelection2[i].ID)
+          }
+      if(ids.length!=0){
+          const options={
+            ids: ids,
+            state:this.form2.HandState,
+            remark:'qweqw'
+          }
+          await hotelsOrderApi.revise(options);
+          this.fetchData()
+          this.$message({
+              message: '修改成功',
+              type: 'success'
+          })
+      }else{
+          this.$message({
+                    message: '请选择订单',
+                    type: 'warning'
+                });
+      }
+    }catch(e){
+              this.$message.error('修改失败!!!')
+          }
+    
+    },
     async platformAccount(){
             const options = {
                 pageSize: 1000,
@@ -820,6 +865,10 @@ export default {
         }
       });
     },
+    handleSelectionChange2(val) {
+        this.multipleSelection2 = val;  
+       // console.log(this.multipleSelection2)       
+      },
     async getImageList(list) {
       if (list) {
         const images = list.split(",");

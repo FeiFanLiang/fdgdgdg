@@ -27,11 +27,19 @@
           </el-col>
         </el-form>
       </template>
-      <el-col :span="24">
+      <el-col :span="12">
           <el-button type="primary" @click="search">搜索</el-button>
           <slot name="button-add"></slot>
-      </el-col>
+      </el-col>  
+      <el-col :span="12">        
+      <el-col>
+      </el-col>        
+          <slot name="col-add"></slot>
+      
+      </el-col>        
   </el-row>
+  
+  
 </template>
 
 <script>

@@ -19,6 +19,9 @@ export default {
   add (params) {
     return axios.post(base + 'AddOrder', params)
   },
+  revise (params) {
+    return axios.post(base + 'SetHandState',params)
+  },
   // 根据第三方平台订单编号获取订单信息  GET /Hotel/HotelOrder/GetByPlatOrderNo/{PlatOrderNo}
   getDetail (PlatOrderNo) {
     return axios.get(base + 'GetByPlatOrderNo/' + PlatOrderNo)
