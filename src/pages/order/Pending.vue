@@ -1,5 +1,5 @@
 <template lang="html">
-<div id="HotelsOrder">
+<div id="pending">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
       <el-form-item label="订单平台" slot="ThreePlatID">
         <el-select v-model="filters.ThreePlatID" clearable @change="changeValue">
@@ -52,6 +52,7 @@
 
       <el-button type="" @click="downloadList($event)" slot="button-add">下载<i class="el-icon-document el-icon--right" ></i></el-button>      
       <el-button  slot="button-add" style="cursor:default;border:none">{{RoomNight}}间夜 &nbsp; 拒单率{{JuDanLv}}%</el-button>
+      <!--
       <el-col slot="col-add">
           <el-form ref="form" :model="form2" label-width="130px">
           <el-col :span="6">
@@ -64,13 +65,11 @@
           </el-form>
             <el-button type="primary" @click="toState()" style="margin-left:180px">修改</el-button>
                 
-       </el-col>
+       </el-col> -->
     </CustomSearchCopy>
     <el-table :data="hotelsOrder" element-loading-text="拼命加载中" v-loading="loading"  border
-       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs" @selection-change="handleSelectionChange2">
-                      <el-table-column type="selection" width="55" :reserve-selection="false"></el-table-column>
-
-        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=120></el-table-column>
+       :default-sort = "{prop: 'BookTime', order: 'descending'}" row-key="ID" id="tabs" @selection-change="handleSelectionChange2">                  
+        <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=170></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
               {{scope.row.AccountName}}--
@@ -79,7 +78,12 @@
               </span>
           </template>
         </el-table-column>
-        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="180"></el-table-column>
+        <el-table-column label="酒店名称" prop="HotelName" show-overflow-tooltip width="180">
+            <template slot-scope="scope" >
+                 <span @dblclick="chuli(scope.$index, scope.row)" style="display:inline-block" >{{scope.row.HotelName}}</span>
+            </template> 
+                
+        </el-table-column>
         <el-table-column label="采购" prop="WaiCaiFlag" width=70>
           <template scope="scope">
             <span v-if="scope.row.WaiCaiFlag == 0">自营</span>
@@ -304,6 +308,34 @@
           <el-button type="primary" @click="submitForm()" :loading="!isEditable" size="large">{{isEditable?'确 定':'提交中'}}</el-button>
         </div>
     </el-dialog>
+    
+    <el-dialog title="失败处理" v-model="showc" width="35%">
+      <el-form  ref="form" :model="form2"  label-width="70px" >
+        <el-row style="margin-bottom:10px">    
+            <el-col>
+            <span>酒店&nbsp;:{{form2.HotelName}}&nbsp; &nbsp;入住人&nbsp;:{{form2.Passenger}}</span>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col>
+                  <el-form-item label="处理备注" prop="HandRemark" >
+                      <el-input  type="textarea" v-model="form2.HandRemark" autosize :minlength="200"></el-input>
+                  </el-form-item>
+            </el-col>
+        </el-row>
+        <el-row>
+        <el-col>
+                <el-button @click="addtext($event)">无房拒单</el-button>
+                <el-button @click="addtext($event)">政策不符</el-button>
+                <el-button @click="addtext($event)">赔钱拒单</el-button>
+        </el-col>
+        </el-row>            
+        </el-form>
+         <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="toState()">确定</el-button>
+      </span> 
+    </el-dialog> 
+    
 </div>
 </template>
 
@@ -345,6 +377,7 @@ export default {
       count: 0,
       loading: false,
       showDialog: false,
+      showc:false,
       isEditable: true,
       form: {
         PlatOrderNo: "",
@@ -368,7 +401,8 @@ export default {
         CurrencyShouKuan: ""
       },
       form2:{
-        HandState:""
+        HandState:"",        
+        HandRemark:""
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
@@ -667,7 +701,7 @@ export default {
     };
   },
   created() {
-    this.fetchData();
+   // this.fetchData();
     this.ThreePlat();
     this.platformAccount();
     this.configList = hotelsOrderApi.getConfig();
@@ -744,30 +778,55 @@ export default {
         _self.$message.error("数据下载失败!!!");
       }
     },
+    
+    chuli($index, row){
+        const _self =this
+        _self.showc = true
+         _self.form2.HandRemark = ''
+         _self.form2.HotelName = row.HotelName
+         _self.form2.Passenger = row.Passenger      
+         console.log(row) 
+         _self.multipleSelection2 = row.ID
+    },
+    addtext(e){
+             const _self = this
+             const ntes = e.target.innerText    
+                let up = _self.form2.BookTime += ntes
+                let num = ''                                        
+                up = _self.form2.HandRemark += ntes + ','
+                //console.log(up.length)
+                if(up.indexOf(ntes) == -1){
+                
+                }else{
+                    num = up.split(ntes)
+                  //  console.log(up.length)                                        
+                    if(num.length-1 == 2){
+                        up = up.replace(ntes,'')
+                        up = up.replace(",",'')        
+                    }
+                _self.form2.HandRemark = up                               
+                }
+
+         
+            
+    },
     async toState(){
     try{
       let ids =[]
-      for(let i in this.multipleSelection2){
-            ids.push(this.multipleSelection2[i].ID)
-          }
-      if(ids.length!=0){
+        ids.push(this.multipleSelection2)
           const options={
             ids: ids,
-            state:this.form2.HandState,
-            remark:''
+            state:3,
+            remark:this.form2.HandRemark
           }
           await hotelsOrderApi.revise(options);
+          this.showc = false                    
           this.fetchData()
           this.$message({
               message: '修改成功',
               type: 'success'
           })
-      }else{
-          this.$message({
-                    message: '请选择订单',
-                    type: 'warning'
-                });
-      }
+    
     }catch(e){
               this.$message.error('修改失败!!!')
           }
@@ -833,23 +892,18 @@ export default {
     },
     changv(value){
       const _self = this;   
-      //console.log(value)
-  //  for(let i in _self.hotelList){
-  //     if(_self.hotelList[i].ID==value){
-  //           _self.form.HotelName = _self.hotelList[i].HotelName
-  //     }
-  //  }
-      
-      if(_self.detail.HotelOrderDetail == undefined){
-      console.log(value)
+     
+    //   if(_self.detail.HotelOrderDetail == undefined){
+    //   console.log(value)
         
+    //     _self.form.HotelID = value 
+    //   }else{
+    //  // console.log(value)101503698324
+    //     _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
+    //   }
+
         _self.form.HotelID = value 
-      }else{
-     // console.log(value)
-        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
-      }
       
-      console.log(_self.form)
       
     },
     searchCallback(filters) {
@@ -1016,7 +1070,7 @@ export default {
       };
       try {
         const res = await hotelsOrderApi.fetch(options);
-        console.log(res)
+      //  console.log(res)
         _self.hotelsOrder = res.data.Data;
          _self.RoomNight = res.data.RoomNight;  
         _self.JuDanLv = res.data.JuDanLv;        
@@ -1038,25 +1092,32 @@ export default {
         }
       });
     },
-    async find() {
+    async findd() {
       const _self = this;
       //添加订单前判断是否存在
      // console.log(_self.form.PlatOrderNo);
       const res = await hotelsOrderApi.getDetail(_self.form.PlatOrderNo);
       _self.detail = res.data.Data;
-      console.log(_self.detail)
+     // console.log(_self.detail)
       if (_self.detail) {
         _self.form = _self.detail;
-        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
+        //_self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
         _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0];
+        _self.form.CurrencyFuKuan =  _self.detail.CurrencyFu
+        _self.form.CurrencyShouKuan =  _self.detail.CurrencyShou
+        //console.log(_self.detail) 
        // console.log(_self.detail.HotelOrderDetail[0].HotelID)
-        
-        if (typeof _self.detail == "undefined") {
+      }
+      if (typeof _self.detail == "undefined") {
           _self.text = 0;
         } else {
           _self.text = 1;
         }
-      }
+      //_self.find()
+    },
+    find(){
+      this.findd()
+      this.findd()
     },
     clickAddBtn() {
       const _self = this;
@@ -1144,7 +1205,7 @@ export default {
             }
             //console.log(_self.form);
             console.log(f)
-           // return false
+          //  return false
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;
@@ -1172,7 +1233,7 @@ export default {
 </script>
 
 <style lang="scss">
-#HotelsOrder {
+#pending {
   p {
     display: block;
   }
@@ -1218,6 +1279,9 @@ export default {
     height: 132px;
     line-height: 132px;
     text-align: center;
+  }
+  .el-dialog--small{
+    width:37%;
   }
   .avatar {
     width: 132px;

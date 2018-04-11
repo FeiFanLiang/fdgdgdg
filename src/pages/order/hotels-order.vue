@@ -976,13 +976,15 @@ export default {
     changv(value){
     
       const _self = this;      
-      console.log(_self.detail.HotelOrderDetail)
-      if(_self.detail.HotelOrderDetail == undefined){
         _self.form.HotelID = value 
-      }else{
-      console.log(value)
-        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
-      }
+      
+      // console.log(_self.detail.HotelOrderDetail)
+      // if(_self.detail.HotelOrderDetail == undefined){
+      //   _self.form.HotelID = value 
+      // }else{
+      // console.log(value)
+      //   _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
+      // }
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -1198,21 +1200,27 @@ export default {
         }
       });
     },
-    async find() {
+    async findd() {
       const _self = this;
       //添加订单前判断是否存在
-      console.log(_self.form.PlatOrderNo);
+      //console.log(_self.form.PlatOrderNo);
       const res = await hotelsOrderApi.getDetail(_self.form.PlatOrderNo);
       _self.detail = res.data.Data;
       if (_self.detail) {
         _self.form = _self.detail;
         _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0];
-        if (typeof _self.detail == "undefined") {
+        _self.form.CurrencyFuKuan =  _self.detail.CurrencyFu
+        _self.form.CurrencyShouKuan =  _self.detail.CurrencyShou
+      }
+      if (typeof _self.detail == "undefined") {
           _self.text = 0;
         } else {
           _self.text = 1;
         }
-      }
+    },
+    find(){
+        this.findd()
+        this.findd()        
     },
     clickAddBtn() {
       const _self = this;
@@ -1220,6 +1228,10 @@ export default {
       _self.text = -1;
       _self.form = {};
       _self.HotelOrderDetail = {};
+      _self.form.CurrencyFuKuan = 'CNY';
+      _self.form.CurrencyShouKuan = 'CNY';
+      _self.HotelOrderDetail.SettlementCycleFu = 3
+      _self.HotelOrderDetail.SettlementCycle = 3
     },
     async submitForm() {
       const _self = this;
@@ -1272,6 +1284,15 @@ export default {
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
            // nowF = { nowF, ..._self.HotelOrderDetail }
          //   console.log(_self.form);
+         let hname
+         nowF.HotelFee = _self.HotelOrderDetail.HotelFee
+              for(let i in _self.hotelList){
+                 if(_self.hotelList[i].ID==nowF.HotelID){
+                       hname = _self.hotelList[i].HotelName
+                 }
+             }
+           console.log(hname)
+           nowF.HotelName = hname
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
