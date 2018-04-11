@@ -832,14 +832,25 @@ export default {
           this.Wcqd = value
     },
     changv(value){
-      const _self = this;      
-      console.log(_self.detail.HotelOrderDetail)
+      const _self = this;   
+      //console.log(value)
+  //  for(let i in _self.hotelList){
+  //     if(_self.hotelList[i].ID==value){
+  //           _self.form.HotelName = _self.hotelList[i].HotelName
+  //     }
+  //  }
+      
       if(_self.detail.HotelOrderDetail == undefined){
+      console.log(value)
+        
         _self.form.HotelID = value 
       }else{
-      console.log(value)
+     // console.log(value)
         _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
       }
+      
+      console.log(_self.form)
+      
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -1030,14 +1041,16 @@ export default {
     async find() {
       const _self = this;
       //添加订单前判断是否存在
-      console.log(_self.form.PlatOrderNo);
+     // console.log(_self.form.PlatOrderNo);
       const res = await hotelsOrderApi.getDetail(_self.form.PlatOrderNo);
       _self.detail = res.data.Data;
       console.log(_self.detail)
       if (_self.detail) {
         _self.form = _self.detail;
-      //  _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
+        _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
         _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0];
+       // console.log(_self.detail.HotelOrderDetail[0].HotelID)
+        
         if (typeof _self.detail == "undefined") {
           _self.text = 0;
         } else {
@@ -1051,6 +1064,12 @@ export default {
       _self.text = -1;
       _self.form = {};
       _self.HotelOrderDetail = {};
+      _self.form.CurrencyFuKuan = 'CNY';
+      _self.form.CurrencyShouKuan = 'CNY';
+      _self.HotelOrderDetail.SettlementCycleFu = 3
+      _self.HotelOrderDetail.SettlementCycle = 3
+      
+      
     },
     async submitForm() {
       const _self = this;
@@ -1095,8 +1114,15 @@ export default {
             }
             _self.form.UpdateTime = time;
             let nowF = _self.form
+            let hname
             nowF.HotelFee = _self.HotelOrderDetail.HotelFee
-         //   console.log(_self.form);
+              for(let i in _self.hotelList){
+                 if(_self.hotelList[i].ID==nowF.HotelID){
+                       hname = _self.hotelList[i].HotelName
+                 }
+             }
+           console.log(hname)
+           nowF.HotelName = hname
             // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };
            // nowF = { nowF, ..._self.HotelOrderDetail }
@@ -1116,8 +1142,8 @@ export default {
                 HotelOrderDetail: [nowF]
               };
             }
-            console.log(_self.form);
-            console.log(nowF)
+            //console.log(_self.form);
+            console.log(f)
            // return false
             await hotelsOrderApi.add(f);
             _self.fetchData();

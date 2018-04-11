@@ -646,7 +646,7 @@ export default {
                 if (valid) {
                     let option = {
                         GroupId: _self.form.GroupName,
-                        PurchasePlatID: _self.form.PurchasePlatID,                        
+                        RulePlatFromId: _self.form.RulePlatFromId,                        
                         PlatFromId: _self.form.PlatformID
                     } 
                      _self.$confirm(`是否删除?`, '提示', {
