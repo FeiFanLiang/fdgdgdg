@@ -754,7 +754,7 @@ export default {
           const options={
             ids: ids,
             state:this.form2.HandState,
-            remark:'qweqw'
+            remark:''
           }
           await hotelsOrderApi.revise(options);
           this.fetchData()
