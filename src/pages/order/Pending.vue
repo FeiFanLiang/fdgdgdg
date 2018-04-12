@@ -722,8 +722,8 @@ export default {
       let timeh2 = "";
       if (typeof _self.filters.BackfillTime != "undefined") {
         if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+          timeh1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
       let options = {
@@ -805,10 +805,7 @@ export default {
                         up = up.replace(",",'')        
                     }
                 _self.form2.HandRemark = up                               
-                }
-
-         
-            
+                }        
     },
     async toState(){
     try{
@@ -893,12 +890,9 @@ export default {
     changv(value){
       const _self = this;   
      
-    //   if(_self.detail.HotelOrderDetail == undefined){
-    //   console.log(value)
-        
+    //   if(_self.detail.HotelOrderDetail == undefined){   
     //     _self.form.HotelID = value 
     //   }else{
-    //  // console.log(value)101503698324
     //     _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
     //   }
 
@@ -997,7 +991,7 @@ export default {
     },
     trim(s){
       if(s){
-    return s.replace(/(^\s*)|(\s*$)/g, '');
+          return s.replace(/(^\s*)|(\s*$)/g, '');
       }
     },
     async fetchData(currentPage, pageSize) {
@@ -1028,8 +1022,8 @@ export default {
       let timeh2 = "";
       if (typeof _self.filters.BackfillTime != "undefined") {
         if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+          timeh1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
       const options = {

@@ -896,8 +896,8 @@ export default {
       let timeh2 = "";
       if (typeof _self.filters.BackfillTime != "undefined") {
         if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+          timeh1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
       let options = {
@@ -1107,8 +1107,8 @@ export default {
       let timeh2 = "";
       if (typeof _self.filters.BackfillTime != "undefined") {
         if (_self.filters.BackfillTime[0] != null) {
-          time1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
-          time2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
+          timeh1 = new Date(_self.filters.BackfillTime[0]).Format("yyyy-MM-dd");
+          timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
       const options = {
