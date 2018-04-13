@@ -660,7 +660,7 @@ export default {
     async fetchData() {
       // const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       const res = await hotelRoomApi.list(this.stateForm.hotelId)
-     // console.log(res)
+      console.log(this.stateForm.hotelId)
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {

@@ -804,7 +804,7 @@ export default {
   },
   created() {
     const _self = this
-    _self.fetchData();
+   // _self.fetchData();
     _self.ThreePlat();
     _self.type = _self.$route.name
     _self.platformAccount();

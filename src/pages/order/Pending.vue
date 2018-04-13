@@ -701,7 +701,7 @@ export default {
     };
   },
   created() {
-   // this.fetchData();
+    this.fetchData();
     this.ThreePlat();
     this.platformAccount();
     this.configList = hotelsOrderApi.getConfig();
