@@ -61,8 +61,10 @@ import hotelHotelpriceApi from './hotel-hotelprice'
 import hotelGroupApi from './hotel-group'
 import wxyhApi from './wxyh'
 import lssueApi from './lssue'
+import hotrlreportApi from './hotel-order-report'
 export {
   accountApi,
+  hotrlreportApi,
   lssueApi,
   wxyhApi,
   hotelGroupApi,

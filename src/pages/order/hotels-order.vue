@@ -1153,7 +1153,7 @@ export default {
             }
        // if(_self.type == '酒店订单'){
            const res = await hotelsOrderApi.fetch(options);
-           console.log(res)
+          
           _self.hotelsOrder = res.data.Data;
           _self.RoomNight = res.data.RoomNight;     
           _self.JuDanLv = res.data.JuDanLv;            

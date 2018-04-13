@@ -65,6 +65,11 @@ export default {
       name: '支付明细'
     },
     {
+      path: 'OrderReport',
+      component: _import('order/order-report'),
+      name: '销售报表'
+    },
+    {
       path: 'PaymentCheck',
       component: _import('order/payment-check'),
       name: '财务流水'

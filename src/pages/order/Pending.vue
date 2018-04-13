@@ -778,38 +778,37 @@ export default {
         _self.$message.error("数据下载失败!!!");
       }
     },
-    
     chuli($index, row){
         const _self =this
         _self.showc = true
          _self.form2.HandRemark = ''
          _self.form2.HotelName = row.HotelName
          _self.form2.Passenger = row.Passenger      
-         console.log(row) 
+        // console.log(row) 
          _self.multipleSelection2 = row.ID
     },
     addtext(e){
-             const _self = this
-             const ntes = e.target.innerText    
-                let up = _self.form2.BookTime += ntes
-                let num = ''                                        
-                up = _self.form2.HandRemark += ntes + ','
-                //console.log(up.length)
-                if(up.indexOf(ntes) == -1){
-                
-                }else{
-                    num = up.split(ntes)
-                  //  console.log(up.length)                                        
-                    if(num.length-1 == 2){
-                        up = up.replace(ntes,'')
-                        up = up.replace(",",'')        
-                    }
-                _self.form2.HandRemark = up                               
-                }        
+            const _self = this
+            const ntes = e.target.innerText    
+            let up = _self.form2.BookTime += ntes
+            let num = ''                                        
+            up = _self.form2.HandRemark += ntes + ','
+            //console.log(up.length)
+            if(up.indexOf(ntes) == -1){
+       
+            }else{
+                num = up.split(ntes)
+              //  console.log(up.length)                                        
+                if(num.length-1 == 2){
+                    up = up.replace(ntes,'')
+                    up = up.replace(",",'')        
+                }
+            _self.form2.HandRemark = up                               
+            }        
     },
     async toState(){
-    try{
-      let ids =[]
+      try{
+        let ids =[]
         ids.push(this.multipleSelection2)
           const options={
             ids: ids,
@@ -823,10 +822,10 @@ export default {
               message: '修改成功',
               type: 'success'
           })
-    
-    }catch(e){
-              this.$message.error('修改失败!!!')
-          }
+      
+          }catch(e){
+             this.$message.error('修改失败!!!')
+            }
     
     },
     async platformAccount(){
@@ -888,17 +887,13 @@ export default {
           this.Wcqd = value
     },
     changv(value){
-      const _self = this;   
-     
+      const _self = this;      
     //   if(_self.detail.HotelOrderDetail == undefined){   
     //     _self.form.HotelID = value 
     //   }else{
     //     _self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID    
     //   }
-
-        _self.form.HotelID = value 
-      
-      
+        _self.form.HotelID = value    
     },
     searchCallback(filters) {
       const now =  Object.assign(this.filters, filters );   
@@ -1095,19 +1090,16 @@ export default {
      // console.log(_self.detail)
       if (_self.detail) {
         _self.form = _self.detail;
-        //_self.form.HotelID = _self.detail.HotelOrderDetail[0].HotelID
         _self.HotelOrderDetail = _self.detail.HotelOrderDetail[0];
         _self.form.CurrencyFuKuan =  _self.detail.CurrencyFu
         _self.form.CurrencyShouKuan =  _self.detail.CurrencyShou
         //console.log(_self.detail) 
-       // console.log(_self.detail.HotelOrderDetail[0].HotelID)
       }
       if (typeof _self.detail == "undefined") {
           _self.text = 0;
         } else {
           _self.text = 1;
         }
-      //_self.find()
     },
     find(){
       this.findd()
@@ -1122,13 +1114,10 @@ export default {
       _self.form.CurrencyFuKuan = 'CNY';
       _self.form.CurrencyShouKuan = 'CNY';
       _self.HotelOrderDetail.SettlementCycleFu = 3
-      _self.HotelOrderDetail.SettlementCycle = 3
-      
-      
+      _self.HotelOrderDetail.SettlementCycle = 3  
     },
     async submitForm() {
       const _self = this;
-      
       if(_self.form.HotelID == undefined){
           this.$message({
             showClose: true,
@@ -1178,10 +1167,7 @@ export default {
              }
            console.log(hname)
            nowF.HotelName = hname
-            // _self.form.HotelOrderDetail = _self.HotelOrderDetail;
-            _self.form = { ..._self.form, ..._self.HotelOrderDetail };
-           // nowF = { nowF, ..._self.HotelOrderDetail }
-         //   console.log(_self.form);
+            _self.form = { ..._self.form, ..._self.HotelOrderDetail };  
             if (typeof _self.detail == "undefined") {
               var f = {
                 Picture: _self.imageList.toString(),
@@ -1197,9 +1183,7 @@ export default {
                 HotelOrderDetail: [nowF]
               };
             }
-            //console.log(_self.form);
-            console.log(f)
-          //  return false
+           // console.log(f)
             await hotelsOrderApi.add(f);
             _self.fetchData();
             _self.showDialog = false;
