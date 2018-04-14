@@ -19,14 +19,20 @@ export default {
       name: '酒店组管理'
     },
     {
-   
       path: 'group/:ID',
       component: _import('hotel/hotel-base/hotel-group-ed'),
       name: '酒店组编辑',
       meta: {
         hidden: true
       }
- 
+    },
+    {
+      path: 'hotellog/:ID',
+      component: _import('hotel/hotel-base/hotel-log'),
+      name: '酒店日志',
+      meta: {
+        hidden: true
+      }
     },
     {
    

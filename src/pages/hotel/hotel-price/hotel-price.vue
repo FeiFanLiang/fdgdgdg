@@ -25,13 +25,13 @@
           </el-option>
         </el-select>
       </el-col> -->
-    <el-col :span="4" :offset="6">
+    <el-col :span="4" :offset="5">
       <el-select v-model="periodType" placeholder="请选择">
         <el-option v-for="item in [{label:'按周显示',value:'week'},{label:'按月显示',value:'month'}]" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
     </el-col>
-    <el-col :span="10">
+    <el-col :span="12">
       <el-button icon="arrow-left" @click="pre">前一{{periodType==='week'?'周':'月'}}</el-button>
       <el-date-picker class="mydate" v-model="chosenDate" type="date" placeholder="选择日期">
       </el-date-picker>
@@ -660,7 +660,7 @@ export default {
     async fetchData() {
       // const res = await roomStatPriceApi.getSonRoomList(this.stateForm.hotelId)
       const res = await hotelRoomApi.list(this.stateForm.hotelId)
-      console.log(this.stateForm.hotelId)
+      console.log(res)
       this.roomList = [...res.data]
       const newList = [...res.data]
       newList.forEach((room, rindex) => {

@@ -83,13 +83,24 @@
                     <el-input type="textarea" v-model="form.remark"></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="18">
+        </el-row>
+        <el-row :gutter="20">
+        <el-col :span="18">
+
+                 <el-button >酒店日志</el-button>
+                 
+            </el-col>
+        <el-col :span="6" >
                 <el-form-item>
                     <el-button @click="Cancel">取消</el-button>
                     <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
                 </el-form-item>
             </el-col>
         </el-row>
+        
+        
+        
+        
 
         <!-- <el-row :gutter="18">
       <el-col :span="2" :offset="19">
@@ -322,6 +333,17 @@ export default {
     },
     Cancel() {
       this.$router.go(-1);
+    },
+    tolog(){
+      const _self = this;
+     
+        this.$router.push({
+        name: '酒店日志',
+        params: {
+          ID: _self.form.id
+        }
+        
+      })
     },
     handleChange() {}
   }

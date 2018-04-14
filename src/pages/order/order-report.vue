@@ -69,13 +69,23 @@ export default {
       },
       copyForm: {},
       filters: {
-        StartDate: new Date('2018-04-01'),
-        EndDate:new Date('2018-04-20')
+        StartDate: '',
+        EndDate:''
       }
     }
   },
   created() {
-    this.fetchData()
+    const myDate = new Date()
+    const now = myDate.Format('yyyy-MM-dd')
+    let mon = myDate.getMonth() + 1
+    const year = myDate.getFullYear()
+    if (mon < 10) {
+          mon = '0' + mon
+        }
+    const satr = year + '-' + mon + '-' + '01' 
+    this.filters.EndDate = new Date(now)
+    this.filters.StartDate = new Date(satr)    
+   // this.fetchData()
   },
   methods: {
     carlineStationSearch() {
