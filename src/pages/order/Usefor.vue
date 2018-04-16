@@ -10,17 +10,19 @@
         </el-col>
     </el-row>
     <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="Nickname" label="昵称"></el-table-column>
+        <el-table-column prop="OrderNo" label="订单号"></el-table-column>
+        <el-table-column prop="HotelName" label="酒店名称"></el-table-column>       
         <el-table-column prop="UserName" label="微信号"></el-table-column>
         <el-table-column prop="Name" label="姓名"></el-table-column>
         <el-table-column prop="Tel" label="电话"></el-table-column>
         <el-table-column prop="OptUser" label="处理人"></el-table-column>
-        <el-table-column prop="CaiUser" label="采购人"></el-table-column>
-        <el-table-column prop="Remark" label="备注"></el-table-column>
+        <el-table-column prop="Remark" label="备注" width="150"></el-table-column>
         <el-table-column prop="State" label="状态">
         <template scope="scope">
-            <span v-if="scope.row.State == 0">废除</span>
-            <span v-if="scope.row.State == 1">正常</span>
+            <span v-if="scope.row.State == 1">加V成功</span>
+            <span v-if="scope.row.State == 0">加V失败</span>
+            <span v-if="scope.row.State == 2">不存在</span>
+            
           </template>
         </el-table-column>
         
@@ -36,58 +38,65 @@
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
     <el-dialog :title="dialogTitle" v-model="showDialog" @close="resetForm('form')">
-      <el-form ref="form" :model="form"  label-width="60px">
+      <el-form ref="form" :model="form"  label-width="80px">
         <el-row :gutter="20">
-          <el-col :span="10">
-              <el-form-item label="昵称" prop="Nickname">
-                  <el-input v-model="form.Nickname" ></el-input>
+          <el-col :span="12">
+              <el-form-item label="订单号" prop="OrderNo">
+                  <el-input v-model="form.OrderNo" @blur="find()" ></el-input>
               </el-form-item>
           </el-col>
-          <el-col :span="10">
-              <el-form-item label="微信号" prop="UserName">
-                  <el-input v-model="form.UserName" ></el-input>
+          <el-col :span="12">
+              <el-form-item label="酒店名称:" prop="HotelName">
+                  <span>{{HotelName}}</span>
               </el-form-item>
           </el-col>
+          
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="10">
+          <el-col :span="12">
               <el-form-item label="姓名" prop="Name">
                   <el-input v-model="form.Name" ></el-input>
               </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="12">
               <el-form-item label="电话" prop="Tel">
                   <el-input v-model="form.Tel" ></el-input>
               </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="10">
+          <el-col :span="12">
               <el-form-item label="处理人" prop="OptUser">
                   <el-input v-model="form.OptUser" ></el-input>
               </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="12">
               <el-form-item label="采购人" prop="CaiUser">
                   <el-input v-model="form.CaiUser" ></el-input>
               </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
-          <el-col :span="10">
-              <el-form-item label="备注" prop="Remark">
-                  <el-input  type="textarea" v-model="form.Remark" autosize :minlength="200"></el-input>
+        <el-row :gutter="20"> 
+         <el-col :span="12">
+              <el-form-item label="微信号" prop="UserName">
+                  <el-input v-model="form.UserName" ></el-input>
               </el-form-item>
           </el-col>
-         <el-col :span="10">
+          <el-col :span="12">
               <el-form-item label="状态" prop="State">
                   <el-radio-group v-model="form.State">
-                      <el-radio :label="1">正常</el-radio>
-                      <el-radio :label="0">废除</el-radio>
+                      <el-radio :label="1">加V成功</el-radio>
+                      <el-radio :label="0">加V失败</el-radio>
+                      <el-radio :label="2">不存在</el-radio>                      
                   </el-radio-group>   
               </el-form-item> 
           </el-col> 
         </el-row>
+          <el-col :span="24">
+              <el-form-item label="备注" prop="Remark">
+                  <el-input  type="textarea" v-model="form.Remark" autosize :minlength="200"></el-input>
+              </el-form-item>
+          </el-col>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="showDialog = false">取 消</el-button>
@@ -97,7 +106,7 @@
 </div>
 </template>
 <script>
-import { wxyhApi } from 'api'
+import { wxyhApi,hotelsOrderApi } from 'api'
 export default {
   data() {
     return {
@@ -110,10 +119,13 @@ export default {
       showDialog: false,
       dialogTitle: '',
       labelPosition: 'right',
+      HotelName:"",
       form: {
-        Nickname: '',
+        OrderNo: '',
         UserName: '',
         ID:'',
+        HotelName:"",
+        HotelID:"",
         Name: '',
         OptUser: '', 
         CaiUser: '',
@@ -141,6 +153,16 @@ export default {
     handleCurrentChange(val) {
         this.currentPage = val
         this.fetchData(this.currentPage)
+    },
+    async find(){
+      const _self = this
+      const res = await hotelsOrderApi.getDetail(_self.form.OrderNo);
+      const xinxi = res.data.Data
+      _self.form.HotelID = xinxi.HotelID
+      _self.form.HotelName = xinxi.HotelName
+      _self.HotelName = xinxi.HotelName 
+      console.log(res.data.Data)
+
     },
     async fetchData(currentPage,pageSize) {
       const _self = this
@@ -170,7 +192,8 @@ export default {
       _self.dialogTitle = '添加微信用户'
       _self.showDialog = true
       _self.form = {}
-      _self.State = 0      
+      _self.State = 0  
+      _self.HotelName = ''    
     },
     async clickEditBtn($index, row) {
       const _self = this
@@ -179,7 +202,8 @@ export default {
       try {
         _self.form.CaiUser = row.CaiUser
         _self.form.Name = row.Name
-        _self.form.Nickname = row.Nickname
+        _self.HotelName = row.HotelName
+        _self.form.OrderNo = row.OrderNo
         _self.form.ID = row.ID
         _self.form.OptUser = row.OptUser
         _self.form.State = row.State        

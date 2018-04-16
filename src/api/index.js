@@ -63,8 +63,10 @@ import wxyhApi from './wxyh'
 import lssueApi from './lssue'
 import hotrlreportApi from './hotel-order-report'
 import downexcel from './downexcel'
+import hotelogApi from './hotel-log'
 export {
   accountApi,
+  hotelogApi,
   downexcel,
   hotrlreportApi,
   lssueApi,

@@ -113,7 +113,7 @@
           <el-col :span="8">
             <el-form-item label="采购平台" prop="PurchasePlatID">
               <el-select v-model="form.PurchasePlatID" clearable style="width:100%;">
-                <el-option v-for="item in [{label:'远洋',value:1},{label:'悠游',value:2}]" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in [{label:'远洋',value:1},{label:'悠游',value:2},{label:'飞猪',value:3},{label:'美团',value:4}]" :label="item.label" :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
