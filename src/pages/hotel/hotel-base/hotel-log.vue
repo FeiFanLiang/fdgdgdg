@@ -236,7 +236,8 @@ export default {
     },
     async hotelDetail1(id){
         console.log(id)
-      const _self = this;    
+      const _self = this; 
+      if(id){
           const params = {
                 HotelID: _self.$route.params.ID,
                 SonRoomID:id,
@@ -253,7 +254,7 @@ export default {
       _self.upLog = ups.data
       _self.upstate = upp.data
      _self.writeLog = inp.data
-       
+       }   
       
       
       console.log(getp)

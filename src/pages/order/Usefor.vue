@@ -1,8 +1,17 @@
 <template lang="html">
 <div id="Wxyh">
     <el-row :gutter="20">
-        <el-col :span="5">
-            <el-input placeholder="请输入微信昵称" v-model="filters.Nickname"></el-input>
+        <el-col :span="3">
+            <el-input placeholder="请输入姓名" v-model="filters.Name"></el-input>
+        </el-col>
+        <el-col :span="4">
+            <el-input placeholder="请输入订单号" v-model="filters.OrderNo"></el-input>
+        </el-col>
+        <el-col :span="4">
+            <el-input placeholder="请输入微信号" v-model="filters.UserName"></el-input>
+        </el-col>
+        <el-col :span="4">
+            <el-input placeholder="请输入处理人" v-model="filters.OptUser"></el-input>
         </el-col>
         <el-col :span="5">
             <el-button type="primary" @click="carlineStationSearch(filters)">搜索</el-button>
@@ -12,27 +21,30 @@
     <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
         <el-table-column prop="OrderNo" label="订单号"></el-table-column>
         <el-table-column prop="HotelName" label="酒店名称"></el-table-column>       
-        <el-table-column prop="UserName" label="微信号"></el-table-column>
-        <el-table-column prop="Name" label="姓名"></el-table-column>
+        <el-table-column prop="UserName" label="微信号" >
+        <template scope="scope">
+            <span @click="clickEditBtn(scope.$index,scope.row)" style="width:100%;height:20px;display:inline-block">{{scope.row.UserName}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="Name" label="姓名" width="90"></el-table-column>
         <el-table-column prop="Tel" label="电话"></el-table-column>
-        <el-table-column prop="OptUser" label="处理人"></el-table-column>
-        <el-table-column prop="Remark" label="备注" width="150"></el-table-column>
-        <el-table-column prop="State" label="状态">
+        <el-table-column prop="OptUser" label="处理人"  width="90"></el-table-column>
+        <el-table-column prop="Remark" label="备注" width="300"></el-table-column>
+        <el-table-column prop="State" label="状态" width="90">
         <template scope="scope">
             <span v-if="scope.row.State == 1">加V成功</span>
             <span v-if="scope.row.State == 0">加V失败</span>
-            <span v-if="scope.row.State == 2">不存在</span>
-            
+            <span v-if="scope.row.State == 2">不存在</span> 
           </template>
         </el-table-column>
         
        
-        <el-table-column label="操作" width="170">
+     <!--   <el-table-column label="操作" width="170">
             <template scope="scope">
                 <el-button type="primary" size="small" @click="clickEditBtn(scope.$index,scope.row)">编辑</el-button>
                 <DeleteButton api="wxyhApi" @successCallBack="fetchData" :id="scope.row.ID" style="display:inline-block"></DeleteButton>
             </template>
-        </el-table-column>
+        </el-table-column> -->
     </el-table>
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
@@ -135,7 +147,10 @@ export default {
       },
       copyForm: {},
       filters: {
-        Nickname: ''
+        Name: '',
+        UserName:"",
+        OptUser:"",
+        OrderNo:""
       }
     }
   },
@@ -174,7 +189,11 @@ export default {
             pageSize: pageSize || _self.pageSize,
             order: 'ID',
             query:{
-                   Nickname: _self.filters.Nickname   
+                   OrderNo: _self.filters.OrderNo,
+                   UserName: _self.filters.UserName,
+                   OptUser: _self.filters.OptUser,                   
+                   Name: _self.filters.Name   
+                      
             }
       }
       try {
