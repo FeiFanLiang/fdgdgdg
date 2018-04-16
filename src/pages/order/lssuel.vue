@@ -51,7 +51,7 @@
             <el-button type="primary" @click="addlss()">新建</el-button>            
         </el-col>
       </el-row>
-      <el-row :gutter="17">
+      <el-row style="padding-left:5px">
             <el-checkbox v-model="checked">仅自己</el-checkbox>       
       </el-row>      
     </el-form>
