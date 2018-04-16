@@ -1057,7 +1057,7 @@ export default{
             if(this.money.length != 0){
                 this.finance = true
             }
-          // console.log(this.money.length)
+          console.log(this.activeName)
         },
         addlss(){
             this.showDialog=true

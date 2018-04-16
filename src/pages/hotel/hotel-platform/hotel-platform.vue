@@ -155,16 +155,6 @@ export default {
             message: '请选择平台',
             type: 'number'
           }
-        ],
-        platHotelId: [
-          {
-            required: true,
-            message: '请输入平台酒店ID'
-          }
-          // {
-          //   type: 'number',
-          //   message: '平台酒店ID必须为数字值'
-          // }
         ]
       },
       spiderData: '',

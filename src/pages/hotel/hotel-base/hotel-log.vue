@@ -68,21 +68,57 @@
           <el-table-column label="物理房型" prop="RoomName" min-width="300"></el-table-column>   
     </el-table> -->
 
-    <el-collapse accordion style="border-right: none;">
+    <el-collapse accordion style="border-right: none;" @change="hotelDetail(activeName)" v-model="activeName">
             <el-collapse-item :key="item.id" v-for="(item,index) in dwzList" style="border-right: none;" :name="item.ID">
               <template slot="title">
                    <span>{{item.RoomName}}</span>
                 </template>
 
-                <el-collapse accordion style="border-right: none;">
-            <el-collapse-item :key="item.id" v-for="(item,index) in dwzList" style="border-right: none;" :name="item.ID">
-              <template slot="title">
-                   <span>{{item.RoomName}}</span>
-                </template>
-                
-
-            </el-collapse-item>
-    </el-collapse>
+                <el-collapse accordion style="border: none;">
+                    <el-collapse-item :key="item.id" v-for="(item,index) in dwzList" style="border-right: none;" :name="item.ID">
+                      <template slot="title">
+                            <span>{{item.RoomName}}</span>
+                        </template>
+                        <el-collapse accordion style="border: none;" @change="">
+                            <el-collapse-item title="抓取价格日志">
+                              <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
+                                  <el-table-column label="日期" prop="RoomName" min-width="300"></el-table-column>
+                                  <el-table-column label="抓取时间" prop="RoomName" min-width="300"></el-table-column>
+                                  <el-table-column label="底价" prop="RoomName" min-width="300"></el-table-column>   
+                                  <el-table-column label="房量" prop="RoomName" min-width="300"></el-table-column>   
+                              </el-table>
+                            </el-collapse-item>
+                        </el-collapse>
+                        <el-collapse accordion style="border: none;" @change="">
+                            <el-collapse-item title="上传价格日志">
+                              <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
+                                  <el-table-column label="渠道" prop="RoomName" min-width="300"></el-table-column>
+                                  <el-table-column label="上传时间" prop="RoomName" min-width="300"></el-table-column>
+                                  <el-table-column label="价格" prop="RoomName" min-width="300"></el-table-column>     
+                              </el-table>
+                            </el-collapse-item>
+                        </el-collapse>
+                         <el-collapse accordion style="border: none;" @change="">
+                              <el-collapse-item title="上传房态日志">
+                                <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
+                                    <el-table-column label="渠道" prop="RoomName" min-width="300"></el-table-column>
+                                    <el-table-column label="上传时间" prop="RoomName" min-width="300"></el-table-column>
+                                    <el-table-column label="房态" prop="RoomName" min-width="300"></el-table-column>     
+                                </el-table>
+                              </el-collapse-item>
+                          </el-collapse>
+                          <el-collapse accordion style="border: none;" @change="">
+                              <el-collapse-item title="写入价格日志">
+                                <el-table :data="dwzList" border style="width: 100%" v-loading="loading">
+                                    <el-table-column label="渠道" prop="RoomName" min-width="300"></el-table-column>
+                                    <el-table-column label="写入时间" prop="RoomName" min-width="300"></el-table-column>
+                                    <el-table-column label="价格" prop="RoomName" min-width="300"></el-table-column>   
+                                    <el-table-column label="房态" prop="RoomName" min-width="300"></el-table-column>   
+                                </el-table>
+                              </el-collapse-item>
+                          </el-collapse>     
+                    </el-collapse-item>
+                </el-collapse>
                 
 
             </el-collapse-item>
@@ -98,7 +134,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      dwzList:[],
+      dwzList:[], 
       WaiCaiPlatID:[],
       expandRowKeys:[0],
       grabLog:[],//抓取价格
@@ -108,6 +144,7 @@ export default {
       pageSize: 10,
       count: 0,
       ID:"",
+      activeName:"",
       loading: false,
       isEditable: true,
       showDialog: false,
@@ -121,7 +158,7 @@ export default {
       }
     }
   },
-  created() {
+  created() { 
     this.fetchData()
     this.platformAccount()
   },
@@ -131,6 +168,12 @@ export default {
     },
     updata(){
       console.log("更新")
+    },
+    hotelDetail(id){
+      if(id){
+        console.log(id)
+          
+      }
     },
     handleSizeChange(val) {
         this.pageSize = val
@@ -194,7 +237,7 @@ export default {
       console.log(this.dwzList)
 
     }
-    
+  
   
   
   }

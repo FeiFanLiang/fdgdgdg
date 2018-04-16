@@ -87,7 +87,7 @@
         <el-row :gutter="20">
         <el-col :span="18">
 
-                 <el-button >酒店日志</el-button>
+                 <el-button>酒店日志</el-button>
                  
             </el-col>
         <el-col :span="6" >

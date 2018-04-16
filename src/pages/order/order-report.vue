@@ -49,9 +49,9 @@
 </div>
 </template> 
 <script>
-import { hotrlreportApi } from 'api'
-import FileSaver from 'file-saver'
-import XLSX from 'xlsx'
+import { hotrlreportApi,downexcel } from 'api'
+// import FileSaver from 'file-saver'
+// import XLSX from 'xlsx'
 export default {
   data() {
     return {
@@ -91,15 +91,19 @@ export default {
     carlineStationSearch() {
       this.fetchData()
     },
-    exportExcel () {   
-         const _self = this      
-         const wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
-         const wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' }) 
-         try {
-             FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), _self.nowexcel)
-         } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
-         return wbout
+    exportExcel(){
+        const _self = this      
+        downexcel.exportExcel(_self.nowexcel) 
     },
+    // exportExcel1 () {   
+    //      const _self = this      
+    //      const wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+    //      const wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' }) 
+    //      try {
+    //          FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), _self.nowexcel)
+    //      } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+    //      return wbout
+    // },
     handleSizeChange(val) {
         this.pageSize = val
         this.fetchData(1, this.pageSize)
@@ -107,9 +111,6 @@ export default {
     handleCurrentChange(val) {
         this.currentPage = val
         this.fetchData(this.currentPage)
-    },
-    async downloadList(currentPage,pageSize) {
-       
     },
     async fetchData() {
       const _self = this
