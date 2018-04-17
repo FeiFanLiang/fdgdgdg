@@ -136,7 +136,7 @@ export default {
         UserName: '',
         ID:'',
         HotelName:"",
-        HotelID:'',
+        HotelID:0,
         Name: '',
         OptUser: '', 
         CaiUser: '',

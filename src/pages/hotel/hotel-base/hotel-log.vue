@@ -140,6 +140,11 @@
                                         </span>
                                       </template>
                                     </el-table-column>
+                                    <el-table-column label="日期" prop="Date">
+                                    <template scope="scope">
+                                          <span v-if="scope.row.Date != null">{{scope.row.Date.substring(0,10)}}</span>
+                                      </template>
+                                    </el-table-column>
                                     <el-table-column label="上传时间" prop="UpdateTime">
                                     <template scope="scope">
                                           <span v-if="scope.row.UpdateTime != null">{{scope.row.UpdateTime.substring(0,10)}}</span>
@@ -163,6 +168,18 @@
                                         <span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span>
                                       </span>
                                     </template>                                   
+                                    </el-table-column>
+                                    <el-table-column label="外采渠道" prop="PurchasePlatID">
+                                    <template scope="scope">
+                                      <span v-for="item in PlatPolicyIDs">
+                                          <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
+                                        </span>
+                                      </template>
+                                    </el-table-column>
+                                    <el-table-column label="日期" prop="Date">
+                                    <template scope="scope">
+                                          <span v-if="scope.row.Date != null">{{scope.row.Date.substring(0,10)}}</span>
+                                      </template>
                                     </el-table-column>
                                     <el-table-column label="上传时间" prop="UpdateTime">
                                     <template scope="scope">
@@ -188,6 +205,11 @@
                                       <span v-for="item in PlatPolicyIDs">
                                           <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
                                         </span>
+                                      </template>
+                                    </el-table-column>
+                                    <el-table-column label="日期" prop="Date">
+                                    <template scope="scope">
+                                          <span v-if="scope.row.Date != null">{{scope.row.Date.substring(0,10)}}</span>
                                       </template>
                                     </el-table-column>
                                     <el-table-column label="写入时间" prop="UpdateTime">
@@ -288,14 +310,15 @@ export default {
                     StartTime:_self.filters.StartDate ? new Date(_self.filters.StartDate).Format('yyyy-MM-dd') : '',
                     EndTime:_self.filters.EndDate ? new Date(_self.filters.EndDate ).Format('yyyy-MM-dd') : ''                           
             }
-          const getp = await hotelogApi.getPrice(params)
-          const ups = await hotelogApi.upState(params)
-          const upp = await hotelogApi.upPrice(params)
-          const inp = await hotelogApi.intPrice(params)
-          _self.grabLog = getp.data
-          _self.upLog = ups.data
-          _self.upstate = upp.data
+          let getp = await hotelogApi.getPrice(params)
+          let ups = await hotelogApi.upState(params)
+          let upp = await hotelogApi.upPrice(params)
+          let inp = await hotelogApi.intPrice(params)
+         _self.grabLog = getp.data
+          _self.upLog = upp.data
+         _self.upstate = ups.data
           _self.writeLog = inp.data
+          console.log(params.StartTime)
           _self.loading2 = false
       
        }else{
