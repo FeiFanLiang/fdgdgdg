@@ -72,9 +72,8 @@
         <el-table-column label="订单号" prop="PlatOrderNo" show-overflow-tooltip width=170></el-table-column>
         <el-table-column label="账户-平台" width="120">
           <template scope="scope">
-              {{scope.row.AccountName}}--
-              <span v-for="item in ThreePlatID">
-                <span v-if="scope.row.ThreePlatID==item.ID">{{item.PlatName}}</span>
+              <span v-for="item in PlatPolicyIDs">
+                <span v-if="scope.row.PlatPolicyID==item.ID">{{item.Account}}</span>
               </span>
           </template>
         </el-table-column>
@@ -149,10 +148,10 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                    <el-form-item label="订单平台" prop="ThreePlatID">
-                        <el-select v-model="form.ThreePlatID" clearable>
-                          <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
-                        </el-select>
+                    <el-form-item label="平台信息" prop="PlatPolicyID">
+                                <el-select v-model="form.PlatPolicyID" clearable>
+                                    <el-option v-for="(item,index) in PlatPolicyIDs " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                                </el-select>
                     </el-form-item>
               </el-col>
               <el-col :span="6">
@@ -383,6 +382,7 @@ export default {
         PlatOrderNo: "",
         HotelName: "",
         HotelID: "",
+        PlatPolicyID:"",
         ThreePlatID: "",
         Room: "",
         HotelBookingNo: "",
@@ -406,6 +406,7 @@ export default {
       },
       HotelOrderDetail: {},
       hotelsOrder: [],
+      PlatPolicyIDs:[],
       WaiCaiPlatID:[],
       ID: "",
       filters: {
@@ -704,6 +705,7 @@ export default {
     this.fetchData();
     this.ThreePlat();
     this.platformAccount();
+    this.platformAccounts()
     this.configList = hotelsOrderApi.getConfig();
   },
   methods: {
@@ -777,6 +779,16 @@ export default {
       } catch (e) {
         _self.$message.error("数据下载失败!!!");
       }
+    },
+    async platformAccounts(){
+            const options = {
+                pageSize: 1000,
+                order: 'Sort',
+                query:{CanSale:true}
+            }     
+            const res = await policyApi.getPolicyPlatform(options)
+            this.PlatPolicyIDs = res.data.Data
+       //     console.log(this.PlatPolicyIDs)
     },
     chuli($index, row){
         const _self =this
@@ -1167,6 +1179,7 @@ export default {
              }
            console.log(hname)
            nowF.HotelName = hname
+          _self.form.HotelName = hname
             _self.form = { ..._self.form, ..._self.HotelOrderDetail };  
             if (typeof _self.detail == "undefined") {
               var f = {
@@ -1183,14 +1196,22 @@ export default {
                 HotelOrderDetail: [nowF]
               };
             }
-           // console.log(f)
-            await hotelsOrderApi.add(f);
-            _self.fetchData();
-            _self.showDialog = false;
-            _self.$message({
-              message: "保存成功",
-              type: "success"
-            });
+            console.log(f)
+           //return false
+          const res = await hotelsOrderApi.add(f);
+          const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                _self.fetchData();
+                _self.showDialog = false;
+                _self.$message({
+                  message: "保存成功",
+                  type: "success"
+                });
+            }    
+          
+           
           } catch (e) {
             _self.$message.error("添加失败!!!");
           } finally {

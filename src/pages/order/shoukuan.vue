@@ -238,12 +238,19 @@ export default {
                     payment:_self.payCheck
                 }
                 console.log(params)
-                await hotelPaymentInfoApi.collectionSave(params)
-                _self.$message({
-                    message: '收款成功',
-                    type: 'success'
-                })
-                _self.$router.go(-1)
+               const res = await hotelPaymentInfoApi.collectionSave(params)
+               const ertext = res.data.Msg
+                if(res.data.State !=true){
+                        _self.$message.error(ertext)          
+                    }else{
+                         _self.$message({
+                            message: '收款成功',
+                            type: 'success'
+                        })
+                        _self.$router.go(-1)
+                    }    
+               
+               
             }catch (e) {
                 console.error(e)
                 _self.$message.error('收款失败!!!')

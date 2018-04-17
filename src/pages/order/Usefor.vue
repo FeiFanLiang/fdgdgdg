@@ -136,7 +136,7 @@ export default {
         UserName: '',
         ID:'',
         HotelName:"",
-        HotelID:"",
+        HotelID:'',
         Name: '',
         OptUser: '', 
         CaiUser: '',
@@ -191,10 +191,16 @@ export default {
       const _self = this
       const res = await hotelsOrderApi.getDetail(_self.form.OrderNo);
       const xinxi = res.data.Data
+      console.log(res.data.Data)
+      
+      if(xinxi == undefined){
+          _self.form.HotelID = 0
+      }else{
       _self.form.HotelID = xinxi.HotelID
       _self.form.HotelName = xinxi.HotelName
-      _self.HotelName = xinxi.HotelName 
-      console.log(res.data.Data)
+      _self.HotelName = xinxi.HotelName
+      }
+       
 
     },
     async fetchData(currentPage,pageSize) {
@@ -264,13 +270,21 @@ export default {
       const _self = this
       try {
         _self.isEditable = false
-        await wxyhApi.add(_self.form)
-        _self.fetchData()
-        _self.showDialog = false
-        _self.$message({
-          message: '保存成功',
-          type: 'success'
-        })
+        console.log(_self.form)
+      //  return false
+      const res = await wxyhApi.add(_self.form)
+      const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                _self.fetchData()
+                _self.showDialog = false
+                _self.$message({
+                  message: '保存成功',
+                  type: 'success'
+                })
+            }
+       
       } catch (e) {
         console.error(e)
         _self.$message.error('添加失败!!!')
@@ -288,13 +302,20 @@ export default {
       }
       try {
         _self.isEditable = false
-        await wxyhApi.edit(_self.form.ID, form)
-        _self.showDialog = false
-        _self.fetchData()
-        _self.$message({
-          message: '编辑成功',
-          type: 'success'
-        })
+      const res = await wxyhApi.edit(_self.form.ID, form)
+        const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                _self.showDialog = false
+                _self.fetchData()
+                _self.$message({
+                  message: '编辑成功',
+                  type: 'success'
+                })
+            }
+
+       
       } catch (e) {
         console.error(e)
         _self.$message.error('编辑失败!!!')

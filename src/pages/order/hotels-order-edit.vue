@@ -264,7 +264,21 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+                         <el-col :span="6">
+                            <el-form-item label="订单状态" prop="OrderState">
+                                <el-select v-model="item.OrderState" clearable>
+                                <el-option v-for="items in OrderState" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                         <el-col :span="6">
+                            <el-form-item label="订单类型" prop="OrderType">
+                                <el-select v-model="item.OrderType" clearable>
+                                <el-option v-for="items in OrderType" :key="items.value" :label="items.label" :value="items.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                      <!--  <el-col :span="6">
                             <el-form-item label="订单平台" prop="ThreePlatID">
                                 <el-select v-model="item.ThreePlatID" clearable>
                                 <el-option v-for="items in ThreePlatID" :key="items.ID" :label="items.PlatName" :value="items.ID"></el-option>
@@ -275,7 +289,7 @@
                             <el-form-item label="账户名称" prop="AccountName">
                                 <el-input placeholder="请输入账户名称" v-model="item.AccountName"></el-input>
                             </el-form-item>
-                        </el-col>
+                        </el-col> -->
                         <el-col :span="6">
                         <el-form-item label="房型" prop="Room">
                             <el-input placeholder="请输入房型" v-model="item.Room"></el-input>
@@ -322,34 +336,18 @@
                                 <el-input placeholder="请输入联系电话" v-model="item.PassengerTel"></el-input>
                             </el-form-item>
                         </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="客人要求" prop="PassengerAsk">
+                                <el-input type="textarea" v-model="item.PassengerAsk" ></el-input>
+                            </el-form-item>
+                        </el-col>
                     <!--     <el-col :span="6">
                             <el-form-item label="床型" prop="Bed">
                                 <el-input  placeholder="请输入床型" v-model="item.Bed" autosize></el-input>
                             </el-form-item>                                                          
                         </el-col> -->
                     </el-row>
-                    <el-row :gutter="24">
-                        <el-col :span="6">
-                            <el-form-item label="客人要求" prop="PassengerAsk">
-                                <el-input type="textarea" v-model="item.PassengerAsk" ></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="订单状态" prop="OrderState">
-                                <el-select v-model="item.OrderState" clearable>
-                                <el-option v-for="items in OrderState" :key="items.value" :label="items.label" :value="items.value"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="订单类型" prop="OrderType">
-                                <el-select v-model="item.OrderType" clearable>
-                                <el-option v-for="items in OrderType" :key="items.value" :label="items.label" :value="items.value"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                       
-                    </el-row>
+                  
                     <el-row :gutter="24">
                         <el-col :span="17">
                             <el-form-item label="备注" prop="Remark" >
@@ -1343,12 +1341,18 @@ export default{
         async submitFormFujia(){
             const _self = this
             try {
-                await paymentCheckApi.addFujia(_self.formFujia)
+               const res = await paymentCheckApi.addFujia(_self.formFujia)
+               const ertext = res.data.Msg
+               if(res.data.State !=true){
+                _self.$message.error(ertext)
+                        
+               }else{
                 _self.showFujia = false
                 _self.$message({
-                message: '添加成功',
-                type: 'success'
-                })
+                    message: '添加成功',
+                    type: 'success'
+                    })
+               }              
                 const options = {
                 query: {
                     HotelOrderID: _self.ID

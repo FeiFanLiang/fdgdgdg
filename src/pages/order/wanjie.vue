@@ -109,12 +109,19 @@ export default {
     async finsh($index, row) {
       const _self = this;
       try {
-        await hotelsOrderApi.finsh2(row.ID);
-        _self.$message({
-          message: "设置完结成功",
-          type: "success"
-        });
-        this.fetchData();
+      const res = await hotelsOrderApi.finsh2(row.ID);
+      const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                 _self.$message({
+                  message: "设置完结成功",
+                  type: "success"
+                });
+                this.fetchData();
+            }
+
+       
       } catch (e) {
         console.error(e);
         _self.$message.error("设置完结失败!!!");

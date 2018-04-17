@@ -157,12 +157,18 @@ export default {
         try{
             if(params.StateScreenshot == 1 && params.Picture !=''){
                 _self.isEditable = false
-            await paymentCheckApi.putImg(params)
-            _self.$message({
-                message: '提交成功',
-                type: 'success'
-            })
-            this.fetchData()
+          const res = await paymentCheckApi.putImg(params)
+          const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                 _self.$message({
+                    message: '提交成功',
+                    type: 'success'
+                })
+                this.fetchData()
+            } 
+           
         
             }else{
                  _self.$message.error('提交失败!!!')    

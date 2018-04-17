@@ -228,13 +228,19 @@ export default {
     },
    async img(row){
         try{
-        const aa=  await hotelPaymentInfoApi.imgState(row.PaymentID)
-        console.log(aa)
-            this.$message({
-                message: '设置成功',
-                type: 'success'
-            })
-            this.fetchData();
+        const res=  await hotelPaymentInfoApi.imgState(row.PaymentID)
+        const ertext = res.data.Msg
+          if(res.data.State !=true){
+                this.$message.error(ertext)          
+            }else{
+                this.$message({
+                    message: '设置成功',
+                    type: 'success'
+                })
+                this.fetchData();
+            } 
+    
+           
         }catch(e){
             this.$message.error('设置失败!!!')
         }

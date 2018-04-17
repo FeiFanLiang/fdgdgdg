@@ -240,22 +240,7 @@ export default {
     },
     updata(){
      this.fetchData()
-     this.tonone()
-     
-     
-    },
-    tonone(){
-        const none = document.getElementsByClassName("el-collapse-item__wrap")
-        const rem = document.getElementsByClassName("el-collapse-item")
-        
-     for(let i in none){
-        none[i].style.display = 'none'
-     }
-     for(let i in rem){
-     
-        
-     }
-     console.log(none.length)
+     this.hotelDetail(this.ID)
     },
     async uphlog(){
       const _self = this; 
@@ -304,6 +289,7 @@ export default {
       const _self = this;  
       _self.loading1 = true  
       if(id){
+        _self.ID = id
        const options = {
           PlatformID :_self.filters.PlatformID,
           RoomID:id
@@ -340,25 +326,13 @@ export default {
           HotelID:this.$route.params.ID
         }
       const res = await hotelogApi.getDetail(options)
-    console.log(res)
+      console.log(res)
       this.dwzList = res.data
       
-      // const newList = [...res.data] 
-      // newList.forEach((room, rindex) => {
-      //   room.SonRooms.forEach(async(sroom, srindex) => {
-      //     const platTimeRange = await this.platTimeRange(sroom.ID)
-      //     sroom.platTimeRange = platTimeRange
-      //     if (rindex + 1 === newList.length && srindex + 1 === room.length) {
-      //       this.dwzList = newList
-      //     } 
-      //   })
-
-      //   // this.$set(newList[index], 'platTimeRange', platTimeRange)
-      // }) 
       if(this.dwzList){
         this.loading=false 
       }
-      //console.log(s)
+      
 
     }
   

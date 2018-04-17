@@ -352,13 +352,19 @@ import { tripOrderApi,policyApi } from 'api'
         try {
           _self.isEditable = false
           console.log(_self.form)
-          await tripOrderApi.add(_self.form)
-          _self.fetchData()
-          _self.showDialog = false
-          _self.$message({
-            message: '添加成功',
-            type: 'success'
-          })
+        const res = await tripOrderApi.add(_self.form)
+        const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                _self.fetchData()
+                _self.showDialog = false
+                _self.$message({
+                  message: '添加成功',
+                  type: 'success'
+                })
+            }    
+          
         } catch (e) {
           console.error(e)
           _self.$message.error('添加失败!!!')
@@ -377,13 +383,20 @@ import { tripOrderApi,policyApi } from 'api'
             }
           }
           console.log(form)
-          await tripOrderApi.edit(_self.form.ID, form)
-          _self.showDialog = false
-          _self.fetchData()
-          _self.$message({
-            message: '编辑成功',
-            type: 'success'
-          })
+        const res = await tripOrderApi.edit(_self.form.ID, form)
+          const ertext = res.data.Msg
+          if(res.data.State !=true){
+                _self.$message.error(ertext)          
+            }else{
+                _self.showDialog = false
+                _self.fetchData()
+                _self.$message({
+                  message: '编辑成功',
+                  type: 'success'
+                })
+            }  
+
+          
         } catch (e) {
           console.error(e)
           _self.$message.error('编辑失败!!!')
