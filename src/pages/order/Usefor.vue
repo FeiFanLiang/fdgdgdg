@@ -245,8 +245,10 @@ export default {
       _self.showDialog = true      
       try {
         _self.form.CaiUser = row.CaiUser
+        _self.form.HotelID = row.HotelID        
         _self.form.Name = row.Name
         _self.HotelName = row.HotelName
+        _self.form.HotelName = row.HotelName        
         _self.form.OrderNo = row.OrderNo
         _self.form.ID = row.ID
         _self.form.OptUser = row.OptUser
