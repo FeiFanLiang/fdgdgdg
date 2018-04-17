@@ -1,10 +1,15 @@
 <template lang="html">
 <div id="HotelsOrder">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
-      <el-form-item label="订单平台" slot="ThreePlatID">
+     <!-- <el-form-item label="订单平台" slot="ThreePlatID">
         <el-select v-model="filters.ThreePlatID" @change="changeValue">
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="平台信息" slot="PlatPolicyID">
+                  <el-select v-model="filters.PlatPolicyID" @change="changeValue">
+                      <el-option v-for="(item,index) in PlatPolicyIDs " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                  </el-select>
       </el-form-item>
       <el-form-item label="人工处理状态" slot="HandState">
         <el-select v-model="filters.HandState" clearable @change="changeValue2">
@@ -515,6 +520,7 @@ export default {
         OrderState:"",
         HandState:"",
         OrderType:"",
+        PlatPolicyID:"",
         WaiCaiFlag:"",
         WaiCaiPlatID:"",
         HotelArea: "",
@@ -941,6 +947,7 @@ export default {
           WaiCaiFlag:_self.filters.WaiCaiFlag,
           BackfillUserName:_self.filters.BackfillUserName,
           WaiCaiPlatID:_self.filters.WaiCaiPlatID,
+          PlatPolicyID:_self.filters.PlatPolicyID,
           PlatOrderNo: _self.filters.PlatOrderNo
         }
       };
@@ -1003,7 +1010,7 @@ export default {
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
       this.filters.WaiCaiNo = now.WaiCaiNo   
-      this.filters.ThreePlatID = this.Pts
+      this.filters.PlatPolicyID = this.Pts
       this.filters.HotelArea = this.Qy
       this.filters.SettlementCycleFu = this.Fs
      // console.log(this.filters)
@@ -1147,6 +1154,7 @@ export default {
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
           WaiCaiNo:_self.filters.WaiCaiNo,
+          PlatPolicyID:_self.filters.PlatPolicyID,          
           OrderState:_self.filters.OrderState,
           OrderType:_self.filters.OrderType,
           WaiCaiFlag:_self.filters.WaiCaiFlag,

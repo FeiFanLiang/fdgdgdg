@@ -94,6 +94,20 @@
                           <el-collapse accordion style="border: none;" @change="">
                               <el-collapse-item title="抓取价格日志">
                                 <el-table :data="grabLog" border style="width: 100%" v-loading="loading">
+                                <el-table-column label="渠道" prop="PlatformID">
+                                    <template scope="scope">
+                                    <span v-for="item in PlatPolicyIDs">
+                                        <span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span>
+                                      </span>
+                                    </template>
+                                    </el-table-column>
+                                    <el-table-column label="外采渠道" prop="PurchasePlatID">
+                                    <template scope="scope">
+                                      <span v-for="item in PlatPolicyIDs">
+                                          <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
+                                        </span>
+                                      </template>
+                                    </el-table-column>
                                     <el-table-column label="日期" prop="Date">
                                     <template scope="scope">
                                           <span v-if="scope.row.Date != null">{{scope.row.Date.substring(0,10)}}</span>
@@ -116,6 +130,13 @@
                                     <template scope="scope">
                                       <span v-for="item in PlatPolicyIDs">
                                           <span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span>
+                                        </span>
+                                      </template>
+                                    </el-table-column>
+                                    <el-table-column label="外采渠道" prop="PurchasePlatID">
+                                    <template scope="scope">
+                                      <span v-for="item in PlatPolicyIDs">
+                                          <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
                                         </span>
                                       </template>
                                     </el-table-column>
@@ -161,6 +182,13 @@
                                         <span v-if="scope.row.PlatformID==item.ID">{{item.PlatName}}</span>
                                       </span>
                                     </template>
+                                    </el-table-column>
+                                    <el-table-column label="外采渠道" prop="PurchasePlatID">
+                                    <template scope="scope">
+                                      <span v-for="item in PlatPolicyIDs">
+                                          <span v-if="scope.row.PurchasePlatID==item.ID">{{item.PlatName}}</span>
+                                        </span>
+                                      </template>
                                     </el-table-column>
                                     <el-table-column label="写入时间" prop="UpdateTime">
                                     <template scope="scope">

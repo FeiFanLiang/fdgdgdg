@@ -37,7 +37,9 @@ const searchData2 = [
   ['订单号', 'PlatOrderNo', 'input', ''],
   ['酒店名称', 'HotelName', 'input', ''],
   ['客人姓名', 'Passenger', 'input', ''],
-  ['订单平台', 'ThreePlatID', 'select', ''],
+  // ['订单平台', 'ThreePlatID', 'select', ''],
+  ['订单平台', 'PlatPolicyID', 'select', ''],
+  
   ['入住日期', 'StayDateStart', 'date', ''],
   ['预定日期', 'BookTime', 'daterange', ''],
   ['人工处理状态', 'HandState', 'select', ''],

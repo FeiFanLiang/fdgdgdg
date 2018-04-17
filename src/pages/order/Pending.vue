@@ -1,10 +1,15 @@
 <template lang="html">
 <div id="pending">
     <CustomSearchCopy :configList="configList.searchOrderFields" @searchCallback="searchCallback">
-      <el-form-item label="订单平台" slot="ThreePlatID">
-        <el-select v-model="filters.ThreePlatID" clearable @change="changeValue">
+      <!-- <el-form-item label="订单平台" slot="ThreePlatID">
+        <el-select v-model="filters.ThreePlatID" @change="changeValue">
           <el-option v-for="item in ThreePlatID" :key="item.ID" :label="item.PlatName" :value="item.ID"></el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="平台信息" slot="PlatPolicyID">
+                  <el-select v-model="filters.PlatPolicyID" @change="changeValue">
+                      <el-option v-for="(item,index) in PlatPolicyIDs " :key="index" :label="item.Account" :value="item.ID"></el-option>
+                  </el-select>
       </el-form-item>
       <!--
       <el-form-item label="人工处理状态" slot="HandState">
@@ -414,6 +419,7 @@ export default {
         ThreePlatID: "",
         SettlementCycle: "",
         checkList: "",
+        PlatPolicyID:"",
         HandState:"",
         HotelArea: "",
         SettlementCycleFu:"",
@@ -750,6 +756,7 @@ export default {
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
+          PlatPolicyID:_self.filters.PlatPolicyID,          
           SettlementCycleFu: _self.filters.SettlementCycleFu,
           OrderState:_self.filters.OrderState,
           OrderType:_self.filters.OrderType,
@@ -912,7 +919,7 @@ export default {
       Object.assign(filters, filters, this.filters);
       this.filters = filters;
       this.filters.WaiCaiNo = now.WaiCaiNo   
-      this.filters.ThreePlatID = this.Pts
+      this.filters.PlatPolicyID = this.Pts
       this.filters.HotelArea = this.Qy
       this.filters.SettlementCycleFu = this.Fs
      // this.filters.HandState = this.Rstate    
@@ -1055,6 +1062,7 @@ export default {
           HotelArea: _self.filters.HotelArea,
           StateAuditor: _self.filters.StateAuditor,
           StateFuKuan: _self.filters.StateFuKuan,
+          PlatPolicyID:_self.filters.PlatPolicyID,
           WaiCaiNo:_self.filters.WaiCaiNo,
           SettlementCycleFu: _self.filters.SettlementCycleFu,
           OrderState:_self.filters.OrderState,
