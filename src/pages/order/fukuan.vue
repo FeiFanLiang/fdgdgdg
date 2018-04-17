@@ -243,8 +243,9 @@ export default {
                 }
                 let remark = ''
                 let passenger = ''
+                console.log(_self.multipleSelection)
                 for(let a in _self.multipleSelection){
-                    if(_self.multipleSelection[a].HotelBookingNo == undefined){
+                    if(_self.multipleSelection[a].HotelBookingNo == undefined||_self.multipleSelection[a].HotelBookingNo == ''){
                         _self.multipleSelection[a].HotelBookingNo = "N"
                     }
                     remark+=_self.multipleSelection[a].Passenger.replace('/',' ')+' '
@@ -291,13 +292,23 @@ export default {
                     list:list,
                     payment:_self.payCheck
                 }
-                console.log(params)
-                await hotelPaymentInfoApi.paySave(params)
-                _self.$message({
+              //  console.log(params)
+               const res =  await hotelPaymentInfoApi.paySave(params)
+               console.log(res)
+               const ertext = res.data.Msg
+               if(res.data.State !=true){
+                _self.$message.error(ertext)
+                        
+               }else{
+                   _self.$message({
                     message: '付款成功',
                     type: 'success'
                 })
                 _self.$router.go(-1)
+
+               }
+                
+             //   _self.$router.go(-1)
             }catch (e) {
                 console.error(e)
                 _self.$message.error('付款失败!!!')

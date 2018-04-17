@@ -33,8 +33,9 @@
         <el-table-column prop="State" label="状态" width="90">
         <template scope="scope">
             <span v-if="scope.row.State == 1">加V成功</span>
-            <span v-if="scope.row.State == 0">加V失败</span>
+            <span v-if="scope.row.State == 0">未处理</span>
             <span v-if="scope.row.State == 2">不存在</span> 
+            <span v-if="scope.row.State == 3">加V失败</span>             
           </template>
         </el-table-column>
         
@@ -95,12 +96,10 @@
               </el-form-item>
           </el-col>
           <el-col :span="12">
-              <el-form-item label="状态" prop="State">
-                  <el-radio-group v-model="form.State">
-                      <el-radio :label="1">加V成功</el-radio>
-                      <el-radio :label="0">加V失败</el-radio>
-                      <el-radio :label="2">不存在</el-radio>                      
-                  </el-radio-group>   
+              <el-form-item label="状态" prop="State"> 
+                  <el-select v-model="form.State" >
+                      <el-option v-for="(item,index) in StateCheck" :label="item.label" :value="item.value" :key="index"></el-option>
+                  </el-select>  
               </el-form-item> 
           </el-col> 
         </el-row>
@@ -146,6 +145,25 @@ export default {
         Tel: ''
       },
       copyForm: {},
+      StateCheck: [
+         {
+          label: "未处理",
+          value: 0
+        },
+        {
+          label: "加V成功",
+          value: 1
+        },
+        {
+          label: "不存在",
+          value: 2
+        },
+         {
+          label: "加V失败",
+          value: 3
+        }
+       
+      ],
       filters: {
         Name: '',
         UserName:"",
@@ -210,8 +228,9 @@ export default {
       const _self = this
       _self.dialogTitle = '添加微信用户'
       _self.showDialog = true
-      _self.form = {}
-      _self.State = 0  
+      _self.form = {
+        State:0
+      } 
       _self.HotelName = ''    
     },
     async clickEditBtn($index, row) {
