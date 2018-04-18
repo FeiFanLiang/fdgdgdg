@@ -129,7 +129,7 @@
               </el-col> -->
               <el-col :span="8">
                         <el-form-item label="酒店名称" prop="HotelName">
-                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv">
+                            <el-select v-model="form.HotelName" clearable filterable remote placeholder="请输入酒店名称" :remote-method="remoteHotelList" :loading="loadingHotel" @change="changv" clearable>
                                 <el-option v-for="(item,index) in hotelList" :key="index" :label="item&&item.HotelName" :value="item&&item.ID">
                                 </el-option>
                             </el-select>
