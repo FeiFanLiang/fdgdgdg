@@ -26,7 +26,7 @@ const children = [
  // orderRoute, // 订单
   kefuRoute, //客服
   caiwuRoute, //财务
- // yewu,
+  yewu,
  // fleetRoute, // 车队
  // evaluateScanRoute, // 扫码 链接
  // wechatRoute, // 微信

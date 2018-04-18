@@ -25,6 +25,13 @@
               </el-select>
         </el-form-item>
         </el-col>
+        <el-col :span="6">
+        <el-form-item label="基础信息渠道" prop="PlatformID" style="margin-bottom:30px">
+              <el-select v-model="filters.PlatformID1" clearable  @change="updata" >
+                <el-option v-for="item in PlatPolicyIDs" :key="item.value" :label="item.PlatName" :value="item.ID"></el-option>
+              </el-select>
+        </el-form-item>
+        </el-col>
     </el-row>
     </el-form>    
     <!--  <el-table :data="dwzList" border style="width: 100%" row-key="ID" v-loading="loading" @expand="handleExpand" :expand-row-keys="expandRowKeys" >
@@ -284,6 +291,7 @@ export default {
         StartDate: '',
         EndDate:'',
         SonRoomID:"",
+        PlatformID1:3,
         PlatformID:3,
         WaiCaiPlatID:5
       }
@@ -435,7 +443,7 @@ export default {
       if(id){
         _self.ID = id
        const options = {
-          PlatformID :_self.filters.PlatformID,
+          PlatformID :_self.filters.PlatformID1,
           RoomID:id
         }
       const res = await hotelogApi.getSon(options)
@@ -463,7 +471,7 @@ export default {
     async fetchData() {
         this.loading=true
         const options = {
-          PlatformID :this.filters.PlatformID,
+          PlatformID :this.filters.PlatformID1,
           HotelID:this.$route.params.ID
         }
       const res = await hotelogApi.getDetail(options)

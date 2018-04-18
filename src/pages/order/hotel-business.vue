@@ -17,13 +17,14 @@
               <el-input  v-model="filters.Phone"></el-input>
             </el-form-item>
           </el-col>
-      </el-row>
-      <el-row :gutter="24">
-        <el-col :span="6">
+          <el-col :span="6">
             <el-form-item label="预定日期">
               <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>
             </el-form-item>
           </el-col>
+      </el-row>
+      <el-row :gutter="24">
+        
       </el-row>
       <el-row :gutter="24">
         <el-col>
@@ -34,23 +35,22 @@
     <el-table :data="paymentCheck" style="width: 100%" border element-loading-text="拼命加载中" v-loading="loading"
      row-key="ID" :expand-row-keys="expandRowKeys">
       
-        <el-table-column label="订单号" prop="PlatOrderNo" width=140></el-table-column>
-        <el-table-column label="酒店名称" prop="Hotel" width=140></el-table-column>         
-        <el-table-column label="入住人" prop="Passenger"></el-table-column>
-        <el-table-column label="预定日期" prop="BookTime" sortable width=115>
+        <el-table-column label="标题" prop="Title"></el-table-column>
+        <el-table-column label="酒店名称" prop="Hotel" >
+        <template scope="scope">
+              <span @click="look(scope.$index,scope.row)">{{scope.row.Hotel}}</span>
+          </template>
+        </el-table-column>         
+        <el-table-column label="入住人" prop="Name" ></el-table-column>
+        <el-table-column label="预定日期" prop="BookTime">
           <template scope="scope">
               <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
           </template>
-      </el-table-column>
-        <el-table-column label="审核人" prop="AuditorUserName"></el-table-column>                                                                                                            
-        <el-table-column label="审核时间" prop="AuditorTime" width=150>
+      </el-table-column>                                                                                                                                                                                                                                                                                                                                         
+        <el-table-column label="审核状态" width=100 fixed="right">
             <template scope="scope">
-            <span v-if="scope.row.AuditorTime != null">{{scope.row.AuditorTime.substring(0,16)}}</span>
-            </template>                             
-        </el-table-column>                                                                                                                                                                                                                                                                                                                                          
-        <el-table-column label="操作" width=80 fixed="right">
-            <template scope="scope">
-                <el-button type="text" size="small" @click="img(scope.row)">确定已发</el-button>
+                <span v-if="scope.row.AuditStatus == 1">已审核</span>
+                <span v-if="scope.row.AuditStatus == 0" @click="confirm(scope.$index,scope.row)">确认审核</span>           
             </template>
         </el-table-column>
     </el-table>
@@ -58,8 +58,46 @@
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
     <el-dialog v-model="dialogVisible" size="small" >
+        <el-form ref="form" :model="form"  label-width="80px">
+            <el-row :gutter="20">
+            <el-col :span="24">
+                <el-form-item label="标题" prop="Title">
+                    <el-input v-model="form.Title" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="20">
+            <el-col :span="8">
+                <el-form-item label="酒店名称" prop="Hotel">
+                    <el-input v-model="form.Hotel" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item label="入住人" prop="Name">
+                    <el-input v-model="form.Name" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+        </el-form> 
+    </el-dialog>
+    <el-dialog v-model="dialogVisible1" size="small" :title="dialogTitle" >
+        <el-form ref="form" :model="form"  label-width="80px"> 
+         <el-row :gutter="20">
+            <el-col :span="12">
+                <el-form-item label="价格" prop="Price">
+                    <el-input v-model="form.Price" ></el-input>
+                </el-form-item>
+            </el-col>
+         </el-row>
+        </el-form> 
+        <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible1 = false">取 消</el-button>
+          <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
+      </span>
         
     </el-dialog>
+    
+    
 </div>
 </template>
 <script>
@@ -72,6 +110,8 @@ export default {
           pageSize: 10,
           count: 0,
           loading: false,
+          isEditable: true,
+          dialogTitle:"",
           paymentCheck:[],
           ThreePlatID: [],
           ID: '',
@@ -86,7 +126,24 @@ export default {
             Name: '',
             BookTime:''
           },
-          dialogVisible:false
+          form:{
+              Price:"",
+              Title:"",
+              Hotel:"",
+              Name:"",
+              Phone:"",
+              Adults:"",
+              StartoffDate:"",
+              BackoffDate:"",
+              Totalprice:"",
+              TimeOrderNum :"",
+              AuditStatus:"",
+              Auditor:"",
+              AuditTime:"", 
+              ID:""
+          },
+          dialogVisible:false,
+          dialogVisible1:false
       }
   },
   created() {
@@ -130,24 +187,42 @@ export default {
                Phone: _self.filters.Phone,
                "BookTime>": time1,
                "BookTime<": time2
-               
-
             }
             
       }
       try {
         const res = await weimpApi.weihotellist(options)
         _self.paymentCheck = res.data.Data
-        console.log( options)
+        console.log( res.data.Data)
         _self.count = res.data.Count
         _self.loading = false
       } catch (e) {
         _self.loading = false
       }
     },
-   async img(row){
+    look($index, row){
+    const _self = this
+    _self.dialogTitle = '查看业务信息'
+    _self.dialogVisible = true  
+    _self.form.Price = row.Price
+    _self.form.Title = row.Title
+    
+    
+    
+    },
+    confirm($index, row){
+    const _self = this
+    _self.dialogTitle = '审核业务信息'
+    _self.dialogVisible1 = true  
+    _self.form.Price = row.Price
+    _self.form.ID = row.ID
+    },
+   async submitForm(){
+    const _self = this
+       
         try{
-        const res=  await hotelPaymentInfoApi.imgState(row.PaymentID)
+        
+        const res=  await weimpApi.revise(_self.form.ID, _self.form.Price)
         const ertext = res.data.Msg
           if(res.data.State !=true){
                 this.$message.error(ertext)          
