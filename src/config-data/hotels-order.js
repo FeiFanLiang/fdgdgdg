@@ -53,7 +53,8 @@ const searchData2 = [
   ['确认号', 'HotelBookingNo', 'input', ''],
   ['回填日期', 'BackfillTime', 'daterange', ''],     
   ['回填人', 'BackfillUserName', 'select', ''],  
-        
+  ['审核日期', 'AuditorTime', 'daterange', ''],     
+  
   ['筛选条件', 'checkList', 'select', ''],
   
 ]

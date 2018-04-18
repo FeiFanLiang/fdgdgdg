@@ -16,6 +16,8 @@ import modifyPrice from './modify-price'
 import kefuRoute from './kefu'
 import caiwuRoute from './caiwu'
 import qita from './qita'
+import yewu from './weimp'
+
 
 
 const children = [
@@ -24,6 +26,7 @@ const children = [
  // orderRoute, // 订单
   kefuRoute, //客服
   caiwuRoute, //财务
+ // yewu,
  // fleetRoute, // 车队
  // evaluateScanRoute, // 扫码 链接
  // wechatRoute, // 微信

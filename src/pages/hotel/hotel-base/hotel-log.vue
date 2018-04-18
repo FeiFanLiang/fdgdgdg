@@ -2,17 +2,13 @@
 <div id="Wxyh">
 <el-row :gutter="20">
   <h1 style="text-align:center">酒店日志</h1>
+  <el-button type="primary" @click="returns()">返回</el-button>
 </el-row>
     <el-form label-width="70px">
     <el-row :gutter="20">
         <el-col :span="6">
-            <el-form-item label="开始时间">
-                <el-date-picker  v-model="filters.StartDate" type="date"  @change="uphlog"></el-date-picker>
-            </el-form-item>
-        </el-col>
-        <el-col :span="6">
-            <el-form-item label="结束时间">
-                <el-date-picker  v-model="filters.EndDate" type="date"  @change="uphlog"></el-date-picker>
+            <el-form-item label="时间范围">
+                <el-date-picker  v-model="filters.StartDate"  type="daterange"  @change="uphlog"></el-date-picker>
             </el-form-item>
         </el-col> 
         <el-col :span="6">
@@ -296,8 +292,10 @@ export default {
   created() { 
     const myDate = new Date()
     const now = myDate.Format('yyyy-MM-dd')
+    const nn = now +"-"+now
     this.filters.StartDate = new Date(now)
     this.filters.EndDate = new Date(now)
+    //console.log(nn)
     this.fetchData()
     this.toWaiCaiPlatID()
     this.platformAccount()
@@ -305,6 +303,9 @@ export default {
   methods: {
     carlineStationSearch() {
       this.fetchData()
+    },
+    returns(){
+            this.$router.go(-1)
     },
     updata(){
       const _self = this; 
@@ -377,13 +378,21 @@ export default {
       if(id!=''){
         _self.sonID = id
         _self.isopen = false
+        let time1 = "";
+      let time2 = "";
+      if (typeof _self.filters.StartDate != "undefined") {
+        if (_self.filters.StartDate[0] != null) {
+          time1 = new Date(_self.filters.StartDate[0]).Format("yyyy-MM-dd");
+          time2 = new Date(_self.filters.StartDate[1]).Format("yyyy-MM-dd");
+        }
+      }
             const params = {
                     HotelID: _self.$route.params.ID,
                     SonRoomID:id,
                     PlatformID: _self.filters.PlatformID,
                     PurchasePlatID:_self.filters.WaiCaiPlatID,
-                    StartTime:_self.filters.StartDate ? new Date(_self.filters.StartDate).Format('yyyy-MM-dd') : '',
-                    EndTime:_self.filters.EndDate ? new Date(_self.filters.EndDate ).Format('yyyy-MM-dd') : ''                           
+                    StartTime:time1,
+                    EndTime:time2                          
             }
             if(_self.nowload == 0){   
               const getp = await hotelogApi.getPrice(params)

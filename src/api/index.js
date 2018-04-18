@@ -64,8 +64,10 @@ import lssueApi from './lssue'
 import hotrlreportApi from './hotel-order-report'
 import downexcel from './downexcel'
 import hotelogApi from './hotel-log'
+import weimpApi from './weimp'
 export {
   accountApi,
+  weimpApi,
   hotelogApi,
   downexcel,
   hotrlreportApi,

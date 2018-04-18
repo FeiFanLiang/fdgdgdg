@@ -525,6 +525,7 @@ export default {
         WaiCaiPlatID:"",
         HotelArea: "",
         BackfillTime:"",
+        AuditorTime:"",
         WaiCaiNo:""
       },
       ThreePlatID: [
@@ -918,6 +919,14 @@ export default {
           timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
+      let timea1 = "";
+      let timea2 = "";
+      if (typeof _self.filters.AuditorTime != "undefined") {
+        if (_self.filters.AuditorTime[0] != null) {
+          timea1 = new Date(_self.filters.AuditorTime[0]).Format("yyyy-MM-dd");
+          timea2 = new Date(_self.filters.AuditorTime[1]).Format("yyyy-MM-dd");
+        }
+      }
       let options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -935,6 +944,8 @@ export default {
           "BookTime<": time2,
           "BackfillTime>": timeh1,
           "BackfillTime<": timeh2,
+          "AuditorTime>":timea1,
+          "AuditorTime<":timea2,          
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycleFu: _self.filters.SettlementCycleFu,
           HotelBookingNo: _self.filters.HotelBookingNo,
@@ -1130,6 +1141,14 @@ export default {
           timeh2 = new Date(_self.filters.BackfillTime[1]).Format("yyyy-MM-dd");
         }
       }
+      let timea1 = "";
+      let timea2 = "";
+      if (typeof _self.filters.AuditorTime != "undefined") {
+        if (_self.filters.AuditorTime[0] != null) {
+          timea1 = new Date(_self.filters.AuditorTime[0]).Format("yyyy-MM-dd");
+          timea2 = new Date(_self.filters.AuditorTime[1]).Format("yyyy-MM-dd");
+        }
+      }
       const options = {
         pageIndex: _self.currentPage,
         pageSize: _self.pageSize,
@@ -1146,6 +1165,8 @@ export default {
           "BookTime<": time2,
           "BackfillTime>": timeh1,
           "BackfillTime<": timeh2,
+          "AuditorTime>": timea1,
+          "AuditorTime<": timea2,
           ThreePlatID: _self.filters.ThreePlatID,
           SettlementCycleFu: _self.filters.SettlementCycleFu,
           HandState:_self.filters.HandState,

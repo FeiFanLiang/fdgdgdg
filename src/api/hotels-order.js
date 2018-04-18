@@ -15,9 +15,6 @@ export default {
   detail (ID) {
     return axios.get(base + ID)
   },
-  weihotellist (ID) {
-    return axios.get(base + 'WeiMPHotelOrderListGet' + ID)
-  },
   // 添加订单  POST /Hotel/HotelOrder/AddOrder
   add (params) {
     return axios.post(base + 'AddOrder', params)
