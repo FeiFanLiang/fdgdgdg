@@ -10,17 +10,17 @@
         </el-col>
         <el-col :span="6">
             <el-form-item label="采购人">
-               <el-input placeholder="请输入采购人" v-model="filters.hotelname"></el-input>             
+               <el-input placeholder="请输入采购人" v-model="filters.PurchasingName"></el-input>             
             </el-form-item>
         </el-col>
         <el-col :span="6">
             <el-form-item label="录入时间">
-                <el-date-picker  v-model="filters.BookTime" type="daterange"></el-date-picker>            
+                <el-date-picker  v-model="filters.CreateTime" type="daterange"></el-date-picker>            
             </el-form-item>
         </el-col>
         <el-col :span="6">
-            <el-form-item label="协议到期日">
-                <el-date-picker  v-model="filters.BookTime" type="date"></el-date-picker>                                       
+            <el-form-item label="协议到期日" label-width="90px">
+                <el-date-picker  v-model="filters.ExpiringDate" type="date"></el-date-picker>                                       
             </el-form-item>
         </el-col>
         <el-col :span="5">
@@ -390,6 +390,9 @@ import UploadImageCopy from 'components/upload-image-copy'
             loading:false,
             filters:{
                 hotelname: '',
+                PurchasingName:"",
+                CreateTime:"",
+                ExpiringDate:""
             },
             title:'',
             //////////////////
@@ -602,12 +605,27 @@ import UploadImageCopy from 'components/upload-image-copy'
             _self.PayCompanyID = res.data.Data
             _self.currentPage = currentPage || _self.currentPage
             _self.pageSize = pageSize || _self.pageSize
+            let time1 = "";
+            let time2 = "";
+            if (typeof _self.filters.CreateTime != "undefined") {
+                if (_self.filters.CreateTime[0] != null) {
+                time1 = new Date(_self.filters.CreateTime[0]).Format("yyyy-MM-dd");
+                time2 = new Date(_self.filters.CreateTime[1]).Format("yyyy-MM-dd");
+                }
+            }
             const options = {
                 pageIndex: _self.currentPage,
                 pageSize: _self.pageSize,
                 order: 'ID',
                 query:{
                     hotelname:_self.filters.hotelname,
+                    PurchasingName:_self.filters.PurchasingName,
+                    ExpiringDate: _self.filters.ExpiringDate
+                    ? new Date(_self.filters.ExpiringDate).Format("yyyy-MM-dd")
+                    : "",
+                    "CreateTime>": time1,
+                    "CreateTime<": time2
+                    
                 }
             }
             try{

@@ -6,7 +6,7 @@ export default {
   component: Pages.Abstract,
   name: '业务信息',
   redirect: '/business/hotel-business',
-  iconClass: 'dingdan',
+  iconClass: 'zhanshi',
   children: [
     {
       path: 'hotel-business',
