@@ -44,37 +44,98 @@
         <el-table-column label="入住人" prop="Name" ></el-table-column>
         <el-table-column label="预定日期" prop="BookTime">
           <template scope="scope">
-              <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(5,16) }}</span>
+              <span v-if="scope.row.BookTime != null">{{ scope.row.BookTime.substring(0,16) }}</span>
           </template>
       </el-table-column>                                                                                                                                                                                                                                                                                                                                         
         <el-table-column label="审核状态" width=100 fixed="right">
             <template scope="scope">
                 <span v-if="scope.row.AuditStatus == 1">已审核</span>
-                <span v-if="scope.row.AuditStatus == 0" @click="confirm(scope.$index,scope.row)">确认审核</span>           
+                <el-button type="text" size="small" v-if="scope.row.AuditStatus == 0" @click="confirm(scope.$index,scope.row)">确认审核</el-button>         
             </template>
         </el-table-column>
     </el-table>
     <div class="pagination-wrapper" style="text-align:center;margin:10px;">
         <el-pagination layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30]" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" :total="count"></el-pagination>
     </div>
-    <el-dialog v-model="dialogVisible" size="small" >
-        <el-form ref="form" :model="form"  label-width="80px">
+    <el-dialog v-model="dialogVisible" size="small" :title="dialogTitle" >
+        <el-form ref="form" :model="form"  label-width="80px" id="onlylook">
             <el-row :gutter="20">
             <el-col :span="24">
                 <el-form-item label="标题" prop="Title">
-                    <el-input v-model="form.Title" ></el-input>
+                    <el-input v-model="form.Title" readonly="readonly" ></el-input>
                 </el-form-item>
             </el-col>
             </el-row>
             <el-row :gutter="20">
-            <el-col :span="8">
+            <el-col :span="12">
                 <el-form-item label="酒店名称" prop="Hotel">
-                    <el-input v-model="form.Hotel" ></el-input>
+                    <el-input v-model="form.Hotel" readonly="readonly" ></el-input>
                 </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
                 <el-form-item label="入住人" prop="Name">
-                    <el-input v-model="form.Name" ></el-input>
+                    <el-input v-model="form.Name" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>            
+            <el-row :gutter="20">            
+            <el-col :span="12">
+                <el-form-item label="联系电话" prop="Phone">
+                    <el-input v-model="form.Phone" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="随行人数" prop="Adults ">
+                    <el-input v-model="form.Adults" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="20">            
+            <el-col :span="12">
+                <el-form-item label="入住时间" prop="StartoffDate ">
+                    <el-input v-model="form.StartoffDate" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="离开时间" prop="BackoffDate ">
+                    <el-input v-model="form.BackoffDate" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="20">
+            <el-col :span="12">
+                <el-form-item label="单价" prop="Price">
+                    <el-input v-model="form.Price" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="总价" prop="Totalprice">
+                    <el-input v-model="form.Totalprice" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            </el-row>
+            <el-row :gutter="20">               
+            <el-col :span="12">
+                <el-form-item label="订单号" prop="TimeOrderNum">
+                    <el-input v-model="form.TimeOrderNum" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="审核状态" prop="AuditStatus ">
+                    <span v-if="form.AuditStatus == 0">未审核</span>
+                    <span v-if="form.AuditStatus == 1">已审核</span>
+                </el-form-item>
+            </el-col>
+              </el-row>
+            <el-row :gutter="20">                
+            <el-col :span="12">
+                <el-form-item label="审核人" prop="Auditor">
+                    <el-input v-model="form.Auditor" readonly="readonly" ></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="审核时间" prop="AuditTime">
+                    <el-input v-model="form.AuditTime" readonly="readonly" ></el-input>
                 </el-form-item>
             </el-col>
             </el-row>
@@ -83,6 +144,11 @@
     <el-dialog v-model="dialogVisible1" size="small" :title="dialogTitle" >
         <el-form ref="form" :model="form"  label-width="80px"> 
          <el-row :gutter="20">
+            <el-col :span="12">
+                <el-form-item label="酒店名称" prop="Hotel">
+                    <el-input v-model="form.Hotel" readonly="readonly"  ></el-input>
+                </el-form-item>
+            </el-col>    
             <el-col :span="12">
                 <el-form-item label="价格" prop="Price">
                     <el-input v-model="form.Price" ></el-input>
@@ -94,10 +160,7 @@
         <el-button @click="dialogVisible1 = false">取 消</el-button>
           <el-button type="primary" @click="submitForm()" :loading="!isEditable">{{isEditable?'确 定':'提交中'}}</el-button>
       </span>
-        
     </el-dialog>
-    
-    
 </div>
 </template>
 <script>
@@ -112,6 +175,7 @@ export default {
           loading: false,
           isEditable: true,
           dialogTitle:"",
+          Price:"",
           paymentCheck:[],
           ThreePlatID: [],
           ID: '',
@@ -147,8 +211,7 @@ export default {
       }
   },
   created() {
-    this.fetchData()
-    
+    this.fetchData() 
   },
   methods:{
       hotelsOrderSearch(filters) {
@@ -187,8 +250,7 @@ export default {
                Phone: _self.filters.Phone,
                "BookTime>": time1,
                "BookTime<": time2
-            }
-            
+            }         
       }
       try {
         const res = await weimpApi.weihotellist(options)
@@ -205,10 +267,19 @@ export default {
     _self.dialogTitle = '查看业务信息'
     _self.dialogVisible = true  
     _self.form.Price = row.Price
-    _self.form.Title = row.Title
-    
-    
-    
+    _self.form.Title = row.Title    
+    _self.form.Hotel = row.Hotel
+    _self.form.Name = row.Name
+    _self.form.Phone = row.Phone
+    _self.form.Adults = row.Adults
+    _self.form.StartoffDate = row.StartoffDate
+    _self.form.BackoffDate = row.BackoffDate
+    _self.form.Totalprice = row.Totalprice
+    _self.form.TimeOrderNum = row.TimeOrderNum
+    _self.form.AuditStatus = row.AuditStatus
+    _self.form.Auditor = row.Auditor
+    _self.form.AuditTime = row.AuditTime
+     
     },
     confirm($index, row){
     const _self = this
@@ -216,13 +287,23 @@ export default {
     _self.dialogVisible1 = true  
     _self.form.Price = row.Price
     _self.form.ID = row.ID
+    _self.Price = row.Price
+    _self.form.Hotel = row.Hotel
+    
     },
    async submitForm(){
     const _self = this
-       
+    let nowprice 
         try{
-        
-        const res=  await weimpApi.revise(_self.form.ID, _self.form.Price)
+            if(_self.form.Price == _self.Price){
+                nowprice = 0
+            }else{
+                nowprice = _self.form.Price
+            }
+            const nowPrice =Number(nowprice)
+            console.log( nowPrice)
+        //return false
+        const res=  await weimpApi.revise(_self.form.ID,nowPrice)
         const ertext = res.data.Msg
           if(res.data.State !=true){
                 this.$message.error(ertext)          
@@ -232,9 +313,7 @@ export default {
                     type: 'success'
                 })
                 this.fetchData();
-            } 
-    
-           
+            }         
         }catch(e){
             this.$message.error('设置失败!!!')
         }
@@ -246,3 +325,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+
+</style>

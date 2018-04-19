@@ -2,7 +2,6 @@
 <div id="Wxyh">
 <el-row :gutter="20">
   <h1 style="text-align:center">酒店日志</h1>
-  <el-button type="primary" @click="returns()">返回</el-button>
 </el-row>
     <el-form label-width="70px">
     <el-row :gutter="20">
@@ -18,20 +17,22 @@
               </el-select>
             </el-form-item>
         </el-col>
-        <el-col :span="6">
-        <el-form-item label="渠道" prop="PlatformID" style="margin-bottom:30px">
+        <el-col :span="5">
+        <el-form-item label="渠道" prop="PlatformID" style="margin-bottom:30px" label-width="50px">
               <el-select v-model="filters.PlatformID" clearable  @change="updata" >
                 <el-option v-for="item in PlatPolicyIDs" :key="item.value" :label="item.PlatName" :value="item.ID"></el-option>
               </el-select>
         </el-form-item>
         </el-col>
-        <el-col :span="6">
-        <el-form-item label="基础信息渠道" prop="PlatformID" style="margin-bottom:30px">
+        <el-col :span="5">
+        <el-form-item label="基础信息渠道" prop="PlatformID" style="margin-bottom:30px" label-width="100px">
               <el-select v-model="filters.PlatformID1" clearable  @change="updata" >
                 <el-option v-for="item in PlatPolicyIDs" :key="item.value" :label="item.PlatName" :value="item.ID"></el-option>
               </el-select>
         </el-form-item>
         </el-col>
+  <el-button type="primary" @click="returns()">返回</el-button>
+        
     </el-row>
     </el-form>    
     <!--  <el-table :data="dwzList" border style="width: 100%" row-key="ID" v-loading="loading" @expand="handleExpand" :expand-row-keys="expandRowKeys" >
@@ -288,7 +289,7 @@ export default {
       },
       copyForm: {},
       filters: {
-        StartDate: '',
+        StartDate:[],
         EndDate:'',
         SonRoomID:"",
         PlatformID1:3,
@@ -301,7 +302,8 @@ export default {
     const myDate = new Date()
     const now = myDate.Format('yyyy-MM-dd')
     const nn = now +"-"+now
-    this.filters.StartDate = new Date(now)
+    this.filters.StartDate[0] = new Date(now)
+    this.filters.StartDate[1] = new Date(now)    
     this.filters.EndDate = new Date(now)
     //console.log(nn)
     this.fetchData()
@@ -329,6 +331,7 @@ export default {
       _self.isopen2 = false
       _self.isopen3 = false
       _self.isopen4 = false   
+      console.log(_self.filters.StartDate)
     },
     toInitial(){
       const _self = this;      
